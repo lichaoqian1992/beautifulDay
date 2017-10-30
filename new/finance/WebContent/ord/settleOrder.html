@@ -1,0 +1,86 @@
+#@layout() #define main()
+
+<section class="content-header" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 订单管理</a></li>
+        <li>结算订单信息</li>
+    </ol>
+</section>
+
+
+
+<section class="invoice">
+    <div class="row">
+        <!--搜索-->
+        <div class="col-md-12 finance_time finance_time_padding_left" id="findun">
+        </div>
+
+        <!--主要信息展示-->
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                <tr class="trBusiness">
+                    <th>编号</th>
+                    <th>商家名称</th>
+                    <th>商家区域</th>
+                    <th>商家电话</th>
+                    <th>订单编号</th>
+                    <th>订单类型</th>
+                    <th>支付方式</th>
+                    <th>用户实付金额</th>
+                    <th>补贴满意卷</th>
+                    <th>订单金额</th>
+                    <th>提点比例</th>
+                    <th>技术服务费</th>
+                    <th>商家应收总金额</th>
+                    <th>下单时间</th>
+                    <th>交易完成时间</th>
+                    <th>结算时间</th>
+                </tr>
+                </thead>
+                <tbody id="orderInfo" >
+                <input type="hidden" id="userId"  value="#(userId)"/>
+                <tr v-for="(shop,index) in Shops">
+                    <td>{{index+1}}</td>
+                    <td style="cursor: pointer" @click="info(shop.user_id)">{{shop.name}}</td>
+                    <td>{{shop.area}}</td>
+                    <td>{{shop.msg_mobile}}</td>
+                    <td>{{shop.order_no}}</td>
+                    <td>{{shop.order_title}}</td>
+                    <td>{{shop.title}}</td>
+                    <td>{{shop.real_amount}}</td>
+                    <td>{{shop.voucher}}</td>
+                    <td>{{shop.order_amount}}</td>
+                    <td>{{shop.user_percentage}}</td>
+                    <td>{{shop.sxf}}</td>
+                    <td>{{shop.balance_amount}}</td>
+                    <td>{{shop.add_time}}</td>
+                    <td>{{shop.complete_time}}</td>
+                    <td>{{shop.real_balance_date}}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!--分页-->
+            <div class="page_box" id="Shoppage">
+                <div class="pull-left">
+                    <span>共<span>{{number}}</span>条数据，当前显示第 <span>{{page}}</span> 页 ，到</span>
+                    <input class="page_number" type="text" v-model="findpages"/>
+                    <button class="btn btn-default" @click ="findpram">GO</button>
+                </div>
+
+                <div class="pull-right">
+                    <a class="page_btn" @click ="findpram1">首页</a> <a class="page_btn" @click ="findpram2">下一页</a>
+                    <a class="page_btn" @click ="findpram3">上一页</a> <a class="page_btn" @click ="findpram4">尾页</a>
+                </div>
+                <!--保存总页数-->
+                <input type="hidden"  v-model="totalpage"/>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+#include("../common/_js.html")
+<script src="../static/js/ord/settleOrder.js" type="text/javascript"></script>
+#end

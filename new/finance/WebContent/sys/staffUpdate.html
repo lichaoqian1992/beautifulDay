@@ -1,0 +1,79 @@
+#@layout()
+#define main()
+<!-- 内容页眉(页眉) -->
+				<section class="content-header">
+					<ol class="breadcrumb">
+						<li>
+							<a href="#"><i class="fa fa-dashboard"></i> 系统管理</a>
+						</li>
+						<li>
+							员工管理
+						</li>
+					</ol>
+				</section>
+
+				<!-- 主要内容 -->
+				<section class="invoice">
+					<div class="row">
+						<div class="col-md-12">
+							<input type="hidden" value=#(session.user.USERNAME) id="creater"/>
+							<div class="rechargePay_list">
+								<div class="group_box">
+									<label class="group_label"><i class="color_red">*</i>登录账号：</label>
+									<div class="group_content">
+									<input type="hidden" id="id">
+										<input class="form-control" type="text" value="" id="userName" placeholder="6-20位英文字母和数字的组合"/>
+										<a href="#" class="href_a update_password" onclick="resetPass()">重置密码</a>
+									</div>
+								</div>
+								<div class="group_box">
+									<label class="group_label"><i class="color_red">*</i>真实姓名：</label>
+									<div class="group_content">
+										<input class="form-control" type="text" value="" id="realName" placeholder="请输入真实姓名" />
+									</div>
+								</div>
+								<div class="group_box">
+									<label class="group_label"><i class="color_red">*</i>角色名称：</label>
+									<div class="group_content">
+										<select class="form-control" id="roleType">
+											<option selected="selected" value="1">系统管理员</option>
+											<option value="3">董事长</option>
+											<option value="2">财务副总裁</option>
+											<option value="4">财务经理</option>
+											<option value="5">资金部负责人</option>
+											<option value="6">充值会计</option>
+											<option value="8">提现会计</option>
+											<option value="7">出纳</option>
+										</select>
+									</div>
+								</div>
+								<div class="group_box">
+									<label class="group_label"><i class="color_red">*</i>手机号码：</label>
+									<div class="group_content">
+										<input class="form-control" type="text" value="" id="mobile" placeholder="请输入正确的手机号码" />
+									</div>
+								</div>
+								<div class="group_box">
+									<label class="group_label">电子邮箱：</label>
+									<div class="group_content">
+										<input class="form-control" type="text" id="email" value="" />
+									</div>
+								</div>
+								<div class="group_box">
+									<label class="group_label"></label>
+									<div class="group_content">
+										<button type="button" class="btn btn-primary" onclick="saveStaff()">保存</button>
+										<button type="button" class="btn btn-default" onclick="cancel()">取消</button>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</section>
+				<!-- /主要内容 -->
+#include("../common/_js.html")
+<script language=javascript src='../static/js/rec/rec.js'></script>
+<script type="text/javascript" src="../static/js/sys/staffManager.js"></script>
+#end

@@ -1,0 +1,98 @@
+#@layout()
+#define main()
+<section class="content-header">
+					<ol class="breadcrumb">
+						<li>
+							<a href="#"><i class="fa fa-dashboard"></i> 充值管理</a>
+						</li>
+						<li>
+							发起充值
+						</li>
+					</ol>
+				</section>
+
+				<!-- 主要内容 -->
+				<section class="invoice">
+				<input type="hidden" value=#(session.user.USERNAME) id="creater"/>
+					<div class="row">
+						<div class="col-md-12">
+							<ul class="nav nav-tabs">
+								<li class="active">
+									<a href="#OAPay" data-toggle="tab">OA充值</a>
+								</li>
+							</ul>
+							<div class="tab-content rechargePay_list">
+								<div class="tab-pane fade in active" id="OAPay">
+									<div class="col-md-12">
+											<div class="group_box">
+												<label class="group_label"><i class="color_red">*</i>OA文件编号：</label>
+												<div class="group_content">
+													<input class="form-control" type="hidden" value="" id="id"/>
+													<input class="form-control" type="text" value="" id="oaId"/>
+													<input class="form-control" type="hidden" value="" id="withDrawls"/>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label"><i class="color_red">*</i>充值类型：</label>
+												<div class="group_content">
+													<select class="form-control" id="rechargeType">
+														<option selected="selected" value="0">员工工资</option>
+														<option value="1">工程款</option>
+														<option value="2">行政款</option>
+														<option value="3">营销策划</option>
+														<option value="5">扣减</option>
+													</select>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label"><i class="color_red">*</i>充值帐户：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="accountName"/>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label">姓名：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="userName"/>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label">身份证号：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="idCard"/>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label"><i class="color_red">*</i>充值金额：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="money"/>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label"><i class="color_red">*</i>可否提现：</label>
+												<div class="group_content">
+													<label>
+														<input type="radio" name="moneytype" id="" value="" />可提现
+													</label>
+													<label>
+														<input type="radio" name="moneytype" id="" value="" />不可提现
+													</label>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label"></label>
+												<div class="group_content">
+													<button type="button" class="btn btn-primary" onclick="update()">重新提交</button>
+												</div>
+											</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</section>
+				
+#include("../common/_js.html")
+<script type="text/javascript" src="../static/js/rec/yesOA.js"></script>
+#end

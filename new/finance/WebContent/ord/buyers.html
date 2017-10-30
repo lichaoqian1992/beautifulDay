@@ -1,0 +1,87 @@
+#@layout() #define main()
+
+<section class="content-header" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 订单管理</a></li>
+        <li>用户信息</li>
+    </ol>
+</section>
+
+<section class="invoice">
+    <div class="row">
+        <!--搜索-->
+        <div class="col-md-12 finance_time finance_time_padding_left" id="findun">
+        <div class="form-group">
+            <label class="control-label">用户名称：</label>
+            <div class="input-group">
+                <input id="name" type="text" class="form-control" v-model="username">
+            </div>
+        </div>
+        <button class="btn btn-primary"  @click="findusernme">查询</button>
+        </div>
+
+        <!--主要信息展示-->
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                <tr class="trBusiness">
+                    <th>编号</th>
+                    <th>用户名</th>
+                    <th>昵称</th>
+                    <th>会员组</th>
+                    <th>邮箱</th>
+                    <th>手机</th>
+                    <th>QQ</th>
+                    <th>所在地区</th>
+                    <th>状态</th>
+                    <th>注册时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="orderInfo" >
+                <tr v-for="(buyer,index) in buyers">
+                    <td>{{index+1}}</td>
+                    <td style="cursor: pointer" @click="info(buyer.user_id)">{{buyer.user_name}}</td>
+                    <td>{{buyer.nick_name}}</td>
+                    <td>{{buyer.title}}</td>
+                    <td>{{buyer.email}}</td>
+                    <td>{{buyer.mobile}}</td>
+                    <td>{{buyer.qq}}</td>
+                    <td>{{buyer.area}}</td>
+
+                    <td v-if="buyer.status==0">正常</td>
+                    <td v-else-if="buyer.status==1">待验证</td>
+                    <td v-else-if="buyer.status==2">待审核</td>
+                    <td v-else-if="buyer.status==3">锁定</td>
+                    <td v-else-if="buyer.status==4">黑名单</td>
+                    <td v-else></td>
+
+                    <td>{{buyer.reg_time}}</td>
+                    <td><a style="cursor: pointer" @click="info(buyer.user_id)">详情</a></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!--分页-->
+            <div class="page_box" id="Buyerpage">
+                <div class="pull-left">
+                    <span>共<span>{{number}}</span>条数据，当前显示第 <span>{{page}}</span> 页 ，到</span>
+                    <input class="page_number" type="text" v-model="findpages"/>
+                    <button class="btn btn-default" @click ="findpram">GO</button>
+                </div>
+
+                <div class="pull-right">
+                    <a class="page_btn" @click ="findpram1">首页</a> <a class="page_btn" @click ="findpram2">下一页</a>
+                    <a class="page_btn" @click ="findpram3">上一页</a> <a class="page_btn" @click ="findpram4">尾页</a>
+                </div>
+                <!--保存总页数-->
+                <input type="hidden"  v-model="totalpage"/>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+#include("../common/_js.html")
+<script src="../static/js/ord/buyers.js" type="text/javascript"></script>
+#end

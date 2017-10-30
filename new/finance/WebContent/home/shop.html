@@ -1,0 +1,178 @@
+#@layout() #define main()
+
+<section class="content-header">
+	<ol class="breadcrumb">
+		<li><i class="fa fa-dashboard"></i> 首页</li>
+	</ol>
+</section>
+
+
+<section class="invoice">
+	<div class="row">
+		<div class="col-md-12">
+			#include("_homemenu.html")
+
+			<div class="tab-content paymentOrderDate_tab_list">
+				<div class="tab-pane fade in active" id="zhifubaoDetail">
+					<div class="col-md-12 finance_time">
+						<div class="form-group">
+							<label class="control-label">商家名称：</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="nickName">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label">账号类型：</label>
+							<div class="input-group">
+								<select class="form-control" id="userType">
+									<option selected="" value="">全部状态</option>
+									<option value="1">正常</option>
+				                    <option value="0">冻结</option>
+								</select>
+							</div>
+						</div>
+						<button class="btn btn-primary" onclick="Confluence(1)">查询</button>
+						<button class="btn btn-danger pull-right" onclick="toExcel()">导出</button>
+					</div>
+					<div class="col-md-12">
+						<table class="table table-bordered liuShuiMingXi">
+							<thead>
+								<tr>
+									<th>编号</th>
+									<th>商家名称</th>
+									<th>商家账号</th>
+									<th>商家区域</th>
+									<th>商家电话</th>
+									<th>商家业务</th>
+									<th>账户状态</th>
+									<th>余额</th>
+									<th>可提现余额</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+							#for(x : refoundList.getList())
+								<tr>
+									<td style="display: none;"><input type="text" class="userId" value="#(x.user_id)"/></td>
+									<td>#(x.sumId)</td>
+									<td><a href="/finance/ord/findBusinessDetails?user_id=#(x.user_id)">#(x.name)</a></td>
+									<td>#(x.user_name)</td>
+									<td>#(x.area)</td>
+									<td>#(x.mobile)</td>
+									<td>#(x.TAG)</td>
+									<td>#(x.state)</td>
+									<td>#(x.amount)</td>
+									<td>#(x.allow_amount)</td>
+									<td><a class="href_a check_file">查看资金流水</a></td>
+								</tr>
+							#end
+							</tbody>
+						</table>
+
+						<div class="page_box">
+							<div class="pull-left pull-leftAll">
+								<span>共<q>#(refoundList.totalRow)</q>条数据，当前显示第 <q>#(refoundList.pageNumber)</q>页 ，到</span> <input class="page_number page_numberAll"
+									type="number" value="1"/>
+								<button class="btn btn-default" onclick="goPage()">GO</button>
+							</div>
+							<input type="hidden" class="page" value="#(refoundList.pageNumber)"/>
+							<input type="hidden" class="lastpage" value="#(refoundList.totalPage)"/>
+							<div class="pull-right">
+								<a class="page_btn" onclick="homePage()">首页</a> <a class="page_btn" onclick="previousPage()">下一页</a> <a
+									class="page_btn" onclick="nextPage()">上一页</a> <a class="page_btn" onclick="Shadowe()">尾页</a>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				
+
+				
+
+			</div>
+		</div>
+	</div>
+	
+	<div class="childAdd" style="display: none;">
+		<div class="row">
+				<div class="col-md-12">
+					<div class="col-md-12 finance_time finance_time_padding_left0">
+						<div class="form-group">
+							<label class="control-label">单号：</label>
+							<div class="input-group">
+								<input type="text" class="form-control" class="orderNoChild">
+							</div>
+						</div>
+						<button class="btn btn-primary btn-primaryChild">查询</button>
+						<button class="btn btn-danger pull-right" onclick="toExcelChild()">导出</button>
+					</div>
+					<table class="table table-bordered liuShuiMingXiChild">
+						<thead>
+							<tr>
+								<th>编号</th>
+								<th>变动时间</th>
+								<th>期初至</th>
+								<th>变动值</th>
+								<th>期末值</th>
+								<th>类型</th>
+								<th>单号</th>
+								<th>备注</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+
+					<div class="page_box">
+						<div class="pull-left pull-leftChild">
+							<span>共<q class="one">0</q>条数据，当前显示第 <q class="tow">0</q>页 ，到</span> <input class="page_number page_numberChild"
+								type="number" value="1"/>
+							<button class="btn btn-default" onclick="goPageChild()">GO</button>
+						</div>
+						<input type="hidden" class="pageChild" value=""/>
+						<input type="hidden" class="lastpageChild" value=""/>
+						<div class="pull-right">
+							<a class="page_btn" onclick="homePageChild()">首页</a> <a class="page_btn" onclick="previousPageChild()">下一页</a> <a
+								class="page_btn" onclick="nextPageChild()">上一页</a> <a class="page_btn" onclick="ShadoweChild()">尾页</a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+	</div>
+	
+</section>
+
+
+#include("../common/_js.html")
+<script type="text/javascript">
+			$(function() {
+				/*时间插件调用
+				 */
+				$('.datepicker').datepicker({
+					format: 'yyyy-mm-dd',
+					autoclose: true,
+					language: 'cn'
+				});
+				
+				//弹出窗
+				$(".table").on("click",".check_file",function(event){
+					layer.open({
+				           type: 1,
+				           title: '账户信息详情',
+				           shadeClose: true,
+				           shade: false,
+				           maxmin: true, //开启最大化最小化按钮
+				           area: ['1180px', '700px'],
+				           content: $(".childAdd").html()
+					});
+				});
+
+				
+				$(".shop").addClass("active");
+				
+			});
+		</script>
+<script type="text/javascript" src="../static/js/home/confluence.js"></script>
+<script type="text/javascript" src="../static/js/home/moneyFlowing.js"></script>
+#end

@@ -1,0 +1,1941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.PropMapper">
+
+
+
+
+	<!-- 短信/////////////////////////////////////////////////////////////////// -->
+	<select id="countSmsTemplate" parameterType="SmsTemplateVo"
+		resultType="int">
+		select count(*) from dt_sms_template  where 1=1
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="content != null and content != ''">
+			and content like '%${content}%'
+		</if>
+		<if test="is_sys != null and is_sys != '-1'">
+			and is_sys=#{is_sys}
+		</if>
+	</select>
+	<select id="querySmsTemplate" parameterType="SmsTemplateVo"
+		resultType="SmsTemplate">
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_mail_template   where  1=1 
+		
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="content != null and content != ''">
+			and content like '%${content}%'
+		</if>
+		<if test="is_sys != null and is_sys != '-1'">
+			and is_sys=#{is_sys}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+	</select>
+	<select id="getSmsTemplate" parameterType="int" resultType="SmsTemplate">
+		select * from dt_sms_template where id=#{0}
+	</select>
+	<update id="updSmsTemplate" parameterType="SmsTemplate">
+		update dt_sms_template set
+		title=#{title},
+		call_index=#{call_index},
+		content=#{content},
+		is_sys=#{is_sys}
+		where id=#{id}
+	</update>
+	<delete id="delSmsTemplate" parameterType="int">
+		delete from dt_sms_template where id=#{0}
+	</delete>
+	<insert id="addSmsTemplate" parameterType="SmsTemplate">
+		insert into dt_sms_template
+		(title,call_index,content,is_sys)
+		values(#{title},#{call_index},#{content},#{is_sys})
+	</insert>
+	<!-- ////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+	<select id="countEmailTemplate" parameterType="EmailTemplateVo"
+		resultType="int">
+		select count(*) from dt_mail_template where 1=1
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="maill_title != null and maill_title != ''">
+			and maill_title like '%${maill_title}%'
+		</if>
+		<if test="content != null and content != ''">
+			and content like '%${content}%'
+		</if>
+	</select>
+	<select id="queryEmailTemplate" parameterType="EmailTemplateVo"
+		resultType="EmailTemplate">
+		
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_mail_template   where  1=1 
+		
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="maill_title != null and maill_title != ''">
+			and maill_title like '%${maill_title}%'
+		</if>
+		<if test="content != null and content != ''">
+			and content like '%${content}%'
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+	</select>
+
+
+	<insert id="addEmailTemplate" parameterType="EmailTemplate">
+		insert into dt_mail_template
+		(title,call_index,maill_title,content,is_sys)
+		values(#{title},#{call_index},#{maill_title},#{content},#{is_sys})
+	</insert>
+
+	<select id="getEmailTemplate" parameterType="int" resultType="EmailTemplate">
+		select * from dt_mail_template where id=#{0}
+	</select>
+
+	<update id="updEmailTemplate" parameterType="EmailTemplate">
+		update dt_mail_template
+		set
+		title=#{title},call_index=#{call_index},maill_title=#{maill_title},content=#{content},is_sys=#{is_sys}
+		where id=#{id}
+	</update>
+
+	<delete id="delEmailTemplate" parameterType="int">
+		delete from dt_mail_template where id=#{0}
+	</delete>
+
+
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="getConfig" parameterType="int" resultType="Config">
+		select * from dt_config where id=#{0}
+	</select>
+
+	<update id="updConfig" parameterType="Config">
+		update dt_config
+		set
+		[key]=#{key},
+		title=#{title},
+		content=#{content},
+		type=#{type},
+		value=#{value},
+		status=#{status}
+		where id=#{id}
+	</update>
+
+	<delete id="delConfig" parameterType="int">
+		delete from dt_config where id=#{0}
+	</delete>
+
+	<select id="countConfig" parameterType="ConfigVo" resultType="int">
+		select count(*) from dt_config  where 1=1
+		<if test="key != null and key != ''">
+			and [key] like '%${key}%'
+		</if>
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if> 
+	</select>
+	<select id="queryConfig" parameterType="ConfigVo" resultType="Config">
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_config   where  1=1 
+		
+		<if test="key != null and key != ''">
+			and [key] like '%${key}%'
+		</if> 
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+		<if test="type != null and type != '不限'">
+			and type=#{type}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+	</select>
+
+	<insert id="addConfig" parameterType="Config">
+		insert into dt_config(key,title,content,type,value,status)
+		values(#{key},#{title},#{content},#{type},#{value},#{status})
+	</insert>
+
+	<select id="getConfigCategory" resultType="map">
+		select distinct type from dt_config where type is not null
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+	<select id="countDistribution" parameterType="DistributionVo"
+		resultType="int">
+		select count(*) from dt_distribution where 1=1
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="express_code != null and express_code != ''">
+			and express_code like '%${express_code}%'
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+	</select>
+
+	<select id="queryDistribution" parameterType="DistributionVo"
+		resultType="Distribution">
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_distribution   where  1=1 
+		
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="express_code != null and express_code != ''">
+			and express_code like '%${express_code}%'
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+
+	</select>
+
+	<insert id="addDistribution" parameterType="Distribution">
+		insert into dt_distribution
+		(title,express_code,express_fee,remark,sort_id,is_lock)
+		values
+		(#{title},#{express_code},#{express_fee},#{remark},#{sort_id},#{is_lock})
+	</insert>
+
+	<select id="getDistribution" parameterType="int" resultType="Distribution">
+		select * from dt_distribution where id=#{0}
+	</select>
+
+	<update id="updDistribution" parameterType="Distribution">
+		update dt_distribution
+		set
+		title=#{title},express_code=#{express_code},express_fee=#{express_fee},
+		remark=#{remark},sort_id=#{sort_id},is_lock=#{is_lock}
+		where id=#{id}
+	</update>
+
+	<delete id="delDistribution" parameterType="int">
+		delete from dt_distribution where id=#{0}
+	</delete>
+
+
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+	<select id="countExpress" parameterType="ExpressVo" resultType="int">
+		select count(*) from dt_express where 1=1
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="website != null and website != ''">
+			and website like '%${website}%'
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+	</select>
+
+	<select id="queryExpress" parameterType="ExpressVo" resultType="Express">
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_express   where  1=1 
+		
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="website != null and website != ''">
+			and website like '%${website}%'
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+	</select>
+
+
+	<insert id="addExpress" parameterType="Express">
+		insert into
+		dt_express(title,express_code,express_fee,remark,sort_id,is_lock)
+		values(#{title},#{express_code},#{express_fee},#{remark},#{sort_id},#{is_lock})
+	</insert>
+	<select id="getExpress" parameterType="int" resultType="Express">
+		select * from dt_express where id=#{0}
+	</select>
+
+	<update id="updExpress" parameterType="Express">
+		update dt_express
+		set
+		title=#{title},express_code=#{express_code},express_fee=#{express_fee},remark=#{remark},
+		sort_id=#{sort_id},is_lock=#{is_lock}
+		where id=#{id}
+	</update>
+
+	<delete id="delExpress" parameterType="int">
+		delete from dt_express where id=#{0}
+	</delete>
+
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+	<select id="countPayment" parameterType="PaymentVo" resultType="int">
+		select count(*) from dt_payment where 1=1
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="type != null and type != '-1'">
+			and type=#{type}
+		</if> 
+		<if test="poundage_type != null and poundage_type != '-1'">
+			and poundage_type=#{poundage_type}
+		</if> 
+		<if test="is_mobile != null and is_mobile != '-1'">
+			and is_mobile=#{is_mobile}
+		</if> 
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>  
+	</select>
+
+	<select id="queryPayment" parameterType="PaymentVo" resultType="Payment">
+				
+		<!-- select * from dt_payment where 1=1  -->
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_payment   where  1=1 
+		
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="type != null and type != '-1'">
+			and type=#{type}
+		</if> 
+		<if test="poundage_type != null and poundage_type != '-1'">
+			and poundage_type=#{poundage_type}
+		</if> 
+		<if test="is_mobile != null and is_mobile != '-1'">
+			and is_mobile=#{is_mobile}
+		</if> 
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if> 
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+		 
+	</select>
+
+	<insert id="addPayment" parameterType="Payment">
+		insert into
+		dt_payment(parent_id,title,img_url,remark,type,poundage_type,poundage_amount,sort_id,is_mobile,is_lock,api_path)
+		values(#{parent_id},#{title},#{img_url},#{remark},#{type},#{poundage_type},#{poundage_amount},#{sort_id},#{is_mobile},#{is_lock},#{api_path})
+	</insert>
+
+	<select id="getPayment" parameterType="int" resultType="Payment">
+		select * from dt_payment where id=#{0}
+	</select>
+
+	<update id="updPayment" parameterType="Payment">
+		update dt_payment set
+		parent_id=#{parent_id},
+		title=#{title},
+		img_url=#{img_url},
+		remark=#{remark},
+		type=#{type},
+		poundage_type=#{poundage_type},
+		poundage_amount=#{poundage_amount},
+		sort_id=#{sort_id},
+		is_mobile=#{is_mobile},
+		is_lock=#{is_lock},
+		api_path=#{api_path}
+		where id=#{id}
+	</update>
+
+	<delete id="delPayment" parameterType="int">
+		delete from dt_payment where id=#{0}
+	</delete>
+
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+	<select id="countMedal" parameterType="MedalVo" resultType="int">
+		select count(*) from dt_medal where 1=1
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+	</select>
+
+	<select id="queryMedal" parameterType="MedalVo" resultType="Medal">
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_medal   where  1=1 
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+	</select>
+
+	<insert id="addMedal" parameterType="Medal">
+		insert into dt_medal (title,icon,type,link_url,is_lock)
+		values (#{title},#{icon},#{type},#{link_url},#{is_lock})
+	</insert>
+	<select id="getMedal" parameterType="int" resultType="Medal">
+		select * from dt_medal where id=#{0}
+	</select>
+	<update id="updMedal" parameterType="Medal">
+		update dt_medal set
+		title=#{title},
+		icon=#{icon},
+		type=#{type},
+		link_url=#{link_url},
+		is_lock=#{is_lock}
+		where id=#{id}
+	</update>
+
+	<delete id="delMedal" parameterType="int">
+		delete from dt_medal where id=#{0}
+	</delete>
+
+
+	<!-- /dt_business_type 系统业务库 -->
+
+	<select id="countBusiness" parameterType="BusinessVo"
+		resultType="int">
+		select count(*) from dt_business_type where 1=1
+		<if test="name != null and name != ''">
+			and name like '%${name}%'
+		</if>
+		<if test="channel_id != null and channel_id != ''">
+			and channel_id like '%${channel_id}%'
+		</if>
+	</select>
+	<select id="queryBusiness" parameterType="BusinessVo"
+		resultType="Business">
+		select * from dt_business_type dt1,
+		(
+		select top 20 id from
+		(
+		select top(#{index}*20) id from dt_business_type where 1=1
+		<if test="name != null and name != ''">
+			and name like '%${name}%'
+		</if>
+		<if test="channel_id != null and channel_id != ''">
+			and channel_id like '%${channel_id}%'
+		</if>
+		order by id desc
+		)dt order by dt.id asc
+		)dt2 where dt1.id=dt2.id order by dt1.id
+	</select>
+
+	<insert id="addBusiness" parameterType="Business">
+		insert into dt_business_type
+		(name,call_index,channel_id,content,role_type,valid_time,deposit,poundage,percentage,agreement,status,add_time)
+		values(#{name},#{call_index},#{channel_id},#{content},#{role_type},#{valid_time},#{deposit},#{poundage},#{percentage},#{agreement},#{status},#{add_time})
+	</insert>
+
+	<select id="getBusiness" parameterType="int" resultType="Business">
+		select * from dt_business_type where id=#{id}
+	</select>
+
+	<update id="updBusiness" parameterType="Business">
+		update dt_business_type set
+		name=#{name},
+		call_index=#{call_index},
+		channel_id=#{channel_id},
+		content=#{content},
+		role_type=#{role_type},
+		valid_time=#{valid_time},
+		deposit=#{deposit},
+		poundage=#{poundage},
+		percentage=#{percentage},
+		agreement=#{agreement},
+		status=#{status},
+		add_time=#{add_time}
+		where id=#{id}
+	</update>
+
+	<delete id="delBusiness" parameterType="int">
+		delete from dt_business_type where id=#{0}
+	</delete>
+
+
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+	<select id="countApoProvince" parameterType="ApoProvinceVo"
+		resultType="int">
+		select count(*) from dt_apo_province where 1=1
+
+	</select>
+	<select id="queryApoProvince" parameterType="ApoProvinceVo"
+		resultType="ApoProvince">
+		select * from dt_apo_province dt1,
+		(
+		select top 20 province_id from
+		(
+		select top(#{index}*20) province_id from dt_apo_province where 1=1
+		order by province_id desc
+		)dt order by dt.province_id asc
+		)dt2 where dt1.province_id=dt2.province_id order by dt1.province_id
+	</select>
+
+	<select id="getApoProvince" parameterType="string" resultType="ApoProvince">
+		select * from dt_apo_province where province_id=#{0}
+	</select>
+
+	<insert id="addApoProvince" parameterType="ApoProvince">
+		insert into dt_apo_province
+		(province_id,code,name,fullname)
+		values (#{province_id},#{code},#{name},#{fullname})
+	</insert>
+
+
+	<update id="updApoProvince" parameterType="ApoProvince">
+		update dt_apo_province set
+		code=#{code},
+		name=#{name},
+		fullname=#{fullname}
+		where province_id=#{province_id}
+	</update>
+
+	<delete id="delApoProvince" parameterType="int">
+		delete from dt_apo_province where province_id=#{0}
+	</delete>
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+	<select id="countApoCity" parameterType="ApoCityVo" resultType="int">
+		select count(*) from dt_apo_city where 1=1
+
+	</select>
+	<select id="queryApoCity" parameterType="ApoCityVo" resultType="ApoCity">
+		select * from dt_apo_city dt1,
+		(
+		select top 20 city_id from
+		(
+		select top(#{index}*20) city_id from dt_apo_city where 1=1
+		order by
+		city_id desc
+		)dt order by dt.city_id asc
+		)dt2 where dt1.city_id=dt2.city_id order by dt1.city_id
+	</select>
+
+	<select id="getApoCity" parameterType="int" resultType="ApoCity">
+		select * from dt_apo_city where city_id=#{0}
+	</select>
+
+	<insert id="addApoCity" parameterType="ApoCity">
+		insert into dt_apo_city
+		(city_id,code,name,province_id)
+		values (#{city_id},#{code},#{name},#{province_id})
+	</insert>
+
+
+	<update id="updApoCity" parameterType="ApoCity">
+		update dt_apo_city set
+		code=#{code},
+		name=#{name},
+		province_id=#{province_id}
+		where city_id=#{city_id}
+	</update>
+
+	<delete id="delApoCity" parameterType="int">
+		delete from dt_apo_city where city_id=#{0}
+	</delete>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+	<select id="countApoCounty" parameterType="ApoCountyVo"
+		resultType="int">
+		select count(*) from dt_apo_county where 1=1
+
+	</select>
+	<select id="queryApoCounty" parameterType="ApoCountyVo"
+		resultType="ApoCounty">
+		select * from dt_apo_county dt1,
+		(
+		select top 20 county_id from
+		(
+		select top(#{index}*20) county_id from dt_apo_county where 1=1
+		order by
+		county_id desc
+		)dt order by dt.county_id asc
+		)dt2 where dt1.county_id=dt2.county_id order by dt1.county_id
+	</select>
+
+	<select id="getApoCounty" parameterType="int" resultType="ApoCounty">
+		select * from dt_apo_county where county_id=#{0}
+	</select>
+
+	<insert id="addApoCounty" parameterType="ApoCounty">
+		insert into dt_apo_county
+		(county_id,code,name,city_id)
+		values (#{county_id},#{code},#{name},#{city_id})
+	</insert>
+
+
+	<update id="updApoCounty" parameterType="ApoCounty">
+		update dt_apo_county set
+		code=#{code},
+		name=#{name},
+		city_id=#{city_id}
+		where county_id=#{county_id}
+	</update>
+
+	<delete id="delApoCounty" parameterType="int">
+		delete from dt_apo_county where county_id=#{0}
+	</delete>
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+	<select id="countApoTown" parameterType="ApoTownVo" resultType="int">
+		select count(*) from dt_apo_town where 1=1
+
+	</select>
+	<select id="queryApoTown" parameterType="ApoTownVo" resultType="ApoTown">
+		select * from dt_apo_town dt1,
+		(
+		select top 20 town_id from
+		(
+		select top(#{index}*20) town_id from dt_apo_town where 1=1
+		order by
+		town_id desc
+		)dt order by dt.town_id asc
+		)dt2 where dt1.town_id=dt2.town_id order by dt1.town_id
+	</select>
+
+	<select id="getApoTown" parameterType="int" resultType="ApoTown">
+		select * from dt_apo_town where town_id=#{0}
+	</select>
+
+	<insert id="addApoTown" parameterType="ApoTown">
+		insert into dt_apo_town
+		(town_id,code,name,county_id)
+		values (#{town_id},#{code},#{name},#{county_id})
+	</insert>
+
+
+	<update id="updApoTown" parameterType="ApoTown">
+		update dt_apo_town set
+		code=#{code},
+		name=#{name},
+		county_id=#{county_id}
+		where town_id=#{town_id}
+	</update>
+
+	<delete id="delApoTown" parameterType="int">
+		delete from dt_apo_town where town_id=#{0}
+	</delete>
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+	<select id="countApoVillage" parameterType="ApoVillageVo"
+		resultType="int">
+		select count(*) from dt_apo_village where 1=1
+
+	</select>
+	<select id="queryApoVillage" parameterType="ApoVillageVo"
+		resultType="ApoVillage">
+		<!-- SELECT * FROM ( SELECT TOP ( 20 * #{index} ) ROW_NUMBER() OVER ( ORDER 
+			BY dt_apo_village.code DESC ) AS rownum , * FROM dt_apo_village ) AS temp 
+			WHERE temp.rownum > ( 20 * ( #{index} - 1 ) ) ORDER BY temp.code -->
+
+
+
+		select * from dt_apo_village dt1,
+		(
+		select top 20 code from
+		(
+		select top(#{index}*20) code from dt_apo_village where 1=1
+		order by
+		code desc
+		)dt order by dt.code asc
+		)dt2 where dt1.code=dt2.code order by dt1.code
+	</select>
+
+	<select id="getApoVillage" parameterType="int" resultType="ApoVillage">
+		select * from dt_apo_village where code=#{0}
+	</select>
+
+	<insert id="addApoVillage" parameterType="ApoVillage">
+		insert into dt_apo_village
+		(code,name,town_id)
+		values (#{code},#{name},#{town_id})
+	</insert>
+
+
+	<update id="updApoVillage" parameterType="ApoVillage">
+		update dt_apo_village set
+		name=#{name},
+		town_id=#{town_id}
+		where code=#{code}
+	</update>
+
+	<delete id="delApoVillage" parameterType="int">
+		delete from dt_apo_village where code=#{0}
+	</delete>
+
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="findProvince" resultType="ApoProvince">
+		select * from dt_apo_province where 1=1
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="findCityByProvince" parameterType="string"
+		resultType="ApoCity">
+		select * from dt_apo_city where province_id=#{0}
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="findCountyByCity" parameterType="string" resultType="ApoCounty">
+		select * from dt_apo_county where city_id=#{0}
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="findTownByCounty" parameterType="string" resultType="ApoTown">
+		select * from dt_apo_town where county_id=#{0}
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="findVillageByTown" parameterType="string"
+		resultType="ApoVillage">
+		select * from dt_apo_village where town_id=#{0}
+	</select>
+
+
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="findCityByProvinceId" parameterType="string"
+		resultType="ApoCity">
+		select * from dt_apo_city dt1,
+		(
+		select top 20 city_id from
+		(
+		select top(#{index}*20) city_id from dt_apo_city where 1=1
+		<if test='province_id!=null and province_id!="" '>
+			and province_id=#{province_id}
+		</if>
+		order by city_id desc
+		)dt order by dt.city_id asc
+		)dt2 where dt1.city_id=dt2.city_id order by dt1.city_id
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="countCityByProvinceId" parameterType="ApoCityVo"
+		resultType="int">
+		select count(*) from dt_apo_city where province_id=#{province_id}
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="findCountyByCityId" parameterType="string"
+		resultType="ApoCounty">
+		select * from dt_apo_county dt1,
+		(
+		select top 20 county_id from
+		(
+		select top(#{index}*20) county_id from dt_apo_county where 1=1
+		<if test='city_id!=null and city_id!="" '>
+			and city_id=#{city_id}
+		</if>
+		order by county_id desc
+		)dt order by dt.county_id asc
+		)dt2 where dt1.county_id=dt2.county_id order by dt1.county_id
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="countCountyByCityId" parameterType="ApoCountyVo"
+		resultType="int">
+		select count(*) from dt_apo_county where city_id=#{city_id}
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="findTownByCountyId" parameterType="string"
+		resultType="ApoTown">
+		select * from dt_apo_town dt1,
+		(
+		select top 20 town_id from
+		(
+		select top(#{index}*20) town_id from dt_apo_town where 1=1
+		<if test='county_id!=null and county_id!="" '>
+			and county_id=#{county_id}
+		</if>
+		order by town_id desc
+		)dt order by dt.town_id asc
+		)dt2 where dt1.town_id=dt2.town_id order by dt1.town_id
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="countTownByCountyId" parameterType="ApoTownVo"
+		resultType="int">
+		select count(*) from dt_apo_town where county_id=#{county_id}
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="findVillageByTownId" parameterType="string"
+		resultType="ApoVillage">
+		select * from dt_apo_village dt1,
+		(
+		select top 20 code from
+		(
+		select top(#{index}*20) code from dt_apo_village where 1=1
+		<if test='town_id!=null and town_id!="" '>
+			and town_id=#{town_id}
+		</if>
+		order by code desc
+		)dt order by dt.code asc
+		)dt2 where dt1.code=dt2.code order by dt1.code
+	</select>
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+	<select id="countVillageByTownId" parameterType="ApoVillageVo"
+		resultType="int">
+		select count(*) from dt_apo_village where town_id=#{town_id}
+	</select>
+
+
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoSfz" parameterType="ApoSfzVo" resultType="int">
+select count(*) from dt_apo_sfz where 1=1
+
+</select>
+<select id="queryApoSfz" parameterType="ApoSfzVo" resultType="ApoSfz">
+select * from dt_apo_sfz dt1,
+(
+	select top 20 code from 
+	(
+		select top(#{index}*20) code from dt_apo_sfz  where 1=1
+		order by code desc
+	)dt order by dt.code asc
+)dt2 where dt1.code=dt2.code order by dt1.code
+</select>
+
+<select id="getApoSfz" parameterType="int" resultType="ApoSfz">
+select * from dt_apo_sfz where code=#{0}
+</select>
+
+<insert id="addApoSfz" parameterType="ApoSfz">
+insert into dt_apo_sfz 
+(code,name)
+values (#{code},#{name})
+</insert>
+
+
+<update id="updApoSfz" parameterType="ApoSfz">
+update dt_apo_sfz set 
+name=#{name}
+where code=#{code}
+</update>
+
+<delete id="delApoSfz" parameterType="int">
+delete from dt_apo_sfz where code=#{0}
+</delete>
+
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoSite" parameterType="ApoSiteVo" resultType="int">
+select count(*) from dt_apo_site where 1=1
+		<if test="name != null and name != ''">
+			and name like '%${name}%'
+		</if>
+		<if test="shop_status != null and shop_status != '-1'">
+			and shop_status=#{shop_status}
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+</select>
+
+<select id="queryApoSite" parameterType="ApoSiteVo" resultType="ApoSite">
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_apo_site   where  1=1 
+		
+		<if test="name != null and name != ''">
+			and name like '%${name}%'
+		</if>
+		<if test="shop_status != null and shop_status != '-1'">
+			and shop_status=#{shop_status}
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+<select id="getApoSite" parameterType="int" resultType="ApoSite">
+select * from dt_apo_site where id=#{0}
+</select>
+
+<insert id="addApoSite" parameterType="ApoSite">
+insert into dt_apo_site 
+(name,area,area_code,area_level,parent_id,status,remark,shop_status,
+shop_min_number,shop_number,url,add_time,site_banner)
+values (#{name},#{area},#{area_code},#{area_level},#{parent_id},#{status},#{remark},#{shop_status},#{shop_min_number},
+#{shop_number},#{url},#{add_time},#{site_banner})
+</insert>
+
+<update id="updApoSite" parameterType="ApoSite">
+update dt_apo_site set 
+name=#{name},
+area=#{area},
+area_code=#{area_code},
+area_level=#{area_level},
+parent_id=#{parent_id},
+status=#{status},
+remark=#{remark},
+shop_status=#{shop_status},
+shop_min_number=#{shop_min_number},
+shop_number=#{shop_number},
+url=#{url},
+add_time=#{add_time},
+site_banner=#{site_banner}
+where id=#{id}
+</update>
+
+<delete id="delApoSite" parameterType="int">
+delete from dt_apo_site where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoSiteContent" parameterType="ApoSiteContentVo" resultType="int">
+select count(*) from dt_apo_site_content where 1=1
+<if test="site_id != null and site_id != ''">
+			and site_id=#{site_id}
+		</if>
+		<if test="content_type != null and content_type != '-1'">
+			and content_type=#{content_type}
+		</if>
+</select>
+
+<select id="queryApoSiteContent" parameterType="ApoSiteContentVo" resultType="ApoSiteContent">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_apo_site_content   where  1=1 
+		
+		<if test="site_id != null and site_id != ''">
+			and site_id=#{site_id}
+		</if>
+		<if test="content_type != null and content_type != '-1'">
+			and content_type=#{content_type}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+<select id="getApoSiteContent" parameterType="int" resultType="ApoSiteContent">
+select * from dt_apo_site_content where id=#{0}
+</select>
+
+<insert id="addApoSiteContent" parameterType="ApoSiteContent">
+insert into dt_apo_site_content 
+(site_id,navigation_id,content_type,content_value,update_time,remark)
+values (#{site_id},#{navigation_id},#{content_type},#{content_value},#{update_time},#{remark})
+</insert>
+
+<update id="updApoSiteContent" parameterType="ApoSiteContent">
+update dt_apo_site_content set 
+site_id=#{site_id},
+navigation_id=#{navigation_id},
+content_type=#{content_type},
+content_value=#{content_value},
+update_time=#{update_time},
+remark=#{remark}
+where id=#{id}
+</update>
+
+<delete id="delApoSiteContent" parameterType="int">
+delete from dt_apo_site_content where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoScreen" parameterType="ApoScreenVo" resultType="int">
+select count(*) from dt_apo_screen where 1=1
+<if test="name != null and name != ''">
+	and name like '%${name}%'
+</if>
+<if test="type != null and type != '-1'">
+	and type=#{type}
+</if>
+</select>
+
+<select id="queryApoScreen" parameterType="ApoScreenVo" resultType="ApoScreen">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_apo_screen   where  1=1 
+		
+		<if test="name != null and name != ''">
+			and name like '%${name}%'
+		</if>
+		<if test="type != null and type != '-1'">
+			and type=#{type}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+<select id="getApoScreen" parameterType="int" resultType="ApoScreen">
+select * from dt_apo_screen where id=#{0}
+</select>
+
+<insert id="addApoScreen" parameterType="ApoScreen">
+insert into dt_apo_screen 
+(code,name,type,sort_id)
+values (#{code},#{name},#{type},#{sort_id})
+</insert>
+
+<update id="updApoScreen" parameterType="ApoScreen">
+update dt_apo_screen set 
+code=#{code},
+name=#{name},
+type=#{type},
+sort_id=#{sort_id}
+where id=#{id}
+</update>
+
+<delete id="delApoScreen" parameterType="int">
+delete from dt_apo_screen where id=#{0}
+</delete>
+
+
+<!-- ///////////////////////////////////// -->
+<select id="countChannel" parameterType="ChannelVo" resultType="int">
+select count(*)  from dt_channel  where 1=1
+<if test="name != null and name != ''">
+	and name like '%${name}%'
+</if>
+<if test="title != null and title != ''">
+	and title like '%${title}%'
+</if>
+</select>
+
+<select id="queryChannel" parameterType="ChannelVo" resultType="Channel">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_channel   where  1=1 
+		
+		<if test="name != null and name != ''">
+			and name like '%${name}%'
+		</if>
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getChannel" parameterType="int" resultType="Channel">
+select * from dt_channel where id=#{0}
+</select>
+
+<delete id="delChannel" parameterType="int">
+delete from dt_channel where id=#{0}
+</delete>
+<insert id="addChannel" parameterType="Channel">
+insert into dt_channel
+(site_id,name,title,is_albums,is_attach,is_spec,sort_id)
+values(#{site_id},#{name},#{title},#{is_albums},#{is_attach},
+#{is_spec},#{sort_id})
+</insert>
+<update id="updChannel" parameterType="Channel">
+ update dt_channel set
+ site_id=#{site_id},
+ name=#{name},
+ title=#{title},
+ is_albums=#{is_albums},
+ is_attach=#{is_attach},
+ is_spec=#{is_spec},
+ sort_id=#{sort_id}
+ where  id=#{id}
+ 
+</update>
+
+
+
+<!-- ///////////////////////////////////// -->
+<select id="countChannelField" parameterType="ChannelFieldVo" resultType="int">
+select count(*)  from dt_channel_field  where 1=1
+<if test="channel_id != null and channel_id != ''">
+	and channel_id=#{channel_id}
+</if>
+<if test="field_id != null and field_id != ''">
+	and field_id=#{field_id}
+</if>
+</select>
+
+<select id="queryChannelField" parameterType="ChannelFieldVo" resultType="ChannelField">
+
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_channel_field   where  1=1 
+		
+		<if test="channel_id != null and channel_id != ''">
+			and channel_id=#{channel_id}
+		</if>
+		<if test="field_id != null and field_id != ''">
+			and field_id=#{field_id}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getChannelField" parameterType="int" resultType="ChannelField">
+select * from dt_channel_field where id=#{0}
+</select>
+
+<delete id="delChannelField" parameterType="int">
+delete from dt_channel_field where id=#{0}
+</delete>
+<insert id="addChannelField" parameterType="ChannelField">
+insert into dt_channel_field
+(channel_id,field_id)
+values(#{channel_id},#{field_id})
+</insert>
+<update id="updChannelField" parameterType="ChannelField">
+ update dt_channel_field set
+ channel_id=#{channel_id},
+ field_id=#{field_id}
+ where  id=#{id}
+ 
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countChannelSite" parameterType="ChannelSiteVo" resultType="int">
+select count(*)  from dt_channel_site  where 1=1
+<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="name != null and name != ''">
+			and name  like '%${name}%'
+		</if>
+		<if test="company != null and company != ''">
+			and company  like '%${company}%'
+		</if>
+		<if test="tel != null and tel != ''">
+			and tel  like '%${tel}%'
+		</if>
+</select>
+
+<select id="queryChannelSite" parameterType="ChannelSiteVo" resultType="ChannelSite">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_channel_site   where  1=1 
+		
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="name != null and name != ''">
+			and name  like '%${name}%'
+		</if>
+		<if test="company != null and company != ''">
+			and company  like '%${company}%'
+		</if>
+		<if test="tel != null and tel != ''">
+			and tel  like '%${tel}%'
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getChannelSite" parameterType="int" resultType="ChannelSite">
+select * from dt_channel_site where id=#{0}
+</select>
+
+<delete id="delChannelSite" parameterType="int">
+delete from dt_channel_site where id=#{0}
+</delete>
+<insert id="addChannelSite" parameterType="ChannelSite">
+insert into dt_channel_site
+(title,build_path,templet_path,domain,name,logo,company,address,tel,fax,email,crod,copyright,seo_title,seo_keyword,seo_description,is_mobile,is_default,sort_id)
+values(#{title},#{build_path},#{templet_path},#{domain},#{name},
+#{logo},#{company},#{address},#{tel},#{fax},#{email},#{crod},#{copyright},#{seo_title},#{seo_keyword},#{seo_description},#{is_mobile},#{is_default},#{sort_id})
+</insert>
+<update id="updChannelSite" parameterType="ChannelSite">
+update dt_channel_site set
+title=#{title},
+build_path=#{build_path},
+templet_path=#{templet_path},
+domain=#{domain},
+name=#{name},
+logo=#{logo},
+company=#{company},
+address=#{address},
+tel=#{tel},
+fax=#{fax},
+email=#{email},
+crod=#{crod},
+copyright=#{copyright},
+seo_title=#{seo_title},
+seo_keyword=#{seo_keyword},
+seo_description=#{seo_description},
+is_mobile=#{is_mobile},
+is_default=#{is_default},
+sort_id=#{sort_id}
+where  id=#{id}
+ 
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countChannelSpec" parameterType="ChannelSpecVo" resultType="int">
+select count(*)  from dt_channel_spec  where 1=1
+<if test="channel_id != null and channel_id != ''">
+			and channel_id=#{channel_id}
+</if>
+<if test="spec_id != null and spec_id != ''">
+	and spec_id=#{spec_id}
+</if>
+</select>
+
+<select id="queryChannelSpec" parameterType="ChannelSpecVo" resultType="ChannelSpec">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_channel_spec   where  1=1 
+		
+		<if test="channel_id != null and channel_id != ''">
+			and channel_id=#{channel_id}
+		</if>
+		<if test="spec_id != null and spec_id != ''">
+			and spec_id=#{spec_id}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getChannelSpec" parameterType="int" resultType="ChannelSpec">
+select * from dt_channel_spec where id=#{0}
+</select>
+
+<delete id="delChannelSpec" parameterType="int">
+delete from dt_channel_spec where id=#{0}
+</delete>
+<insert id="addChannelSpec" parameterType="ChannelSpec">
+insert into dt_channel_spec
+(channel_id,spec_id)
+values(#{channel_id},#{spec_id})
+</insert>
+<update id="updChannelSpec" parameterType="ChannelSpec">
+ update dt_channel_spec set
+ channel_id=#{channel_id},
+ spec_id=#{spec_id}
+ where  id=#{id}
+ 
+</update>
+
+
+
+<select id="getGoodsFirstCategory" resultType="Category" >
+
+	select id,title from dt_article_category where type=0 and parent_id=0
+
+</select>
+
+<select id="getCategorysByParentId" resultType="Category" parameterType="int">
+
+	select id,title from dt_article_category where parent_id=#{parent_id}
+
+</select>
+
+<select id="getCategoryById" resultType="Category" parameterType="int">
+
+	select id,title from dt_article_category where id=#{id}
+
+</select>
+
+
+
+<!-- //dt_mb_category(用户自定义分类模板表) -->
+<select id="countMbCategory" parameterType="MbCategoryVo" resultType="int">
+select count(*)  from dt_mb_category  where 1=1
+<if test="category_id != null and category_id != ''">
+	and category_id=#{category_id}
+</if>
+<if test="mb_content != null and mb_content != ''">
+	and mb_content like '%${mb_content}%'
+</if>
+<if test="status != null and status != '-1'">
+	and status=#{status}
+</if>
+</select>
+
+<select id="queryMbCategory" parameterType="MbCategoryVo" resultType="MbCategory">
+
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_mb_category   where  1=1 
+		
+		<if test="category_id != null and category_id != ''">
+			and category_id=#{category_id}
+		</if>
+		<if test="mb_content != null and mb_content != ''">
+			and mb_content like '%${mb_content}%'
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getMbCategory" parameterType="int" resultType="MbCategory">
+select * from dt_mb_category where id=#{0}
+</select>
+<insert id="addMbCategory" parameterType="MbCategory">
+insert into dt_mb_category
+(category_id,mb_content,status,add_time,update_time,remark)
+values(#{category_id},#{mb_content},#{status},#{add_time},#{update_time},#{remark})
+</insert>
+<update id="updMbCategory" parameterType="MbCategory">
+update dt_mb_category set
+category_id=#{category_id},
+mb_content=#{mb_content},
+status=#{status},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delMbCategory" parameterType="int">
+delete from dt_mb_category where id=#{0}
+</delete>
+
+
+<!-- 2.5.28.dt_mb_article(用户发布内容模板表) -->
+<select id="countMbArticle" parameterType="MbArticleVo" resultType="int">
+select count(*)  from dt_mb_article  where 1=1
+<if test="category_id != null and category_id != ''">
+			and category_id=#{category_id}
+		</if>
+		<if test="keywords != null and keywords != ''">
+			and keywords like '%${keywords}%'
+		</if>
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+</select>
+
+<select id="queryMbArticle" parameterType="MbArticleVo" resultType="MbArticle">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_mb_article   where  1=1 
+		
+		<if test="category_id != null and category_id != ''">
+			and category_id=#{category_id}
+		</if>
+		<if test="keywords != null and keywords != ''">
+			and keywords like '%${keywords}%'
+		</if>
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getMbArticle" parameterType="int" resultType="MbArticle">
+select * from dt_mb_article where id=#{0}
+</select>
+<insert id="addMbArticle" parameterType="MbArticle">
+insert into dt_mb_article
+(category_id,keywords,title,img_url,seo_title,seo_keywords,seo_description,tags,zhaiyao,sub_title,goods_no,brand,goods_describe,matter,content,content_wap,status,add_time,update_time,remark)
+values(#{category_id},#{keywords},#{title},#{img_url},#{seo_title},#{seo_keywords},#{seo_description},#{tags},#{zhaiyao},#{sub_title},#{goods_no},#{brand},#{goods_describe},#{matter},#{content},#{content_wap},#{status},#{add_time},#{update_time},#{remark})
+</insert>
+<update id="updMbArticle" parameterType="MbArticle">
+update dt_mb_article set
+category_id=#{category_id},
+keywords=#{keywords},
+title=#{title},
+img_url=#{img_url},
+seo_title=#{seo_title},
+seo_keywords=#{seo_keywords},
+seo_description=#{seo_description},
+tags=#{tags},
+zhaiyao=#{zhaiyao},
+sub_title=#{sub_title},
+goods_no=#{goods_no},
+brand=#{brand},
+goods_describe=#{goods_describe},
+matter=#{matter},
+content=#{content},
+content_wap=#{content_wap},
+status=#{status},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delMbArticle" parameterType="int">
+delete from dt_mb_article where id=#{0}
+</delete>
+
+
+<!-- //dt_mb_images(内容所用图片模板表) -->
+<select id="countMbImages" parameterType="MbImagesVo" resultType="int">
+select count(*)  from dt_mb_images  where 1=1
+<if test="category_id != null and category_id != ''">
+	and category_id=#{category_id}
+</if>
+<if test="keywords != null and keywords != ''">
+	and keywords like '%${keywords}%'
+</if>
+<if test="status != null and status != '-1'">
+	and status=#{status}
+</if>
+</select>
+
+<select id="queryMbImages" parameterType="MbImagesVo" resultType="MbImages">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_mb_images   where  1=1 
+		
+		<if test="category_id != null and category_id != ''">
+			and category_id=#{category_id}
+		</if>
+		<if test="keywords != null and keywords != ''">
+			and keywords like '%${keywords}%'
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+<select id="getMbImages" parameterType="int" resultType="MbImages">
+select * from dt_mb_images where id=#{0}
+</select>
+<insert id="addMbImages" parameterType="MbImages">
+insert into dt_mb_images
+(category_id,keywords,url,status,add_time,update_time,remark)
+values(#{category_id},#{keywords},#{url},#{status},#{add_time},#{update_time},#{remark})
+</insert>
+<update id="updMbImages" parameterType="MbImages">
+update dt_mb_images set
+category_id=#{category_id},
+keywords=#{keywords},
+url=#{url},
+status=#{status},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delMbImages" parameterType="int">
+delete from dt_mb_images where id=#{0}
+</delete>
+
+
+<!-- //dt_mb_yewu(分类所用业务模板表) -->
+<select id="countMbYewu" parameterType="MbYewuVo" resultType="int">
+select count(*)  from dt_mb_yewu  where 1=1
+<if test="category_id != null and category_id != ''">
+	and category_id=#{category_id}
+</if>
+<if test="status != null and status != '-1'">
+	and status=#{status}
+</if>
+</select>
+
+<select id="queryMbYewu" parameterType="MbYewuVo" resultType="MbYewu">
+SELECT id,category_id,status,add_time,update_time,remark FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_mb_yewu   where  1=1 
+		
+		<if test="category_id != null and category_id != ''">
+			and category_id=#{category_id}
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getMbYewu" parameterType="int" resultType="MbYewu">
+select id,category_id,status,add_time,update_time,remark from dt_mb_yewu where id=#{0}
+</select>
+<insert id="addMbYewu" parameterType="MbYewu">
+insert into dt_mb_yewu
+(category_id,status,add_time,update_time,remark)
+values(#{category_id},#{status},#{add_time},#{update_time},#{remark})
+</insert>
+<update id="updMbYewu" parameterType="MbYewu">
+update dt_mb_yewu set
+category_id=#{category_id},
+status=#{status},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delMbYewu" parameterType="int">
+delete from dt_mb_yewu where id=#{0}
+</delete>
+
+
+<!-- //dt_mb_goods_matter(用户发布内容购买须知等模板表) -->
+<select id="countMbGoodsMatter" parameterType="MbGoodsMatterVo" resultType="int">
+select count(*)  from dt_mb_goods_matter  where 1=1
+<if test="category_id != null and category_id != ''">
+	and category_id=#{category_id}
+</if>
+<if test="status != null and status != '-1'">
+	and status=#{status}
+</if>
+</select>
+
+<select id="queryMbGoodsMatter" parameterType="MbGoodsMatterVo" resultType="MbGoodsMatter">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_mb_goods_matter   where  1=1 
+		
+		<if test="category_id != null and category_id != ''">
+			and category_id=#{category_id}
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getMbGoodsMatter" parameterType="int" resultType="MbGoodsMatter">
+select * from dt_mb_goods_matter where id=#{0}
+</select>
+<insert id="addMbGoodsMatter" parameterType="MbGoodsMatter">
+insert into dt_mb_goods_matter
+(channel_id,category_id,p_title,c_title,c_content,status)
+values(#{channel_id},#{category_id},#{p_title},#{c_title},#{c_content},#{status})
+</insert>
+<update id="updMbGoodsMatter" parameterType="MbGoodsMatter">
+update dt_mb_goods_matter set
+channel_id=#{channel_id},
+category_id=#{category_id},
+p_title=#{p_title},
+c_title=#{c_title},
+c_content=#{c_content},
+status=#{status}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delMbGoodsMatter" parameterType="int">
+delete from dt_mb_goods_matter where id=#{0}
+</delete>
+
+
+<!-- 2.5.33.	dt_mb_shop_matter(店铺总须知模板表) -->
+<select id="countMbShopMatter" parameterType="MbShopMatterVo" resultType="int">
+select count(*)  from dt_mb_shop_matter  where 1=1
+<if test="category_id != null and category_id != ''">
+	and category_id=#{category_id}
+</if>
+<if test="status != null and status != '-1'">
+	and status=#{status}
+</if>
+</select>
+
+<select id="queryMbShopMatter" parameterType="MbShopMatterVo" resultType="MbShopMatter">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_mb_shop_matter   where  1=1 
+		
+		<if test="category_id != null and category_id != ''">
+			and category_id=#{category_id}
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getMbShopMatter" parameterType="int" resultType="MbShopMatter">
+select * from dt_mb_shop_matter where id=#{0}
+</select>
+<insert id="addMbShopMatter" parameterType="MbShopMatter">
+insert into dt_mb_shop_matter
+(category_id,p_title,c_title,c_content,status)
+values(#{category_id},#{p_title},#{c_title},#{c_content},#{status})
+</insert>
+<update id="updMbShopMatter" parameterType="MbShopMatter">
+update dt_mb_shop_matter set
+category_id=#{category_id},
+p_title=#{p_title},
+c_title=#{c_title},
+c_content=#{c_content},
+status=#{status}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delMbShopMatter" parameterType="int">
+delete from dt_mb_shop_matter where id=#{0}
+</delete>
+
+
+<!-- //dt_mb_channel_matter(店铺所用各业务频道须知等模板表) -->
+<select id="countMbChannelMatter" parameterType="MbChannelMatterVo" resultType="int">
+select count(*)  from dt_mb_channel_matter  where 1=1
+<if test="channel_id != null and channel_id != ''">
+	and channel_id=#{channel_id}
+</if>
+<if test="status != null and status != '-1'">
+	and status=#{status}
+</if>
+</select>
+
+<select id="queryMbChannelMatter" parameterType="MbChannelMatterVo" resultType="MbChannelMatter">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_mb_channel_matter   where  1=1 
+		
+		<if test="channel_id != null and channel_id != ''">
+			and channel_id=#{channel_id}
+		</if>
+		<if test="status != null and status != '-1'">
+			and status=#{status}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getMbChannelMatter" parameterType="int" resultType="MbChannelMatter">
+select * from dt_mb_channel_matter where id=#{0}
+</select>
+<insert id="addMbChannelMatter" parameterType="MbChannelMatter">
+insert into dt_mb_channel_matter
+(channel_id,p_title,c_title,c_content,status)
+values(#{channel_id},#{p_title},#{c_title},#{c_content},#{status})
+</insert>
+<update id="updMbChannelMatter" parameterType="MbChannelMatter">
+update dt_mb_channel_matter set
+channel_id=#{channel_id},
+p_title=#{p_title},
+c_title=#{c_title},
+c_content=#{c_content},
+status=#{status}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delMbChannelMatter" parameterType="int">
+delete from dt_mb_channel_matter where id=#{0}
+</delete>
+
+
+<!-- //dt_banktype（支持绑定银行卡/三方账户类型信息表） -->
+
+<select id="countBanktype" parameterType="BanktypeVo" resultType="int">
+select count(*)  from dt_banktype  where 1=1
+<if test="title != null and title != ''">
+	and title like '%${title}%'
+</if>
+<if test="type != null and type != '-1'">
+	and type=#{type}
+</if>
+<if test="poundage_type != null and poundage_type != '-1'">
+	and poundage_type=#{poundage_type}
+</if>
+<if test="is_lock != null and is_lock != '-1'">
+	and is_lock=#{is_lock}
+</if>
+</select>
+
+<select id="queryBanktype" parameterType="BanktypeVo" resultType="Banktype">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_banktype   where  1=1 
+		
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="type != null and type != '-1'">
+			and type=#{type}
+		</if>
+		<if test="poundage_type != null and poundage_type != '-1'">
+			and poundage_type=#{poundage_type}
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getBanktype" parameterType="int" resultType="Banktype">
+select * from dt_banktype where id=#{0}
+</select>
+<insert id="addBanktype" parameterType="Banktype">
+insert into dt_banktype
+(title,img_url,remark,type,poundage_type,poundage_amount,min_amount,max_amount,sort_id,is_lock,colour,bin)
+values(#{title},#{img_url},#{remark},#{type},#{poundage_type},#{poundage_amount},#{min_amount},#{max_amount},#{sort_id},#{is_lock},#{colour},#{bin})
+</insert>
+<update id="updBanktype" parameterType="Banktype">
+update dt_banktype set
+title=#{title},
+img_url=#{img_url},
+remark=#{remark},
+type=#{type},
+poundage_type=#{poundage_type},
+poundage_amount=#{poundage_amount},
+min_amount=#{min_amount},
+max_amount=#{max_amount},
+sort_id=#{sort_id},
+is_lock=#{is_lock},
+colour=#{colour},
+bin=#{bin}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delBanktype" parameterType="int">
+delete from dt_banktype where id=#{0}
+</delete>
+
+
+<!-- //dt_user_oauth_app（用户第三方登录类型信息表） -->
+<select id="countUserOauthApp" parameterType="UserOauthAppVo" resultType="int">
+select count(*)  from dt_user_oauth_app  where 1=1
+<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="remark != null and remark != ''">
+			and remark like '%${remark}%'
+		</if>
+		<if test="is_mobile != null and is_mobile != '-1'">
+			and is_mobile=#{is_mobile}
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+</select>
+
+<select id="queryUserOauthApp" parameterType="UserOauthAppVo" resultType="UserOauthApp">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_oauth_app   where  1=1 
+		
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="remark != null and remark != ''">
+			and remark like '%${remark}%'
+		</if>
+		<if test="is_mobile != null and is_mobile != '-1'">
+			and is_mobile=#{is_mobile}
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getUserOauthApp" parameterType="int" resultType="UserOauthApp">
+select * from dt_user_oauth_app where id=#{0}
+</select>
+<insert id="addUserOauthApp" parameterType="UserOauthApp">
+insert into dt_user_oauth_app
+(title,img_url,app_id,app_key,remark,sort_id,is_mobile,is_lock,api_path,is_del)
+values(#{title},#{img_url},#{app_id},#{app_key},#{remark},#{sort_id},#{is_mobile},#{is_lock},#{api_path},#{is_del})
+</insert>
+<update id="updUserOauthApp" parameterType="UserOauthApp">
+update dt_user_oauth_app set
+title=#{title},
+img_url=#{img_url},
+app_id=#{app_id},
+app_key=#{app_key},
+remark=#{remark},
+sort_id=#{sort_id},
+is_mobile=#{is_mobile},
+is_lock=#{is_lock},
+api_path=#{api_path},
+is_del=#{is_del}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserOauthApp" parameterType="int">
+delete from dt_user_oauth_app where id=#{0}
+</delete>
+
+<!-- //2.1.22.	dt_groups(系统分组信息表) -->
+<select id="countGroups" parameterType="GroupsVo" resultType="int">
+select count(*)  from dt_groups  where 1=1
+<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="is_default != null and is_default != '-1'">
+			and is_default=#{is_default}
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+</select>
+
+<select id="queryGroups" parameterType="GroupsVo" resultType="Groups">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_groups   where  1=1 
+		
+		<if test="title != null and title != ''">
+			and title like '%${title}%'
+		</if>
+		<if test="is_default != null and is_default != '-1'">
+			and is_default=#{is_default}
+		</if>
+		<if test="is_lock != null and is_lock != '-1'">
+			and is_lock=#{is_lock}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getGroups" parameterType="int" resultType="Groups">
+select * from dt_groups where id=#{0}
+</select>
+<insert id="addGroups" parameterType="Groups">
+insert into dt_groups
+(title,icon,type,is_lock,is_default)
+values(#{title},#{icon},#{type},#{is_lock},#{is_default})
+</insert>
+<update id="updGroups" parameterType="Groups">
+update dt_groups set
+title=#{title},
+icon=#{icon},
+type=#{type},
+is_lock=#{is_lock},
+is_default=#{is_default}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delGroups" parameterType="int">
+delete from dt_groups where id=#{0}
+</delete>
+
+
+<!-- //dt_supplier_scorerule(信誉规则) -->
+<select id="countRules" parameterType="ScoreruleVo" resultType="int">
+select count(*) from dt_supplier_scorerule  where 1=1
+</select>
+
+<select id="queryRules" parameterType="ScoreruleVo" resultType="Scorerule">
+SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_supplier_scorerule  where  1=1 
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+<select id="getRules" parameterType="int" resultType="Scorerule">
+select * from dt_supplier_scorerule where id=#{0}
+</select>
+
+<update id="updRules" parameterType="Scorerule">
+update dt_supplier_scorerule set
+ebusiness_type=#{ebusiness_type},
+param_key=#{param_key},
+param_value=#{param_value},
+start_count=#{start_count},
+title=#{title},
+descr=#{descr}
+where  id=#{id}
+ 
+</update>
+
+<insert id="addRules" parameterType="Scorerule">
+insert into dt_supplier_scorerule
+values(#{ebusiness_type},#{param_key},#{param_value},#{start_count},#{title},#{descr})
+</insert>
+
+<delete id="delRules" parameterType="int">
+delete from dt_supplier_scorerule where id=#{0}
+</delete>
+
+</mapper>

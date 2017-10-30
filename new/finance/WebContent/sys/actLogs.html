@@ -1,0 +1,114 @@
+#@layout() #define main()
+
+<section class="content-header">
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i>系统管理</a></li>
+		<li>操作日志</li>
+	</ol>
+</section>
+
+<!-- 主要内容 -->
+<section class="invoice">
+	<div class="row">
+		<div class="col-md-12 finance_time finance_time_padding_left">
+			<div class="form-group">
+				<label class="control-label"></label>
+				<div class="input-group">
+					<select class="form-control">
+						<option selected="" value="全部">全部</option>
+						<option value="最近一天">最近一天</option>
+						<option value="最近一周">最近一周</option>
+						<option value="最近一月">最近一月</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>操作人</th>
+						<th>操作时间</th>
+						<th>操作信息</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1</td>
+						<td>admin/张悦</td>
+						<td>2017-03-16 15:49:14</td>
+						<td>账户：admin系统登录</td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td>admin/张悦</td>
+						<td>2017-03-16 15:49:14</td>
+						<td>账户：admin系统登录</td>
+					</tr>
+					<!--<tr>
+										<td colspan="20" class="table_no_data">
+											暂时没有数据 !
+										</td>
+									</tr>-->
+				</tbody>
+			</table>
+
+			<div class="page_box">
+				<div class="pull-left">
+					<span>共2条数据，当前显示第 1 页 ，到</span> <input class="page_number"
+						type="text" value="1" />
+					<button class="btn btn-default">GO</button>
+				</div>
+
+				<div class="pull-right">
+					<a class="page_btn">首页</a> <a class="page_btn">下一页</a> <a
+						class="page_btn">上一页</a> <a class="page_btn">尾页</a>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</section>
+
+
+
+#include("../common/_js.html")
+<script type="text/javascript">
+			$(function() {
+				/*时间插件调用
+				 */
+				$('.datepicker').datepicker({
+					format: 'yyyy-mm-dd',
+					autoclose: true,
+					language: 'cn'
+				});
+				
+				/*
+				 * 弹出窗
+				 */
+				$(".table").on("click",".rechargeDetails",function(event){//查看详情
+					event.preventDefault();
+					layer.open({
+						type: 2,
+						title:"充值单详情",
+						btn: ['关闭'], //按钮
+						shade: 0.8,
+						shadeClose: true,
+						skin: 'layui-layer-rim', //加上边框
+						area: ['850px', '500px'], //宽高
+						content: $(this).attr("href"),
+						yes:function(){
+							layer.closeAll();
+						}
+					});
+				});
+
+			});
+		</script>
+
+
+
+
+#end

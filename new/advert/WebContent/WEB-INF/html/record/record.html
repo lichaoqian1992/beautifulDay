@@ -1,0 +1,237 @@
+#@layout() 
+#define main()
+<div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>操作记录</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="/advert/toMain">系统管理</a>
+                        </li>
+                        <li>
+                            <strong>操作记录</strong>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-lg-2">
+    
+                </div>
+            </div>
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            
+                            <div class="row adds-header ibox-content form-horizontal">
+                                <div class="row adds-header form-horizontal">
+                                     <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">操作人：</label>
+                                            <div class="col-sm-8">
+                                                <select id="userName" class="form-control">
+                                                	<option value="">不限</option>
+								                    #for(x:aa)
+								                   	<option value="#(x.user_name)">#(x.user_name)</option>
+								                   	#end
+								                 </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">业务名称：</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="businessName" placeholder="业务名称"> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">操作类型：</label>
+                                            <div class="col-sm-8">
+                                                <select id="operationType" class="form-control">
+                                                	<option value="">不限</option>
+                                                	<option value="添加">添加</option>
+                                                	<option value="更新">更新</option>
+                                                	<option value="删除">删除</option>
+                                                	<option value="其他">其他</option>
+								                 </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button type="button" id="searchPl" class="btn btn-primary pull-right" onclick="getRecord('1')">查询</button>
+                                    </div>
+                                </div>
+                                
+                                <table class="table table-striped table-bordered table-hover " >
+                                    <thead>
+                                        <tr>
+                                            <th>编号</th>
+                                            <th>操作人</th>
+                                            <th>业务名称</th>
+                                            <th>业务id</th>
+                                            <th>操作类型</th>
+                                            <th>操作描述</th>
+                                            <th>操作时间</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="placeList">
+                                       
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="row adds-header ibox-content form-horizontal">
+                            	<div class="pull-left">
+									<span id="pageInfo"></span>
+									<input class="page_number" type="text" value="1" id="toPage" style="width:48px;height: 34px; text-align: center; border:1px solid #31AD8B; border-radius:4px;"/>&nbsp
+									<button class="btn btn-primary pull-right" onclick="toPage()">GO</button>
+								</div>	
+								<div class="pull-right">
+									<input id="firstPage" type="hidden"/>
+									<input id="nowPage" type="hidden"/>
+									<input id="lastPage" type="hidden"/>
+									<a class="page_btn btn btn-primary" onclick="firstPage()">首页</a>
+									<a class="page_btn btn btn-primary" onclick="upPage()">上一页</a>
+									<a class="page_btn btn btn-primary" onclick="nextPage()">下一页</a>
+									<a class="page_btn btn btn-primary" onclick="lastPage()">尾页</a>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="#(ctx)/static/js/jquery-2.1.1.min.js"></script>
+            
+            <script>
+            	
+            	$(function(){
+            		getRecord(1);
+            	});
+            
+            	function getRecord(page){
+            		var txt = "";
+            		if(page == undefined){
+            			page = 1;
+            		}
+            		$.ajax({
+            			type:"get",
+            			url:"/advert/record/getRecord",
+            			dataType:"json",
+            			data:{
+            				userName:$("#userName").val(),
+            				businessName:$("#businessName").val(),
+            				operationType:$("#operationType").val(),
+            				page:page
+            			},success:function(data){
+            				if(data.list.length>0){
+            					for(var i=0;i<data.list.length;i++){
+               					txt +="<tr><td>"
+               							+(i+1)+
+               							"</td><td>"
+               							+data.list[i].user_name+
+               							"</td><td>"
+               							+data.list[i].business_name+
+               							"</td><td>"
+               							+data.list[i].business_id+
+               							"</td><td>"
+               							+data.list[i].operation_type+
+               							"</td><td>"
+               							+data.list[i].content+
+               							"</td><td>"
+               							+data.list[i].create_time+
+               							"</td></tr>";
+            					}
+            					$("#placeList").html(txt);
+                				$("#firstPage").val(1);
+                				$("#nowPage").val(data.pageNumber);
+                				$("#lastPage").val(data.totalPage);
+                				$("#pageInfo").html("共"+data.totalRow+"条数据，当前显示第 "+data.pageNumber+" 页  ，到");
+            				}else{
+            					layer.msg('查无数据！', {
+                    				icon: 1,
+                    				time: 1000
+                    			});
+            				}
+            			}
+            			
+            		});
+            	}
+            	//点击首页
+            	function firstPage(){
+            		if(1 == $("#nowPage").val()){
+            			layer.msg('已经是第一页', {
+            				icon: 1,
+            				time: 1000
+            			});
+            			return;
+            		}
+            		getRecord(1);
+            	}
+            	//点击上一页
+            	function upPage(){
+            		var page = $("#nowPage").val()*1-1;
+            		if(page<1){
+            			layer.msg('已经是第一页', {
+            				icon: 1,
+            				time: 1000
+            			});
+            			return;
+            		}
+            		getRecord(page);
+            	}
+            	//点击下一页
+            	function nextPage(){
+            		var page = $("#nowPage").val()*1+1;
+            		if(page>$("#lastPage").val()){
+            			layer.msg('已经是最后一页', {
+            				icon: 1,
+            				time: 1000
+            			});
+            			return;
+            		}
+            		getRecord(page);
+            	}
+            	//点击末页
+            	function lastPage(){
+            		var page = $("#lastPage").val();
+            		if(page == $("#nowPage").val()){
+            			layer.msg('已经是最后一页', {
+            				icon: 1,
+            				time: 1000
+            			});
+            			return;
+            		}
+            		getRecord(page);
+            	}
+            	//跳转到指定页
+            	function toPage(){   
+            		var page =parseInt($("#toPage").val().trim());
+     
+            		if(page>$("#lastPage").val()){
+            			layer.msg('没有那么多页', {
+            				icon: 1,
+            				time: 1000
+            			});
+            			return;
+            		}
+            		if(page<=0){
+            			layer.msg('页码不能小于1', {
+            				icon: 1,
+            				time: 1000
+            			});
+            			return;
+            		}
+            		if(page == $("#nowPage").val()){
+            			layer.msg('已经是第'+page+'页', {
+            				icon: 1,
+            				time: 1000
+            			});
+            			return;
+            		}
+            		getRecord(page);
+            	}
+            </script>
+            
+            #end
+            

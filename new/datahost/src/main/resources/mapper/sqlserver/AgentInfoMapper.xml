@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.datahost.mapper.sqlserver.AgentInfoMapper" >
+    
+    <select id="getAgentInfo" parameterType="com.manji.datahost.model.sqlserver.agent.AgentInfo" resultType="com.manji.datahost.model.sqlserver.agent.AgentInfo"  >
+    select b.user_name,a.agent_area,a.address,a.telephone,a.qq,a.name as agent_name,a.mobile,a.email,a.begin_time,a.end_time,a.state
+	from dt_user_role_agentinfo a left join dt_users b on a.user_id=b.id 
+	left join dt_user_role_shopinfo c on b.id=c.user_id
+	left join dt_user_accountinfo d on a.user_id=d.user_id and d.role_type='Agent'
+	where 1=1
+	<if test="user_name != null and user_name != ''"> and b.user_name=#{user_name}</if>
+	<if test="mobile != null and mobile != ''"> and b.mobile=#{mobile}</if>
+	<if test="name != null and name != ''"> and c.name=#{name}</if>
+    </select> 
+	
+	<select id="getUserAccount" parameterType="com.manji.datahost.vo.PageVo" resultType="com.manji.datahost.model.sqlserver.user.UserAccount"  >
+    SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0, 
+		 	user_id,value,old_value,new_value,add_time,order_no,type,remark from dt_user_amount_log where user_id=#{user_id}
+		 )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+    </select>
+    <select id="countUserAccount" parameterType="int" resultType="int">
+	select count(*) from dt_user_amount_log where user_id=#{user_id}
+	</select>
+    
+</mapper>

@@ -1,0 +1,80 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+			<div class="sidebar-collapse">
+				<ul class="nav" id="side-menu">
+					<li class="nav-header">
+						<div class="dropdown profile-element">
+							<span> <img alt="image" class="img-circle"
+								src="#(ctx)/static/img/profile_small.jpg" />
+							</span> <a data-toggle="dropdown" class="dropdown-toggle"
+								href="index.html"> <span class="clear"> <span
+									class="block m-t-xs"> <strong class="font-bold"
+										id="user-name">#(session.user.user_name)</strong>
+								</span> 
+								<!-- <span class="text-muted text-xs block" id="lv-privilege">超级管理员
+										<b class="caret"></b>
+								</span> -->
+							</span>
+							</a>
+							<!-- <ul class="dropdown-menu animated fadeInRight m-t-xs">
+								<li><a href="javascript:;">修改头像</a></li>
+								<li><a href="javascript:;">个人资料</a></li>
+								<li class="divider"></li>
+								<li><a href="javascript:;">安全退出</a></li>
+							</ul> -->
+						</div>
+						<div class="logo-element">广告管理系统</div>
+
+					</li>
+					<li>
+						<a href="/advert/index"><i class="fa fa fa-globe"></i>
+						<span class="nav-label">首页</span><span class="fa arrow"></span></a>
+					</li>
+					 <li><a href="javascript:;"><i class="fa fa fa-globe"></i>
+							<span class="nav-label">频道管理</span><span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level">
+						#for(x:session.menu)
+						#if(x.parent_id == 2)
+							<li><a href="#(x.action_key)">#(x.name)</a></li>
+							<!-- <li><a href="/advert/channel/add">新增频道</a></li> -->
+						#end
+						#end
+						</ul></li>
+					<li><a href="javascript:;"><i class="fa fa fa-globe"></i>
+							<span class="nav-label">广告位管理</span><span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level">
+						#for(x:session.menu)
+						#if(x.parent_id == 3)
+							<li><a href="#(x.action_key)">#(x.name)</a></li>
+							<!-- <li><a href="/advert/place">广告位列表</a></li>
+							<li><a href="/advert/place/add">新增广告位</a></li> -->
+						#end
+						#end
+						</ul></li>
+					<li><a href="javascript:;"><i class="fa fa fa-globe"></i>
+							<span class="nav-label">广告管理</span><span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level">
+						#for(x:session.menu)
+						#if(x.parent_id == 4)
+						<li><a href="#(x.action_key)">#(x.name)</a></li>
+							<!-- <li><a href="/advert/advertise">广告列表</a></li>
+							<li><a href="/advert/advertise/add">新增广告</a></li> -->
+						#end
+						#end
+						</ul></li>	
+					<li><a href="javascript:;"><i class="fa fa fa-globe"></i>
+							<span class="nav-label">系统管理</span><span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level">
+						#for(x:session.menu)
+						#if(x.parent_id == 5)
+						<li><a href="#(x.action_key)">#(x.name)</a></li>
+							<!-- <li><a href="/advert/file/add">文件上传</a></li>
+							<li><a href="/advert/file">文件上传记录</a></li>
+							<li><a href="/advert/record">操作记录</a></li> -->
+						#end
+						#end
+						</ul>
+					</li>
+				</ul>
+
+			</div>
+		</nav>

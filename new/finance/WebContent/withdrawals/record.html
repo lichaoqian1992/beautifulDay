@@ -1,0 +1,144 @@
+#@layout() 
+#define main()
+
+<style>
+	td{
+		white-space: nowrap;
+		padding: 0 5px;
+	}
+	.dtd{
+		position:relative;
+		left:-1px;
+		top: 0;
+		background:#fff;
+	}
+</style>
+
+			<section class="content-header">
+					<ol class="breadcrumb">
+						<li><a href="#"><i class="fa fa-dashboard"></i> 提现管理</a></li>
+						<li>
+							 提现完成
+						</li>
+					</ol>
+				</section>
+
+				<!-- 主要内容 -->
+				<section class="invoice">
+					<div class="row">
+						<div class="col-md-12 finance_time finance_time_padding_left">
+							<div class="form-group">
+								<label class="control-label">提现订单号：</label>
+								<div class="input-group">
+									<input type="text" class="form-control" id="withdrawalsNo">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label">用户类型：</label>
+								<div class="input-group">
+									<select class="form-control" id="userRoleType">
+										<option selected="" value="">全部状态</option>
+										<option value="Shop">商家</option>
+										<option value="Buyer">用户</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label">提现状态：</label>
+								<div class="input-group">
+									<select class="form-control" id="confirmwhether">
+								        <option selected="" value="">全部状态</option>
+								        <option value="1">提现成功</option>
+								        <option value="2">提现失败</option>
+								        <option value="0">人工处理中</option>
+								        <option value="系统处理中" disabled="disabled">系统处理中</option>
+							       </select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label">时间：</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker" data-date-end-date="0d" placeholder="开始时间" id="startTime">
+								</div>
+							</div>
+							<div class="date_striping">-</div>
+							<div class="form-group">
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker datepickerlast" id="endTime" data-date-end-date="0d" placeholder="截止时间">
+								</div>
+							</div>
+							<button class="btn btn-primary" onclick="findpram()">查询</button>
+							<button class="btn btn-danger pull-right" id="excl">导出</button>
+							<button class="btn btn-danger pull-right batchOk">提现成功</button>
+						</div>
+						<div class="col-md-12">
+							<div id="tableDiv" style="width:100%;overflow-x:auto;">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class="dtd"><input type="checkbox" id="checkAll"></th>
+										<th class="dtd">编号</th>
+										<th class="dtd">提现单号</th>
+										<th class="dtd">提现用户类型</th>
+										<th class="dtd">提现账号</th>
+										<th>商家名称</th>
+										<th>开户人</th>
+										<th>开户行</th>
+										<th>所属支行</th>
+										<th>银行账号</th>
+										<th>提现金额（元）</th>
+										<th>金融手续费</th>
+										<th>到账金额</th>
+										<th>提交时间</th>
+										<th>完成时间</th>
+										<th>状态</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody id="userAccountData">
+
+								</tbody>
+							</table>
+							</div>
+							<div class="page_box">
+								<div class="pull-left">
+									<span>共<span id="number">0</span>条数据，当前显示第<span id="page">1</span> 页  ，到</span>
+									<input class="page_number" type="text" value="1" id="findpages" />
+									<button class="btn btn-default" onclick="findpram(this)">GO</button>
+								</div>
+
+								<div class="pull-right">
+									<a class="page_btn" onclick="findpram(this)">首页</a>
+									<a class="page_btn" onclick="findpram(this)">下一页</a>
+									<a class="page_btn" onclick="findpram(this)">上一页</a>
+									<a class="page_btn" onclick="findpram(this)">尾页</a>
+								</div>
+
+								<div class="pull-left" style="margin-left: 20px">
+									<span>共选择:<span id="xzb">0</span>笔 ，总金额:<span id="xzy">0.00</span>元</span>
+								</div>
+								<!--保存总页数-->
+								<input type="hidden"  id="totalpage" value="0"/>
+							</div>
+						</div>
+					</div>
+
+				</section>
+
+
+
+		<div class="layer_box">
+
+		</div>
+#include("../common/_js.html")
+<script src="../static/js/withdrawals/record.js" type="text/javascript"></script>
+
+
+#end
