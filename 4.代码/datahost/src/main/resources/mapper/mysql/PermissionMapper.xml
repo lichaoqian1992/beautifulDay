@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.datahost.mapper.mysql.PermissionMapper" >
+    <!-- <resultMap id="BaseResultMap" type="com.manji.datahost.model.mysql.Permission" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+    </resultMap> -->
+    
+    <sql id="Base_Column_List" >
+        state_value
+    </sql>
+
+    <select id="getConnector" parameterType="string" resultType="int"  >
+       SELECT 
+       <include refid="Base_Column_List" />
+       FROM mj_connector where interface_name=#{interface_name}
+    </select>
+
+   <!--  <select id="getOne" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+        SELECT 
+       <include refid="Base_Column_List" />
+       FROM user
+       WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.neo.entity.UserEntity" >
+       INSERT INTO 
+            users
+            (userName,passWord,user_sex) 
+        VALUES
+            (#{userName}, #{passWord}, #{userSex})
+    </insert>
+    
+    <update id="update" parameterType="com.neo.entity.UserEntity" >
+       UPDATE 
+            users 
+       SET 
+        <if test="userName != null">userName = #{userName},</if>
+        <if test="passWord != null">passWord = #{passWord},</if>
+        nick_name = #{nickName}
+       WHERE 
+            id = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.Long" >
+       DELETE FROM
+             users 
+       WHERE 
+             id =#{id}
+    </delete> -->
+
+</mapper>
