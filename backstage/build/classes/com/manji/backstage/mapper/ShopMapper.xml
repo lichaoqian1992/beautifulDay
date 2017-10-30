@@ -1,0 +1,1041 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.ShopMapper" >
+
+
+	<!-- dt_user_role_shopinfo	用户商家信息表 -->
+
+<select id="countShopInfo" parameterType="ShopInfoVo" resultType="int">
+select count(*) from dt_user_role_shopinfo where 1=1
+	<if test="is_del != '-1'">
+		and is_del = #{is_del}	
+	</if>	
+	<if test="user_id != null and user_id != ''">
+	   	and  user_id=#{user_id}
+	</if>
+	<if test="name != null and name != ''">
+		and name like '%${name}%'	
+	</if>
+</select>
+<select id="queryShopInfo" parameterType="ShopInfoVo" resultType="ShopInfo">
+
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_role_shopinfo   where  1=1 
+	<if test="is_del != '-1'">
+		and is_del = #{is_del}	
+	</if>	
+	<if test="user_id != null and user_id != ''">
+	   	and  user_id=#{user_id}
+	</if>
+	<if test="name != null and name != ''">
+		and name like '%${name}%'	
+	</if>
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+<select id="getShopInfo" parameterType="int" resultType="ShopInfo">
+select * from dt_user_role_shopinfo where id=#{0}
+</select>
+
+<update id="updShopInfo" parameterType="ShopInfo">
+update dt_user_role_shopinfo set
+user_id =#{user_id},
+name =#{name},
+content =#{content},
+TAG =#{TAG},
+pc_logo =#{pc_logo},
+wap_logo =#{wap_logo},
+mobile =#{mobile},
+address =#{address},
+weburl =#{weburl},
+area =#{area},
+longitude =#{longitude},
+latitude =#{latitude},
+is_distribution =#{is_distribution},
+distribution_area =#{distribution_area},
+distribution_distance =#{distribution_distance},
+is_express =#{is_express},
+express_types =#{express_types},
+is_local_transaction =#{is_local_transaction},
+is_booking =#{is_booking},
+is_plugins =#{is_plugins},
+review_times =#{review_times},
+review_score =#{review_score},
+service_review_score =#{service_review_score},
+pack_review_score =#{pack_review_score},
+distribution_review_score =#{distribution_review_score},
+state =#{state},
+remark =#{remark},
+update_time =#{update_time},
+is_del =#{is_del},
+damage_times =#{damage_times},
+damage_money =#{damage_money},
+damage_date =#{damage_date},
+pics =#{pics},
+group_id =#{group_id},
+main_business =#{main_business}, 
+is_sign_up =#{is_sign_up},
+add_time =#{add_time},
+hot =#{hot},
+[from_value] =#{from_value},
+online_content =#{online_content},
+yysj =#{yysj}, 
+dpkg =#{dpkg},
+percentage =#{percentage},
+matter =#{matter},
+is_balance =#{is_balance}
+where id=#{id}
+</update>
+
+<insert id="addShopInfo" parameterType="ShopInfo">
+insert into dt_user_role_shopinfo
+(group_id,user_id,name,content,pics,TAG,pc_logo,wap_logo,mobile,online_content,address,weburl,area,longitude,latitude,is_distribution,distribution_area,distribution_distance,is_express,express_types,is_local_transaction,is_booking,is_plugins,review_times,review_score,service_review_score,pack_review_score,distribution_review_score,damage_times,damage_money,damage_date,state,
+remark,update_time,add_time,is_del,main_business,from_value,is_sign_up,hot,yysj,dpkg,percentage,matter,is_balance)
+values (#{group_id},#{user_id},#{name},#{content},#{pics},#{TAG},#{pc_logo},#{wap_logo},#{mobile},#{online_content},#{address},#{weburl},#{area},#{longitude},#{latitude},#{is_distribution},#{distribution_area},#{distribution_distance},#{is_express},#{express_types},#{is_local_transaction},#{is_booking},#{is_plugins},#{review_times},#{review_score},#{service_review_score},#{pack_review_score},#{distribution_review_score},#{damage_times},#{damage_money},#{damage_date},#{state},#{remark},#{update_time},#{add_time},#{is_del},#{main_business},#{from_value},#{is_sign_up},#{hot},#{yysj},#{dpkg},#{percentage},#{matter},#{is_balance})
+</insert>
+
+<delete id="delShopInfo" parameterType="int">
+delete from dt_user_role_shopinfo where id=#{0}
+</delete>
+
+	<!-- dt_user_role_shopinfo_temp	用户商家信息修改林纯表 -->
+
+<select id="countTempShopInfo" parameterType="TempShopInfoVo" resultType="int">
+select count(*) from dt_user_role_shopinfo_temp where 1=1
+  <if test="id != null and id != ''">
+   and  id=#{id}
+  </if>
+  <if test="user_id != null and user_id != ''">
+	   and  user_id=#{user_id}
+  </if>
+  <if test="name != null and name != ''">
+   	   and name like '%${name}%'
+  </if>
+</select>
+<select id="queryTempShopInfo" parameterType="TempShopInfoVo" resultType="TempShopInfo">
+select * from dt_user_role_shopinfo_temp dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_role_shopinfo_temp  where 1=1
+		<if test="id != null and id != ''">
+		   and  id=#{id}
+		</if>
+		<if test="user_id != null and user_id != ''">
+		   and  user_id=#{user_id}
+		</if>
+		<if test="name != null and name != ''">
+      	   and name like '%${name}%'
+    	</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getTempShopInfo" parameterType="int" resultType="TempShopInfo">
+select * from dt_user_role_shopinfo_temp where id=#{0}
+</select>
+
+<update id="updTempShopInfo" parameterType="TempShopInfo" >
+update dt_user_role_shopinfo_temp set
+recorded_id =#{recorded_id},
+group_id =#{group_id},
+user_id =#{user_id},
+name =#{name},
+content =#{content},
+TAG =#{TAG},
+pc_logo =#{pc_logo},
+wap_logo =#{wap_logo},
+mobile =#{mobile},
+address =#{address},
+weburl =#{weburl},
+area =#{area},
+is_distribution =#{is_distribution},
+distribution_area =#{distribution_area},
+distribution_distance =#{distribution_distance},
+is_express  =#{is_express},
+express_types =#{express_types},
+is_local_transaction =#{is_local_transaction},
+is_booking =#{is_booking},
+is_plugins =#{is_plugins},
+state =#{state},
+remark =#{remark},
+update_time =#{update_time},
+percentage =#{percentage}
+where id=#{id}
+</update>
+
+<insert id="addTempShopInfo" parameterType="TempShopInfo">
+insert into dt_user_role_shopinfo_temp
+(recorded_id,group_id,user_id,name,content,TAG,pc_logo,wap_logo,mobile,address,weburl,area,is_distribution,distribution_area,distribution_distance,is_express,express_types,is_local_transaction,is_booking,is_plugins,state,remark,update_time,percentage)
+values (#{recorded_id},#{group_id},#{user_id},#{name},#{content},#{TAG},#{pc_logo},#{wap_logo},#{mobile},#{address},#{weburl},#{area},#{is_distribution},#{distribution_area},#{distribution_distance},#{is_express},#{express_types},#{is_local_transaction},#{is_booking},#{is_plugins},#{state},#{remark},#{update_time},#{percentage})
+</insert>
+
+<delete id="delTempShopInfo" parameterType="int">
+delete from dt_user_role_shopinfo_temp where id=#{0}
+</delete>
+
+
+<!-- dt_business_user	用户业务申购信息表 -->
+
+<select id="countCooperate" parameterType="CooperateVo" resultType="int">
+select count(*) from dt_business_user where 1=1
+	<if test="status != '-1'">
+		and status = #{status}	
+	</if>	
+	<if test="user_id != '' and user_id != null">
+		and user_id = #{user_id}	
+	</if>
+	<if test="channel_id != '-1'">
+		and channel_id = #{channel_id}	
+	</if>	
+	<if test="is_del != '-1'">
+		and is_del = #{is_del}	
+	</if>	
+</select>
+<select id="queryCooperate" parameterType="CooperateVo" resultType="Cooperate">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, b.*,p.title from dt_business_user b left join dt_payment p on p.id=b.channel_id  where  1=1 
+	<if test="status != '-1'">
+		and status = #{status}	
+	</if>	
+	<if test="user_id != '' and user_id != null">
+		and user_id = #{user_id}	
+	</if>
+	<if test="channel_id != '-1'">
+		and channel_id = #{channel_id}	
+	</if>	
+	<if test="is_del != '-1'">
+		and is_del = #{is_del}	
+	</if>		
+order by b.id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+<select id="getCooperate" parameterType="int" resultType="Cooperate">
+select * from dt_business_user where id=#{0}
+</select>
+
+<insert id="addCooperate" parameterType="Cooperate" >
+insert into dt_business_user
+(user_id,user_role_type,user_role_value,name,call_index,channel_id,content,valid_time,deposit,poundage,percentage,user_deposit,user_poundage,user_percentage,agreement,user_agreement,status,add_time,update_time,remark,is_del,ywkg,ywms,ywgz)
+values(#{user_id},#{user_role_type},#{user_role_value},#{name},#{call_index},#{channel_id},#{content},#{valid_time},#{deposit},#{poundage},#{percentage},#{user_deposit},#{user_poundage},#{user_percentage},#{agreement},#{user_agreement},#{status},#{add_time},#{update_time},#{remark},#{is_del},#{ywkg},#{ywms},#{ywgz})
+</insert>
+
+<update id="updCooperate" parameterType="Cooperate" >
+update dt_business_user set
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+name=#{name},
+call_index=#{call_index},
+channel_id=#{channel_id},
+content=#{content},
+valid_time=#{valid_time},
+deposit=#{deposit},
+poundage=#{poundage},
+percentage=#{percentage},
+user_deposit=#{user_deposit},
+user_poundage=#{user_poundage},
+user_percentage=#{user_percentage},
+agreement=#{agreement},
+user_agreement=#{user_agreement},
+status=#{status},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark},
+is_del=#{is_del},
+ywkg=#{ywkg},
+ywms=#{ywms},
+ywgz=#{ywgz}
+where id=#{id}
+</update>
+<delete id="delCooperate" parameterType="int">
+delete from dt_business_user where id=#{0}
+</delete>
+
+
+
+<!-- dt_user_role_shopinfo_other	用户商家其他信息素材表 -->
+
+
+<select id="countOtherInfo" parameterType="OtherInfoVo" resultType="int">
+select count(*) from dt_user_role_shopinfo_other where 1=1
+		<if test="shop_id != null and shop_id != ''">
+	      and shop_id=#{shop_id}
+	    </if>
+		<if test="shop_user_id != null and shop_user_id != ''">
+	      and shop_user_id=#{shop_user_id}
+	    </if>
+	    <if test="title != null and title != ''">
+	      and title like '%${title}%'
+	    </if>
+</select>
+<select id="queryOtherInfo" parameterType="OtherInfoVo" resultType="OtherInfo">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_role_shopinfo_other   where  1=1 
+		<if test="shop_id != null and shop_id != ''">
+	      and shop_id=#{shop_id}
+	    </if>
+		<if test="shop_user_id != null and shop_user_id != ''">
+	      and shop_user_id=#{shop_user_id}
+	    </if>
+	    <if test="title != null and title != ''">
+	      and title like '%${title}%'
+	    </if>
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+<select id="getOtherInfo" parameterType="int" resultType="OtherInfo">
+select * from dt_user_role_shopinfo_other where id=#{0}
+</select>
+
+<insert id="addOtherInfo" parameterType="OtherInfo" >
+insert into dt_user_role_shopinfo_other
+(shop_id,shop_user_id,category_id,add_user_id,title,file_url,add_time,is_del)
+values(#{shop_id},#{shop_user_id},#{category_id},#{add_user_id},#{title},#{file_url},#{add_time},#{is_del})
+</insert>
+
+<update id="updOtherInfo" parameterType="OtherInfo" >
+update dt_user_role_shopinfo_other set
+shop_id=#{shop_id},
+shop_user_id=#{shop_user_id},
+category_id=#{category_id},
+add_user_id=#{add_user_id},
+title=#{title},
+file_url=#{file_url},
+add_time=#{add_time},
+is_del=#{is_del}
+where id=#{id}
+</update>
+
+<delete id="delOtherInfo" parameterType="int">
+delete from dt_user_role_shopinfo_other where id=#{0}
+</delete>
+
+
+
+<!-- dt_user_role_shopinfo_scope	用户商家经营分为表 -->
+
+<select id="countScopeInfo" parameterType="ScopeInfoVo" resultType="int">
+select count(*) from dt_user_role_shopinfo_scope where 1=1
+<if test="user_id != null and user_id != ''">
+		      and user_id=#{user_id}
+		    </if>
+			<if test="status != '-1'">
+		      and status=#{status}
+		    </if>
+</select>
+<select id="queryScopeInfo" parameterType="ScopeInfoVo" resultType="ScopeInfo">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_role_shopinfo_scope  where  1=1 
+			<if test="user_id != null and user_id != ''">
+		      and user_id=#{user_id}
+		    </if>
+			<if test="status != '-1'">
+		      and status=#{status}
+		    </if>
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+<select id="getScopeInfo" parameterType="int" resultType="ScopeInfo">
+select * from dt_user_role_shopinfo_scope where id=#{0}
+</select>
+
+<insert id="addScopeInfo" parameterType="ScopeInfo" >
+insert into dt_user_role_shopinfo_scope
+(user_id,user_role_type,user_role_value,scope_values,status,local_area)
+values(#{user_id},#{user_role_type},#{user_role_value},#{scope_values},#{status},#{local_area})
+</insert>
+
+<update id="updScopeInfo" parameterType="ScopeInfo">
+update dt_user_role_shopinfo_scope set
+user_id =#{user_id},
+user_role_type =#{user_role_type},
+user_role_value =#{user_role_value},
+scope_values =#{scope_values},
+status =#{status},
+local_area =#{local_area}
+where id=#{id}
+</update>
+
+<delete id="delScopeInfo" parameterType="int">
+delete from dt_user_role_shopinfo_scope where id=#{0}
+</delete>
+
+
+<!-- //dt_shop_brand(商家品牌)-->
+<select id="countShopBrand" parameterType="ShopBrandVo" resultType="int">
+select count(*)  from dt_shop_brand  where 1=1
+	<if test="brand_type != '-1'">
+		and brand_type = #{brand_type}	
+	</if>	
+	<if test="apply_type != '-1'">
+		and apply_type = #{apply_type}	
+	</if>	
+	<if test="state != '-1'">
+		and state = #{state}	
+	</if>	
+	<if test="shop_id != '' and shop_id != null">
+		and shop_id = #{shop_id}	
+	</if>	
+	<if test="name != null and name != ''">
+		and name like '%${name}%'	
+	</if>
+</select>
+
+<select id="queryShopBrand" parameterType="ShopBrandVo" resultType="ShopBrand">
+
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_shop_brand   where  1=1 
+	<if test="brand_type != '-1'">
+		and brand_type = #{brand_type}	
+	</if>	
+	<if test="apply_type != '-1'">
+		and apply_type = #{apply_type}	
+	</if>	
+	<if test="state != '-1'">
+		and state = #{state}	
+	</if>	
+	<if test="shop_id != '' and shop_id != null">
+		and shop_id = #{shop_id}	
+	</if>	
+	<if test="name != null and name != ''">
+		and name like '%${name}%'	
+	</if>
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getShopBrand" parameterType="int" resultType="ShopBrand">
+select * from dt_shop_brand where id=#{0}
+</select>
+<insert id="addShopBrand" parameterType="ShopBrand">
+insert into dt_shop_brand
+(shop_id,name,register_no,brand_type,logo,ascription_person,authorize_pics,authorize_time,
+sys_brandId,apply_type,state,is_del,add_time,update_time,remark)
+values(#{shop_id},#{name},#{register_no},#{brand_type},#{logo},#{ascription_person},#{authorize_pics},#{authorize_time},#{sys_brandId},#{apply_type},#{state},
+#{is_del},#{add_time},#{update_time},#{remark})
+</insert>
+<update id="updShopBrand" parameterType="ShopBrand">
+update dt_shop_brand set
+shop_id=#{shop_id},
+name=#{name},
+register_no=#{register_no},
+brand_type=#{brand_type},
+logo=#{logo},
+ascription_person=#{ascription_person},
+authorize_pics=#{authorize_pics},
+authorize_time=#{authorize_time},
+sys_brandId=#{sys_brandId},
+apply_type=#{apply_type},
+state=#{state},
+is_del=#{is_del},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delShopBrand" parameterType="int">
+delete from dt_shop_brand where id=#{0}
+</delete>
+
+
+<!-- //dt_shop_wuliumuban(商家物流模板) -->
+<select id="countShopWuliumuban" parameterType="ShopWuliumubanVo" resultType="int">
+select count(*)  from dt_shop_wuliumuban  where 1=1
+		<if test="shop_id != null and shop_id != ''">
+	      and shop_id=#{shop_id}
+	    </if>
+		<if test="is_del != '-1'">
+	      and is_del=#{is_del}
+	    </if>
+	    <if test="expenses_companyId != '-1'">
+	      and expenses_companyId=#{expenses_companyId}
+	    </if>
+	    <if test="name != null and name != ''">
+			and name like '%${name}%'	
+		</if>
+</select>
+
+<select id="queryShopWuliumuban" parameterType="ShopWuliumubanVo" resultType="ShopWuliumuban">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, p.*,e.title title  from dt_shop_wuliumuban p left join dt_express e on e.id=p.expenses_companyId where  1=1 
+		<if test="shop_id != null and shop_id != ''">
+	      and shop_id=#{shop_id}
+	    </if>
+		<if test="is_del != '-1'">
+	      and is_del=#{is_del}
+	    </if>
+	    <if test="expenses_companyId != '-1'">
+	      and expenses_companyId=#{expenses_companyId}
+	    </if>	
+	    <if test="name != null and name != ''">
+			and name like '%${name}%'	
+		</if>
+order by p.id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getShopWuliumuban" parameterType="int" resultType="ShopWuliumuban">
+select * from dt_shop_wuliumuban where id=#{0}
+</select>
+<insert id="addShopWuliumuban" parameterType="ShopWuliumuban">
+insert into dt_shop_wuliumuban
+(shop_id,name,expenses_companyId,is_del,add_time,update_time,remark)
+values(#{shop_id},#{name},#{expenses_companyId},#{is_del},#{add_time},#{update_time},#{remark})
+</insert>
+<update id="updShopWuliumuban" parameterType="ShopWuliumuban">
+update dt_shop_wuliumuban set
+shop_id=#{shop_id},
+name=#{name},
+expenses_companyId=#{expenses_companyId},
+is_del=#{is_del},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delShopWuliumuban" parameterType="int">
+delete from dt_shop_wuliumuban where id=#{0}
+</delete>
+
+
+<!-- //dt_shop_wuliumuban_item(商家物流模板明细) -->
+<select id="countShopWuliumubanItem" parameterType="ShopWuliumubanItemVo" resultType="int">
+select count(*)  from dt_shop_wuliumuban_item  where 1=1
+	<if test="shop_id != '' and shop_id != null">
+		and shop_id = #{shop_id}	
+	</if>
+	<if test="mb_id != '' and mb_id != null">
+		and mb_id = #{mb_id}	
+	</if>
+</select>
+
+<select id="queryShopWuliumubanItem" parameterType="ShopWuliumubanItemVo" resultType="ShopWuliumubanItem">
+
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_shop_wuliumuban_item   where  1=1 	
+	<if test="shop_id != '' and shop_id != null">
+		and shop_id = #{shop_id}	
+	</if>
+	<if test="mb_id != '' and mb_id != null">
+		and mb_id = #{mb_id}	
+	</if>	
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+<select id="getShopWuliumubanItem" parameterType="int" resultType="ShopWuliumubanItem">
+select * from dt_shop_wuliumuban_item where id=#{0}
+</select>
+<insert id="addShopWuliumubanItem" parameterType="ShopWuliumubanItem">
+insert into dt_shop_wuliumuban_item
+(shop_id,mb_id,send_area,type,start,start_price,augment,augment_price,is_free,free_price,is_all,add_time,update_time,remark)
+values(#{shop_id},#{mb_id},#{send_area},#{type},#{start},#{start_price},#{augment},#{augment_price},
+#{is_free},#{free_price},#{is_all},#{add_time},#{update_time},#{remark})
+</insert>
+<update id="updShopWuliumubanItem" parameterType="ShopWuliumubanItem">
+update dt_shop_wuliumuban_item set
+shop_id=#{shop_id},
+mb_id=#{mb_id},
+send_area=#{send_area},
+type=#{type},
+start=#{start},
+start_price=#{start_price},
+augment=#{augment},
+augment_price=#{augment_price},
+is_free=#{is_free},
+free_price=#{free_price},
+is_all=#{is_all},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delShopWuliumubanItem" parameterType="int">
+delete from dt_shop_wuliumuban_item where id=#{0}
+</delete>
+
+
+<!-- //dt_shop_zisong(商家自送) -->
+<select id="countShopZisong" parameterType="ShopZisongVo" resultType="int">
+select count(*) from dt_shop_zisong z left join dt_user_role_shopinfo r on r.id=z.shop_id  where 1=1
+	<if test="type != '-1'">
+		and type = #{type}	
+	</if>	
+	<if test="name != '' and name != null">
+		and name like '%${name}%'
+	</if>	
+	<if test="shop_id != null and shop_id != ''">
+		and shop_id = #{shop_id}	
+	</if>
+</select>
+
+<select id="queryShopZisong" parameterType="ShopZisongVo" resultType="ShopZisong">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, z.*,r.name from dt_shop_zisong z left join dt_user_role_shopinfo r on r.id=z.shop_id where  1=1
+	<if test="type != '-1'">
+		and type = #{type}	
+	</if>	
+	<if test="name != '' and name != null">
+		and name like '%${name}%'
+	</if>	
+	<if test="shop_id != null and shop_id != ''">
+		and shop_id = #{shop_id}	
+	</if>
+order by z.id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getShopZisong" parameterType="int" resultType="ShopZisong">
+select * from dt_shop_zisong where id=#{0}
+</select>
+<insert id="addShopZisong" parameterType="ShopZisong">
+insert into dt_shop_zisong
+(shop_id,type,area,city,is_free,free_price,add_time,update_time,remark)
+values(#{shop_id},#{type},#{area},#{city},#{is_free},#{free_price},#{add_time},#{update_time},#{remark})
+</insert>
+<update id="updShopZisong" parameterType="ShopZisong">
+update dt_shop_zisong set
+shop_id=#{shop_id},
+type=#{type},
+area=#{area},
+city=#{city},
+is_free=#{is_free},
+free_price=#{free_price},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delShopZisong" parameterType="int">
+delete from dt_shop_zisong where id=#{0}
+</delete>
+
+
+<!-- //dt_shop_expensesInfo（商家配送、退货信息表） -->
+<select id="countShopExpensesInfo" parameterType="ShopExpensesInfoVo" resultType="int">
+select count(*)  from dt_shop_expensesInfo  where 1=1
+	<if test="type != '-1'">
+		and type = #{type}	
+	</if>	
+	<if test="shop_id != '' and shop_id != null">
+		and shop_id = #{shop_id}	
+	</if>	
+	<if test="address != null and address != ''">
+		and address like '%${address}%'	
+	</if>
+	<if test="name != null and name != ''">
+		and name like '%${name}%'	
+	</if>
+</select>
+
+<select id="queryShopExpensesInfo" parameterType="ShopExpensesInfoVo" resultType="ShopExpensesInfo">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_shop_expensesInfo   where  1=1 
+	<if test="type != '-1'">
+		and type = #{type}	
+	</if>	
+	<if test="shop_id != '' and shop_id != null">
+		and shop_id = #{shop_id}	
+	</if>	
+	<if test="address != null and address != ''">
+		and address like '%${address}%'	
+	</if>
+	<if test="name != null and name != ''">
+		and name like '%${name}%'	
+	</if>
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getShopExpensesInfo" parameterType="int" resultType="ShopExpensesInfo">
+select * from dt_shop_expensesInfo where id=#{0}
+</select>
+<insert id="addShopExpensesInfo" parameterType="ShopExpensesInfo">
+insert into dt_shop_expensesInfo
+(shop_id,type,name,telephone,area_code,address,code,add_time,update_time,remark)
+values(#{shop_id},#{type},#{name},#{telephone},#{area_code},#{address},#{code},#{add_time},#{update_time},#{remark})
+</insert>
+<update id="updShopExpensesInfo" parameterType="ShopExpensesInfo">
+update dt_shop_expensesInfo set
+shop_id=#{shop_id},
+type=#{type},
+name=#{name},
+telephone=#{telephone},
+area_code=#{area_code},
+address=#{address},
+code=#{code},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delShopExpensesInfo" parameterType="int">
+delete from dt_shop_expensesInfo where id=#{0}
+</delete>
+
+
+<!-- //dt_business_sms(短信信息表) -->
+<select id="countBusinessSms" parameterType="BusinessSmsVo" resultType="int">
+select count(*)  from dt_business_sms  where 1=1
+	<if test="is_del != '-1'">
+		and is_del = #{is_del}	
+	</if>	
+	<if test="user_id != '' and user_id != null">
+		and user_id = #{user_id}	
+	</if>
+</select>
+
+<select id="queryBusinessSms" parameterType="BusinessSmsVo" resultType="BusinessSms">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_business_sms   where  1=1 
+	<if test="is_del != '-1'">
+		and is_del = #{is_del}	
+	</if>	
+	<if test="user_id != '' and user_id != null">
+		and user_id = #{user_id}	
+	</if>	
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getBusinessSms" parameterType="int" resultType="BusinessSms">
+select * from dt_business_sms where id=#{0}
+</select>
+<insert id="addBusinessSms" parameterType="BusinessSms">
+insert into dt_business_sms
+(user_id,user_role_type,user_role_value,sms_number,cust_money,sms_count_number,remark,is_del)
+values(#{user_id},#{user_role_type},#{user_role_value},#{sms_number},#{cust_money},#{sms_count_number},#{remark},#{is_del})
+</insert>
+<update id="updBusinessSms" parameterType="BusinessSms">
+update dt_business_sms set
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+sms_number=#{sms_number},
+cust_money=#{cust_money},
+sms_count_number=#{sms_count_number},
+remark=#{remark},
+is_del=#{is_del}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delBusinessSms" parameterType="int">
+delete from dt_business_sms where id=#{0}
+</delete>
+
+
+<!-- //dt_business_groupshop(托管店铺开关表) -->
+<select id="countBusinessGroupshop" parameterType="BusinessGroupshopVo" resultType="int">
+select count(*)  from dt_business_groupshop b left join dt_payment p on p.id=b.channel_id  where 1=1
+		<if test="type != '-1'">
+			and b.type = #{type}	
+		</if>
+		<if test="channel_id != '-1'">
+			and channel_id = #{channel_id}	
+		</if>
+		<if test="is_open != '-1'">
+			and is_open = #{is_open}	
+		</if>
+		<if test="notice_type != '-1'">
+			and notice_type = #{notice_type}	
+		</if>
+		<if test="is_del != '-1'">
+			and is_del = #{is_del}	
+		</if>	
+		<if test="shop_id != '' and shop_id != null">
+			and shop_id = #{shop_id}	
+		</if>	
+</select>
+
+<select id="queryBusinessGroupshop" parameterType="BusinessGroupshopVo" resultType="BusinessGroupshop">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, b.*,p.title  from dt_business_groupshop b left join dt_payment p on p.id=b.channel_id  where  1=1 
+		<if test="type != '-1'">
+			and b.type = #{type}	
+		</if>
+		<if test="channel_id != '-1'">
+			and channel_id = #{channel_id}	
+		</if>
+		<if test="is_open != '-1'">
+			and is_open = #{is_open}	
+		</if>
+		<if test="notice_type != '-1'">
+			and notice_type = #{notice_type}	
+		</if>
+		<if test="is_del != '-1'">
+			and is_del = #{is_del}	
+		</if>	
+		<if test="shop_id != '' and shop_id != null">
+			and shop_id = #{shop_id}	
+		</if>	
+order by b.id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getBusinessGroupshop" parameterType="int" resultType="BusinessGroupshop">
+select * from dt_business_groupshop where id=#{0}
+</select>
+<insert id="addBusinessGroupshop" parameterType="BusinessGroupshop">
+insert into dt_business_groupshop
+(groupshop_id,shop_id,type,channel_id,is_open,notice_type,add_time,update_time,is_del,remark)
+values(#{groupshop_id},#{shop_id},#{type},#{channel_id},#{is_open},#{notice_type},
+#{add_time},#{update_time},#{is_del},#{remark})
+</insert>
+<update id="updBusinessGroupshop" parameterType="BusinessGroupshop">
+update dt_business_groupshop set
+groupshop_id=#{groupshop_id},
+shop_id=#{shop_id},
+type=#{type},
+channel_id=#{channel_id},
+is_open=#{is_open},
+notice_type=#{notice_type},
+add_time=#{add_time},
+update_time=#{update_time},
+is_del=#{is_del},
+remark=#{remark}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delBusinessGroupshop" parameterType="int">
+delete from dt_business_groupshop where id=#{0}
+</delete>
+
+
+<!-- //dt_user_role_shopinfo_group(商家集团信身份表) -->
+<select id="countUserRoleShopinfoGroup" parameterType="UserRoleShopinfoGroupVo" resultType="int">
+select count(*)  from dt_user_role_shopinfo_group  where 1=1
+<if test="status != '-1'">
+	and status = #{status}	
+</if>	
+<if test="user_id != '' and user_id != null">
+	and user_id = #{user_id}	
+</if>
+</select>
+
+<select id="queryUserRoleShopinfoGroup" parameterType="UserRoleShopinfoGroupVo" resultType="UserRoleShopinfoGroup">
+
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_role_shopinfo_group   where  1=1 
+	<if test="status != '-1'">
+		and status = #{status}	
+	</if>	
+	<if test="user_id != '' and user_id != null">
+		and user_id = #{user_id}	
+	</if>	
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+<select id="getUserRoleShopinfoGroup" parameterType="int" resultType="UserRoleShopinfoGroup">
+select * from dt_user_role_shopinfo_group where id=#{0}
+</select>
+<insert id="addUserRoleShopinfoGroup" parameterType="UserRoleShopinfoGroup">
+insert into dt_user_role_shopinfo_group
+(user_id,user_role_type,user_role_value,group_name,manager_type,add_time,update_time,remark,status)
+values(#{user_id},#{user_role_type},#{user_role_value},#{group_name},#{manager_type},#{add_time},#{update_time},#{remark},#{status})
+</insert>
+<update id="updUserRoleShopinfoGroup" parameterType="UserRoleShopinfoGroup">
+update dt_user_role_shopinfo_group set
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+group_name=#{group_name},
+manager_type=#{manager_type},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark},
+status=#{status}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserRoleShopinfoGroup" parameterType="int">
+delete from dt_user_role_shopinfo_group where id=#{0}
+</delete>
+
+
+<!-- //dt_user_role_shopinfo_grouprelation(集团托管商家店铺关联表) -->
+<select id="countUserRoleShopinfoGrouprelation" parameterType="UserRoleShopinfoGrouprelationVo" resultType="int">
+select count(*)  from dt_user_role_shopinfo_grouprelation  where 1=1
+<if test="status != '-1'">
+	and status = #{status}	
+</if>	
+<if test="manager_type != '-1'">
+	and manager_type = #{manager_type}	
+</if>	
+<if test="shop_id != '' and shop_id != null">
+	and shop_id = #{shop_id}	
+</if>
+</select>
+
+<select id="queryUserRoleShopinfoGrouprelation" parameterType="UserRoleShopinfoGrouprelationVo" resultType="UserRoleShopinfoGrouprelation">
+
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_role_shopinfo_grouprelation   where  1=1 
+	<if test="status != '-1'">
+		and status = #{status}	
+	</if>	
+	<if test="manager_type != '-1'">
+		and manager_type = #{manager_type}	
+	</if>	
+	<if test="shop_id != '' and shop_id != null">
+		and shop_id = #{shop_id}	
+	</if>	
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+<select id="getUserRoleShopinfoGrouprelation" parameterType="int" resultType="UserRoleShopinfoGrouprelation">
+select * from dt_user_role_shopinfo_grouprelation where id=#{0}
+</select>
+<insert id="addUserRoleShopinfoGrouprelation" parameterType="UserRoleShopinfoGrouprelation">
+insert into dt_user_role_shopinfo_grouprelation
+(shop_id,manager_type,groupshop_id,status,add_time,update_time,remark,auditinfo)
+values(#{shop_id},#{manager_type},#{groupshop_id},#{status},#{add_time},#{update_time},#{remark},#{auditinfo})
+</insert>
+<update id="updUserRoleShopinfoGrouprelation" parameterType="UserRoleShopinfoGrouprelation">
+update dt_user_role_shopinfo_grouprelation set
+shop_id=#{shop_id},
+manager_type=#{manager_type},
+groupshop_id=#{groupshop_id},
+status=#{status},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark},
+auditinfo=#{auditinfo}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserRoleShopinfoGrouprelation" parameterType="int">
+delete from dt_user_role_shopinfo_grouprelation where id=#{0}
+</delete>
+
+
+<!-- //dt_user_role_shopinfo_matter(用户商家附加信息素材表) -->
+<select id="countUserRoleShopinfoMatter" parameterType="UserRoleShopinfoMatterVo" resultType="int">
+select count(*)  from dt_user_role_shopinfo_matter  where 1=1
+	<if test="status != '-1'">
+		and status = #{status}	
+	</if>	
+	<if test="is_edit != '-1'">
+		and is_edit = #{is_edit}	
+	</if>	
+	<if test="user_id != null and user_id != ''">
+     	and user_id=#{user_id}
+    </if>
+</select>
+
+<select id="queryUserRoleShopinfoMatter" parameterType="UserRoleShopinfoMatterVo" resultType="UserRoleShopinfoMatter">
+
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_role_shopinfo_matter   where  1=1 
+	<if test="status != '-1'">
+		and status = #{status}	
+	</if>	
+	<if test="is_edit != '-1'">
+		and is_edit = #{is_edit}	
+	</if>	
+	<if test="user_id != null and user_id != ''">
+     	and user_id=#{user_id}
+    </if>
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getUserRoleShopinfoMatter" parameterType="int" resultType="UserRoleShopinfoMatter">
+select * from dt_user_role_shopinfo_matter where id=#{0}
+</select>
+<insert id="addUserRoleShopinfoMatter" parameterType="UserRoleShopinfoMatter">
+insert into dt_user_role_shopinfo_matter
+(user_id,user_role_type,user_role_value,type,title,content,is_edit,status,add_time)
+values(#{user_id},#{user_role_type},#{user_role_value},#{type},#{title},#{content},#{is_edit},#{status},#{add_time})
+</insert>
+<update id="updUserRoleShopinfoMatter" parameterType="UserRoleShopinfoMatter">
+update dt_user_role_shopinfo_matter set
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+type=#{type},
+title=#{title},
+content=#{content},
+is_edit=#{is_edit},
+status=#{status},
+add_time=#{add_time}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserRoleShopinfoMatter" parameterType="int">
+delete from dt_user_role_shopinfo_matter where id=#{0}
+</delete>
+
+
+<select id="findExpress" parameterType="ShopWuliumubanVo" resultType="ShopWuliumuban">
+SELECT id,title FROM dt_express
+</select>
+
+<select id="findChannelList" parameterType="CooperateVo" resultType="Cooperate">
+SELECT id,title FROM dt_payment
+</select>
+
+
+
+
+
+
+
+</mapper>

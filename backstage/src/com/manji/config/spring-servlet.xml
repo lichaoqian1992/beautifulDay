@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<!-- 1. 数据源 : DriverManagerDataSource -->
+
+	<bean id="parentDataSource"
+		  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	</bean>
+
+
+	<!-- 本地数据源  -->
+	<!-- <bean id="BGMDataSource1" parent="parentDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+		<property name="url"
+			value="jdbc:sqlserver://localhost:1433;DatabaseName=backstage"></property>
+		<property name="username" value="sa"></property>
+		<property name="password" value="123456"></property>
+	</bean>
+	
+	<bean id="BGMDataSource2" parent="parentDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+		<property name="url"
+			value="jdbc:sqlserver://192.168.0.31;DatabaseName=manji"></property>
+		<property name="username" value="sa"></property>
+		<property name="password" value="Ljx520520"></property>
+	</bean>  -->
+
+
+	<!-- 开发环境数据源 -->
+
+	<!-- <bean id="BGMDataSource1" parent="parentDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+		<property name="url"
+				  value="jdbc:sqlserver://192.168.0.31:1433;DatabaseName=backstage"></property>
+		<property name="username" value="mjdev"></property>
+		<property name="password" value="546bkf@mj"></property>
+	</bean>
+
+	<bean id="BGMDataSource2" parent="parentDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+		<property name="url"
+				  value="jdbc:sqlserver://192.168.0.31;DatabaseName=manji"></property>
+		<property name="username" value="mjdev"></property>
+		<property name="password" value="546bkf@mj"></property>
+	</bean>  --> 
+
+	<!-- 测试环境数据源 -->
+
+<!-- 	<bean id="BGMDataSource1" parent="parentDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+		<property name="url"
+			value="jdbc:sqlserver://192.168.0.48:1433;DatabaseName=backstage"></property>
+		<property name="username" value="mjtest"></property>
+		<property name="password" value="happyCS233"></property>
+	</bean>
+
+	<bean id="BGMDataSource2" parent="parentDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+		<property name="url"
+			value="jdbc:sqlserver://192.168.0.48:1433;DatabaseName=manji"></property>
+		<property name="username" value="mjtest"></property>
+		<property name="password" value="happyCS233"></property>
+	</bean>  -->
+
+
+
+	<!-- 正式环境数据源  -->
+ 	 <bean id="BGMDataSource1" parent="parentDataSource">
+	     <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+	     <property name="url"
+	         value="jdbc:sqlserver://172.16.1.21:1433;DatabaseName=backstage"></property>
+	     <property name="username" value="mjuser"></property>
+	     <property name="password" value="78Gxtw@#Dysq"></property>
+	 </bean>
+	
+	 <bean id="BGMDataSource2" parent="parentDataSource">
+	     <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+	     <property name="url"
+	         value="jdbc:sqlserver://172.16.1.21:1433;DatabaseName=manji"></property>
+	     <property name="username" value="mjuser"></property>
+	     <property name="password" value="78Gxtw@#Dysq"></property>
+	 </bean> 
+
+	<!--平台数据源  -->
+	<!-- 	<bean id="BGMDataSource2" parent="parentDataSource">
+            <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+            <property name="url"
+                value="jdbc:sqlserver://219.153.12.171:1433;DatabaseName=manji"></property>
+            <property name="username" value="sa"></property>
+            <property name="password" value="Deyuan123456"></property>
+        </bean> -->
+
+
+
+
+	<!-- 初始化配置 -->
+	<bean id="dataSource" class="com.manji.backstage.datasource.DynamicDataSource">
+		<property name="defaultTargetDataSource" ref="BGMDataSource2"></property>
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry value-ref="BGMDataSource1" key="BGM"></entry>
+				<entry value-ref="BGMDataSource2" key="MANJI"></entry>
+			</map>
+		</property>
+
+	</bean>
+
+
+
+
+
+	<!--2.MyBatis定义数据源,同意加载配置 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation"
+				  value="classpath:com/manji/config/mybatis-config.xml" />
+	</bean>
+
+	<!--3. mybatis自动扫描加载Sql映射文件/接口 : MapperScannerConfigurer sqlSessionFactory -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.manji.backstage.mapper"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+
+	<!--4. 事务管理 : DataSourceTransactionManager dataSource:引用上面定义的数据源 -->
+	<bean id="txManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 5. 使用声明式事务 transaction-manager：引用上面定义的事务管理器 -->
+	<tx:annotation-driven transaction-manager="txManager" />
+
+</beans>

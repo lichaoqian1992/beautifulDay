@@ -1,0 +1,996 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.OrdrMapper" >
+
+<select id="countOrderGoods" parameterType="OrderGoodsVo" resultType="int">
+select count(*) from dt_order_goods where 1=1
+</select>
+<select id="queryOrderGoods" parameterType="OrderGoodsVo" resultType="OrderGoods">
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_goods   where  1=1
+
+  <if test="state != 0">
+    and state=#{state}
+  </if>
+  <if test="goods_comment != 0">
+    and goods_comment=#{goods_comment}
+  </if>
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+
+
+<select id="getOrderGoods" parameterType="long" resultType="OrderGoods">
+select * from dt_order_goods where id=#{0}
+</select>
+
+<update id="updOrderGoods" parameterType="OrderGoods">
+update dt_order_goods set 
+article_id=#{article_id},
+order_id=#{order_id},
+goods_id=#{goods_id},
+goods_no=#{goods_no},
+goods_title=#{goods_title},
+img_url=#{img_url},
+spec_text=#{spec_text},
+goods_price=#{goods_price},
+real_price=#{real_price},
+quantity=#{quantity},
+point=#{point},
+state=#{state},
+is_back=#{is_back},
+back_order_id=#{back_order_id},
+back_quantity=#{back_quantity},
+goods_comment=#{goods_comment}
+where id=#{id}
+</update>
+
+<insert id="addOrderGoods" parameterType="OrderGoods">
+insert into dt_order_goods
+(article_id,order_id,goods_id,goods_no,goods_title,img_url,spec_text,goods_price,real_price,quantity,point,state,is_back,back_order_id,back_quantity,goods_comment)
+values (#{article_id},#{order_id},#{goods_id},#{goods_no},#{goods_title},#{img_url},#{spec_text},#{goods_price},#{real_price},#{quantity},#{point},#{state},#{is_back},#{back_order_id},#{back_quantity},
+#{goods_comment})
+</insert>
+
+<delete id="delOrderGoods" parameterType="long">
+delete from dt_order_goods where id=#{0}
+</delete>
+
+
+<select id="countOrderBookInfo" parameterType="OrderBookInfoVo" resultType="int">
+select count(*) from dt_order_bookinfo where 1=1
+</select>
+<select id="queryOrderBookInfo" parameterType="OrderBookInfoVo" resultType="OrderBookInfo">
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_bookinfo   where  1=1
+
+  <if test="name != null and name != ''">
+    and name like  '%'+#{name}+ '%'
+  </if>
+  <if test="mobile != null and mobile != ''">
+    and mobile like '%'+#{mobile}+ '%'
+  </if>
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+
+
+<select id="getOrderBookInfo" parameterType="long" resultType="OrderBookInfo">
+select * from dt_order_bookinfo where id=#{0}
+</select>
+
+<update id="updOrderBookInfo" parameterType="OrderBookInfo">
+update dt_order_bookinfo set 
+order_id=#{order_id},
+name=#{name},
+mobile=#{mobile},
+in_time=#{in_time},
+out_time=#{out_time},
+members=#{members},
+info=#{info},
+sms_send_state=#{sms_send_state},
+sms_send_time=#{sms_send_time}
+where id=#{id}
+</update>
+
+<insert id="addOrderBookInfo" parameterType="OrderBookInfo">
+insert into dt_order_bookinfo
+(order_id,name,mobile,in_time,out_time,members,info,sms_send_state,sms_send_time)
+values (#{order_id},#{name},#{mobile},#{in_time},#{out_time},#{members},#{info},#{sms_send_state},#{sms_send_time})
+</insert>
+
+<delete id="delOrderBookInfo" parameterType="long">
+delete from dt_order_bookinfo where id=#{0}
+</delete>
+
+
+<select id="countOrderDistributioninfo" parameterType="OrderDistributioninfoVo" resultType="int">
+select count(*) from dt_order_distributioninfo where 1=1
+</select>
+<select id="queryOrderDistributioninfo" parameterType="OrderDistributioninfoVo" resultType="OrderDistributioninfo">
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_distributioninfo   where  1=1
+  <if test="mobile != null and mobile != ''">
+    and mobile like '%'+#{mobile}+ '%'
+  </if>
+  <if test="send_status != null and send_status != ''">
+    and send_status=#{send_status}
+  </if>
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+
+
+<select id="getOrderDistributioninfo" parameterType="long" resultType="OrderDistributioninfo">
+select * from dt_order_distributioninfo where id=#{0}
+</select>
+
+<update id="updOrderDistributioninfo" parameterType="OrderDistributioninfo">
+update dt_order_distributioninfo set 
+order_id=#{order_id},
+name=#{name},
+mobile=#{mobile},
+area=#{area},
+address=#{address},
+hop_arrive_time=#{hop_arrive_time},
+send_time=#{send_time},
+send_user_name=#{send_user_name},
+send_user_mobile=#{send_user_mobile},
+real_arrive_time=#{real_arrive_time},
+sms_send_state=#{sms_send_state},
+sms_send_time=#{sms_send_time},
+send_status=#{send_status},
+members=#{members},
+longitude=#{longitude},
+latitude=#{latitude}
+where id=#{id}
+</update>
+
+<insert id="addOrderDistributioninfo" parameterType="OrderDistributioninfo">
+insert into dt_order_distributioninfo
+(order_id,name,mobile,area,address,hop_arrive_time,send_time,send_user_name,send_user_mobile,real_arrive_time,sms_send_state,sms_send_time,send_status,members,longitude,latitude)
+values (#{order_id},#{name},#{mobile},#{area},#{address},#{hop_arrive_time},#{send_time},#{send_user_name},#{send_user_mobile},#{real_arrive_time},#{sms_send_state},#{sms_send_time},
+#{send_status},#{members},#{longitude},#{latitude})
+</insert>
+
+<delete id="delOrderDistributioninfo" parameterType="long">
+delete from dt_order_distributioninfo where id=#{0}
+</delete>
+
+<select id="countOrderVirtualinfo" parameterType="OrderVirtualinfoVo" resultType="int">
+select count(*) from dt_order_virtualinfo where 1=1
+</select>
+<select id="queryOrderVirtualinfo" parameterType="OrderVirtualinfoVo" resultType="OrderVirtualinfo">
+
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_virtualinfo   where  1=1
+
+  <if test="order_id != null and order_id != ''">
+    and order_id=#{order_id}
+  </if>
+  <if test="state != -1">
+    and state=#{state}
+  </if>
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+
+
+<select id="getOrderVirtualinfo" parameterType="long" resultType="OrderVirtualinfo">
+select * from dt_order_virtualinfo where id=#{0}
+</select>
+
+<update id="updOrderVirtualinfo" parameterType="OrderVirtualinfo">
+update dt_order_virtualinfo set 
+article_id=#{article_id},
+order_id=#{order_id},
+goods_id=#{goods_id},
+ticket_no=#{ticket_no},
+add_time=#{add_time},
+expired_time=#{expired_time},
+state=#{state},
+update_time=#{update_time},
+sms_send_state=#{sms_send_state},
+sms_send_time=#{sms_send_time},
+back_order_id=#{back_order_id}
+where id=#{id}
+</update>
+
+<insert id="addOrderVirtualinfo" parameterType="OrderVirtualinfo">
+insert into dt_order_virtualinfo
+(article_id,order_id,goods_id,ticket_no,add_time,expired_time,state,update_time,sms_send_state,sms_send_time,back_order_id)
+values (#{article_id},#{order_id},#{goods_id},#{ticket_no},#{add_time},#{expired_time},#{state},#{update_time},#{sms_send_state},#{sms_send_time},#{back_order_id})
+</insert>
+
+<delete id="delOrderVirtualinfo" parameterType="long">
+delete from dt_order_virtualinfo where id=#{0}
+</delete>
+
+
+<select id="countOrderGoodInfo" parameterType="OrderGoodInfoVo" resultType="int">
+select count(*) from dt_order_goodinfo where 1=1
+</select>
+<select id="queryOrderGoodInfo" parameterType="OrderGoodInfoVo" resultType="OrderGoodInfo">
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_goodinfo   where  1=1
+  <if test="accept_name != null and accept_name != ''">
+    and accept_name like '%${accept_name}%'
+  </if>
+  <if test="express_status != null and express_status != ''">
+    and express_status=#{express_status}
+  </if>
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+
+
+<select id="getOrderGoodInfo" parameterType="long" resultType="OrderGoodInfo">
+select * from dt_order_goodinfo where id=#{0}
+</select>
+
+<update id="updOrderGoodInfo" parameterType="OrderGoodInfo">
+update dt_order_goodinfo set 
+order_id=#{order_id},
+express_id=#{express_id},
+express_no=#{express_no},
+express_status=#{express_status},
+express_time=#{express_time},
+accept_name=#{accept_name},
+post_code=#{post_code},
+telephone=#{telephone},
+mobile=#{mobile},
+email=#{email},
+area=#{area},
+address=#{address},
+is_receipt=#{is_receipt},
+is_deliver=#{is_deliver}
+where id=#{id}
+</update>
+
+<insert id="addOrderGoodInfo" parameterType="OrderGoodInfo">
+insert into dt_order_goodinfo
+(order_id,express_id,express_no,express_status,express_time,accept_name,post_code,telephone,mobile,email,area,address,is_receipt,is_deliver)
+values (#{order_id},#{express_id},#{express_no},#{express_status},#{express_time},#{accept_name},#{post_code},#{telephone},#{mobile},#{email},#{address},#{address},#{is_receipt},#{is_deliver})
+</insert>
+
+<delete id="delOrderGoodInfo" parameterType="long">
+delete from dt_order_goodinfo where id=#{0}
+</delete>
+
+
+<select id="countOrderSms" parameterType="OrderSmsVo" resultType="int">
+select count(*) from dt_order_sms where 1=1
+</select>
+<select id="queryOrderSms" parameterType="OrderSmsVo" resultType="OrderSms">
+
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_sms   where  1=1
+
+  <if test=" order_id != null and  order_id != ''">
+    and  order_id=#{ order_id}
+  </if>
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+
+</select>
+
+
+<select id="getOrderSms" parameterType="long" resultType="OrderSms">
+select * from dt_order_sms where id=#{0}
+</select>
+
+<update id="updOrderSms" parameterType="OrderSms">
+update dt_order_sms set 
+order_id=#{order_id},
+business_sms_id=#{business_sms_id},
+title=#{title},
+price=#{price},
+quantity=#{quantity},
+back_order_id=#{back_order_id}
+where id=#{id}
+</update>
+
+<insert id="addOrderSms" parameterType="OrderSms">
+insert into dt_order_sms
+(order_id,business_sms_id,title,price,quantity,back_order_id)
+values (#{order_id},#{business_sms_id},#{title},#{price},#{quantity},#{back_order_id})
+</insert>
+
+<delete id="delOrderSms" parameterType="long">
+delete from dt_order_sms where id=#{0}
+</delete>
+
+
+<select id="countOrderAdvert" parameterType="OrderAdvertVo" resultType="int">
+select count(*) from dt_order_advert where 1=1
+</select>
+<select id="queryOrderAdvert" parameterType="OrderAdvertVo" resultType="OrderAdvert">
+
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_advert   where  1=1
+  <if test=" order_id != null and  order_id != ''">
+    and  order_id=#{ order_id}
+  </if>
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+
+</select>
+
+
+<select id="getOrderAdvert" parameterType="long" resultType="OrderAdvert">
+select * from dt_order_advert where id=#{0}
+</select>
+
+<update id="updOrderAdvert" parameterType="OrderAdvert">
+update dt_order_advert set 
+order_id=#{order_id},
+advert_banner_id=#{advert_banner_id},
+title=#{title},
+price=#{price},
+quantity=#{quantity},
+back_order_id=#{back_order_id}
+where id=#{id}
+</update>
+
+<insert id="addOrderAdvert" parameterType="OrderAdvert">
+insert into dt_order_advert
+(order_id,advert_banner_id,title,price,quantity,back_order_id)
+values (#{order_id},#{advert_banner_id},#{title},#{price},#{quantity},#{back_order_id})
+</insert>
+
+<delete id="delOrderAdvert" parameterType="long">
+delete from dt_order_advert where id=#{0}
+</delete>
+
+
+<select id="countOrderBusiness" parameterType="OrderBusinessVo" resultType="int">
+select count(*) from dt_order_business where 1=1
+</select>
+<select id="queryOrderBusiness" parameterType="OrderBusinessVo" resultType="OrderBusiness">
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_business   where  1=1
+
+  <if test=" order_id != null and  order_id != ''">
+    and  order_id=#{ order_id}
+  </if>
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+
+</select>
+
+
+<select id="getOrderBusiness" parameterType="long" resultType="OrderBusiness">
+select * from dt_order_business where id=#{0}
+</select>
+
+<update id="updOrderBusiness" parameterType="OrderBusiness">
+update dt_order_business set 
+order_id=#{order_id},
+business_user_id=#{business_user_id},
+title=#{title},
+price=#{price},
+quantity=#{quantity},
+back_order_id=#{back_order_id}
+where id=#{id}
+</update>
+
+<insert id="addOrderBusiness" parameterType="OrderBusiness">
+insert into dt_order_business
+(order_id,business_user_id,title,price,quantity,back_order_id)
+values (#{order_id},#{business_user_id},#{title},#{price},#{quantity},#{back_order_id})
+</insert>
+
+<delete id="delOrderBusiness" parameterType="long">
+delete from dt_order_business where id=#{0}
+</delete>
+
+
+<select id="countOrderBackInfo" parameterType="OrderBackInfoVo" resultType="int">
+select count(*) from dt_order_backinfo where 1=1
+</select>
+<select id="queryOrderBackInfo" parameterType="OrderBackInfoVo" resultType="OrderBackInfo">
+
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_backinfo   where  1=1
+
+  <if test=" order_no != null and  order_no != ''">
+    and  order_no=#{ order_no}
+  </if>
+
+  <if test=" status != null and  status != ''">
+    and  status=#{ status}
+  </if>
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+
+
+<select id="getOrderBackInfo" parameterType="long" resultType="OrderBackInfo">
+select * from dt_order_backinfo where id=#{0}
+</select>
+
+<update id="updOrderBackInfo" parameterType="OrderBackInfo">
+update dt_order_backinfo set 
+order_no=#{order_no},
+order_id=#{order_id},
+back_goods_amount=#{back_goods_amount},
+real_back_amount=#{real_back_amount},
+point=#{point},
+status=#{status},
+update_time=#{update_time},
+voucher=#{voucher},
+back_from=#{back_from},
+invalid_time=#{invalid_time},
+exec_num=#{exec_num},
+back_goods=#{back_goods},
+back_category=#{back_category},
+back_remark=#{back_remark},
+back_resource=#{back_resource},
+reject_remark=#{reject_remark},
+add_time=#{add_time},
+back_return_no=#{back_return_no},
+agree_time=#{agree_time}
+where id=#{id}
+</update>
+
+<insert id="addOrderBackInfo" parameterType="OrderBackInfo">
+insert into dt_order_backinfo
+(order_no,order_id,back_goods_amount,real_back_amount,point,status,update_time,voucher,back_from,invalid_time,exec_num,
+back_goods,back_category,back_remark,back_resource,reject_remark,add_time,back_return_no,agree_time)
+values (#{order_no},#{order_id},#{back_goods_amount},#{real_back_amount},#{point},#{status},#{update_time},#{voucher},#{back_from},#{invalid_time},
+#{exec_num},#{back_goods},#{back_category},#{back_remark},#{back_resource},#{reject_remark},#{add_time},#{back_return_no},#{agree_time})
+</insert>
+
+<delete id="delOrderBackInfo" parameterType="long">
+delete from dt_order_backinfo where id=#{0}
+</delete>
+
+
+<select id="countOrders" parameterType="OrdersVo" resultType="int">
+select count(*) from dt_orders where 1=1
+</select>
+<select id="queryOrders" parameterType="OrdersVo" resultType="Orders">
+
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_orders   where  1=1
+  <if test="user_id != null and user_id != ''">
+    and user_id=#{user_id}
+  </if>
+  <if test="status != 0">
+    and status=#{status}
+  </if>
+  <if test="payment_status != 0">
+    and payment_status=#{payment_status}
+  </if>
+  <if test="book_back_status != 0">
+    and book_back_status=#{book_back_status}
+  </if>
+
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+
+</select>
+
+
+<select id="getOrders" parameterType="long" resultType="Orders">
+select * from dt_orders where id=#{0}
+</select>
+
+<update id="updOrders" parameterType="Orders">
+update dt_orders set 
+order_title=#{order_title},
+order_no=#{order_no},
+order_type=#{order_type},
+shop_user_id=#{shop_user_id},
+shop_user_role_type=#{shop_user_role_type},
+shop_user_role_value=#{shop_user_role_value},
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+express_type=#{express_type},
+express_fee=#{express_fee},
+message=#{message},
+remark=#{remark},
+is_invoice=#{is_invoice},
+invoice_title=#{invoice_title},
+payable_amount=#{payable_amount},
+pre_payable_amount=#{pre_payable_amount},
+real_amount=#{real_amount},
+order_amount=#{order_amount},
+voucher=#{voucher},
+point=#{point},
+status=#{status},
+add_time=#{add_time},
+confirm_time=#{confirm_time},
+invalid_time=#{invalid_time},
+complete_time=#{complete_time},
+payment_id=#{payment_id},
+payment_fee=#{payment_fee},
+payment_status=#{payment_status},
+payment_time=#{payment_time},
+settlement_status=#{settlement_status},
+settlement_time=#{settlement_time},
+is_callback=#{is_callback},
+back_url=#{back_url},
+notice_url=#{notice_url},
+back_status=#{back_status},
+back_time=#{back_time},
+is_del=#{is_del},
+book_back_status=#{book_back_status},
+activity_id=#{activity_id},
+exec_num=#{exec_num},
+is_normal=#{is_normal},
+reject_remark=#{reject_remark},
+cancelremark=#{cancelremark},
+old_real_amount=#{old_real_amount},
+cancel_amount_remark=#{cancel_amount_remark}
+where id=#{id}
+</update>
+
+<insert id="addOrders" parameterType="Orders">
+insert into dt_orders
+(order_title,order_no,order_type,shop_user_id,shop_user_role_type,shop_user_role_value,user_id,user_role_type,user_role_value,
+express_type,express_fee,message,remark,is_invoice,invoice_title,payable_amount,pre_payable_amount,real_amount,order_amount,
+voucher,point,status,add_time,confirm_time,invalid_time,complete_time,payment_id,payment_fee,payment_status,payment_time,settlement_status,settlement_time,
+is_callback,back_url,notice_url,back_status,back_time,is_del,book_back_status,activity_id,exec_num,is_normal,reject_remark,cancelremark,
+old_real_amount,cancel_amount_remark)
+values (#{order_title},#{order_no},#{order_type},#{shop_user_id},#{shop_user_role_type},#{shop_user_role_value},#{user_id},
+#{user_role_type},#{user_role_value},#{express_type},#{express_fee},#{message},#{remark},#{is_invoice},#{invoice_title},#{payable_amount},
+#{pre_payable_amount},#{real_amount},#{order_amount},#{voucher},#{point},#{status},#{add_time},#{confirm_time},#{invalid_time},
+#{complete_time},#{payment_id},#{payment_fee},#{payment_status},#{payment_time},#{settlement_status},#{settlement_time},#{is_callback},
+#{back_url},#{notice_url},#{back_status},#{back_time},#{is_del},#{book_back_status},#{activity_id},#{exec_num},#{is_normal},#{reject_remark},
+#{cancelremark},#{old_real_amount},#{cancel_amount_remark})
+</insert>
+
+<delete id="delOrders" parameterType="long">
+delete from dt_orders where id=#{0}
+</delete>
+
+
+<select id="countOrderCallback" parameterType="OrderCallbackVo" resultType="int">
+select count(*) from dt_order_callback where 1=1
+</select>
+<select id="queryOrderCallback" parameterType="OrderCallbackVo" resultType="OrderCallback">
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_callback   where  1=1
+  <if test="order_id != null and order_id != ''">
+    and order_id=#{order_id}
+  </if>
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+
+</select>
+
+
+<select id="getOrderCallback" parameterType="long" resultType="OrderCallback">
+select * from dt_order_callback where id=#{0}
+</select>
+
+<update id="updOrderCallback" parameterType="OrderCallback">
+update dt_order_callback set 
+order_id=#{order_id},
+add_time=#{add_time},
+status=#{status}
+where id=#{id}
+</update>
+
+<insert id="addOrderCallback" parameterType="OrderCallback">
+insert into dt_order_callback
+(order_id,add_time,status)
+values (#{order_id},#{add_time},#{status})
+</insert>
+
+<delete id="delOrderCallback" parameterType="long">
+delete from dt_order_callback where id=#{0}
+</delete>
+
+
+<select id="countOrderComment" parameterType="OrderCommentVo" resultType="int">
+select count(*) from dt_order_comment where 1=1
+</select>
+<select id="queryOrderComment" parameterType="OrderCommentVo" resultType="OrderComment">
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_comment   where  1=1
+  <if test="order_id != null and order_id != ''">
+    and order_id=#{order_id}
+  </if>
+  <if test="is_lock != -1">
+    and is_lock=#{is_lock}
+  </if>
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+
+
+<select id="getOrderComment" parameterType="int" resultType="OrderComment">
+select * from dt_order_comment where id=#{0}
+</select>
+
+<update id="updOrderComment" parameterType="OrderComment">
+update dt_order_comment set 
+order_id=#{order_id},
+shop_user_id=#{shop_user_id},
+shop_user_role_type=#{shop_user_role_type},
+shop_user_role_value=#{shop_user_role_value},
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+user_ip=#{user_ip},
+review_score=#{review_score},
+service_review_score=#{service_review_score},
+pack_review_score=#{pack_review_score},
+distribution_review_score=#{distribution_review_score},
+is_lock=#{is_lock},
+add_time=#{add_time},
+reply_area=#{reply_area},
+local_area=#{local_area}
+where id=#{id}
+</update>
+
+<insert id="addOrderComment" parameterType="OrderComment">
+insert into dt_order_comment
+(order_id,shop_user_id,shop_user_role_type,shop_user_role_value,user_id,user_role_type,user_role_value,user_ip,
+review_score,service_review_score,pack_review_score,distribution_review_score,is_lock,add_time,reply_area,local_area)
+values (#{order_id},#{shop_user_id},#{shop_user_role_type},#{shop_user_role_value},#{user_id},#{user_role_type},#{user_role_value},#{user_ip},
+#{review_score},#{service_review_score},#{pack_review_score},#{distribution_review_score},#{is_lock},#{add_time},#{reply_area},#{local_area})
+</insert>
+
+<delete id="delOrderComment" parameterType="int">
+delete from dt_order_comment where id=#{0}
+</delete>
+
+
+<select id="countOrderSettlement" parameterType="OrderSettlementVo" resultType="int">
+select count(*) from dt_order_settlement where 1=1
+</select>
+<select id="queryOrderSettlement" parameterType="OrderSettlementVo" resultType="OrderSettlement">
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_settlement   where  1=1
+
+  <if test="order_id != null and order_id != ''">
+    and order_id=#{order_id}
+  </if>
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+
+
+<select id="getOrderSettlement" parameterType="long" resultType="OrderSettlement">
+select * from dt_order_settlement where id=#{0}
+</select>
+
+<update id="updOrderSettlement" parameterType="OrderSettlement">
+update dt_order_settlement set 
+order_id=#{order_id},
+order_no=#{order_no},
+order_type=#{order_type},
+shop_user_id=#{shop_user_id},
+shop_user_role_type=#{shop_user_role_type},
+shop_user_role_value=#{shop_user_role_value},
+settlement_money=#{settlement_money},
+percentage_money=#{percentage_money},
+real_money=#{real_money},
+add_time=#{add_time},
+remark=#{remark}
+where id=#{id}
+</update>
+
+<insert id="addOrderSettlement" parameterType="OrderSettlement">
+insert into dt_order_settlement
+(order_id,order_no,order_type,shop_user_id,shop_user_role_type,shop_user_role_value,settlement_money,percentage_money,real_money,
+add_time,remark)
+values (#{order_id},#{order_no},#{order_type},#{shop_user_id},#{shop_user_role_type},#{shop_user_role_value},#{settlement_money},
+#{percentage_money},#{real_money},#{add_time},#{remark})
+</insert>
+
+<delete id="delOrderSettlement" parameterType="long">
+delete from dt_order_settlement where id=#{0}
+</delete>
+
+
+<select id="countOrderOnlinePay" parameterType="OrderOnlinePayVo" resultType="int">
+select count(*) from dt_order_online_pay where 1=1
+</select>
+<select id="queryOrderOnlinePay" parameterType="OrderOnlinePayVo" resultType="OrderOnlinePay">
+
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_online_pay   where  1=1
+
+  <if test="user_id != null and user_id != ''">
+    and user_id=#{user_id}
+  </if>
+  <if test="user_role_type != null and user_role_type != ''">
+    and user_role_type=#{user_role_type}
+  </if>
+  <if test="status != -1">
+    and status=#{status}
+  </if>
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+
+
+<select id="getOrderOnlinePay" parameterType="int" resultType="OrderOnlinePay">
+select * from dt_order_online_pay where id=#{0}
+</select>
+
+<update id="updOrderOnlinePay" parameterType="OrderOnlinePay">
+update dt_order_online_pay set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+order_type=#{order_type},
+order_id_list=#{order_id_list},
+use_voucher=#{use_voucher},
+payment_name=#{payment_name},
+payment_id=#{payment_id},
+add_time=#{add_time},
+notify_time=#{notify_time},
+transaction_no=#{transaction_no},
+transaction_money=#{transaction_money},
+transaction_identity=#{transaction_identity},
+transaction_txt=#{transaction_txt},
+status=#{status},
+is_del=#{is_del},
+return_url=#{return_url},
+payment_type=#{payment_type},
+payment_money=#{payment_money},
+notify_url=#{notify_url},
+partner_channel=#{partner_channel},
+remark=#{remark}
+where id=#{id}
+</update>
+
+<insert id="addOrderOnlinePay" parameterType="OrderOnlinePay">
+insert into dt_order_online_pay
+(user_id,user_role_type,user_role_value,order_type,order_id_list,use_voucher,payment_name,payment_id,add_time,notify_time,transaction_no,transaction_money,transaction_identity,
+transaction_txt,status,is_del,return_url,payment_type,payment_money,notify_url,partner_channel,remark)
+values (#{user_id},#{user_role_type},#{user_role_value},#{order_type},#{order_id_list},#{use_voucher},#{payment_name},#{payment_id},
+#{add_time},#{notify_time},#{transaction_no},#{transaction_money},#{transaction_identity},#{transaction_txt},#{status},
+#{is_del},#{return_url},#{payment_type},#{payment_money},#{notify_url},#{partner_channel},#{remark})
+</insert>
+
+<delete id="delOrderOnlinePay" parameterType="int">
+delete from dt_order_online_pay where id=#{0}
+</delete>
+
+
+<select id="countOrderPartner" parameterType="OrderPartnerVo" resultType="int">
+select count(*) from dt_order_partner where 1=1
+</select>
+<select id="queryOrderPartner" parameterType="OrderPartnerVo" resultType="OrderPartner">
+
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_partner   where  1=1
+  <if test="user_id != null and user_id != ''">
+    and user_id=#{user_id}
+  </if>
+
+  <if test="order_no != null and order_no != ''">
+    and order_no=#{order_no}
+  </if>
+
+  <if test="user_role_type != null and user_role_type != ''">
+    and user_role_type=#{user_role_type}
+  </if>
+  <if test="pay_status != -1">
+    and pay_status=#{pay_status}
+  </if>
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+
+</select>
+
+
+<select id="getOrderPartner" parameterType="int" resultType="OrderPartner">
+select * from dt_order_partner where id=#{0}
+</select>
+
+<update id="updOrderPartner" parameterType="OrderPartner">
+update dt_order_partner set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+partner_channel=#{partner_channel},
+order_no=#{order_no},
+order_title=#{order_title},
+order_money=#{order_money},
+pay_status=#{pay_status},
+return_url=#{return_url},
+notify_url=#{notify_url},
+notify_number=#{notify_number},
+notify_result=#{notify_result},
+notify_status=#{notify_status},
+add_time=#{add_time},
+pay_time=#{pay_time},
+back_time=#{back_time},
+over_time=#{over_time}
+where id=#{id}
+</update>
+
+<insert id="addOrderPartner" parameterType="OrderPartner">
+insert into dt_order_partner
+(user_id,user_role_type,user_role_value,partner_channel,order_no,order_title,order_money,pay_status,return_url,notify_url,notify_number,notify_result,
+notify_status,add_time,pay_time,back_time,over_time,is_del)
+values (#{user_id},#{user_role_type},#{user_role_value},#{partner_channel},#{order_no},#{order_title},#{order_money},#{pay_status},#{return_url},#{notify_url},#{notify_number},#{notify_result},
+#{notify_status},#{add_time},#{pay_time},#{back_time},#{over_time},#{is_del})
+</insert>
+
+<delete id="delOrderPartner" parameterType="int">
+delete from dt_order_partner where id=#{0}
+</delete>
+
+
+
+<!-- 4.17.1.	dt_order_queue (账户结算主表) -->
+<select id="countOrderQueue" parameterType="OrderQueueVo" resultType="int">
+select count(*)  from dt_order_queue  where 1=1
+</select>
+
+<select id="queryOrderQueue" parameterType="OrderQueueVo" resultType="OrderQueue">
+
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_queue   where  1=1
+  <if test="order_id != null and order_id != ''">
+    and order_id=#{order_id}
+  </if>
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+
+</select>
+<select id="getOrderQueue" parameterType="int" resultType="OrderQueue">
+select * from dt_order_queue where id=#{0}
+</select>
+<insert id="addOrderQueue" parameterType="OrderQueue">
+insert into dt_order_queue
+(order_id,state,queuetype,executetime,createtime,completiontime)
+values(#{order_id},#{state},#{queuetype},#{executetime},#{createtime},#{completiontime})
+</insert>
+<update id="updOrderQueue" parameterType="OrderQueue">
+update dt_order_queue set
+order_id={order_id},
+state={state},
+queuetype={queuetype},
+executetime={executetime},
+createtime={createtime},
+completiontime={completiontime}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delOrderQueue" parameterType="int">
+delete from dt_order_queue where id=#{0}
+</delete>
+
+
+
+<!-- 4.16.1.dt_order_log(账户结算主表) -->
+<select id="countOrderLog" parameterType="OrderLogVo" resultType="int">
+select count(*)  from dt_order_log  where 1=1
+</select>
+
+<select id="queryOrderLog" parameterType="OrderLogVo" resultType="OrderLog">
+
+  SELECT * FROM
+
+  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM
+
+  ( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_order_log   where  1=1
+  <if test="order_id != null and order_id != ''">
+    and order_id=#{order_id}
+  </if>
+
+
+  <if test="uid != null and uid != ''">
+    and uid=#{uid}
+  </if>
+
+  order by id desc
+  )vip)mvp where temprownumber>((#{index}-1)*20)
+
+
+</select>
+<select id="getOrderLog" parameterType="int" resultType="OrderLog">
+select * from dt_order_log where id=#{0}
+</select>
+<insert id="addOrderLog" parameterType="OrderLog">
+insert into dt_order_log
+(order_id,uid,beginstate,endstate,createtime,developername,remark)
+values(#{order_id},#{uid},#{beginstate},#{endstate},#{createtime},#{developername},#{remark})
+</insert>
+<update id="updOrderLog" parameterType="OrderLog">
+update dt_order_log set
+order_id=#{order_id},
+uid=#{uid},
+beginstate=#{beginstate},
+endstate=#{endstate},
+createtime=#{createtime},
+developername=#{developername},
+remark=#{remark}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delOrderLog" parameterType="int">
+delete from dt_order_log where id=#{0}
+</delete>
+
+
+
+
+
+</mapper>

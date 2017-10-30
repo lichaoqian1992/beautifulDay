@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.UserMapper">
+
+
+
+	<!-- dt_user_safeprotect 用户安全保障信息表 -->
+
+
+	<select id="countVerify" parameterType="VerifyVo" resultType="int">
+		select count(*) from dt_user_safeprotect where 1=1
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+		<if test="safe_state != '-1'">
+			and safe_state=#{safe_state}
+		</if>
+	</select>
+	<select id="queryVerify" parameterType="VerifyVo" resultType="Verify">
+		SELECT * FROM 
+
+	( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+	( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_safeprotect   where  1=1 
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+		<if test="safe_state != '-1'">
+			and safe_state=#{safe_state}
+		</if>
+	order by id desc
+	 )vip)mvp where temprownumber>((#{index}-1)*20)
+	 
+	</select>
+	<select id="getVerify" parameterType="int" resultType="Verify">
+		select * from dt_user_safeprotect where id=#{0}
+	</select>
+
+	<insert id="addVerify" parameterType="Verify">
+		insert into dt_user_safeprotect
+		(user_id,safe_type,safe_value,safe_state,update_time,update_remark,local_area)
+		values(#{user_id},#{safe_type},#{safe_value},#{safe_state},#{update_time},#{update_remark},#{local_area})
+	</insert>
+
+	<update id="updVerify" parameterType="Verify">
+		update dt_user_safeprotect set
+		user_id=#{user_id},
+		safe_type=#{safe_type},
+		safe_value=#{safe_value},
+		safe_state=#{safe_state},
+		update_time=#{update_time},
+		update_remark=#{update_remark},
+		local_area=#{local_area}
+		where id=#{id}
+	</update>
+
+	<delete id="delVerify" parameterType="int">
+		delete from dt_user_safeprotect where id=#{0}
+	</delete>
+
+
+
+
+	<!-- dt_users 用户信息表 -->
+
+	<select id="countUser" parameterType="UserVo" resultType="int">
+		select count(*) from dt_users
+		where 1=1
+		<if test="user_name != null and user_name != ''">
+			and user_name like '%${user_name}%'	
+		</if>	
+		<if test="nick_name != null and nick_name != ''">
+			and nick_name like '%${nick_name}%'	
+		</if>	
+		<if test="status != '-1'">
+			and status = #{status}
+		</if>	
+
+
+	</select>
+	<select id="queryUser" parameterType="UserVo" resultType="User">		
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_users   where  1=1 
+			<if test="user_name != null and user_name != ''">
+				and user_name like '%${user_name}%'	
+			</if>	
+			<if test="nick_name != null and nick_name != ''">
+				and nick_name like '%${nick_name}%'	
+			</if>	
+			<if test="status != '-1'">
+				and status = #{status}
+			</if>	
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+	</select>
+
+
+	<select id="getUser" parameterType="int" resultType="User">
+		select * from dt_users where id=#{0}
+	</select>
+
+	<update id="updUser" parameterType="User">
+		update dt_users set
+		group_id=#{group_id},
+		user_name=#{user_name},
+		salt=#{salt},
+		password=#{password},
+		mobile=#{mobile},
+		email=#{email},
+		avatar=#{avatar},
+		nick_name=#{nick_name},
+		sex=#{sex},
+		birthday=#{birthday},
+		telphone=#{telphone},
+		area=#{area},
+		address=#{address},
+		qq=#{qq},
+		pay_password=#{pay_password},
+		status=#{status},
+		remark=#{remark},
+		reg_time=#{reg_time},
+		reg_ip=#{reg_ip},
+		from_value=#{from_value},
+		is_del=#{is_del}
+		where id=#{id}
+	</update>
+
+	<insert id="addUser" parameterType="User">
+		insert into dt_users
+		(group_id,user_name,salt,password,mobile,email,avatar,nick_name,sex,birthday,telphone,area,address,qq,pay_password,status,remark,reg_time,reg_ip,from_value,is_del)
+		values
+		(#{group_id},#{user_name},#{salt},#{password},#{mobile},#{email},#{avatar},#{nick_name},#{sex},#{birthday},#{telphone},#{area},#{address},#{qq},#{pay_password},#{status},#{remark},#{reg_time},#{reg_ip},#{from_value},#{is_del})
+	</insert>
+
+	<delete id="delUser" parameterType="int">
+		delete from dt_users where id=#{0}
+	</delete>
+	
+
+<!-- dt_user_addr_book	用户收获地址新标 -->
+
+
+<select id="countRecAddr" parameterType="RecAddrVo" resultType="int">
+select count(*) from dt_user_addr_book where 1=1
+<if test="user_id != null and user_id != ''">
+     and user_id=#{user_id}
+   </if>
+<if test="accept_name != null and accept_name != ''">
+     and accept_name like '%${accept_name}%'
+   </if>
+	<if test="mobile != null and mobile != ''">
+     and mobile like '%${mobile}%'
+   </if>
+<if test="is_default !='-1'">
+     and is_default = #{is_default}
+   </if>
+<if test="is_distribution !='-1'">
+  and is_distribution = #{is_distribution}
+</if>
+<if test="is_del !='-1'">
+  and is_del = #{is_del}
+</if>
+</select>
+<select id="queryRecAddr" parameterType="RecAddrVo" resultType="RecAddr">
+	SELECT * FROM 
+
+	( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+	( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_addr_book   where  1=1 
+		<if test="user_id != null and user_id != ''">
+	      and user_id=#{user_id}
+	    </if>
+		<if test="accept_name != null and accept_name != ''">
+	      and accept_name like '%${accept_name}%'
+	    </if>
+		<if test="mobile != null and mobile != ''">
+	      and mobile like '%${mobile}%'
+	    </if>
+		<if test="is_default !='-1'">
+	      and is_default = #{is_default}
+	    </if>
+	    <if test="is_distribution !='-1'">
+	      and is_distribution = #{is_distribution}
+	    </if>
+	    <if test="is_del !='-1'">
+	      and is_del = #{is_del}
+	    </if>
+	order by id desc
+	 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+<select id="getRecAddr" parameterType="int" resultType="RecAddr">
+select * from dt_user_addr_book where id=#{0}
+</select>
+
+<insert id="addRecAddr" parameterType="RecAddr" >
+insert into dt_user_addr_book
+(user_id,user_role_type,user_role_value,accept_name,area,address,mobile,telphone,email,post_code,is_default,add_time,is_del,longitude,latitude,is_distribution,sex,doorplate)
+values(#{user_id},#{user_role_type},#{user_role_value},#{accept_name},#{area},#{address},#{mobile},#{telphone},#{email},#{post_code},#{is_default},#{add_time},#{is_del},#{longitude},#{latitude},#{is_distribution},#{sex},#{doorplate})
+
+</insert>
+
+<update id="updRecAddr" parameterType="RecAddr">
+update dt_user_addr_book set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+accept_name=#{accept_name},
+area=#{area},
+address=#{address},
+mobile=#{mobile},
+telphone=#{telphone},
+email=#{email},
+post_code=#{post_code},
+is_default=#{is_default},
+add_time=#{add_time},
+is_del=#{is_del},
+longitude=#{longitude},
+latitude=#{latitude},
+is_distribution=#{is_distribution},
+sex=#{sex},
+doorplate=#{doorplate}
+where id=#{id}
+</update>
+
+<delete id="delRecAddr" parameterType="int">
+delete from dt_user_addr_book where id=#{0}
+</delete>
+
+<!-- dt_user_favorites	用户收藏信息表 -->
+
+
+<select id="countUserFavorites" parameterType="UserFavoritesVo" resultType="int">
+select count(*) from dt_user_favorites where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>
+ <if test="title != null and title != ''">
+      and title like '%${title}%'
+    </if>
+</select>
+<select id="queryUserFavorites" parameterType="UserFavoritesVo" resultType="UserFavorites">
+select * from dt_user_favorites dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_favorites  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+    <if test="title != null and title != ''">
+      and title like '%${title}%'
+    </if>
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getUserFavorites" parameterType="int" resultType="UserFavorites">
+select * from dt_user_favorites where id=#{0}
+</select>
+
+<insert id="addUserFavorites" parameterType="UserFavorites" >
+insert into dt_user_favorites
+(type,value,title,pics,url,user_id,TAG,add_times,is_del)
+values(#{type},#{value},#{title},#{pics},#{url},#{user_id},#{TAG},#{add_times},#{is_del})
+
+</insert>
+
+<update id="updUserFavorites" parameterType="UserFavorites">
+update dt_user_favorites set 
+type=#{type},
+value=#{value},
+title=#{title},
+pics=#{pics},
+url=#{url},
+user_id=#{user_id},
+TAG=#{TAG},
+add_times=#{add_times},
+is_del=#{is_del}
+where id=#{id}
+</update>
+
+<delete id="delUserFavorites" parameterType="int">
+delete from dt_user_favorites where id=#{0}
+</delete>
+
+<!-- dt_user_personinfo	用户个人信息表 -->
+
+<select id="countPersonInfo" parameterType="PersonInfoVo" resultType="int">
+select count(*) from dt_user_personinfo where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>
+<if test="person_name != null and person_name != ''">
+  and person_name like '%${person_name}%'
+</if>
+<if test="card_type != null and card_type != ''">
+  and card_type like '%${card_type}%'
+</if>
+<if test="card_number != null and card_number != ''">
+  and card_number like '%${card_number}%'
+</if>
+</select>
+<select id="queryPersonInfo" parameterType="PersonInfoVo" resultType="PersonInfo">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_personinfo   where  1=1 
+	<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+    <if test="person_name != null and person_name != ''">
+      and person_name like '%${person_name}%'
+    </if>
+    <if test="card_type != null and card_type != ''">
+      and card_type like '%${card_type}%'
+    </if>
+    <if test="card_number != null and card_number != ''">
+      and card_number like '%${card_number}%'
+    </if>
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getPersonInfo" parameterType="int" resultType="PersonInfo">
+select * from dt_user_personinfo where id=#{0}
+</select>
+
+<insert id="addPersonInfo" parameterType="PersonInfo">
+insert into dt_user_personinfo
+(user_id,person_name,card_type,card_number,card_pics,person_area,person_nation,person_brithday,local_area)
+values(#{user_id},#{person_name},#{card_type},#{card_number},#{card_pics},#{person_area},#{person_nation},#{person_brithday},#{local_area})
+</insert>
+
+<update id="updPersonInfo" parameterType="PersonInfo">
+update dt_user_personinfo set
+user_id=#{user_id},
+person_name=#{person_name},
+card_type=#{card_type},
+card_number=#{card_number},
+card_pics=#{card_pics},
+person_area=#{person_area},
+person_nation=#{person_nation},
+person_brithday=#{person_brithday},
+local_area=#{local_area}
+where id=#{id}
+</update>
+
+<delete id="delPersonInfo" parameterType="int">
+delete from dt_user_personinfo where id=#{0}
+</delete>
+
+
+<!-- dt_user_companyinfo	用户个人信息表 -->
+
+
+<select id="countCompanyInfo" parameterType="CompanyInfoVo" resultType="int">
+select count(*) from dt_user_companyinfo where 1=1
+<if test="user_id != null and user_id != ''">
+    and user_id=#{user_id}
+</if>
+<if test="name != null and name != ''">
+	and name like '%${name}%'
+</if>
+</select>
+<select id="queryCompanyInfo" parameterType="CompanyInfoVo" resultType="CompanyInfo">
+select * from dt_user_companyinfo dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_companyinfo  where 1=1
+		<if test="user_id != null and user_id != ''">
+      		and user_id=#{user_id}
+    	</if>
+    	<if test="name != null and name != ''">
+      		and name like '%${name}%'
+    	</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getCompanyInfo" parameterType="int" resultType="CompanyInfo">
+select * from dt_user_companyinfo where id=#{0}
+</select>
+
+<insert id="addCompanyInfo" parameterType="CompanyInfo" >
+insert into dt_user_companyinfo 
+(user_id,type,name,area,website,email,telephone,address,business,card_number,card_pics,card_type,legal_person,legal_person_mobile,legal_person_idcard,license_pics,license_num)
+values(#{user_id},#{type},#{name},#{area},#{website},#{email},#{telephone},#{address},#{business},#{card_number},#{card_pics},#{card_type},#{legal_person},#{legal_person_mobile},#{legal_person_idcard},#{license_pics},#{license_num})
+</insert>
+
+<update id="updCompanyInfo" parameterType="CompanyInfo">
+update dt_user_companyinfo set
+user_id=#{user_id},
+type=#{type},
+name=#{name},
+area=#{area},
+website=#{website},
+email=#{email},
+telephone=#{telephone},
+address=#{address},
+business=#{business},
+card_number=#{card_number},
+card_pics=#{card_pics},
+card_type=#{card_type},
+legal_person=#{legal_person},
+legal_person_mobile=#{legal_person_mobile},
+legal_person_idcard=#{legal_person_idcard},
+license_pics=#{license_pics},
+license_num=#{license_num}
+where id=#{id}
+</update>
+
+<delete id="delCompanyInfo" parameterType="int">
+delete from dt_user_companyinfo where id=#{0}
+</delete>
+
+
+
+<!-- dt_user_banktype	用户绑定银行卡 -->
+
+
+<select id="countUserBankType" parameterType="UserBankTypeVo" resultType="int">
+select count(*) from dt_user_banktype where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>
+<if test="bank_type_value != null and bank_type_value != ''">
+  and bank_type_value like '%${bank_type_value}%'
+</if>
+<if test="status != '-1'">
+  and status=#{status}
+</if>
+</select>
+<select id="queryUserBankType" parameterType="UserBankTypeVo" resultType="UserBankType">
+
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_banktype   where  1=1 
+	<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+    <if test="bank_type_value != null and bank_type_value != ''">
+      and bank_type_value like '%${bank_type_value}%'
+    </if>
+    <if test="status != '-1'">
+      and status=#{status}
+    </if>
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+
+<select id="getUserBankType" parameterType="int" resultType="UserBankType">
+select * from dt_user_banktype where id=#{0}
+</select>
+
+<insert id="addUserBankType" parameterType="UserBankType">
+insert into dt_user_banktype 
+(bank_type,user_id,user_role_type,user_role_value,bank_type_value,bank_address,bank_area,add_time,is_last_use,failed_times,is_del,usertype,status,remark)
+values(#{bank_type},#{user_id},#{user_role_type},#{user_role_value},#{bank_type_value},#{bank_address},#{bank_area},#{add_time},#{is_last_use},#{failed_times},#{is_del},#{usertype},#{status},#{remark})
+
+</insert>
+
+<update id="updUserBankType" parameterType="UserBankType" >
+update dt_user_banktype set
+bank_type =#{bank_type},
+user_id =#{user_id},
+user_role_type =#{user_role_type},
+user_role_value =#{user_role_value},
+bank_type_value =#{bank_type_value},
+bank_address =#{bank_address},
+bank_area =#{bank_area},
+add_time =#{add_time},
+is_last_use =#{is_last_use},
+failed_times =#{failed_times},
+is_del =#{is_del},
+usertype =#{usertype},
+status =#{status},
+remark =#{remark}
+where id=#{id}
+</update>
+
+<delete id="delUserBankType" parameterType="int">
+delete from dt_user_banktype where id=#{0}
+</delete>
+
+
+<!-- //	dt_user_role_buyerinfo	用户买家信息表 -->
+
+<select id="countBuyerInfo" parameterType="BuyerInfoVo" resultType="int">
+select count(*) from dt_user_role_buyerinfo where 1=1
+<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+</if>
+</select>
+
+<select id="queryBuyerInfo" parameterType="BuyerInfoVo" resultType="BuyerInfo">
+SELECT * FROM 
+	( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+	( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_role_buyerinfo   where  1=1 
+		<if test="user_id != null and user_id != ''">
+	      and user_id=#{user_id}
+	    </if>
+	order by id desc
+	 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+
+<select id="getBuyerInfo" parameterType="int" resultType="BuyerInfo">
+select * from dt_user_role_buyerinfo where id=#{0}
+</select>
+
+<delete id="delBuyerInfo" parameterType="int">
+delete from dt_user_role_buyerinfo where id=#{0}
+</delete>
+
+<insert id="addBuyerInfo" parameterType="BuyerInfo">
+insert into dt_user_role_buyerinfo
+(user_id,user_exp,damage_times,damage_money,damage_date,review_times,review_score,buy_tags,view_tags,areas,update_time)
+values(#{user_id},#{user_exp},#{damage_times},#{damage_money},#{damage_date},#{review_times},#{review_score},#{buy_tags},#{view_tags},#{areas},#{update_time})
+
+</insert>
+
+<update id="updBuyerInfo" parameterType="BuyerInfo" >
+update dt_user_role_buyerinfo set
+user_id =#{user_id},
+user_exp =#{user_exp},
+damage_times =#{damage_times},
+damage_money =#{damage_money},
+damage_date =#{damage_date},
+review_times =#{review_times},
+review_score =#{review_score},
+buy_tags =#{buy_tags},
+view_tags =#{view_tags},
+areas =#{areas},
+update_time =#{update_time}
+where id=#{id}
+</update>
+
+<!-- 2.3.6.dt_user_code(用户随机码信息表) -->
+
+<select id="countUserCode" parameterType="UserCodeVo" resultType="int">
+select count(*)  from dt_user_code  where 1=1
+<if test="status != '-1'">
+	and status = #{status}	
+</if>	
+<if test="type != '' and type != null">
+	and type = #{type}	
+</if>	
+</select>
+
+<select id="queryUserCode" parameterType="UserCodeVo" resultType="UserCode">
+	SELECT * FROM 
+
+	( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+	( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_code   where  1=1 
+		<if test="status != '-1'">
+			and status = #{status}	
+		</if>	
+		<if test="type != '' and type != null">
+			and type = #{type}	
+		</if>	
+	order by id desc
+	 )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+<select id="getUserCode" parameterType="int" resultType="UserCode">
+select * from dt_user_code where id=#{0}
+</select>
+<insert id="addUserCode" parameterType="UserCode">
+insert into dt_user_code
+(user_id,user_role_type,user_role_value,type,str_code,count,status,user_ip,eff_time,add_time)
+values(#{user_id},#{user_role_type},#{user_role_value},#{type},#{str_code},#{count},#{status},#{user_ip},#{eff_time},#{add_time})
+</insert>
+<update id="updUserCode" parameterType="UserCode">
+ update dt_user_code set
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+type=#{type},
+str_code=#{str_code},
+count=#{count},
+status=#{status},
+user_ip=#{user_ip},
+eff_time=#{eff_time},
+add_time=#{add_time}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserCode" parameterType="int">
+delete from dt_user_code where id=#{0}
+</delete>
+
+
+<!-- 2.3.33.dt_user_fixed (买家批量充值记录表) -->
+<select id="countUserFixed" parameterType="UserFixedVo" resultType="int">
+select count(*)  from dt_user_fixed  where 1=1
+<if test="user_id != null and user_id != ''">
+     and user_id=#{user_id}
+   </if>
+    <if test="is_del != '-1'">
+     and is_del=#{is_del}
+   </if>
+   <if test="category != '-1'">
+     and category=#{category}
+   </if>
+   <if test="state != '-1'">
+     and state=#{state}
+   </if>
+</select>
+
+<select id="queryUserFixed" parameterType="UserFixedVo" resultType="UserFixed">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_fixed   where  1=1 
+	<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+     <if test="is_del != '-1'">
+      and is_del=#{is_del}
+    </if>
+    <if test="category != '-1'">
+      and category=#{category}
+    </if>
+    <if test="state != '-1'">
+      and state=#{state}
+    </if>
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getUserFixed" parameterType="long" resultType="UserFixed">
+select * from dt_user_fixed where id=#{0}
+</select>
+<insert id="addUserFixed" parameterType="UserFixed">
+insert into dt_user_fixed
+(excel_file,row_no,user_key,amount,voucher,user_id,role_type,role_value,state,is_del,remark,add_time,category)
+values(#{excel_file},#{row_no},#{user_key},#{amount},#{voucher},#{user_id},#{role_type},#{role_value},#{state},#{is_del},#{remark},#{add_time},#{category})
+</insert>
+<update id="updUserFixed" parameterType="UserFixed">
+update dt_user_fixed set
+excel_file=#{excel_file},
+row_no=#{row_no},
+user_key=#{user_key},
+amount=#{amount},
+voucher=#{voucher},
+user_id=#{user_id},
+role_type=#{role_type},
+role_value=#{role_value},
+state=#{state},
+is_del=#{is_del},
+remark=#{remark},
+add_time=#{add_time},
+category=#{category}
+
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserFixed" parameterType="long">
+delete from dt_user_fixed where id=#{0}
+</delete>
+
+
+<!-- 2.3.3.dt_user_from_value（用户标识申请信息表） -->
+<select id="countUserFromValue" parameterType="UserFromValueVo" resultType="int">
+select count(*)  from dt_user_from_value  where 1=1
+<if test="from_type != '-1'">
+		and from_type = #{from_type}
+	</if>	
+	<if test="status != '-1'">
+		and status = #{status}
+	</if>	
+</select>
+
+<select id="queryUserFromValue" parameterType="UserFromValueVo" resultType="UserFromValue">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_from_value   where  1=1 
+	<if test="from_type != '-1'">
+		and from_type = #{from_type}
+	</if>	
+	<if test="status != '-1'">
+		and status = #{status}
+	</if>	
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getUserFromValue" parameterType="int" resultType="UserFromValue">
+select * from dt_user_from_value where id=#{0}
+</select>
+<insert id="addUserFromValue" parameterType="UserFromValue">
+insert into dt_user_from_value
+(user_id,user_role_type,user_role_value,from_value,wechat_id,img_url,from_type,yx_time,add_time,status,is_del,subscribe_count,reg_count)
+values(#{user_id},#{user_role_type},#{user_role_value},#{from_value},#{wechat_id},#{img_url},#{from_type},#{yx_time},#{add_time},#{status},#{is_del},#{subscribe_count},#{reg_count})
+</insert>
+<update id="updUserFromValue" parameterType="UserFromValue">
+update dt_user_from_value set
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+from_value=#{from_value},
+wechat_id=#{wechat_id},
+img_url=#{img_url},
+from_type=#{from_type},
+yx_time=#{yx_time},
+add_time=#{add_time},
+status=#{status},
+is_del=#{is_del},
+subscribe_count=#{subscribe_count},
+reg_count=#{reg_count}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserFromValue" parameterType="int">
+delete from dt_user_from_value where id=#{0}
+</delete>
+
+
+<!-- 2.3.5.	dt_user_group_price（用户分组商品价格信息表） -->
+<select id="countUserGroupPrice" parameterType="UserGroupPriceVo" resultType="int">
+select count(*)  from dt_user_group_price  where 1=1
+<if test="article_id != '' and article_id != null">
+	and article_id = #{article_id}	
+</if>	
+<if test="goods_id != '' and goods_id != null">
+	and goods_id = #{goods_id}	
+</if>
+<if test="group_id != '' and group_id != null">
+	and group_id = #{group_id}	
+</if>
+</select>
+
+<select id="queryUserGroupPrice" parameterType="UserGroupPriceVo" resultType="UserGroupPrice">
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_group_price   where  1=1 
+	<if test="article_id != '' and article_id != null">
+		and article_id = #{article_id}	
+	</if>	
+	<if test="goods_id != '' and goods_id != null">
+		and goods_id = #{goods_id}	
+	</if>
+	<if test="group_id != '' and group_id != null">
+		and group_id = #{group_id}	
+	</if>
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getUserGroupPrice" parameterType="int" resultType="UserGroupPrice">
+select * from dt_user_group_price where id=#{0}
+</select>
+<insert id="addUserGroupPrice" parameterType="UserGroupPrice">
+insert into dt_user_group_price
+(article_id,goods_id,group_id,price)
+values(#{article_id},#{goods_id},#{group_id},#{price})
+</insert>
+<update id="updUserGroupPrice" parameterType="UserGroupPrice">
+ update dt_user_group_price set
+ article_id=#{article_id},
+ goods_id=#{goods_id},
+ group_id=#{group_id},
+ price=#{price}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserGroupPrice" parameterType="int">
+delete from dt_user_group_price where id=#{0}
+</delete>
+
+
+<!-- 2.3.31.dt_user_often_use (用户经常使用信息表) -->
+<select id="countUserOftenUse" parameterType="UserOftenUseVo" resultType="int">
+select count(*)  from dt_user_often_use  where 1=1
+	<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+ 
+    <if test="is_del != '-1'">
+      and is_del=#{is_del}
+    </if>
+</select>
+
+<select id="queryUserOftenUse" parameterType="UserOftenUseVo" resultType="UserOftenUse">
+	SELECT * FROM 
+
+	( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+	( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_often_use   where  1=1 
+		<if test="user_id != null and user_id != ''">
+	      and user_id=#{user_id}
+	    </if>
+	 
+	    <if test="is_del != '-1'">
+	      and is_del=#{is_del}
+	    </if>
+	order by id desc
+	 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getUserOftenUse" parameterType="int" resultType="UserOftenUse">
+select * from dt_user_often_use where id=#{0}
+</select>
+<insert id="addUserOftenUse" parameterType="UserOftenUse">
+insert into dt_user_often_use
+(user_id,type,value,times,update_times,is_del)
+values(#{user_id},#{type},#{value},#{times},#{update_times},#{is_del})
+</insert>
+<update id="updUserOftenUse" parameterType="UserOftenUse">
+ update dt_user_often_use set
+ user_id=#{user_id},
+ type=#{type},
+ value=#{value},
+ times=#{times},
+ update_times=#{update_times},
+ is_del=#{is_del}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserOftenUse" parameterType="int">
+delete from dt_user_often_use where id=#{0}
+</delete>
+
+
+<!-- 2.3.2.dt_user_wechat（用户微信信息表） -->
+<select id="countUserWechat" parameterType="UserWechatVo" resultType="int">
+select count(*)  from dt_user_wechat  where 1=1
+	<if test="nick_name != null and nick_name != ''">
+		and nick_name like '%${nick_name}%'	
+	</if>	
+	<if test="is_subscribe != '-1'">
+		and is_subscribe = #{is_subscribe}
+	</if>	
+</select>
+
+<select id="queryUserWechat" parameterType="UserWechatVo" resultType="UserWechat">
+
+SELECT * FROM 
+
+( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_wechat  where  1=1 
+	<if test="nick_name != null and nick_name != ''">
+		and nick_name like '%${nick_name}%'	
+	</if>	
+	<if test="is_subscribe != '-1'">
+		and is_subscribe = #{is_subscribe}
+	</if>	
+order by id desc
+ )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getUserWechat" parameterType="int" resultType="UserWechat">
+select * from dt_user_wechat where id=#{0}
+</select>
+<insert id="addUserWechat" parameterType="UserWechat">
+insert into dt_user_wechat
+(user_id,wechat_id,open_id,nick_name,sex,country,province,city,headimg,is_subscribe,update_time,form_id)
+values(#{user_id},#{wechat_id},#{open_id},#{nick_name},#{sex},#{country},#{province},#{city},#{headimg},#{is_subscribe},#{update_time},#{form_id})
+</insert>
+<update id="updUserWechat" parameterType="UserWechat">
+update dt_user_wechat set
+user_id=#{user_id},
+wechat_id=#{wechat_id},
+open_id=#{open_id},
+nick_name=#{nick_name},
+sex=#{sex},
+country=#{country},
+province=#{province},
+city=#{city},
+headimg=#{headimg},
+is_subscribe=#{is_subscribe},
+update_time=#{update_time},
+form_id=#{form_id}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserWechat" parameterType="int">
+delete from dt_user_wechat where id=#{0}
+</delete>
+
+
+<!-- 2.3.18.dt_user_oauth（用户第三方登录授权信息表） -->
+<select id="countUserOauth" parameterType="UserOauthVo" resultType="int">
+select count(*)  from dt_user_oauth  where 1=1
+<if test="oauth_name != '-1'">
+	and oauth_name = #{oauth_name}
+</if>	
+<if test="user_id != '' and user_id != null">
+	and user_id = #{user_id}	
+</if>	
+</select>
+
+<select id="queryUserOauth" parameterType="UserOauthVo" resultType="UserOauth">
+	SELECT * FROM 
+
+	( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+	( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_oauth   where  1=1 
+		<if test="oauth_name != '-1'">
+			and oauth_name = #{oauth_name}
+		</if>	
+		<if test="user_id != '' and user_id != null">
+			and user_id = #{user_id}	
+		</if>	
+	order by id desc
+	 )vip)mvp where temprownumber>((#{index}-1)*20)
+</select>
+<select id="getUserOauth" parameterType="int" resultType="UserOauth">
+select * from dt_user_oauth where id=#{0}
+</select>
+<insert id="addUserOauth" parameterType="UserOauth">
+insert into dt_user_oauth
+(user_id,oauth_name,oauth_access_token,oauth_openid,add_time)
+values(#{user_id},#{oauth_name},#{oauth_access_token},#{oauth_openid},#{add_time})
+</insert>
+<update id="updUserOauth" parameterType="UserOauth">
+update dt_user_oauth set
+user_id=#{user_id},
+oauth_name=#{oauth_name},
+oauth_access_token=#{oauth_access_token},
+oauth_openid=#{oauth_openid},
+add_time=#{add_time}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserOauth" parameterType="int">
+delete from dt_user_oauth where id=#{0}
+</delete>
+
+
+
+</mapper>

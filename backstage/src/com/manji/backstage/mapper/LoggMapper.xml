@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.LoggMapper">
+
+
+
+
+	<!-- dt_user_login_log 用户登陆日志表 -->
+
+
+
+
+	<select id="countLoginLog" parameterType="LoginLogVo"
+		resultType="int">
+		select count(*) from dt_user_login_log where 1=1
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+			<if test="remark != null and remark != ''">
+				and remark like '%'+#{remark}+'%'
+			</if>
+	</select>
+	<select id="queryLoginLog" parameterType="LoginLogVo"
+		resultType="LoginLog">
+		
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_login_log   where  1=1 
+		
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+			<if test="remark != null and remark != ''">
+				and remark like '%'+#{remark}+'%'
+			</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+		
+	</select>
+	<select id="getLoginLog" parameterType="int" resultType="LoginLog">
+		select * from dt_user_login_log where id=#{id}
+	</select>
+	<update id="updLoginLog" parameterType="LoginLog">
+		update dt_user_login_log
+		set
+		user_id=#{user_id},
+		remark=#{remark},
+		login_time=#{login_time},
+		login_ip=#{login_ip},
+		login_from=#{login_from}
+		where id=#{id}
+	</update>
+	<delete id="delLoginLog" parameterType="int">
+		delete from dt_user_login_log where id=#{0}
+	</delete>
+
+	<!-- dt_user_sign_log 用户签到日志表 -->
+
+	<select id="countSignLog" parameterType="SignLogVo" resultType="int">
+		select count(*) from dt_user_sign_log where 1=1
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+			<if test="address != null and address != ''">
+				and address like '%'+#{address}+'%'
+			</if>
+	</select>
+	<select id="querySignLog" parameterType="SignLogVo" resultType="SignLog">
+		
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_sign_log   where  1=1 
+		
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+			<if test="address != null and address != ''">
+				and address like '%'+#{address}+'%'
+			</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+	
+	</select>
+	<select id="getSignLog" parameterType="int" resultType="SignLog">
+		select * from dt_user_Sign_log where id=#{id}
+	</select>
+	<update id="updSignLog" parameterType="SignLog">
+		update dt_user_sign_log
+		set
+		user_id=#{user_id},
+		add_time=#{add_time},
+		get_point=#{get_point},
+		continue_times=#{continue_times},
+		longitude=#{longitude},
+		latitude=#{latitude},
+		address=#{address},
+		remark=#{remark}
+		where id=#{id}
+	</update>
+	<delete id="delSignLog" parameterType="int">
+		delete from dt_user_sign_log where id=#{0}
+	</delete>
+
+	<!-- dt_user_sms_log 用户短信发送日子表 -->
+
+
+
+
+	<select id="countSmsLog" parameterType="SmsLogVo" resultType="int">
+		select count(*) from dt_user_sms_log where 1=1
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+			<if test="send_status != null and send_status != ''">
+				and send_status=#{send_status}
+			</if>
+	</select>
+
+	<select id="countEmailLog" parameterType="EmailLogVo"
+		resultType="int">
+		select count(*) from dt_user_mail_log where 1=1
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+			<if test="post_email != null and post_email != ''">
+				and post_email=#{post_email}
+			</if>
+			<if test="get_email != null and get_email != ''">
+				and get_email=#{get_email}
+			</if>
+	</select>
+
+	<select id="countFileDownLog" parameterType="FileDownLogVo"
+		resultType="int">
+		select count(*) from dt_user_attach_log where 1=1
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+	</select>
+
+	<select id="querySmsLog" parameterType="SmsLogVo" resultType="SmsLog">
+		
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_sms_log   where  1=1 
+		
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+			<if test="send_status != null and send_status != ''">
+				and send_status=#{send_status}
+			</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+	
+	</select>
+
+	<!-- dt_user_mail_log 用户邮件发送日志表 -->
+
+	<select id="queryEmailLog" parameterType="EmailLogVo"
+		resultType="EmailLog">
+		
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_mail_log   where  1=1 
+		
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+			<if test="post_email != null and post_email != ''">
+				and post_email=#{post_email}
+			</if>
+			<if test="get_email != null and get_email != ''">
+				and get_email=#{get_email}
+			</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+
+	</select>
+
+	<select id="queryFileDownLog" parameterType="FileDownLogVo"
+		resultType="FileDownLog">
+		select * from dt_user_attach_log dt1,
+		(
+		select top 20 id from
+		(
+		select top(#{index}*20) id from dt_user_attach_log where 1=1
+
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+		order by id desc
+		)dt order by dt.id asc
+		)dt2 where dt1.id=dt2.id order by dt1.id
+	</select>
+
+	<select id="getSmsLog" parameterType="int" resultType="SmsLog">
+		select * from dt_user_sms_log where id=#{0}
+	</select>
+
+	<select id="getEmailLog" parameterType="int" resultType="EmailLog">
+		select * from dt_user_mail_log where id=#{0}
+	</select>
+
+	<select id="getFileDownLog" parameterType="int" resultType="FileDownLog">
+		select * from dt_user_attach_log where id=#{0}
+	</select>
+
+	<update id="updSmsLog" parameterType="SmsLog">
+		update dt_user_sms_log
+		set
+		user_id=#{user_id},
+		user_role_type=#{user_role_type},
+		user_role_value=#{user_role_value},
+		type=#{type},
+		content=#{content},
+		user_ip=#{user_ip},
+		Mobile=#{Mobile},
+		add_time=#{add_time},
+		send_status=#{send_status},
+		send_remark=#{send_remark},
+		send_time=#{send_time}
+		where id=#{id}
+	</update>
+
+	<update id="updEmailLog" parameterType="EmailLog">
+		update dt_user_mail_log
+		set
+		user_id=#{user_id},
+		user_role_type=#{user_role_type},
+		user_role_value=#{user_role_value},
+		type=#{type},
+		title=#{title},
+		content=#{content},
+		user_ip=#{user_ip},
+		get_email=#{get_email},
+		post_email=#{post_email},
+		add_time=#{add_time},
+		send_status=#{send_status},
+		send_remark=#{send_remark},
+		send_time=#{send_time}
+		where id=#{id}
+	</update>
+
+	<update id="updFileDownLog" parameterType="FileDownLog">
+		update dt_user_attach_log
+		set
+		user_id=#{user_id},
+		user_role_type=#{user_role_type},
+		user_role_value=#{user_role_value},
+		attach_id=#{attach_id},
+		file_name=#{file_name},
+		add_time=#{add_time}
+		where id=#{id}
+	</update>
+
+	<insert id="addSmsLog" parameterType="SmsLog">
+		insert into
+		dt_user_sms_log(user_id,user_role_type,user_role_value,type,content,user_ip,Mobile,add_time,send_status,send_remark,send_time)
+		values
+		(#{user_id},#{user_role_type},#{user_role_value},#{type},#{content},#{user_ip},#{Mobile},#{add_time},#{send_status},#{send_remark},#{send_time})
+	</insert>
+
+	<insert id="addEmailLog" parameterType="EmailLog">
+		insert into
+		dt_user_mail_log(user_id,user_role_type,user_role_value,type,title,content,user_ip,get_email,post_email,add_time,send_status,send_remark,send_time)
+		values
+		(#{user_id},#{user_role_type},#{user_role_value},#{type},#{title},#{content},#{user_ip},#{get_email},#{post_email},#{add_time},#{send_status},#{send_remark},#{send_time})
+	</insert>
+
+	<delete id="delSmsLog" parameterType="int">
+		delete from dt_user_sms_log where id=#{0}
+	</delete>
+
+	<delete id="delEmailLog" parameterType="int">
+		delete from dt_user_mail_log where id=#{0}
+	</delete>
+
+	<delete id="delFileDownLog" parameterType="int">
+		delete from dt_user_attach_log where id=#{0}
+	</delete>
+
+
+
+
+	<select id="countPageViewLog" parameterType="PageViewLogVo"
+		resultType="int">
+		select count(*) from dt_page_view_log where 1=1
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+			<if test="view_type != null and view_type != ''">
+				and view_type=#{view_type}
+			</if>
+	</select>
+	<select id="queryPageViewLog" parameterType="PageViewLogVo"
+		resultType="PageViewLog">
+		
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_page_view_log   where  1=1 
+		
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+			<if test="view_type != null and view_type != ''">
+				and view_type=#{view_type}
+			</if>
+		
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+		
+	</select>
+	<select id="getPageViewLog" parameterType="long" resultType="PageViewLog">
+		select * from dt_page_view_log where id=#{0}
+	</select>
+	<update id="updPageViewLog" parameterType="PageViewLog">
+		update dt_page_view_log
+		set
+		user_id=#{user_id},
+		title=#{title},
+		url=#{url},
+		from_url=#{from_url},
+		ip=#{ip},
+		view_time=#{view_time},
+		view_type=#{view_type},
+		view_browser=#{view_browser}
+		where id=#{id}
+	</update>
+	<delete id="delPageViewLog" parameterType="int">
+		delete from dt_page_view_log where id=#{0}
+	</delete>
+
+
+
+	<select id="countDeviceLog" parameterType="DeviceLogVo"
+		resultType="int">
+		select count(*) from dt_user_online_log where 1=1
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+	</select>
+	<select id="queryDeviceLog" parameterType="DeviceLogVo"
+		resultType="DeviceLog">
+		select * from dt_user_online_log dt1,
+		(
+		select top 20 id from
+		(
+		select top(#{index}*20) id from dt_user_online_log where 1=1
+
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+		order by id desc
+		)dt order by dt.id asc
+		)dt2 where dt1.id=dt2.id order by dt1.id
+	</select>
+	<select id="getDeviceLog" parameterType="long" resultType="DeviceLog">
+		select * from dt_user_online_log where id=#{0}
+	</select>
+	<update id="updDeviceLog" parameterType="DeviceLog">
+		update dt_user_online_log
+		set
+		user_id=#{user_id},
+		from_type=#{from_type},
+		from_device=#{from_device},
+		from_ip=#{from_ip},
+		from_time=#{from_time},
+		from_areapoint=#{from_areapoint},
+		from_area=#{from_area}
+		where id=#{id}
+	</update>
+	<delete id="delDeviceLog" parameterType="long">
+		delete from dt_user_online_log where id=#{0}
+	</delete>
+
+	<!-- // dt_user_message 用户站内短消息信息表 -->
+
+	<select id="countNotice" parameterType="NoticeVo" resultType="int">
+		select count(*) from dt_notice where 1=1
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+		<if test="title != null and title != ''">
+			and title like '%'+#{title}+'%'
+		</if>
+		
+			and state = #{state}
+
+	</select>
+	<select id="queryNotice" parameterType="NoticeVo" resultType="Notice">
+		SELECT * FROM 
+
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_notice   where  1=1 
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+		<if test="title != null and title != ''">
+			and title like '%'+#{title}+'%'
+		</if>
+		
+			and state = #{state}
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+	
+	</select>
+
+	<insert id="addNotice" parameterType="Notice">
+		insert into dt_notice
+		(title,content,get_user_roles,get_user_groups,get_user_area,user_id,user_role_type,user_role_value,state,update_time,remark)
+		values(#{title},#{content},#{get_user_roles},#{get_user_groups},#{get_user_area},#{user_id},#{user_role_type},#{user_role_value},#{state},#{update_time},#{remark})
+	</insert>
+
+	<select id="getNotice" parameterType="int" resultType="Notice">
+		select * from dt_notice where id=#{0}
+	</select>
+
+	<update id="updNotice" parameterType="Notice">
+		update dt_notice set
+		title=#{title},
+		content=#{content},
+		get_user_roles=#{get_user_roles},
+		get_user_groups=#{get_user_groups},
+		get_user_area=#{get_user_area},
+		user_id=#{user_id},
+		user_role_type=#{user_role_type},
+		user_role_value=#{user_role_value},
+		state=#{state},
+		update_time=#{update_time},
+		remark=#{remark}
+		where id=#{id}
+	</update>
+
+	<delete id="delNotice" parameterType="int">
+		delete from dt_notice where id=#{0}
+	</delete>
+
+	<!-- //////////// dt_user_message 用户站内短消息信息表//////////////////////////////////////////////// -->
+
+	<select id="countUserMessage" parameterType="UserMessageVo"
+		resultType="int">
+		select count(*) from dt_user_message where 1=1
+			<if test="accept_user_id != null and accept_user_id != ''"> 
+				and accept_user_id=#{accept_user_id} 
+			</if> 
+			
+			<if test="accept_user_role_type != null and accept_user_role_type != ''"> 
+				and accept_user_role_type=#{accept_user_role_type} 
+			</if> 
+			<if test="type != null and type != ''"> 
+				and type=#{type} 
+			</if> 
+			<if test="is_read != null and is_read != ''"> 
+				and is_read=#{is_read} 
+			</if>
+
+
+	</select>
+	<select id="queryUserMessage" parameterType="UserMessageVo"
+		resultType="UserMessage">
+		SELECT * FROM 
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_message   where  1=1 
+			<if test="accept_user_id != null and accept_user_id != ''"> 
+				and accept_user_id=#{accept_user_id} 
+			</if> 
+			
+			<if test="accept_user_role_type != null and accept_user_role_type != ''"> 
+				and accept_user_role_type=#{accept_user_role_type} 
+			</if> 
+			<if test="type != null and type != ''"> 
+				and type=#{type} 
+			</if> 
+			<if test="is_read != null and is_read != ''"> 
+				and is_read=#{is_read} 
+			</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+		
+	</select>
+
+	<insert id="addUserMessage" parameterType="UserMessage">
+		insert into dt_user_message
+		(type,post_user_id,post_user_role_type,post_user_role_value,accept_user_id,accept_user_role_type,accept_user_role_value,is_read,title,content,post_time,read_time,is_del)
+		values(#{type},#{post_user_id},#{post_user_role_type},#{post_user_role_value},#{accept_user_id},#{accept_user_role_type},#{accept_user_role_value},#{is_read},#{title},#{content},#{post_time},#{read_time},#{is_del})
+	</insert>
+
+	<select id="getUserMessage" parameterType="long" resultType="UserMessage">
+		select * from dt_user_message where id=#{0}
+	</select>
+
+	<update id="updUserMessage" parameterType="UserMessage">
+		update dt_user_message set
+		type=#{type},
+		post_user_id=#{post_user_id},
+		post_user_role_type=#{post_user_role_type},
+		post_user_role_value=#{post_user_role_value},
+		accept_user_id=#{accept_user_id},
+		accept_user_role_type=#{accept_user_role_type},
+		accept_user_role_value=#{accept_user_role_value},
+		is_read=#{is_read},
+		title=#{title},
+		content=#{content},
+		post_time=#{post_time},
+		read_time=#{read_time},
+		is_del=#{is_del}
+		where id=#{id}
+	</update>
+
+	<delete id="delUserMessage" parameterType="int">
+		delete from dt_user_message where id=#{0}
+	</delete>
+
+	<!-- // dt_user_notice 用户动态消息表/////////////////////////////////////////////////////////////// -->
+	<select id="countUserNotice" parameterType="UserNoticeVo"
+		resultType="int">
+		select count(*) from dt_user_notice where 1=1
+			and type=#{type}
+			and user_role_type=#{user_role_type}
+			and is_del=#{is_del}
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+
+
+
+	</select>
+	<select id="queryUserNotice" parameterType="UserNoticeVo"
+		resultType="UserNotice">
+		SELECT * FROM 
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_notice   where  1=1 
+			and type=#{type}
+			and user_role_type=#{user_role_type}
+			and is_del=#{is_del}
+			<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+			</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+		
+	</select>
+
+	<insert id="addUserNotice" parameterType="UserNotice">
+		insert into dt_user_notice
+		(type,title,url,add_time,user_id,user_role_type,user_role_value,is_del)
+		values(#{type},#{title},#{url},#{add_time},#{user_id},#{user_role_type},#{user_role_value},#{is_del})
+	</insert>
+
+	<select id="getUserNotice" parameterType="int" resultType="UserNotice">
+		select * from dt_user_notice where id=#{0}
+	</select>
+
+	<update id="updUserNotice" parameterType="UserNotice">
+		update dt_user_notice set
+		type=#{type},
+		title=#{title},
+		url=#{url},
+		add_time=#{add_time},
+		user_id=#{user_id},
+		user_role_type=#{user_role_type},
+		user_role_value=#{user_role_value=#},
+		is_del=#{is_del}
+		where id=#{id}
+	</update>
+
+	<delete id="delUserNotice" parameterType="int">
+		delete from dt_user_notice where id=#{0}
+	</delete>
+
+
+
+
+
+	<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+	<select id="countFiles" parameterType="FilesVo" resultType="int">
+		select count(*) from dt_files where 1=1
+
+	</select>
+	<select id="queryFiles" parameterType="FilesVo" resultType="Files">
+		select * from dt_files dt1,
+		(
+		select top 20 id from
+		(
+		select top(#{index}*20) id from dt_files where 1=1
+		order by id desc
+		)dt order by dt.id asc
+		)dt2 where dt1.id=dt2.id order by dt1.id
+	</select>
+
+	<select id="getFiles" parameterType="string" resultType="Files">
+		select * from dt_files where id=#{0}
+	</select>
+
+	<insert id="addFiles" parameterType="Files">
+		insert into dt_files
+		(file_name,file_path,file_md5,file_server,file_uptime,file_upuser,file_usetimes,file_state,file_type,file_endwith,file_fullpath)
+		values
+		(#{file_name},#{file_path},#{file_md5},#{file_server},#{file_uptime},#{file_upuser},#{file_usetimes},#{file_state},#{file_type},#{file_endwith},#{file_fullpath})
+	</insert>
+
+
+	<update id="updFiles" parameterType="Files">
+		update dt_files set
+		file_name=#{file_name},
+		file_path=#{file_path},
+		file_md5=#{file_md5},
+		file_server=#{file_server},
+		file_uptime=#{file_uptime},
+		file_upuser=#{file_upuser},
+		file_usetimes=#{file_usetimes},
+		file_state=#{file_state},
+		file_type=#{file_type},
+		file_endwith=#{file_endwith},
+		file_fullpath=#{file_fullpath}
+		where id=#{id}
+	</update>
+
+	<delete id="delFiles" parameterType="int">
+		delete from dt_files where id=#{0}
+	</delete>
+	<!-- 上传文件饼图 -->
+	<select id="countFilesGroup" resultType="map">
+		select case file_type when '0' then '图片'
+		when '1' then '压缩包'
+		when '2' then 'WORD等文档'
+		else '其他文件' end as file_type , count(*) as count from dt_files group by
+		file_type order by file_type desc
+	</select>
+
+	<!-- 2.3.20.dt_user_notice_read（用户动态消息读取记录表） -->
+<select id="countUserNoticeRead" parameterType="UserNoticeReadVo" resultType="int">
+select count(*)  from dt_user_notice_read  where 1=1
+		<if test="user_id != null and user_id != ''"> 
+			and user_id = #{user_id}
+		</if>
+		<if test="user_role_type != null and user_role_type != ''"> 
+			and user_role_type = #{user_role_type}
+		</if>
+</select>
+
+<select id="queryUserNoticeRead" parameterType="UserNoticeReadVo" resultType="UserNoticeRead">
+
+SELECT * FROM 
+		( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{index}*20) tempcolumn=0, *  from dt_user_notice_read   where  1=1 
+			<if test="user_id != null and user_id != ''"> 
+			and user_id = #{user_id}
+		</if>
+		<if test="user_role_type != null and user_role_type != ''"> 
+			and user_role_type = #{user_role_type}
+		</if>
+		order by id desc
+		 )vip)mvp where temprownumber>((#{index}-1)*20)
+
+</select>
+<select id="getUserNoticeRead" parameterType="int" resultType="UserNoticeRead">
+select * from dt_user_notice_read where id=#{0}
+</select>
+<insert id="addUserNoticeRead" parameterType="UserNoticeRead">
+insert into dt_user_notice_read
+(from_type,read_time,user_id,user_role_type,user_role_value)
+values(#{from_type},#{read_time},#{user_id},#{user_role_type},#{user_role_value})
+</insert>
+<update id="updUserNoticeRead" parameterType="UserNoticeRead">
+update dt_user_notice_read set
+user_id=#{user_id},
+from_type=#{from_type},
+read_time=#{read_time},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserNoticeRead" parameterType="int">
+delete from dt_user_notice_read where id=#{0}
+</delete>
+	
+
+</mapper>
