@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.datahost.mapper.sqlserver.ClientInfoMapper" >
+    
+    <select id="getUserManage" parameterType="com.manji.datahost.vo.ClientManageVo" resultType="com.manji.datahost.model.sqlserver.client.UserManage"  >
+    SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0, 
+	    a.id as user_id,a.user_name,d.person_name,a.nick_name,a.mobile,a.area,a.reg_time,
+	    b.last_login_time,a.status,c.state from  manji.dbo.dt_users a left join
+	 	(select max(t.login_time) as  last_login_time,t.user_id as userId
+		from mj_log.dbo.dt_user_login_log t group by  t.user_id ) b on a.id=b.userId
+		left join manji.dbo.dt_user_accountinfo c on a.id=c.user_id and c.role_type='Buyer'
+		left join manji.dbo.dt_user_personinfo d on a.id=d.user_id where a.is_del=0
+	    <if test="reg_start_time != null and reg_start_time !=''"> and a.reg_time&gt;=#{reg_start_time} </if>
+	    <if test="reg_end_time != null and reg_end_time !=''"> and a.reg_time&lt;=#{reg_end_time}</if>
+	    <if test="login_start_time != null and login_start_time !=''"> and b.last_login_time&gt;=#{login_start_time}</if> 
+	    <if test="login_end_time != null and login_end_time !=''"> and b.last_login_time&lt;=#{login_end_time}</if> 
+	    <if test="key_word != null and key_word !=''"> and (a.user_name like '%${key_word}%' or d.person_name like '%${key_word}%' or a.nick_name like '%${key_word}%' or a.mobile like '%${key_word}%')</if> 
+	    order by a.id
+    )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+    </select>
+    
+	<select id="countUserManage" parameterType="com.manji.datahost.vo.ClientManageVo" resultType="int">
+	select count(*) count from  manji.dbo.dt_users a left join
+ 	(select max(t.login_time) as  last_login_time,t.user_id as userId
+	from mj_log.dbo.dt_user_login_log t group by  t.user_id ) b on a.id=b.userId
+	left join manji.dbo.dt_user_accountinfo c on a.id=c.user_id and c.role_type='Buyer'
+	left join manji.dbo.dt_user_personinfo d on a.id=d.user_id where a.is_del=0
+	<if test="reg_start_time != null and reg_start_time !=''"> and a.reg_time&gt;=#{reg_start_time} </if>
+    <if test="reg_end_time != null and reg_end_time !=''"> and a.reg_time&lt;=#{reg_end_time}</if>
+    <if test="login_start_time != null and login_start_time !=''"> and b.last_login_time&gt;=#{login_start_time}</if> 
+    <if test="login_end_time != null and login_end_time !=''"> and b.last_login_time&lt;=#{login_end_time}</if> 
+    <if test="key_word != null and key_word !=''"> and (a.user_name like '%${key_word}%' or d.person_name like '%${key_word}%' or a.nick_name like '%${key_word}%' or a.mobile like '%${key_word}%')</if> 
+	</select>	
+	
+	<update id="updAccountState">
+	update dt_user_accountinfo set state=#{state} where user_id=#{user_id}
+	</update>
+	
+	<select id="getShopManage" parameterType="com.manji.datahost.vo.ClientManageVo" resultType="com.manji.datahost.model.sqlserver.client.ShopManage">
+	SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0, 
+		a.id as shop_id,a.user_id,b.user_name,a.name,a.mobile,a.area,d.title,a.add_time,e.last_login_time,b.status,c.state from dt_user_role_shopinfo a 
+		left join dt_users b on a.user_id=b.id
+		left join dt_user_accountinfo c on a.user_id=c.user_id and c.role_type='Shop'
+		left join dt_article_category d on a.main_business=d.id
+		left join (select max(t.login_time) as  last_login_time,t.user_id as userId
+		from mj_log.dbo.dt_user_login_log t group by  t.user_id ) e on a.user_id=e.userId  where a.is_del=0 
+		<if test="reg_start_time != null and reg_start_time !=''"> and a.add_time&gt;=#{reg_start_time} </if>
+	    <if test="reg_end_time != null and reg_end_time !=''"> and a.add_time&lt;=#{reg_end_time}</if>
+	    <if test="login_start_time != null and login_start_time !=''"> and e.last_login_time&gt;=#{login_start_time}</if> 
+	    <if test="login_end_time != null and login_end_time !=''"> and e.last_login_time&lt;=#{login_end_time}</if> 
+	    <if test="key_word != null and key_word !=''"> and (b.user_name like '%${key_word}%' or a.name like '%${key_word}%' or b.mobile like '%${key_word}%')</if>
+	    order by a.id
+	)vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+	</select>
+	
+	<select id="countShopManage" parameterType="com.manji.datahost.vo.ClientManageVo" resultType="int">
+	select count(*) from dt_user_role_shopinfo a 
+	left join dt_users b on a.user_id=b.id
+	left join dt_user_accountinfo c on a.user_id=c.user_id and c.role_type='Shop'
+	left join dt_article_category d on a.main_business=d.id
+	left join (select max(t.login_time) as  last_login_time,t.user_id as userId
+	from mj_log.dbo.dt_user_login_log t group by  t.user_id ) e on a.user_id=e.userId  where a.is_del=0 
+	<if test="reg_start_time != null and reg_start_time !=''"> and a.add_time&gt;=#{reg_start_time} </if>
+    <if test="reg_end_time != null and reg_end_time !=''"> and a.add_time&lt;=#{reg_end_time}</if>
+    <if test="login_start_time != null and login_start_time !=''"> and e.last_login_time&gt;=#{login_start_time}</if> 
+    <if test="login_end_time != null and login_end_time !=''"> and e.last_login_time&lt;=#{login_end_time}</if> 
+    <if test="key_word != null and key_word !=''"> and (b.user_name like '%${key_word}%' or a.name like '%${key_word}%' or b.mobile like '%${key_word}%')</if>
+	</select>
+	
+	<!-- 用户详情 -->
+	<select id="findSafeInfo" parameterType="int" resultType="com.manji.datahost.model.sqlserver.client.SafeInfo">
+	select top 1 a.password,a.pay_password,a.email,a.mobile,b.person_name from dt_users a left join dt_user_personinfo b on a.id=b.user_id where a.id=#{user_id}
+	</select>
+	
+	<select id="getPasswordTime" resultType="string">
+	select update_time from dt_user_safeprotect  where update_time>DateAdd(Month,#{time},getdate()) and user_id=#{user_id} and safe_type=#{type}
+	</select>
+	
+	<select id="getUserSafe" parameterType="int" resultType="com.manji.datahost.model.sqlserver.client.UserSafe">
+	select top 1 a.id as user_id,a.nick_name,a.avatar,b.person_name from dt_users a left join dt_user_personinfo b on a.id=b.user_id where a.id=#{user_id}
+	</select>
+	
+	<select id="findUserInfo" parameterType="int" resultType="com.manji.datahost.model.sqlserver.user.UserInfo">
+	select top 1 a.id as user_id,a.avatar,a.user_name,a.reg_time,a.area,a.nick_name,a.sex,a.birthday,a.password,a.pay_password,a.mobile,a.email,b.person_name,a.status,b.card_number,
+    c.role_type,c.role_value,c.amount,c.voucher,c.state from dt_users a left join dt_user_personinfo b on a.id=b.user_id 
+    left join dt_user_accountinfo c on a.id=c.user_id and c.role_type='Buyer' 
+    left join dt_user_role_shopinfo d on a.id=d.user_id where a.id=#{user_id}
+	</select>
+	
+	<select id="findUserAccount" parameterType="com.manji.datahost.vo.AccountVo" resultType="com.manji.datahost.model.sqlserver.user.UserAccount"  >
+    SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0, 
+		 	a.user_id,a.value,a.old_value,a.new_value,a.add_time,a.order_no,a.type,a.remark,b.id as order_id 
+		 	from dt_user_amount_log a left join dt_orders b on a.order_no=b.order_no where a.user_id=#{user_id}
+		 	<if test="type != null and type != ''"> and a.type=#{type}</if>
+    		<choose>
+                <when test="start_time != null and start_time !='' and start_time > '2016-08-01 01:00:39.713'">
+                       and a.add_time&gt;=#{start_time}
+                </when>
+                <otherwise>
+                       and a.add_time&gt;'2016-08-01 01:00:39.713'
+                </otherwise>
+         	</choose>
+            <if test="end_time != null and end_time !='' and end_time > '2016-08-01 01:00:39.713'">
+                   and a.add_time&lt;=#{end_time}
+            </if>
+            order by a.add_time desc
+		 )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+    </select>
+    <select id="countUserAccount" parameterType="com.manji.datahost.vo.AccountVo" resultType="int">
+		select count(*) from dt_user_amount_log a left join dt_orders b on a.order_no=b.order_no where a.user_id=#{user_id}
+		<if test="type != null and type != ''"> and a.type=#{type}</if>
+		<choose>
+	           <when test="start_time != null and start_time !='' and start_time > '2016-08-01 01:00:39.713'">
+	                  and a.add_time&gt;=#{start_time}
+	           </when>
+	           <otherwise>
+	                  and a.add_time&gt;'2016-08-01 01:00:39.713'
+	           </otherwise>
+	   	</choose>
+	    <if test="end_time != null and end_time !='' and end_time > '2016-08-01 01:00:39.713'">
+	           and a.add_time&lt;=#{end_time}
+	    </if>
+	</select>
+	
+	<select id="findUserVoucher" parameterType="com.manji.datahost.vo.AccountVo" resultType="com.manji.datahost.model.sqlserver.user.UserVoucher"  >
+    SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0, 
+		 	a.user_id,a.value,a.old_value,a.new_value,a.add_time,a.order_no,a.type,a.remark,b.id as order_id 
+		 	from dt_user_voucher_log a left join dt_orders b on a.order_no=b.order_no where a.user_id=#{user_id}
+		 	<if test="type != null and type != ''"> and a.type=#{type}</if>
+    		<choose>
+                <when test="start_time != null and start_time !='' and start_time > '2016-08-01 01:00:39.713'">
+                       and a.add_time&gt;=#{start_time}
+                </when>
+                <otherwise>
+                       and a.add_time&gt;'2016-08-01 01:00:39.713'
+                </otherwise>
+         	</choose>
+            <if test="end_time != null and end_time !='' and end_time > '2016-08-01 01:00:39.713'">
+                   and a.add_time&lt;=#{end_time}
+            </if>
+            order by a.add_time desc
+		 )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+    </select>
+    <select id="countUserVoucher" parameterType="com.manji.datahost.vo.AccountVo" resultType="int">
+		select count(*) from dt_user_voucher_log a left join dt_orders b on a.order_no=b.order_no where a.user_id=#{user_id}
+		<if test="type != null and type != ''"> and a.type=#{type}</if>
+		<choose>
+	           <when test="start_time != null and start_time !='' and start_time > '2016-08-01 01:00:39.713'">
+	                  and a.add_time&gt;=#{start_time}
+	           </when>
+	           <otherwise>
+	                  and a.add_time&gt;'2016-08-01 01:00:39.713'
+	           </otherwise>
+	   	</choose>
+	    <if test="end_time != null and end_time !='' and end_time > '2016-08-01 01:00:39.713'">
+	           and a.add_time&lt;=#{end_time}
+	    </if>
+	</select>
+	
+	<select id="findUserOrder" parameterType="com.manji.datahost.vo.UserOrderVo" resultType="com.manji.datahost.model.sqlserver.user.UserOrder"  >
+     SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0,
+			o.id as order_id,o.user_id,isnull((select user_name from dt_users where id=o.user_id),'-') as buyer_name,isnull(o.payment_status,'') payment_status,
+		    isnull((select user_name from dt_users where id=o.shop_user_id),'-') as shop_name,f.mobile,
+			isnull(o.order_no,'-') order_no,isnull(o.order_amount,0) order_amount,isnull(o.add_time,'') add_time,isnull(g.express_status,'-') express_status,
+			isnull(o.status,'-') status,isnull(f.name,'-') name,isnull(o.book_back_status,'-') book_back_status from 
+			dt_orders o left join dt_users u on o.shop_user_id=u.id 
+			left join dt_order_goodinfo g on o.id=g.order_id 
+			left join dt_user_role_shopinfo f on o.shop_user_role_value=f.id and o.shop_user_role_type='Shop' 
+			where o.user_id=#{user_id}
+			<if test="start_time != null and start_time !=''"> and o.add_time&gt;=#{start_time} </if>
+		    <if test="end_time != null and end_time !=''"> and o.add_time&lt;=#{end_time}</if>
+		    <if test="payment_status != null and payment_status !=''"> and o.payment_status=#{payment_status}</if> 
+		    <if test="status != null and status !=''"> and o.status=#{status}</if> 
+		    <if test="order_no != null and order_no !=''"> and o.order_no like '%${order_no}%'</if> 
+		 )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+    </select>
+    <select id="countUserOrder" parameterType="int" resultType="int">
+		select count(*) from dt_orders o left join dt_users u on o.shop_user_id=u.id 
+		left join dt_order_goodinfo g on o.id=g.order_id 
+		left join dt_user_role_shopinfo f on o.shop_user_role_value=f.id and o.shop_user_role_type='Shop' 
+		left join dt_order_backinfo b on o.id=b.order_id where o.user_id=#{user_id}
+		<if test="start_time != null and start_time !=''"> and o.add_time&gt;=#{start_time} </if>
+	    <if test="end_time != null and end_time !=''"> and o.add_time&lt;=#{end_time}</if>
+	    <if test="payment_status != null and payment_status !=''"> and o.payment_status=#{payment_status}</if> 
+	    <if test="status != null and status !=''"> and o.status=#{status}</if> 
+	    <if test="order_no != null and order_no !=''"> and o.order_no like '%${order_no}%'</if> 
+	</select>
+	
+	<select id="findOrderBack" parameterType="com.manji.datahost.vo.OrderBackVo" resultType="com.manji.datahost.model.sqlserver.client.OrderBack"  >
+     SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0,
+			e.goods_title,c.name,c.mobile,(select user_name from dt_users where id=b.user_id) as buyer_name,
+			a.order_no,a.real_back_amount,a.back_goods,a.status,a.add_time,a.order_id
+			from dt_order_backinfo a left join dt_orders b on a.order_id=b.id 
+			left join dt_user_role_shopinfo c on c.user_id=b.shop_user_id
+			left join dt_users d on b.shop_user_id=d.id
+			left join dt_order_goods e on a.order_id=e.order_id
+			where b.user_id=#{user_id}
+			<choose>
+	           <when test="type == 1">
+	                  and a.add_time&gt;DateAdd(Month,-3,getdate())
+	           </when>
+	           <otherwise>
+					<if test="start_time != null and start_time !=''"> and a.add_time&gt;=#{start_time} </if>
+				    <if test="end_time != null and end_time !=''"> and a.add_time&lt;=#{end_time}</if>
+				    <if test="back_goods != null and back_goods !=''"> and a.back_goods=#{back_goods}</if> 
+				    <if test="status != null and status !=''"> and a.status=#{status}</if> 
+				    <if test="order_no != null and order_no !=''"> and a.order_no like '%${order_no}%'</if> 
+	           </otherwise>
+	   		</choose>
+		 )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+    </select>
+    <select id="countOrderBack" parameterType="int" resultType="int">
+		select count(*) 
+		from dt_order_backinfo a left join dt_orders b on a.order_id=b.id 
+		left join dt_user_role_shopinfo c on c.user_id=b.shop_user_id
+		left join dt_users d on b.shop_user_id=d.id
+		where b.user_id=#{user_id}
+		<choose>
+	           <when test="type == 1">
+	                  and a.add_time&gt;DateAdd(Month,-3,getdate())
+	           </when>
+	           <otherwise>
+					<if test="start_time != null and start_time !=''"> and a.add_time&gt;=#{start_time} </if>
+				    <if test="end_time != null and end_time !=''"> and a.add_time&lt;=#{end_time}</if>
+				    <if test="back_goods != null and back_goods !=''"> and a.back_goods=#{back_goods}</if> 
+				    <if test="status != null and status !=''"> and a.status=#{status}</if> 
+				    <if test="order_no != null and order_no !=''"> and a.order_no like '%${order_no}%'</if> 
+	           </otherwise>
+	   	</choose>
+	</select>
+	
+	<select id="findUserLogin" parameterType="com.manji.datahost.vo.UserLoginVo" resultType="com.manji.datahost.model.sqlserver.client.UserLogin"  >
+     SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0,
+			login_ip,login_entrance,login_time from mj_log.dbo.dt_user_login_log 
+			where user_id=#{user_id}
+			<if test="start_time != null and start_time !=''"> and login_time&gt;=#{start_time} </if>
+		    <if test="end_time != null and end_time !=''"> and login_time&lt;=#{end_time}</if>
+		 )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+    </select>
+    <select id="countUserLogin" parameterType="int" resultType="int">
+		select count(*) from mj_log.dbo.dt_user_login_log where user_id=#{user_id}
+		<if test="start_time != null and start_time !=''"> and login_time&gt;=#{start_time} </if>
+	    <if test="end_time != null and end_time !=''"> and login_time&lt;=#{end_time}</if>
+	</select>
+	
+	<select id="findOrderIdByOrderNo" parameterType="string" resultType="int">
+		select id as order_id from dt_orders where order_no=#{order_no}
+	</select>
+	
+	<!-- 商家信息 -->
+	<select id="getShopReputation" parameterType="int" resultType="int">
+		select score from dt_supplier_business where shop_id=#{shop_id}
+	</select>
+	
+	<select id="findReputationInfo" parameterType="int" resultType="com.manji.datahost.model.sqlserver.client.ShopReputation">
+		select top 1 a.id as shop_id,a.user_id,a.pc_logo,a.name,b.name as company_name from dt_user_role_shopinfo a left join dt_user_companyinfo b on a.user_id=b.user_id 
+		where a.is_del=0 and a.user_id=#{user_id}
+	</select>
+	
+	<select id="findShopActivities" parameterType="com.manji.datahost.vo.ActivitiesVo" resultType="com.manji.datahost.model.sqlserver.shop.ShopActivities"> 
+	SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0, 
+		a.user_id,a.title,a.content,a.begin_time,a.end_time,a.status,c.name,
+		(case a.act_type when 'mj' then '满减' when 'zk' then '折扣' when 'lj' then '立减' else '' end) act_type
+		from dt_activity_business_shop a left join dt_user_role_shopinfo c on a.user_id=c.user_id 
+		where a.user_id=#{user_id}
+		<if test="status != null and status != ''"> and a.status=#{status}</if>
+		<if test="act_type != null and act_type != ''"> and a.act_type=#{act_type}</if>
+		<if test="title != null and title != ''"> and a.title like '%${title}%'</if>
+		<if test="start_time != null and start_time != '' and end_time != null and end_time != ''"> 
+		and (a.begin_time &lt;#{end_time} and a.begin_time&gt;#{start_time} or 
+		a.end_time&gt;#{start_time} and a.end_time&lt;#{end_time} or
+		a.begin_time&lt;#{start_time} and a.end_time&gt;#{end_time})</if>
+		<if test="start_time != null and start_time != '' and (end_time == null or end_time == '')"> 
+		and a.end_time&gt;#{start_time}</if>
+		<if test="end_time != null and end_time != '' and (start_time == null or start_time == '')"> 
+		and a.begin_time&lt;#{end_time}</if>
+		 )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+	</select>
+	<select id="countActivities" parameterType="int" resultType="int">
+	select count(*) from dt_activity_business_shop a left join dt_user_role_shopinfo c on a.user_id=c.user_id 
+	where a.user_id=#{user_id}
+	<if test="status != null and status != ''"> and a.status=#{status}</if>
+	<if test="act_type != null and act_type != ''"> and a.act_type=#{act_type}</if>
+	<if test="title != null and title != ''"> and a.title like '%${title}%'</if>
+	<if test="start_time != null and start_time != '' and end_time != null and end_time != ''"> 
+	and (a.begin_time &lt;#{end_time} and a.begin_time&gt;#{start_time} or 
+	a.end_time&gt;#{start_time} and a.end_time&lt;#{end_time} or
+	a.begin_time&lt;#{start_time} and a.end_time&gt;#{end_time})</if>
+	<if test="start_time != null and start_time != '' and (end_time == null or end_time == '')"> 
+	and a.end_time&gt;#{start_time}</if>
+	<if test="end_time != null and end_time != '' and (start_time == null or start_time == '')"> 
+	and a.begin_time&lt;#{end_time}</if>
+	</select>
+	
+	<select id="findGoodsManage" parameterType="com.manji.datahost.vo.GoodsManageVo" resultType="com.manji.datahost.model.sqlserver.shop.GoodsManage">
+     SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0, 
+			a.id as article_id,a.update_time,a.title,e.class_list,a.category_id,isnull(d.title,'默认分类') as self_title,c.name,b.goods_describe,b.sell_price,b.is_show
+			from dt_article a left join dt_article_info b on a.id=b.article_id left join dt_brand c on b.brand=c.id
+			left join dt_article_category_user d on a.user_category_id=d.id 
+			left join dt_article_category e on a.category_id=e.id
+			where a.is_del=0 and a.user_id=#{user_id}
+			<if test="is_show != null and is_show != '-1'"> and b.is_show=#{is_show}</if>
+			<if test="self_title != null and self_title != ''"> and d.title=#{self_title}</if>
+			<if test="title != null and title != ''"> and e.title like '%${title}%'</if>
+			<if test="name != null and name != ''"> and a.title like '%${name}%'</if>
+		 )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+    </select>
+    <select id="countGoodsManage" parameterType="com.manji.datahost.vo.GoodsManageVo" resultType="int">
+		select count(*) from dt_article a left join dt_article_info b on a.id=b.article_id left join dt_brand c on b.brand=c.id
+		left join dt_article_category_user d on a.user_category_id=d.id 
+		left join dt_article_category e on a.category_id=e.id
+		where a.is_del=0 and a.user_id=#{user_id}
+		<if test="is_show != null and is_show != '-1'"> and b.is_show=#{is_show}</if>
+		<if test="self_title != null and self_title != ''"> and d.title=#{title}</if>
+		<if test="title != null and title != ''"> and e.title like '%${title}%'</if>
+		<if test="name != null and name != ''"> and a.title like '%${name}%'</if>
+	</select>
+	
+	<select id="findSelfCategory" parameterType="int" resultType="map">
+		select title from dt_article_category_user where user_id=#{user_id}
+	</select>
+	
+	<select id="findTitleByParentId" parameterType="int" resultType="map">
+		select id,title from dt_article_category where parent_id=#{parent_id}
+	</select>
+	
+	<select id="findShopScore" parameterType="int" resultType="map">
+		select user_id,0.1*review_score review_score,0.1*service_review_score service_review_score,
+		0.1*pack_review_score pack_review_score,0.1*distribution_review_score distribution_review_score
+		from dt_user_role_shopinfo where user_id=#{user_id}
+	</select>
+	
+	<select id="findArticleInfo" parameterType="int" resultType="com.manji.datahost.model.sqlserver.client.ArticleInfo">
+	select a.id as article_id,a.category_id,a.title,a.img_url,b.class_list from dt_article a left join dt_article_category b on a.category_id=b.id where a.id=#{article_id}
+	</select>
+	
+	<select id="findGoodsCategory" parameterType="string" resultType="map">
+	select class_layer,title from dt_article_category where id in 
+	<foreach item="class_list" index="index" collection="array" open="(" separator="," close=")">
+	#{class_list}
+	</foreach>
+	</select>
+	
+	<select id="findDefaultCategory" parameterType="int" resultType="string">
+	select title from dt_article_category_user where id = (select user_category_id from dt_article where id=#{article_id})
+	</select>
+	
+	<select id="findGoodsDetail" parameterType="int" resultType="map">
+	select b.name,i.sub_title,i.goods_describe,i.goods_expenses from dt_article_info i left join dt_brand b on i.brand=b.id where i.article_id=#{article_id};
+	</select>
+	
+	<select id="findExpress" parameterType="int" resultType="map">
+	select title,logo from dt_express where id=#{expenses_companyId}
+	</select>
+	
+	<select id="findExpensesTemp" parameterType="int" resultType="string">
+	select name from dt_shop_wuliumuban where id=#{expenses_tempId}
+	</select>
+	
+	<select id="findArticleSpec" parameterType="int" resultType="com.manji.datahost.model.sqlserver.client.ArticleSpec">
+	select id as goods_id,goods_no,spec_text,sell_price,stock_quantity from dt_article_goods where article_id=#{article_id}
+	</select>
+	
+	<select id="countHavingSell" parameterType="int" resultType="int">
+	select count(*) from dt_order_goods where goods_id=#{goods_id} and state=1
+	</select>
+	
+	<select id="findGoodsPics" parameterType="int" resultType="string">
+	select img_url from dt_article where id=#{article_id}
+	</select>
+	
+	<select id="findGoodsAlbums" parameterType="int" resultType="map">
+	select thumb_path from dt_article_albums where article_id=#{article_id}
+	</select>
+	
+	<select id="findCommentInfo" parameterType="int" resultType="map">
+	select a.order_no,b.id as user_id,b.nick_name,convert(varchar(19),c.add_time,20) add_time from dt_orders a left join dt_users b on a.shop_user_id=b.id
+	left join dt_order_comment c on a.id=c.order_id where a.id=#{order_id}
+	</select>
+	
+	<select id="findCommentScore" parameterType="int" resultType="map">
+	select id,goods_title,img_url,spec_text,goods_score from dt_order_goods where order_id=#{order_id}
+	</select>
+	
+	<select id="findCommentContent" parameterType="int" resultType="map">
+	select isnull(pics,'') pics,content,convert(varchar(19),add_time,20) add_time,reply_content,convert(varchar(19),reply_time,20) reply_time from dt_article_comment where order_id=#{order_id}
+	</select>
+	
+	<select id="findCompanyInfo" parameterType="int" resultType="map">
+	select top 1 name,type,legal_person,isnull(legal_person_idcard,'') legal_person_idcard,isnull(card_number,'') card_number,isnull(card_pics,'') card_pics from dt_user_companyinfo where user_id=#{user_id} order by id desc
+	</select>
+	
+	<select id="findShopIdByUserId" parameterType="int" resultType="int">
+	select user_id from dt_user_role_shopinfo where id=#{shop_Id}
+	</select>
+	
+	<select id="findCardInfo" parameterType="int" resultType="map">
+	select title,file_url from dt_user_role_shopinfo_other where shop_id=#{shop_id}
+	</select>
+	
+	<select id="findShopCard" parameterType="int" resultType="map">
+	select isnull(name,'') name,isnull(content,'') content,isnull(mobile,'') mobile,isnull(msg_mobile,'') msg_mobile,isnull(area,'') area,
+	isnull(address,'') address,isnull(acreage,'') acreage from dt_user_role_shopinfo where id=#{shop_id}
+	</select>
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.datahost.mapper.sqlserver.NoticeMapper" >
+
+<select id="getUserNotice" parameterType="com.manji.datahost.model.sqlserver.notice.UserNoticeVo" resultType="com.manji.datahost.model.sqlserver.notice.UserNotice">
+ SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0, 
+		* from dt_user_notice
+		 )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+</select>
+
+<update id="updUserNotice" parameterType="com.manji.datahost.model.sqlserver.notice.UserNotice">
+update dt_user_notice set type=#{type},title=#{title},url=#{url},add_time=#{add_time},user_id=#{user_id},
+user_role_type=#{user_role_type},user_role_value=#{user_role_value},is_del=#{is_del},is_read=#{is_read},order_type=#{order_type},voice=#{voice}
+where id=#{id}
+</update>
+
+<insert id="addUserNotice" parameterType="com.manji.datahost.model.sqlserver.notice.UserNotice">
+insert into dt_user_notice (type,title,url,add_time,user_id,user_role_type,user_role_value,is_del,is_read,order_type,order_id,voice)
+values (#{type},#{title},#{url},#{add_time},#{user_id},#{user_role_type},#{user_role_value},#{is_del},#{is_read},#{order_type},#{order_id},#{voice})
+</insert>
+
+<delete id="delUserNotice" parameterType="int">
+delete from dt_user_notice where id=#{0}
+</delete>
+
+<select id="countUserNotice" parameterType="com.manji.datahost.model.sqlserver.notice.UserNoticeVo" resultType="int">
+select count(*) from dt_user_notice
+</select>
+
+
+<select id="getUserNoticeRead" parameterType="com.manji.datahost.model.sqlserver.notice.UserNoticeReadVo" resultType="com.manji.datahost.model.sqlserver.notice.UserNoticeRead">
+ SELECT * FROM  ( SELECT row_number() over (order by tempcolumn) temprownumber, * FROM  
+		( SELECT TOP (#{pageNumber}*#{pageSize}) tempcolumn=0, 
+		* from dt_user_notice_read
+		 )vip)mvp where temprownumber>((#{pageNumber}-1)*#{pageSize})
+</select>
+
+<update id="updUserNoticeRead" parameterType="com.manji.datahost.model.sqlserver.notice.UserNoticeRead">
+update dt_user_notice_read set user_id=#{user_id},user_role_type=#{user_role_type},user_role_value=#{user_role_value},
+read_time=#{read_time},from_type=#{from_type}
+where id=#{id}
+</update>
+
+<insert id="addUserNoticeRead" parameterType="com.manji.datahost.model.sqlserver.notice.UserNoticeRead">
+insert into dt_user_notice_read (user_id,user_role_type,user_role_value,read_time,from_type)
+values (#{user_id},#{user_role_type},#{user_role_value}#{read_time},#{from_type})
+</insert>
+
+<delete id="delUserNoticeRead" parameterType="int">
+delete from dt_user_notice_read where id=#{0}
+</delete>
+
+<select id="countUserNoticeRead" parameterType="com.manji.datahost.model.sqlserver.notice.UserNoticeReadVo" resultType="int">
+select count(*) from dt_user_notice_read
+</select>
+
+</mapper>
