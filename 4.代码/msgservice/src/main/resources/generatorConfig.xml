@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">  
+<generatorConfiguration>
+	<!-- 驱动包 -->
+	<classPathEntry location="E:\.m2\repository\mysql\mysql-connector-java\5.1.39\mysql-connector-java-5.1.39.jar" />
+	<context id="MySqlTables" targetRuntime="MyBatis3" introspectedColumnImpl="com.manji.msgservice.common.utils.mybatis.generator.SimpleIntrospectedColumn">
+		<property name="javaFileEncoding" value="UTF8" />
+		<plugin type="com.manji.msgservice.common.utils.mybatis.generator.SimpleGeneratorPlugin" />
+		<commentGenerator type="com.manji.msgservice.common.utils.mybatis.generator.SimpleCommentGenerator">
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+		<!-- 数据库连接 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://192.168.0.30:3306/javadb?useUnicode=true&amp;characterEncoding=UTF8"
+			userId="javadev" password="54juser@Mj">
+		</jdbcConnection>
+		
+    	<!-- model的配置  -->
+		<javaModelGenerator targetPackage="com.manji.msgservice.model"
+			targetProject="msgservice\src\main\java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true"/>
+			<property name="exampleRootClass"
+				value="com.manji.msgservice.common.utils.mybatis.model.ModelExample" />
+		</javaModelGenerator>
+		
+		<!--mybatis的xml的配置  -->
+		<sqlMapGenerator targetPackage="mapper" targetProject="msgservice\src\main\resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		
+		<!--mapper的配置  -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.manji.msgservice.mapper" targetProject="msgservice\src\main\java">
+			<property name="enableSubPackages" value="true" />
+			<property name="clientRootInterface" value="com.manji.msgservice.common.utils.mybatis.mapper.Mapper" />
+		</javaClientGenerator>
+		<!-- <table tableName="msg_biz_type" domainObjectName="MsgBizType"></table> -->
+		<!-- <table tableName="msg_template" domainObjectName="MsgTemplate"></table> -->
+		<!-- <table tableName="msg_inner_rec" domainObjectName="MsgInnerRec"></table> -->
+		<table tableName="msg_sms_rec" domainObjectName="MsgSmsRec"></table>
+	</context> 
+</generatorConfiguration>

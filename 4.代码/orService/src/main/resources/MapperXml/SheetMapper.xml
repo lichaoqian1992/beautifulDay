@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.manji.orService.mapper.SheetMapper">
+
+    <!--查询工单-->
+    <select id="selectSheet" parameterType="com.manji.orService.vo.SelectSheetVo" resultType="java.util.HashMap">
+
+        SELECT
+        os.or_sheet_status statusId,
+        os.or_sheet_type_id typeId,
+        os.or_priority priority,
+        os.or_id orId,
+        ifnull(os.or_number, '') orNumber,
+        ifnull(os.or_theme, '') orTheme,
+        ifnull(ci.cus_name, '') cusName,
+        ifnull(cr.cus_title, '') cusTitle,
+        ifnull(
+        date_format(
+        os.or_establish_time,
+        '%Y-%m-%d %T'
+        ),
+        ''
+        ) orEstablishTime,
+        ifnull(
+        date_format(
+        os.or_update_time,
+        '%Y-%m-%d %T'
+        ),
+        ''
+        ) orUpdateTime,
+        ifnull(os.or_label, '') orLabel
+        FROM
+        or_sheets os
+        LEFT JOIN cus_con_sheet ccs ON os.or_id = ccs.cus_cid
+        AND ccs.cus_type = 0
+        LEFT JOIN cus_info ci ON ci.cus_id = ccs.cus_info_id
+        LEFT JOIN cus_reason cr ON os.or_sheet_type_id = cr.cus_id
+
+        <if test="orPlate !='' and orPlate !=null">
+
+            <!--未提交工单-->
+            <if test="orPlate =='pendshet'">
+                where os.or_founder_id=#{orFounderId} and os.or_founder_dept=#{orFounderDept} and os.or_sheet_status=1 and ccs.cus_isdel=1
+            </if>
+
+            <!--待我处理的派单-->
+            <if test="orPlate =='dealshet'">
+                where os.or_person_id=#{orFounderId} and os.or_sheet_status=2 and ccs.cus_isdel=1
+            </if>
+
+            <!--驳回工单-->
+            <if test="orPlate =='rejeshet'">
+                where os.or_person_id=#{orFounderId} and os.or_sheet_status=5 and ccs.cus_isdel=1
+            </if>
+
+            <!--处理完毕待确认的工单-->
+            <if test="orPlate =='ovfishet'">
+                where os.or_person_id=#{orFounderId} and os.or_sheet_status=3 and ccs.cus_isdel=1
+            </if>
+
+            <!--回收站-->
+            <if test="orPlate =='deleshet'">
+                where os.or_founder_id=#{orFounderId} and os.or_founder_dept=#{orFounderDept} and os.or_sheet_status=6 and ccs.cus_isdel=0
+            </if>
+
+        </if>
+
+        <if test="orSheetTypeId!='-1'">
+            and os.or_sheet_type_id = #{orSheetTypeId}
+        </if>
+        <if test="orPriority!='-1'">
+            and os.or_priority = #{orPriority}
+        </if>
+        <if test="search!=''  and search !=null ">
+            and (os.or_number = #{search} or os.or_theme = #{search} or os.or_label = #{search})
+        </if>
+        <if test="startTime!='' and endTime!=''">
+            and os.or_establish_time between #{startTime} and #{endTime}
+        </if>
+        <if test="startTime!='' and endTime==''">
+            and os.or_establish_time &gt;= #{startTime}
+        </if>
+        <if test="startTime=='' and endTime!=''">
+            and os.or_establish_time &lt;= #{endTime}
+        </if>
+
+        order by orEstablishTime desc
+
+    </select>
+
+    <!--查询工单-->
+    <select id="selectSheetAll" parameterType="com.manji.orService.vo.JurisdictionVo" resultType="java.util.HashMap">
+        select * from (
+
+        <if test="dealshetBoo">
+        select os.or_sheet_status statusId,'待提交' statusName,os.or_sheet_type_id typeId,os.or_priority priority,os.or_id orId,ifnull(os.or_number,'') orNumber,ifnull(os.or_theme,'') orTheme,ifnull(ci.cus_name,'') cusName,ifnull(cr.cus_title,'') cusTitle,ifnull(date_format(os.or_establish_time,'%Y-%m-%d %T'),'') orEstablishTime,ifnull(date_format(os.or_update_time,'%Y-%m-%d %T'),'') orUpdateTime,ifnull(os.or_label,'') orLabel from or_sheets os LEFT JOIN cus_con_sheet ccs on os.or_id=ccs.cus_cid and ccs.cus_type=0 left join cus_info ci on ci.cus_id=ccs.cus_info_id left join cus_reason cr on  os.or_sheet_type_id=cr.cus_id where os.or_founder_id=#{selectSheetVo.orFounderId} and os.or_founder_dept=#{selectSheetVo.orFounderDept} and os.or_sheet_status=1 and ccs.cus_isdel=1
+
+        UNION ALL
+        </if>
+
+        <if test="dealshetBoo">
+        select os.or_sheet_status statusId,'待我处理' statusName,os.or_sheet_type_id typeId,os.or_priority priority,os.or_id orId,ifnull(os.or_number,'') orNumber,ifnull(os.or_theme,'') orTheme,ifnull(ci.cus_name,'') cusName,ifnull(cr.cus_title,'') cusTitle,ifnull(date_format(os.or_establish_time,'%Y-%m-%d %T'),'') orEstablishTime,ifnull(date_format(os.or_update_time,'%Y-%m-%d %T'),'') orUpdateTime,ifnull(os.or_label,'') orLabel from or_sheets os LEFT JOIN cus_con_sheet ccs on os.or_id=ccs.cus_cid and ccs.cus_type=0 left join cus_info ci on ci.cus_id=ccs.cus_info_id left join cus_reason cr on  os.or_sheet_type_id=cr.cus_id  where os.or_person_id=#{selectSheetVo.orFounderId} and os.or_sheet_status=2 and ccs.cus_isdel=1
+
+        UNION ALL
+        </if>
+
+        <if test="rejeshetBoo">
+        select os.or_sheet_status statusId,'被驳回' statusName,os.or_sheet_type_id typeId,os.or_priority priority,os.or_id orId,ifnull(os.or_number,'') orNumber,ifnull(os.or_theme,'') orTheme,ifnull(ci.cus_name,'') cusName,ifnull(cr.cus_title,'') cusTitle,ifnull(date_format(os.or_establish_time,'%Y-%m-%d %T'),'') orEstablishTime,ifnull(date_format(os.or_update_time,'%Y-%m-%d %T'),'') orUpdateTime,ifnull(os.or_label,'') orLabel from or_sheets os LEFT JOIN cus_con_sheet ccs on os.or_id=ccs.cus_cid and ccs.cus_type=0 left join cus_info ci on ci.cus_id=ccs.cus_info_id left join cus_reason cr on  os.or_sheet_type_id=cr.cus_id  where os.or_person_id=#{selectSheetVo.orFounderId} and os.or_founder_dept=#{selectSheetVo.orFounderDept} and os.or_sheet_status=5 and ccs.cus_isdel=1
+
+        UNION ALL
+        </if>
+
+        <if test="ovfishetBoo">
+        select os.or_sheet_status statusId,'处理完毕待确认' statusName,os.or_sheet_type_id typeId,os.or_priority priority,os.or_id orId,ifnull(os.or_number,'') orNumber,ifnull(os.or_theme,'') orTheme,ifnull(ci.cus_name,'') cusName,ifnull(cr.cus_title,'') cusTitle,ifnull(date_format(os.or_establish_time,'%Y-%m-%d %T'),'') orEstablishTime,ifnull(date_format(os.or_update_time,'%Y-%m-%d %T'),'') orUpdateTime,ifnull(os.or_label,'') orLabel from or_sheets os LEFT JOIN cus_con_sheet ccs on os.or_id=ccs.cus_cid  and ccs.cus_type=0 left join cus_info ci on ci.cus_id=ccs.cus_info_id left join cus_reason cr on  os.or_sheet_type_id=cr.cus_id  where os.or_person_id=#{selectSheetVo.orFounderId} and os.or_sheet_status=3 and ccs.cus_isdel=1
+
+        UNION ALL
+        </if>
+
+        select os.or_sheet_status statusId,'已分派' statusName,os.or_sheet_type_id typeId,os.or_priority priority,os.or_id orId,ifnull(os.or_number,'') orNumber,ifnull(os.or_theme,'') orTheme,ifnull(ci.cus_name,'') cusName,ifnull(cr.cus_title,'') cusTitle,ifnull(date_format(os.or_establish_time,'%Y-%m-%d %T'),'') orEstablishTime,ifnull(date_format(os.or_update_time,'%Y-%m-%d %T'),'') orUpdateTime,ifnull(os.or_label,'') orLabel from or_sheets os LEFT JOIN cus_con_sheet ccs on os.or_id=ccs.cus_cid and ccs.cus_type=0 left join cus_info ci on ci.cus_id=ccs.cus_info_id left join cus_reason cr on os.or_sheet_type_id=cr.cus_id  left join or_sheet_log osl on os.or_id=osl.or_sheet_id where ((osl.or_handle_id=#{selectSheetVo.orFounderId} and osl.or_operation_type_id =3 ) or (osl.or_person_id=#{selectSheetVo.orFounderId} and osl.or_operation_type_id =1 )) and os.or_person_id &lt;&gt; #{selectSheetVo.orFounderId} group by os.or_id,ci.cus_name having statusId=2
+
+        UNION ALL
+
+        select os.or_sheet_status statusId,'已关闭' statusName,os.or_sheet_type_id typeId,os.or_priority priority,os.or_id orId,ifnull(os.or_number,'') orNumber,ifnull(os.or_theme,'') orTheme,ifnull(ci.cus_name,'') cusName,ifnull(cr.cus_title,'') cusTitle,ifnull(date_format(os.or_establish_time,'%Y-%m-%d %T'),'') orEstablishTime,ifnull(date_format(os.or_update_time,'%Y-%m-%d %T'),'') orUpdateTime,ifnull(os.or_label,'') orLabel from or_sheets os LEFT JOIN cus_con_sheet ccs on os.or_id=ccs.cus_cid and ccs.cus_type=0 left join cus_info ci on ci.cus_id=ccs.cus_info_id left join cus_reason cr on os.or_sheet_type_id=cr.cus_id  left join or_sheet_log osl on os.or_id=osl.or_sheet_id where (osl.or_handle_id=#{selectSheetVo.orFounderId} and osl.or_operation_type_id in (3,4)) or (osl.or_person_id=#{selectSheetVo.orFounderId} and osl.or_operation_type_id =1 ) group by os.or_id,ci.cus_name having statusId=4
+
+        ) allSheet where 1=1
+
+        <if test="selectSheetVo.orSheetTypeId!='-1'">
+            and typeId = #{selectSheetVo.orSheetTypeId}
+        </if>
+        <if test="selectSheetVo.orPriority!='-1'">
+            and priority= #{selectSheetVo.orPriority}
+        </if>
+        <if test="selectSheetVo.search!=''  and selectSheetVo.search !=null ">
+            and (orNumber = #{selectSheetVo.search} or orTheme = #{selectSheetVo.search} or orLabel = #{selectSheetVo.search})
+        </if>
+        <if test="selectSheetVo.startTime!='' and selectSheetVo.endTime!=''">
+            and allSheet.orEstablishTime between #{selectSheetVo.startTime} and #{selectSheetVo.endTime}
+        </if>
+        <if test="selectSheetVo.startTime!='' and selectSheetVo.endTime==''">
+            and allSheet.orEstablishTime &gt;= #{selectSheetVo.startTime}
+        </if>
+        <if test="selectSheetVo.startTime=='' and selectSheetVo.endTime!=''">
+            and allSheet.orEstablishTime &lt;= #{selectSheetVo.endTime}
+        </if>
+
+        order by orEstablishTime desc
+
+    </select>
+
+    <!--查询工单详情-->
+    <select id="selectSheetDetails" parameterType="int" resultType="java.util.HashMap">
+        SELECT
+            ifnull(os.or_person_id, '') personId,
+            ifnull(ci.cus_mobile, '') mobile,
+            ifnull(os.or_send_list, '') sendId,
+            os.or_id orId,
+            ifnull(ci.cus_account, '') cusAccount,
+            ifnull(ci.cus_name, '') cusName,
+            ifnull(ci.cus_type, '') cusType,
+            ifnull(ci.cus_tel, '') cusTel,
+            ifnull(ci.cus_area, '') cusArea,
+            ifnull(ci.cus_user_time, '') cusUserTime,
+            ifnull(ci.cus_shop_time, '') cusShopTime,
+            ifnull(ci.cus_state, 0) cusState,
+            ifnull(ci.cus_status, 0) cusStatus,
+            ifnull(os.or_sheet_type_id, 0) orSheetTypeId,
+            ifnull(os.or_priority, '') orPriority,
+            ifnull(os.or_label, '') orLabel,
+            ifnull(os.or_theme, '') orTheme,
+            ifnull(os.or_sheet_content, '') orSheetContent,
+            ifnull(os.or_sheet_status, 0) orSheetStatus,
+            ifnull(os.or_number, 0) orNumber,
+            ifnull(os.or_founder_id, 0) orFounderId,
+            ifnull(os.or_founder_dept, 0) orFounderDept,
+            ifnull(os.or_sheet_pics, '') orSheetPics,
+            date_format(
+                os.or_complete_time,
+                '%Y-%m-%d %T'
+            ) orCompleteTime
+        FROM
+            or_sheets os
+        LEFT JOIN cus_con_sheet ccs ON os.or_id = ccs.cus_cid
+        AND ccs.cus_type = 0
+        LEFT JOIN cus_info ci ON ci.cus_id = ccs.cus_info_id
+        LEFT JOIN cus_reason cr ON os.or_sheet_type_id = cr.cus_id
+        WHERE
+            os.or_id = #{id}
+    </select>
+
+    <!--查询抄送工单-->
+    <select id="selectSend" parameterType="com.manji.orService.vo.SelectSheetVo" resultType="java.util.HashMap">
+        SELECT
+        ccs.or_id sendId,
+        ccs.or_is_see isSee,
+        IFNULL(ccs.or_cc_person_name, '') orCcPersonName,
+        IFNULL(ccs.or_cc_person_dept, '') orCcPersonDept,
+        os.or_id orId,
+        IFNULL(os.or_number, '') orNumber,
+        os.or_priority orPriority,
+        os.or_theme orTheme,
+        date_format(
+        ccs.or_cc_time,
+        '%Y-%m-%d %T'
+        ) orCcTime
+        FROM
+        or_cc_send ccs
+        LEFT JOIN or_sheets os ON os.or_id = ccs.or_cc_sheet_id
+        WHERE
+        ccs.or_cc_id = #{orFounderId}
+
+        <if test="orPriority !='-1'">
+            and os.or_sheet_type_id=#{orSheetTypeId}
+        </if>
+        <if test="startTime!='' and endTime!=''">
+            and os.or_cc_time between #{startTime} and #{endTime}
+        </if>
+        <if test="startTime!='' and endTime==''">
+            and os.or_cc_time &gt;= #{startTime}
+        </if>
+        <if test="startTime=='' and endTime!=''">
+            and os.or_cc_time &lt;= #{endTime}
+        </if>
+        <if test="search!=''  and search !=null ">
+            and (os.or_number = #{search} or os.or_theme = #{search} or os.or_label = #{search})
+        </if>
+    </select>
+
+    <!--查询工单条数-->
+    <select id="countSheet" parameterType="int"  resultType="com.manji.orService.vo.SheetStatusVo">
+        SELECT
+            or_sheet_status STATUS,
+            count(or_sheet_status) count
+        FROM
+            or_sheets os
+        LEFT JOIN cus_con_sheet ccs ON os.or_id = ccs.cus_cid
+        AND ccs.cus_type = 0
+        WHERE
+            os.or_person_id = #{orFounderId} and ccs.cus_isdel=1 and or_sheet_status in (2,5,3) group by or_sheet_status
+    </select>
+
+    <select id="countSheet2" parameterType="int"  resultType="com.manji.orService.vo.SheetStatusVo">
+        SELECT
+            or_sheet_status STATUS,
+            count(or_sheet_status) count
+        FROM
+            or_sheets os
+        LEFT JOIN cus_con_sheet ccs ON os.or_id = ccs.cus_cid
+        AND ccs.cus_type = 0
+        WHERE
+            os.or_founder_id = #{orFounderId} and ccs.cus_isdel=1 and or_sheet_status in (1) group by or_sheet_status
+    </select>
+
+    <select id="countSheet3" parameterType="int"  resultType="com.manji.orService.vo.SheetStatusVo">
+        SELECT
+            ifnull(count(1), '') count
+        FROM
+            or_cc_send
+        WHERE
+            or_cc_id = #{orFounderId} and or_is_see=1
+    </select>
+
+    <!--查询日志-->
+    <select id="selectLog" parameterType="int" resultType="com.manji.orService.dao.SheetLogDao">
+        SELECT
+            *
+        FROM
+            or_sheet_log
+        WHERE
+            or_operation_type_id IN (1, 2)
+        AND or_sheet_id = #{id} order by or_operation_time desc limit 1
+    </select>
+
+    <select id="detailsSheetRecord"  resultType="java.util.HashMap">
+        select IFNULL(or_operation_pics,'') pics,IFNULL(or_person,'') orPerson,IFNULL(or_person_dept,'') orPersonDept,IFNULL(or_operation_time,'') orOperationTime,IFNULL(or_operation_type_descr,'') orOperationTypeDescr,IFNULL(or_operation_content,'') orOperationContent from or_sheet_log where or_sheet_id=#{id}
+        <if test="type =='status' ">
+        and or_operation_type_id &lt;&gt; 6
+        </if>
+        <if test="type =='memo' ">
+        and or_operation_type_id = 6
+        </if>
+        order by or_operation_time desc
+    </select>
+
+    <!--查询站内信息-->
+    <select id="selInformations" resultType="java.util.HashMap">
+        SELECT
+            oi.or_sheet_id sheetId,
+            IFNULL(oi.or_person, '') person,
+            IFNULL(oi.or_person_dept, '') personDept,
+            date_format(
+                oi.or_informations_time,
+                '%Y-%m-%d %T'
+            ) time,
+
+        IF (
+            or_informations_type = 1,
+            '抄送',
+
+        IF (
+            or_informations_type = 2,
+            '指派',
+
+        IF (
+            or_informations_type = 3,
+            '备注',
+
+        IF (
+            or_informations_type = 4,
+            '驳回',
+            ''
+        )
+        )
+        )
+        ) type,
+         os.or_number number,
+         os.or_theme theme,
+         os.or_sheet_status status,
+         oi.or_relevant_content
+        FROM
+            or_informations oi
+        LEFT JOIN or_sheets os ON os.or_id = oi.or_sheet_id
+        WHERE
+            oi.is_see = #{0} and oi.or_handle_id=#{1}
+        ORDER BY
+            oi.or_informations_time DESC
+    </select>
+
+    <!--查询自己的工单-->
+    <select id="sheetSelf" resultType="java.util.HashMap">
+        SELECT
+            os.or_id sheetId,
+            IFNULL(os.or_sheet_status, '') sheetStatus,
+            IFNULL(os.or_number, '') number,
+            IFNULL(os.or_priority, '') priority,
+            IFNULL(os.or_theme, '') theme,
+            IFNULL((select osl.or_handle_id from or_sheet_log osl where osl.or_sheet_id=os.or_id and osl.or_operation_type_id IN (3, 4, 7, 8) order by or_operation_time desc LIMIT 1),'') handleId,
+            IFNULL((select osl.or_handle from or_sheet_log osl where osl.or_sheet_id=os.or_id and osl.or_operation_type_id IN (3, 4, 7, 8) order by or_operation_time desc LIMIT 1),'') handle,
+            IFNULL((select osl.or_handle_dept from or_sheet_log osl where osl.or_sheet_id=os.or_id and osl.or_operation_type_id IN (3, 4, 7, 8) order by or_operation_time desc LIMIT 1),'') handleDept
+        FROM
+            or_sheets os
+        LEFT JOIN cus_con_sheet ccs ON os.or_id = ccs.cus_cid AND ccs.cus_type = 0
+        WHERE
+            os.or_sheet_status IN (2, 3, 5)
+        and os.or_founder_id=#{0} and or_founder_dept=#{1}
+        ORDER BY os.or_establish_time desc
+    </select>
+
+
+    <!--查询站内信息-->
+    <select id="pushInfo" resultType="java.util.HashMap">
+        SELECT
+        oi.or_id informaId,
+        oi.or_sheet_id sheetId,
+        IFNULL(oi.or_person, '') person,
+        IFNULL(oi.or_person_dept, '') personDept,
+        date_format(
+        oi.or_informations_time,
+        '%Y-%m-%d %T'
+        ) time,
+
+        IF (
+        or_informations_type = 1,
+        '抄送',
+
+        IF (
+        or_informations_type = 2,
+        '指派',
+
+        IF (
+        or_informations_type = 3,
+        '备注',
+
+        IF (
+        or_informations_type = 4,
+        '驳回',
+        ''
+        )
+        )
+        )
+        ) type,
+        os.or_number number,
+        os.or_theme theme,
+        os.or_sheet_status status,
+        oi.or_relevant_content,
+        oi.is_see,
+        oi.is_push
+        FROM
+        or_informations oi
+        LEFT JOIN or_sheets os ON os.or_id = oi.or_sheet_id
+        WHERE
+        oi.or_handle_id=#{0}
+        ORDER BY
+        oi.or_informations_time DESC
+        LIMIT 1
+    </select>
+
+</mapper>
