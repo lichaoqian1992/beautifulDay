@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.mlife.mapper.ChargeOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.manji.mlife.model.ChargeOrder" >
+    <id column="billId" property="billid" jdbcType="VARCHAR" />
+    <result column="outerId" property="outerid" jdbcType="VARCHAR" />
+    <result column="rechargeAccount" property="rechargeaccount" jdbcType="VARCHAR" />
+    <result column="saleAmount" property="saleamount" jdbcType="VARCHAR" />
+    <result column="orderProfit" property="orderprofit" jdbcType="VARCHAR" />
+    <result column="orderTime" property="ordertime" jdbcType="VARCHAR" />
+    <result column="operateTime" property="operatetime" jdbcType="VARCHAR" />
+    <result column="payState" property="paystate" jdbcType="VARCHAR" />
+    <result column="rechargeState" property="rechargestate" jdbcType="VARCHAR" />
+    <result column="classType" property="classtype" jdbcType="VARCHAR" />
+    <result column="itemCost" property="itemcost" jdbcType="VARCHAR" />
+    <result column="orderCost" property="ordercost" jdbcType="VARCHAR" />
+    <result column="revokeMessage" property="revokemessage" jdbcType="VARCHAR" />
+    <result column="facePrice" property="faceprice" jdbcType="VARCHAR" />
+    <result column="itemNum" property="itemnum" jdbcType="VARCHAR" />
+    <result column="itemName" property="itemname" jdbcType="VARCHAR" />
+    <result column="supId" property="supid" jdbcType="VARCHAR" />
+    <result column="supQq" property="supqq" jdbcType="VARCHAR" />
+    <result column="supNickName" property="supnickname" jdbcType="VARCHAR" />
+    <result column="supContactUser" property="supcontactuser" jdbcType="VARCHAR" />
+    <result column="supMobile" property="supmobile" jdbcType="VARCHAR" />
+    <result column="gameArea" property="gamearea" jdbcType="VARCHAR" />
+    <result column="gameServer" property="gameserver" jdbcType="VARCHAR" />
+    <result column="receiveMobile" property="receivemobile" jdbcType="VARCHAR" />
+    <result column="actPrice" property="actprice" jdbcType="VARCHAR" />
+    <result column="extPay" property="extpay" jdbcType="VARCHAR" />
+    <result column="battleAccount" property="battleaccount" jdbcType="VARCHAR" />
+    <result column="tplId" property="tplid" jdbcType="VARCHAR" />
+    <result column="expireDate" property="expiredate" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    billId, outerId, rechargeAccount, saleAmount, orderProfit, orderTime, operateTime, 
+    payState, rechargeState, classType, itemCost, orderCost, revokeMessage, facePrice, 
+    itemNum, itemName, supId, supQq, supNickName, supContactUser, supMobile, gameArea, 
+    gameServer, receiveMobile, actPrice, extPay, battleAccount, tplId, expireDate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from chargeOrder
+    where billId = #{billid,jdbcType=VARCHAR}
+  </select>
+   <select id="selectByOuterId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from chargeOrder
+    where outerId = #{outerId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from chargeOrder
+    where billId = #{billid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByPrimaryKey2" parameterType="java.lang.String" >
+    delete from chargeOrder
+    where outerId = #{outerId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.manji.mlife.model.ChargeOrder" >
+    insert into chargeOrder (billId, outerId, rechargeAccount, 
+      saleAmount, orderProfit, orderTime, 
+      operateTime, payState, rechargeState, 
+      classType, itemCost, orderCost, 
+      revokeMessage, facePrice, itemNum, 
+      itemName, supId, supQq, 
+      supNickName, supContactUser, supMobile, 
+      gameArea, gameServer, receiveMobile, 
+      actPrice, extPay, battleAccount, 
+      tplId, expireDate)
+    values (#{billid,jdbcType=VARCHAR}, #{outerid,jdbcType=VARCHAR}, #{rechargeaccount,jdbcType=VARCHAR}, 
+      #{saleamount,jdbcType=VARCHAR}, #{orderprofit,jdbcType=VARCHAR}, #{ordertime,jdbcType=VARCHAR}, 
+      #{operatetime,jdbcType=VARCHAR}, #{paystate,jdbcType=VARCHAR}, #{rechargestate,jdbcType=VARCHAR}, 
+      #{classtype,jdbcType=VARCHAR}, #{itemcost,jdbcType=VARCHAR}, #{ordercost,jdbcType=VARCHAR}, 
+      #{revokemessage,jdbcType=VARCHAR}, #{faceprice,jdbcType=VARCHAR}, #{itemnum,jdbcType=VARCHAR}, 
+      #{itemname,jdbcType=VARCHAR}, #{supid,jdbcType=VARCHAR}, #{supqq,jdbcType=VARCHAR}, 
+      #{supnickname,jdbcType=VARCHAR}, #{supcontactuser,jdbcType=VARCHAR}, #{supmobile,jdbcType=VARCHAR}, 
+      #{gamearea,jdbcType=VARCHAR}, #{gameserver,jdbcType=VARCHAR}, #{receivemobile,jdbcType=VARCHAR}, 
+      #{actprice,jdbcType=VARCHAR}, #{extpay,jdbcType=VARCHAR}, #{battleaccount,jdbcType=VARCHAR}, 
+      #{tplid,jdbcType=VARCHAR}, #{expiredate,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.manji.mlife.model.ChargeOrder" >
+    insert into chargeOrder
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="billid != null" >
+        billId,
+      </if>
+      <if test="outerid != null" >
+        outerId,
+      </if>
+      <if test="rechargeaccount != null" >
+        rechargeAccount,
+      </if>
+      <if test="saleamount != null" >
+        saleAmount,
+      </if>
+      <if test="orderprofit != null" >
+        orderProfit,
+      </if>
+      <if test="ordertime != null" >
+        orderTime,
+      </if>
+      <if test="operatetime != null" >
+        operateTime,
+      </if>
+      <if test="paystate != null" >
+        payState,
+      </if>
+      <if test="rechargestate != null" >
+        rechargeState,
+      </if>
+      <if test="classtype != null" >
+        classType,
+      </if>
+      <if test="itemcost != null" >
+        itemCost,
+      </if>
+      <if test="ordercost != null" >
+        orderCost,
+      </if>
+      <if test="revokemessage != null" >
+        revokeMessage,
+      </if>
+      <if test="faceprice != null" >
+        facePrice,
+      </if>
+      <if test="itemnum != null" >
+        itemNum,
+      </if>
+      <if test="itemname != null" >
+        itemName,
+      </if>
+      <if test="supid != null" >
+        supId,
+      </if>
+      <if test="supqq != null" >
+        supQq,
+      </if>
+      <if test="supnickname != null" >
+        supNickName,
+      </if>
+      <if test="supcontactuser != null" >
+        supContactUser,
+      </if>
+      <if test="supmobile != null" >
+        supMobile,
+      </if>
+      <if test="gamearea != null" >
+        gameArea,
+      </if>
+      <if test="gameserver != null" >
+        gameServer,
+      </if>
+      <if test="receivemobile != null" >
+        receiveMobile,
+      </if>
+      <if test="actprice != null" >
+        actPrice,
+      </if>
+      <if test="extpay != null" >
+        extPay,
+      </if>
+      <if test="battleaccount != null" >
+        battleAccount,
+      </if>
+      <if test="tplid != null" >
+        tplId,
+      </if>
+      <if test="expiredate != null" >
+        expireDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="billid != null" >
+        #{billid,jdbcType=VARCHAR},
+      </if>
+      <if test="outerid != null" >
+        #{outerid,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeaccount != null" >
+        #{rechargeaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="saleamount != null" >
+        #{saleamount,jdbcType=VARCHAR},
+      </if>
+      <if test="orderprofit != null" >
+        #{orderprofit,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertime != null" >
+        #{ordertime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatetime != null" >
+        #{operatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="paystate != null" >
+        #{paystate,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargestate != null" >
+        #{rechargestate,jdbcType=VARCHAR},
+      </if>
+      <if test="classtype != null" >
+        #{classtype,jdbcType=VARCHAR},
+      </if>
+      <if test="itemcost != null" >
+        #{itemcost,jdbcType=VARCHAR},
+      </if>
+      <if test="ordercost != null" >
+        #{ordercost,jdbcType=VARCHAR},
+      </if>
+      <if test="revokemessage != null" >
+        #{revokemessage,jdbcType=VARCHAR},
+      </if>
+      <if test="faceprice != null" >
+        #{faceprice,jdbcType=VARCHAR},
+      </if>
+      <if test="itemnum != null" >
+        #{itemnum,jdbcType=VARCHAR},
+      </if>
+      <if test="itemname != null" >
+        #{itemname,jdbcType=VARCHAR},
+      </if>
+      <if test="supid != null" >
+        #{supid,jdbcType=VARCHAR},
+      </if>
+      <if test="supqq != null" >
+        #{supqq,jdbcType=VARCHAR},
+      </if>
+      <if test="supnickname != null" >
+        #{supnickname,jdbcType=VARCHAR},
+      </if>
+      <if test="supcontactuser != null" >
+        #{supcontactuser,jdbcType=VARCHAR},
+      </if>
+      <if test="supmobile != null" >
+        #{supmobile,jdbcType=VARCHAR},
+      </if>
+      <if test="gamearea != null" >
+        #{gamearea,jdbcType=VARCHAR},
+      </if>
+      <if test="gameserver != null" >
+        #{gameserver,jdbcType=VARCHAR},
+      </if>
+      <if test="receivemobile != null" >
+        #{receivemobile,jdbcType=VARCHAR},
+      </if>
+      <if test="actprice != null" >
+        #{actprice,jdbcType=VARCHAR},
+      </if>
+      <if test="extpay != null" >
+        #{extpay,jdbcType=VARCHAR},
+      </if>
+      <if test="battleaccount != null" >
+        #{battleaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="tplid != null" >
+        #{tplid,jdbcType=VARCHAR},
+      </if>
+      <if test="expiredate != null" >
+        #{expiredate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.manji.mlife.model.ChargeOrder" >
+    update chargeOrder
+    <set >
+      <if test="outerid != null" >
+        outerId = #{outerid,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeaccount != null" >
+        rechargeAccount = #{rechargeaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="saleamount != null" >
+        saleAmount = #{saleamount,jdbcType=VARCHAR},
+      </if>
+      <if test="orderprofit != null" >
+        orderProfit = #{orderprofit,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertime != null" >
+        orderTime = #{ordertime,jdbcType=VARCHAR},
+      </if>
+      <if test="operatetime != null" >
+        operateTime = #{operatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="paystate != null" >
+        payState = #{paystate,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargestate != null" >
+        rechargeState = #{rechargestate,jdbcType=VARCHAR},
+      </if>
+      <if test="classtype != null" >
+        classType = #{classtype,jdbcType=VARCHAR},
+      </if>
+      <if test="itemcost != null" >
+        itemCost = #{itemcost,jdbcType=VARCHAR},
+      </if>
+      <if test="ordercost != null" >
+        orderCost = #{ordercost,jdbcType=VARCHAR},
+      </if>
+      <if test="revokemessage != null" >
+        revokeMessage = #{revokemessage,jdbcType=VARCHAR},
+      </if>
+      <if test="faceprice != null" >
+        facePrice = #{faceprice,jdbcType=VARCHAR},
+      </if>
+      <if test="itemnum != null" >
+        itemNum = #{itemnum,jdbcType=VARCHAR},
+      </if>
+      <if test="itemname != null" >
+        itemName = #{itemname,jdbcType=VARCHAR},
+      </if>
+      <if test="supid != null" >
+        supId = #{supid,jdbcType=VARCHAR},
+      </if>
+      <if test="supqq != null" >
+        supQq = #{supqq,jdbcType=VARCHAR},
+      </if>
+      <if test="supnickname != null" >
+        supNickName = #{supnickname,jdbcType=VARCHAR},
+      </if>
+      <if test="supcontactuser != null" >
+        supContactUser = #{supcontactuser,jdbcType=VARCHAR},
+      </if>
+      <if test="supmobile != null" >
+        supMobile = #{supmobile,jdbcType=VARCHAR},
+      </if>
+      <if test="gamearea != null" >
+        gameArea = #{gamearea,jdbcType=VARCHAR},
+      </if>
+      <if test="gameserver != null" >
+        gameServer = #{gameserver,jdbcType=VARCHAR},
+      </if>
+      <if test="receivemobile != null" >
+        receiveMobile = #{receivemobile,jdbcType=VARCHAR},
+      </if>
+      <if test="actprice != null" >
+        actPrice = #{actprice,jdbcType=VARCHAR},
+      </if>
+      <if test="extpay != null" >
+        extPay = #{extpay,jdbcType=VARCHAR},
+      </if>
+      <if test="battleaccount != null" >
+        battleAccount = #{battleaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="tplid != null" >
+        tplId = #{tplid,jdbcType=VARCHAR},
+      </if>
+      <if test="expiredate != null" >
+        expireDate = #{expiredate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where billId = #{billid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.manji.mlife.model.ChargeOrder" >
+    update chargeOrder
+    set outerId = #{outerid,jdbcType=VARCHAR},
+      rechargeAccount = #{rechargeaccount,jdbcType=VARCHAR},
+      saleAmount = #{saleamount,jdbcType=VARCHAR},
+      orderProfit = #{orderprofit,jdbcType=VARCHAR},
+      orderTime = #{ordertime,jdbcType=VARCHAR},
+      operateTime = #{operatetime,jdbcType=VARCHAR},
+      payState = #{paystate,jdbcType=VARCHAR},
+      rechargeState = #{rechargestate,jdbcType=VARCHAR},
+      classType = #{classtype,jdbcType=VARCHAR},
+      itemCost = #{itemcost,jdbcType=VARCHAR},
+      orderCost = #{ordercost,jdbcType=VARCHAR},
+      revokeMessage = #{revokemessage,jdbcType=VARCHAR},
+      facePrice = #{faceprice,jdbcType=VARCHAR},
+      itemNum = #{itemnum,jdbcType=VARCHAR},
+      itemName = #{itemname,jdbcType=VARCHAR},
+      supId = #{supid,jdbcType=VARCHAR},
+      supQq = #{supqq,jdbcType=VARCHAR},
+      supNickName = #{supnickname,jdbcType=VARCHAR},
+      supContactUser = #{supcontactuser,jdbcType=VARCHAR},
+      supMobile = #{supmobile,jdbcType=VARCHAR},
+      gameArea = #{gamearea,jdbcType=VARCHAR},
+      gameServer = #{gameserver,jdbcType=VARCHAR},
+      receiveMobile = #{receivemobile,jdbcType=VARCHAR},
+      actPrice = #{actprice,jdbcType=VARCHAR},
+      extPay = #{extpay,jdbcType=VARCHAR},
+      battleAccount = #{battleaccount,jdbcType=VARCHAR},
+      tplId = #{tplid,jdbcType=VARCHAR},
+      expireDate = #{expiredate,jdbcType=VARCHAR}
+    where billId = #{billid,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey2" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    *
+    from chargeOrder
+    where outerId = #{outerid,jdbcType=VARCHAR}
+  </select>
+</mapper>

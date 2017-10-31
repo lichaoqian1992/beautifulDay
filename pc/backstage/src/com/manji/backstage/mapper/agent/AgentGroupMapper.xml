@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.agent.AgentGroupMapper" >
+
+<select id="countAgentGroup"  resultType="java.util.Map">
+select title,isnull(t2.count,0) count from dt_agent_groups t1 left join
+(select count(group_id) count,group_id from dt_user_role_agentinfo group by group_id )t2
+on t1.id=t2.group_id
+</select>
+
+<select id="selAgentGroups" resultType="AgentGroup">
+	select * from dt_agent_groups order by id 
+</select>
+
+<select id="findAgentGroup" resultType="map">
+	select id,title from dt_agent_groups
+</select>
+
+
+<insert id="addAgentGroup" parameterType="AgentGroup">
+
+	insert into 
+	dt_agent_groups
+	(title,grade,upgrade_exp,amount,point,discount,is_default,is_upgrade,is_lock)
+	values
+	(#{title},#{grade},#{upgrade_exp},#{amount},#{point},#{discount},#{is_default},#{is_upgrade},#{is_lock})
+
+</insert>
+
+<update id="updAgentGroup" parameterType="AgentGroup" >
+
+	update dt_agent_groups 
+	set title=#{title},
+	grade=#{grade},
+	upgrade_exp=#{upgrade_exp},
+	amount=#{amount},
+	point=#{point},
+	discount=#{discount},
+	is_default=#{is_default},
+	is_upgrade=#{is_upgrade},
+	is_lock=#{is_lock}
+	where id=#{id}
+
+</update>
+
+<delete id="delAgentGroup" parameterType="int">
+
+	delete from dt_agent_groups where id=#{id}
+
+</delete>
+
+<select id="shopAgentCounts" parameterType="java.lang.String" resultType="String">
+	select count(*) from dt_agent_groups where title=#{0}
+</select>
+
+<select id="getAgentGroup" parameterType="int" resultType="AgentGroup">
+select * from dt_agent_groups where id=#{0}
+</select>
+
+<select id="queryAgentById" parameterType="int" resultType="AgentGroup">
+select * from dt_agent_groups where id=#{0}
+</select>
+
+<select id="getAgentGroupList" resultType="AgentGroup">
+select id,title from dt_agent_groups
+</select>
+
+</mapper>

@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.mlife.mapper.TrafficOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.manji.mlife.model.TrafficOrder" >
+    <id column="orderNo" property="orderno" jdbcType="VARCHAR" />
+    <result column="tradNo" property="tradno" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="itemId" property="itemid" jdbcType="VARCHAR" />
+    <result column="passengerName" property="passengername" jdbcType="VARCHAR" />
+    <result column="passengerTel" property="passengertel" jdbcType="VARCHAR" />
+    <result column="idcardType" property="idcardtype" jdbcType="VARCHAR" />
+    <result column="idcardNo" property="idcardno" jdbcType="VARCHAR" />
+    <result column="ticketNo" property="ticketno" jdbcType="VARCHAR" />
+    <result column="salePrice" property="saleprice" jdbcType="VARCHAR" />
+    <result column="payCash" property="paycash" jdbcType="VARCHAR" />
+    <result column="itemPrice" property="itemprice" jdbcType="VARCHAR" />
+    <result column="refundFee" property="refundfee" jdbcType="VARCHAR" />
+    <result column="feeDetail" property="feedetail" jdbcType="VARCHAR" />
+    <result column="seatType" property="seattype" jdbcType="VARCHAR" />
+    <result column="seatName" property="seatname" jdbcType="VARCHAR" />
+    <result column="seatInfo" property="seatinfo" jdbcType="VARCHAR" />
+    <result column="saleOrderNo" property="saleorderno" jdbcType="VARCHAR" />
+    <result column="trainNo" property="trainno" jdbcType="VARCHAR" />
+    <result column="startStation" property="startstation" jdbcType="VARCHAR" />
+    <result column="recevieStation" property="receviestation" jdbcType="VARCHAR" />
+    <result column="startTime" property="starttime" jdbcType="VARCHAR" />
+    <result column="recevieTime" property="recevietime" jdbcType="VARCHAR" />
+    <result column="contactName" property="contactname" jdbcType="VARCHAR" />
+    <result column="contactTel" property="contacttel" jdbcType="VARCHAR" />
+    <result column="orderType" property="ordertype" jdbcType="VARCHAR" />
+    <result column="legs" property="legs" jdbcType="VARCHAR" />
+    <result column="insurancestate" property="insurancestate" jdbcType="VARCHAR" />
+    <result column="insurancefacePrice" property="insurancefaceprice" jdbcType="VARCHAR" />
+    <result column="insurancepayCash" property="insurancepaycash" jdbcType="VARCHAR" />
+    <result column="insuranceitemCash" property="insuranceitemcash" jdbcType="VARCHAR" />
+    <result column="insurancesalePrice" property="insurancesaleprice" jdbcType="VARCHAR" />
+    <result column="insurancesaleOrderNo" property="insurancesaleorderno" jdbcType="VARCHAR" />
+    <result column="insuranceinsuranceNo" property="insuranceinsuranceno" jdbcType="VARCHAR" />
+    <result column="insuranceitemId" property="insuranceitemid" jdbcType="VARCHAR" />
+    <result column="insuranceuserTel" property="insuranceusertel" jdbcType="VARCHAR" />
+    <result column="insuranceuserName" property="insuranceusername" jdbcType="VARCHAR" />
+    <result column="insuranceinsurancePolicyNo" property="insuranceinsurancepolicyno" jdbcType="VARCHAR" />
+    <result column="totalOtherFee" property="totalotherfee" jdbcType="VARCHAR" />
+    <result column="totalPurPrice" property="totalpurprice" jdbcType="VARCHAR" />
+    <result column="totalFacePrice" property="totalfaceprice" jdbcType="VARCHAR" />
+    <result column="totalPayCash" property="totalpaycash" jdbcType="VARCHAR" />
+    <result column="totalSalePrice" property="totalsaleprice" jdbcType="VARCHAR" />
+    <result column="totalSalePrice" property="totalsaleprice" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    orderNo, tradNo, title, itemId, passengerName, passengerTel, idcardType, idcardNo, 
+    ticketNo, salePrice, payCash, itemPrice, refundFee, feeDetail, seatType, seatName, 
+    seatInfo, saleOrderNo, trainNo, startStation, recevieStation, startTime, recevieTime, 
+    contactName, contactTel, orderType, legs, insurancestate, insurancefacePrice, insurancepayCash, 
+    insuranceitemCash, insurancesalePrice, insurancesaleOrderNo, insuranceinsuranceNo, 
+    insuranceitemId, insuranceuserTel, insuranceuserName, insuranceinsurancePolicyNo, 
+    totalOtherFee, totalPurPrice, totalFacePrice, totalPayCash, totalSalePrice ,state
+  </sql>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from trafficOrder
+    where orderNo = #{orderno,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByPrimaryKey2" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from trafficOrder
+    where tradNo = #{tradNo,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from trafficOrder
+    where tradNo = #{tradNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.manji.mlife.model.TrafficOrder" >
+    insert into trafficOrder (orderNo, tradNo, title, 
+      itemId, passengerName, passengerTel, 
+      idcardType, idcardNo, ticketNo, 
+      salePrice, payCash, itemPrice, 
+      refundFee, feeDetail, seatType, 
+      seatName, seatInfo, saleOrderNo, 
+      trainNo, startStation, recevieStation, 
+      startTime, recevieTime, contactName, 
+      contactTel, orderType, legs, 
+      insurancestate, insurancefacePrice, insurancepayCash, 
+      insuranceitemCash, insurancesalePrice, 
+      insurancesaleOrderNo, insuranceinsuranceNo, 
+      insuranceitemId, insuranceuserTel, insuranceuserName, 
+      insuranceinsurancePolicyNo, totalOtherFee, 
+      totalPurPrice, totalFacePrice, totalPayCash, 
+      totalSalePrice,state)
+    values (#{orderno,jdbcType=VARCHAR}, #{tradno,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{itemid,jdbcType=VARCHAR}, #{passengername,jdbcType=VARCHAR}, #{passengertel,jdbcType=VARCHAR}, 
+      #{idcardtype,jdbcType=VARCHAR}, #{idcardno,jdbcType=VARCHAR}, #{ticketno,jdbcType=VARCHAR}, 
+      #{saleprice,jdbcType=VARCHAR}, #{paycash,jdbcType=VARCHAR}, #{itemprice,jdbcType=VARCHAR}, 
+      #{refundfee,jdbcType=VARCHAR}, #{feedetail,jdbcType=VARCHAR}, #{seattype,jdbcType=VARCHAR}, 
+      #{seatname,jdbcType=VARCHAR}, #{seatinfo,jdbcType=VARCHAR}, #{saleorderno,jdbcType=VARCHAR}, 
+      #{trainno,jdbcType=VARCHAR}, #{startstation,jdbcType=VARCHAR}, #{receviestation,jdbcType=VARCHAR}, 
+      #{starttime,jdbcType=VARCHAR}, #{recevietime,jdbcType=VARCHAR}, #{contactname,jdbcType=VARCHAR}, 
+      #{contacttel,jdbcType=VARCHAR}, #{ordertype,jdbcType=VARCHAR}, #{legs,jdbcType=VARCHAR}, 
+      #{insurancestate,jdbcType=VARCHAR}, #{insurancefaceprice,jdbcType=VARCHAR}, #{insurancepaycash,jdbcType=VARCHAR}, 
+      #{insuranceitemcash,jdbcType=VARCHAR}, #{insurancesaleprice,jdbcType=VARCHAR}, 
+      #{insurancesaleorderno,jdbcType=VARCHAR}, #{insuranceinsuranceno,jdbcType=VARCHAR}, 
+      #{insuranceitemid,jdbcType=VARCHAR}, #{insuranceusertel,jdbcType=VARCHAR}, #{insuranceusername,jdbcType=VARCHAR}, 
+      #{insuranceinsurancepolicyno,jdbcType=VARCHAR}, #{totalotherfee,jdbcType=VARCHAR}, 
+      #{totalpurprice,jdbcType=VARCHAR}, #{totalfaceprice,jdbcType=VARCHAR}, #{totalpaycash,jdbcType=VARCHAR}, 
+      #{totalsaleprice,jdbcType=VARCHAR},#{state,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.manji.mlife.model.TrafficOrder" >
+    insert into trafficOrder
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderno != null" >
+        orderNo,
+      </if>
+      <if test="tradno != null" >
+        tradNo,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="itemid != null" >
+        itemId,
+      </if>
+      <if test="passengername != null" >
+        passengerName,
+      </if>
+      <if test="passengertel != null" >
+        passengerTel,
+      </if>
+      <if test="idcardtype != null" >
+        idcardType,
+      </if>
+      <if test="idcardno != null" >
+        idcardNo,
+      </if>
+      <if test="ticketno != null" >
+        ticketNo,
+      </if>
+      <if test="saleprice != null" >
+        salePrice,
+      </if>
+      <if test="paycash != null" >
+        payCash,
+      </if>
+      <if test="itemprice != null" >
+        itemPrice,
+      </if>
+      <if test="refundfee != null" >
+        refundFee,
+      </if>
+      <if test="feedetail != null" >
+        feeDetail,
+      </if>
+      <if test="seattype != null" >
+        seatType,
+      </if>
+      <if test="seatname != null" >
+        seatName,
+      </if>
+      <if test="seatinfo != null" >
+        seatInfo,
+      </if>
+      <if test="saleorderno != null" >
+        saleOrderNo,
+      </if>
+      <if test="trainno != null" >
+        trainNo,
+      </if>
+      <if test="startstation != null" >
+        startStation,
+      </if>
+      <if test="receviestation != null" >
+        recevieStation,
+      </if>
+      <if test="starttime != null" >
+        startTime,
+      </if>
+      <if test="recevietime != null" >
+        recevieTime,
+      </if>
+      <if test="contactname != null" >
+        contactName,
+      </if>
+      <if test="contacttel != null" >
+        contactTel,
+      </if>
+      <if test="ordertype != null" >
+        orderType,
+      </if>
+      <if test="legs != null" >
+        legs,
+      </if>
+      <if test="insurancestate != null" >
+        insurancestate,
+      </if>
+      <if test="insurancefaceprice != null" >
+        insurancefacePrice,
+      </if>
+      <if test="insurancepaycash != null" >
+        insurancepayCash,
+      </if>
+      <if test="insuranceitemcash != null" >
+        insuranceitemCash,
+      </if>
+      <if test="insurancesaleprice != null" >
+        insurancesalePrice,
+      </if>
+      <if test="insurancesaleorderno != null" >
+        insurancesaleOrderNo,
+      </if>
+      <if test="insuranceinsuranceno != null" >
+        insuranceinsuranceNo,
+      </if>
+      <if test="insuranceitemid != null" >
+        insuranceitemId,
+      </if>
+      <if test="insuranceusertel != null" >
+        insuranceuserTel,
+      </if>
+      <if test="insuranceusername != null" >
+        insuranceuserName,
+      </if>
+      <if test="insuranceinsurancepolicyno != null" >
+        insuranceinsurancePolicyNo,
+      </if>
+      <if test="totalotherfee != null" >
+        totalOtherFee,
+      </if>
+      <if test="totalpurprice != null" >
+        totalPurPrice,
+      </if>
+      <if test="totalfaceprice != null" >
+        totalFacePrice,
+      </if>
+      <if test="totalpaycash != null" >
+        totalPayCash,
+      </if>
+      <if test="totalsaleprice != null" >
+        totalSalePrice,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderno != null" >
+        #{orderno,jdbcType=VARCHAR},
+      </if>
+      <if test="tradno != null" >
+        #{tradno,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="itemid != null" >
+        #{itemid,jdbcType=VARCHAR},
+      </if>
+      <if test="passengername != null" >
+        #{passengername,jdbcType=VARCHAR},
+      </if>
+      <if test="passengertel != null" >
+        #{passengertel,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardtype != null" >
+        #{idcardtype,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardno != null" >
+        #{idcardno,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketno != null" >
+        #{ticketno,jdbcType=VARCHAR},
+      </if>
+      <if test="saleprice != null" >
+        #{saleprice,jdbcType=VARCHAR},
+      </if>
+      <if test="paycash != null" >
+        #{paycash,jdbcType=VARCHAR},
+      </if>
+      <if test="itemprice != null" >
+        #{itemprice,jdbcType=VARCHAR},
+      </if>
+      <if test="refundfee != null" >
+        #{refundfee,jdbcType=VARCHAR},
+      </if>
+      <if test="feedetail != null" >
+        #{feedetail,jdbcType=VARCHAR},
+      </if>
+      <if test="seattype != null" >
+        #{seattype,jdbcType=VARCHAR},
+      </if>
+      <if test="seatname != null" >
+        #{seatname,jdbcType=VARCHAR},
+      </if>
+      <if test="seatinfo != null" >
+        #{seatinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="saleorderno != null" >
+        #{saleorderno,jdbcType=VARCHAR},
+      </if>
+      <if test="trainno != null" >
+        #{trainno,jdbcType=VARCHAR},
+      </if>
+      <if test="startstation != null" >
+        #{startstation,jdbcType=VARCHAR},
+      </if>
+      <if test="receviestation != null" >
+        #{receviestation,jdbcType=VARCHAR},
+      </if>
+      <if test="starttime != null" >
+        #{starttime,jdbcType=VARCHAR},
+      </if>
+      <if test="recevietime != null" >
+        #{recevietime,jdbcType=VARCHAR},
+      </if>
+      <if test="contactname != null" >
+        #{contactname,jdbcType=VARCHAR},
+      </if>
+      <if test="contacttel != null" >
+        #{contacttel,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertype != null" >
+        #{ordertype,jdbcType=VARCHAR},
+      </if>
+      <if test="legs != null" >
+        #{legs,jdbcType=VARCHAR},
+      </if>
+      <if test="insurancestate != null" >
+        #{insurancestate,jdbcType=VARCHAR},
+      </if>
+      <if test="insurancefaceprice != null" >
+        #{insurancefaceprice,jdbcType=VARCHAR},
+      </if>
+      <if test="insurancepaycash != null" >
+        #{insurancepaycash,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceitemcash != null" >
+        #{insuranceitemcash,jdbcType=VARCHAR},
+      </if>
+      <if test="insurancesaleprice != null" >
+        #{insurancesaleprice,jdbcType=VARCHAR},
+      </if>
+      <if test="insurancesaleorderno != null" >
+        #{insurancesaleorderno,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceinsuranceno != null" >
+        #{insuranceinsuranceno,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceitemid != null" >
+        #{insuranceitemid,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceusertel != null" >
+        #{insuranceusertel,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceusername != null" >
+        #{insuranceusername,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceinsurancepolicyno != null" >
+        #{insuranceinsurancepolicyno,jdbcType=VARCHAR},
+      </if>
+      <if test="totalotherfee != null" >
+        #{totalotherfee,jdbcType=VARCHAR},
+      </if>
+      <if test="totalpurprice != null" >
+        #{totalpurprice,jdbcType=VARCHAR},
+      </if>
+      <if test="totalfaceprice != null" >
+        #{totalfaceprice,jdbcType=VARCHAR},
+      </if>
+      <if test="totalpaycash != null" >
+        #{totalpaycash,jdbcType=VARCHAR},
+      </if>
+      <if test="totalsaleprice != null" >
+        #{totalsaleprice,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.manji.mlife.model.TrafficOrder" >
+    update trafficOrder
+    <set >
+      <if test="tradno != null" >
+        tradNo = #{tradno,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="itemid != null" >
+        itemId = #{itemid,jdbcType=VARCHAR},
+      </if>
+      <if test="passengername != null" >
+        passengerName = #{passengername,jdbcType=VARCHAR},
+      </if>
+      <if test="passengertel != null" >
+        passengerTel = #{passengertel,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardtype != null" >
+        idcardType = #{idcardtype,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardno != null" >
+        idcardNo = #{idcardno,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketno != null" >
+        ticketNo = #{ticketno,jdbcType=VARCHAR},
+      </if>
+      <if test="saleprice != null" >
+        salePrice = #{saleprice,jdbcType=VARCHAR},
+      </if>
+      <if test="paycash != null" >
+        payCash = #{paycash,jdbcType=VARCHAR},
+      </if>
+      <if test="itemprice != null" >
+        itemPrice = #{itemprice,jdbcType=VARCHAR},
+      </if>
+      <if test="refundfee != null" >
+        refundFee = #{refundfee,jdbcType=VARCHAR},
+      </if>
+      <if test="feedetail != null" >
+        feeDetail = #{feedetail,jdbcType=VARCHAR},
+      </if>
+      <if test="seattype != null" >
+        seatType = #{seattype,jdbcType=VARCHAR},
+      </if>
+      <if test="seatname != null" >
+        seatName = #{seatname,jdbcType=VARCHAR},
+      </if>
+      <if test="seatinfo != null" >
+        seatInfo = #{seatinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="saleorderno != null" >
+        saleOrderNo = #{saleorderno,jdbcType=VARCHAR},
+      </if>
+      <if test="trainno != null" >
+        trainNo = #{trainno,jdbcType=VARCHAR},
+      </if>
+      <if test="startstation != null" >
+        startStation = #{startstation,jdbcType=VARCHAR},
+      </if>
+      <if test="receviestation != null" >
+        recevieStation = #{receviestation,jdbcType=VARCHAR},
+      </if>
+      <if test="starttime != null" >
+        startTime = #{starttime,jdbcType=VARCHAR},
+      </if>
+      <if test="recevietime != null" >
+        recevieTime = #{recevietime,jdbcType=VARCHAR},
+      </if>
+      <if test="contactname != null" >
+        contactName = #{contactname,jdbcType=VARCHAR},
+      </if>
+      <if test="contacttel != null" >
+        contactTel = #{contacttel,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertype != null" >
+        orderType = #{ordertype,jdbcType=VARCHAR},
+      </if>
+      <if test="legs != null" >
+        legs = #{legs,jdbcType=VARCHAR},
+      </if>
+      <if test="insurancestate != null" >
+        insurancestate = #{insurancestate,jdbcType=VARCHAR},
+      </if>
+      <if test="insurancefaceprice != null" >
+        insurancefacePrice = #{insurancefaceprice,jdbcType=VARCHAR},
+      </if>
+      <if test="insurancepaycash != null" >
+        insurancepayCash = #{insurancepaycash,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceitemcash != null" >
+        insuranceitemCash = #{insuranceitemcash,jdbcType=VARCHAR},
+      </if>
+      <if test="insurancesaleprice != null" >
+        insurancesalePrice = #{insurancesaleprice,jdbcType=VARCHAR},
+      </if>
+      <if test="insurancesaleorderno != null" >
+        insurancesaleOrderNo = #{insurancesaleorderno,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceinsuranceno != null" >
+        insuranceinsuranceNo = #{insuranceinsuranceno,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceitemid != null" >
+        insuranceitemId = #{insuranceitemid,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceusertel != null" >
+        insuranceuserTel = #{insuranceusertel,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceusername != null" >
+        insuranceuserName = #{insuranceusername,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceinsurancepolicyno != null" >
+        insuranceinsurancePolicyNo = #{insuranceinsurancepolicyno,jdbcType=VARCHAR},
+      </if>
+      <if test="totalotherfee != null" >
+        totalOtherFee = #{totalotherfee,jdbcType=VARCHAR},
+      </if>
+      <if test="totalpurprice != null" >
+        totalPurPrice = #{totalpurprice,jdbcType=VARCHAR},
+      </if>
+      <if test="totalfaceprice != null" >
+        totalFacePrice = #{totalfaceprice,jdbcType=VARCHAR},
+      </if>
+      <if test="totalpaycash != null" >
+        totalPayCash = #{totalpaycash,jdbcType=VARCHAR},
+      </if>
+      <if test="totalsaleprice != null" >
+        totalSalePrice = #{totalsaleprice,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      
+      
+    </set>
+    where orderNo = #{orderno,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.manji.mlife.model.TrafficOrder" >
+    update trafficOrder
+    set tradNo = #{tradno,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      itemId = #{itemid,jdbcType=VARCHAR},
+      passengerName = #{passengername,jdbcType=VARCHAR},
+      passengerTel = #{passengertel,jdbcType=VARCHAR},
+      idcardType = #{idcardtype,jdbcType=VARCHAR},
+      idcardNo = #{idcardno,jdbcType=VARCHAR},
+      ticketNo = #{ticketno,jdbcType=VARCHAR},
+      salePrice = #{saleprice,jdbcType=VARCHAR},
+      payCash = #{paycash,jdbcType=VARCHAR},
+      itemPrice = #{itemprice,jdbcType=VARCHAR},
+      refundFee = #{refundfee,jdbcType=VARCHAR},
+      feeDetail = #{feedetail,jdbcType=VARCHAR},
+      seatType = #{seattype,jdbcType=VARCHAR},
+      seatName = #{seatname,jdbcType=VARCHAR},
+      seatInfo = #{seatinfo,jdbcType=VARCHAR},
+      saleOrderNo = #{saleorderno,jdbcType=VARCHAR},
+      trainNo = #{trainno,jdbcType=VARCHAR},
+      startStation = #{startstation,jdbcType=VARCHAR},
+      recevieStation = #{receviestation,jdbcType=VARCHAR},
+      startTime = #{starttime,jdbcType=VARCHAR},
+      recevieTime = #{recevietime,jdbcType=VARCHAR},
+      contactName = #{contactname,jdbcType=VARCHAR},
+      contactTel = #{contacttel,jdbcType=VARCHAR},
+      orderType = #{ordertype,jdbcType=VARCHAR},
+      legs = #{legs,jdbcType=VARCHAR},
+      insurancestate = #{insurancestate,jdbcType=VARCHAR},
+      insurancefacePrice = #{insurancefaceprice,jdbcType=VARCHAR},
+      insurancepayCash = #{insurancepaycash,jdbcType=VARCHAR},
+      insuranceitemCash = #{insuranceitemcash,jdbcType=VARCHAR},
+      insurancesalePrice = #{insurancesaleprice,jdbcType=VARCHAR},
+      insurancesaleOrderNo = #{insurancesaleorderno,jdbcType=VARCHAR},
+      insuranceinsuranceNo = #{insuranceinsuranceno,jdbcType=VARCHAR},
+      insuranceitemId = #{insuranceitemid,jdbcType=VARCHAR},
+      insuranceuserTel = #{insuranceusertel,jdbcType=VARCHAR},
+      insuranceuserName = #{insuranceusername,jdbcType=VARCHAR},
+      insuranceinsurancePolicyNo = #{insuranceinsurancepolicyno,jdbcType=VARCHAR},
+      totalOtherFee = #{totalotherfee,jdbcType=VARCHAR},
+      totalPurPrice = #{totalpurprice,jdbcType=VARCHAR},
+      totalFacePrice = #{totalfaceprice,jdbcType=VARCHAR},
+      totalPayCash = #{totalpaycash,jdbcType=VARCHAR},
+      totalSalePrice = #{totalsaleprice,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR}
+      
+    where orderNo = #{orderno,jdbcType=VARCHAR}
+  </update>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</mapper>

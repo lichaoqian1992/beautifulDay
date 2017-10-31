@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.message.MessageMapper" >
+
+
+<select id="countNotice" parameterType="NoticeVo" resultType="int">
+select count(*) from dt_notice where 1=1
+<if test="get_user_groups != null and get_user_groups != ''">
+			and get_user_groups=#{get_user_groups}
+			</if>
+<if test="user_role_type != null and user_role_type != ''">
+			and user_role_type=#{user_role_type}
+			</if>
+<if test="state != null and state != ''">
+			and state=#{state}
+			</if>
+
+</select>
+<select id="queryNotice" parameterType="NoticeVo" resultType="Notice">
+select * from dt_notice dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_notice  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+		<!-- <if test="user_role_type != null and user_role_type != ''">
+			and user_role_type=#{user_role_type}
+			</if>
+		<if test="state != null and state != ''">
+			and state=#{state}
+			</if> -->
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addNotice" parameterType="Notice">
+insert into dt_notice
+(title,content,get_user_roles,get_user_groups,get_user_area,user_id,user_role_type,user_role_value,state,update_time,remark)
+values(#{title},#{content},#{get_user_roles},#{get_user_groups},#{get_user_area},#{user_id},#{user_role_type},#{user_role_value},#{state},#{update_time},#{remark})
+</insert>
+
+<select id="getNotice" parameterType="int" resultType="Notice">
+select * from dt_notice where id=#{0}
+</select>
+
+<update id="updNotice" parameterType="Notice">
+update dt_notice set
+title=#{title},
+content=#{content},
+get_user_roles=#{get_user_roles},
+get_user_groups=#{get_user_groups},
+get_user_area=#{get_user_area},
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+state=#{state},
+update_time=#{update_time},
+remark=#{remark}
+where id=#{id}
+</update> 
+
+<delete id="delNotice" parameterType="int">
+delete from dt_notice where id=#{0}
+</delete>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countUserMessage" parameterType="UserMessageVo" resultType="int">
+select count(*) from dt_user_message where 1=1
+<if test="post_user_role_type != null and post_user_role_type != ''">
+			and post_user_role_type=#{post_user_role_type}
+			</if>
+<if test="accept_user_role_type != null and accept_user_role_type != ''">
+			and accept_user_role_type=#{accept_user_role_type}
+			</if>
+<if test="is_read != null and is_read != ''">
+			and is_read=#{is_read}
+			</if>
+
+
+</select>
+<select id="queryUserMessage" parameterType="UserMessageVo" resultType="UserMessage">
+select * from dt_user_message dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_message  where 1=1
+		
+	<!-- 	<if test="accept_user_role_type != null and accept_user_role_type != ''">
+			and accept_user_role_type=#{accept_user_role_type}
+			</if>
+		<if test="is_read != null and is_read != ''">
+			and is_read=#{is_read}
+			</if> -->
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addUserMessage" parameterType="UserMessage">
+insert into dt_user_message
+(type,post_user_id,post_user_role_type,post_user_role_value,accept_user_id,accept_user_role_type,accept_user_role_value,is_read,title,content,post_time,read_time,is_del)
+values(#{type},#{post_user_id},#{post_user_role_type},#{post_user_role_value},#{accept_user_id},#{accept_user_role_type},#{accept_user_role_value},#{is_read},#{title},#{content},#{post_time},#{read_time},#{is_del})
+</insert>
+
+<select id="getUserMessage" parameterType="long" resultType="UserMessage">
+select * from dt_user_message where id=#{0}
+</select>
+
+<update id="updUserMessage" parameterType="UserMessage" >
+update dt_user_message set
+type=#{type},
+post_user_id=#{post_user_id},
+post_user_role_type=#{post_user_role_type},
+post_user_role_value=#{post_user_role_value},
+accept_user_id=#{accept_user_id},
+accept_user_role_type=#{accept_user_role_type},
+accept_user_role_value=#{accept_user_role_value},
+is_read=#{is_read},
+title=#{title},
+content=#{content},
+post_time=#{post_time},
+read_time=#{read_time},
+is_del=#{is_del}
+where id=#{id}
+</update>
+
+<delete id="delUserMessage" parameterType="int">
+delete from dt_user_message where id=#{0}
+</delete>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="countUserNotice" parameterType="UserNoticeVo" resultType="int">
+select count(*) from dt_user_notice where 1=1
+<if test="type != null and type != ''">
+			and type=#{type}
+			</if>
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+
+
+
+</select>
+<select id="queryUserNotice" parameterType="UserNoticeVo" resultType="UserNotice">
+select * from dt_user_notice dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_notice  where 1=1
+		
+		<!-- <if test="type != null and type != ''">
+			and type=#{type}
+			</if> -->
+      <if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addUserNotice" parameterType="UserNotice">
+insert into dt_user_notice
+(type,title,url,add_time,user_id,user_role_type,user_role_value,is_del)
+values(#{type},#{title},#{url},#{add_time},#{user_id},#{user_role_type},#{user_role_value},#{is_del})
+</insert>
+
+<select id="getUserNotice" parameterType="int" resultType="UserNotice">
+select * from dt_user_notice where id=#{0}
+</select>
+
+<update id="updUserNotice" parameterType="UserNotice" >
+update dt_user_notice set
+type=#{type},
+title=#{title},
+url=#{url},
+add_time=#{add_time},
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value=#},
+is_del=#{is_del}
+where id=#{id}
+</update>
+
+<delete id="delUserNotice" parameterType="int">
+delete from dt_user_notice where id=#{0}
+</delete>
+
+
+
+
+</mapper>

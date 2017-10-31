@@ -1,0 +1,12 @@
+<ul class="content_nav">
+	#for(x : session.menu)
+	<li class="active_right_nav">
+		<h3><i class="classify"></i>#(x.name)</h3>
+		<ul class="second_nav">
+			#for(y : x.child)
+				<li><a href="#(y.url)">#(y.name)</a></li>
+			#end
+		</ul>
+	</li>
+	#end
+</ul>

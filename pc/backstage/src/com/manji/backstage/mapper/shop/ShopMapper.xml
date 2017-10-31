@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.shop.ShopMapper" >
+
+<select id="countShopInfo" parameterType="ShopInfoVo" resultType="int">
+select count(*) from dt_user_role_shopinfo where 1=1
+<if test="id != null and id != ''">
+ 	   and  id=#{id}
+</if>
+<if test="user_id != null and user_id != ''">
+ 	   and  user_id=#{user_id}
+</if>
+</select>
+<select id="queryShopInfo" parameterType="ShopInfoVo" resultType="ShopInfo">
+select * from dt_user_role_shopinfo dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_role_shopinfo  where 1=1
+		<if test="id != null and id != ''">
+		   and  id=#{id}
+		</if>
+		<if test="user_id != null and user_id != ''">
+	   	   and  user_id=#{user_id}
+	 	</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getShopInfo" parameterType="int" resultType="ShopInfo">
+select * from dt_user_role_shopinfo where id=#{0}
+</select>
+
+<update id="updShopInfo" parameterType="ShopInfo">
+update dt_user_role_shopinfo set
+group_id =#{group_id},
+user_id =#{user_id},
+name =#{name},
+content =#{content},
+pics =#{pics},
+TAG =#{TAG},
+pc_logo =#{pc_logo},
+wap_logo =#{wap_logo},
+mobile =#{mobile},
+online_content =#{online_content},
+address =#{address},
+weburl =#{weburl},
+area =#{area},
+longitude =#{longitude},
+latitude =#{latitude},
+is_distribution =#{is_distribution},
+distribution_area =#{distribution_area},
+distribution_distance =#{distribution_distance},
+is_express =#{is_express},
+express_types =#{express_types},
+is_local_transaction =#{is_local_transaction},
+is_booking =#{is_booking},
+is_plugins =#{is_plugins},
+review_times =#{review_times},
+review_score =#{review_score},
+service_review_score =#{service_review_score},
+pack_review_score =#{pack_review_score},
+distribution_review_score =#{distribution_review_score},
+damage_times =#{damage_times},
+damage_money =#{damage_money},
+damage_date =#{damage_date},
+state =#{state},
+remark =#{remark},
+update_time =#{update_time},
+add_time =#{add_time},
+is_del =#{is_del},
+main_business =#{main_business}, 
+from_value =#{from_value},
+is_sign_up =#{is_sign_up},
+hot =#{hot},
+yysj =#{yysj}, 
+dpkg =#{dpkg},
+percentage =#{percentage},
+matter =#{matter},
+is_balance =#{is_balance}
+where id=#{id}
+</update>
+
+<insert id="addShopInfo" parameterType="ShopInfo">
+insert into dt_user_role_shopinfo
+(group_id,user_id,name,content,pics,TAG,pc_logo,wap_logo,mobile,online_content,address,weburl,area,longitude,latitude,is_distribution,distribution_area,distribution_distance,is_express,express_types,is_local_transaction,is_booking,is_plugins,review_times,review_score,service_review_score,pack_review_score,distribution_review_score,damage_times,damage_money,damage_date,state,
+remark,update_time,add_time,is_del,main_business,from_value,is_sign_up,hot,yysj,dpkg,percentage,matter,is_balance)
+values (#{group_id},#{user_id},#{name},#{content},#{pics},#{TAG},#{pc_logo},#{wap_logo},#{mobile},#{online_content},#{address},#{weburl},#{area},#{longitude},#{latitude},#{is_distribution},#{distribution_area},#{distribution_distance},#{is_express},#{express_types},#{is_local_transaction},#{is_booking},#{is_plugins},#{review_times},#{review_score},#{service_review_score},#{pack_review_score},#{distribution_review_score},#{damage_times},#{damage_money},#{damage_date},#{state},#{remark},#{update_time},#{add_time},#{is_del},#{main_business},#{from_value},#{is_sign_up},#{hot},#{yysj},#{dpkg},#{percentage},#{matter},#{is_balance})
+</insert>
+
+<delete id="delShopInfo" parameterType="int">
+delete from dt_user_role_shopinfo where id=#{0}
+</delete>
+
+
+
+<select id="countTempShopInfo" parameterType="TempShopInfoVo" resultType="int">
+select count(*) from dt_user_role_shopinfo_temp where 1=1
+  <if test="id != null and id != ''">
+   and  id=#{id}
+  </if>
+  <if test="user_id != null and user_id != ''">
+	   and  user_id=#{user_id}
+  </if>
+  <if test="name != null and name != ''">
+   	   and name like '%${name}%'
+  </if>
+</select>
+<select id="queryTempShopInfo" parameterType="TempShopInfoVo" resultType="TempShopInfo">
+select * from dt_user_role_shopinfo_temp dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_role_shopinfo_temp  where 1=1
+		<if test="id != null and id != ''">
+		   and  id=#{id}
+		</if>
+		<if test="user_id != null and user_id != ''">
+		   and  user_id=#{user_id}
+		</if>
+		<if test="name != null and name != ''">
+      	   and name like '%${name}%'
+    	</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getTempShopInfo" parameterType="int" resultType="TempShopInfo">
+select * from dt_user_role_shopinfo_temp where id=#{0}
+</select>
+
+<update id="updTempShopInfo" parameterType="TempShopInfo" >
+update dt_user_role_shopinfo_temp set
+recorded_id =#{recorded_id},
+group_id =#{group_id},
+user_id =#{user_id},
+name =#{name},
+content =#{content},
+TAG =#{TAG},
+pc_logo =#{pc_logo},
+wap_logo =#{wap_logo},
+mobile =#{mobile},
+address =#{address},
+weburl =#{weburl},
+area =#{area},
+is_distribution =#{is_distribution},
+distribution_area =#{distribution_area},
+distribution_distance =#{distribution_distance},
+is_express  =#{is_express},
+express_types =#{express_types},
+is_local_transaction =#{is_local_transaction},
+is_booking =#{is_booking},
+is_plugins =#{is_plugins},
+state =#{state},
+remark =#{remark},
+update_time =#{update_time},
+percentage =#{percentage}
+where id=#{id}
+</update>
+
+<insert id="addTempShopInfo" parameterType="TempShopInfo">
+insert into dt_user_role_shopinfo_temp
+(recorded_id,group_id,user_id,name,content,TAG,pc_logo,wap_logo,mobile,address,weburl,area,is_distribution,distribution_area,distribution_distance,is_express,express_types,is_local_transaction,is_booking,is_plugins,state,remark,update_time,percentage)
+values (#{recorded_id},#{group_id},#{user_id},#{name},#{content},#{TAG},#{pc_logo},#{wap_logo},#{mobile},#{address},#{weburl},#{area},#{is_distribution},#{distribution_area},#{distribution_distance},#{is_express},#{express_types},#{is_local_transaction},#{is_booking},#{is_plugins},#{state},#{remark},#{update_time},#{percentage})
+</insert>
+
+<delete id="delTempShopInfo" parameterType="int">
+delete from dt_user_role_shopinfo_temp where id=#{0}
+</delete>
+
+
+
+
+<select id="countBusiness" parameterType="BusinessVo" resultType="int">
+select count(*) from dt_business_type where 1=1
+	<if test="name != null and name != ''">
+	  	   and name like '%${name}%'
+	</if>
+	<if test="channel_id != null and channel_id != ''">
+    	   and channel_id like '%${channel_id}%'
+  	</if>
+</select>
+<select id="queryBusiness" parameterType="BusinessVo" resultType="Business">
+select * from dt_business_type dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_business_type  where 1=1
+		<if test="name != null and name != ''">
+      	   and name like '%${name}%'
+    	</if>
+		<if test="channel_id != null and channel_id != ''">
+      	   and channel_id like '%${channel_id}%'
+    	</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addBusiness" parameterType="Business">
+insert into dt_business_type
+(name,call_index,channel_id,content,role_type,valid_time,deposit,poundage,percentage,agreement,status,add_time)
+values(#{name},#{call_index},#{channel_id},#{content},#{role_type},#{valid_time},#{deposit},#{poundage},#{percentage},#{agreement},#{status},#{add_time})
+</insert>
+
+<select id="getBusiness" parameterType="int" resultType="Business">
+select * from dt_business_type where id=#{id}
+</select>
+
+<update id="updBusiness" parameterType="Business" >
+update dt_business_type set
+name=#{name},
+call_index=#{call_index},
+channel_id=#{channel_id},
+content=#{content},
+role_type=#{role_type},
+valid_time=#{valid_time},
+deposit=#{deposit},
+poundage=#{poundage},
+percentage=#{percentage},
+agreement=#{agreement},
+status=#{status},
+add_time=#{add_time}
+where id=#{id}
+</update>
+
+<delete id="delBusiness" parameterType="int">
+delete from dt_business_type where id=#{0}
+</delete>
+
+
+
+
+<select id="countCooperate" parameterType="CooperateVo" resultType="int">
+select count(*) from dt_business_user
+</select>
+<select id="queryCooperate" parameterType="CooperateVo" resultType="Cooperate">
+select * from dt_business_user dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_business_user  where 1=1
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getCooperate" parameterType="int" resultType="Cooperate">
+select * from dt_business_user where id=#{0}
+</select>
+
+<insert id="addCooperate" parameterType="Cooperate" >
+insert into dt_business_user
+(user_id,user_role_type,user_role_value,name,call_index,channel_id,content,valid_time,deposit,poundage,percentage,user_deposit,user_poundage,user_percentage,agreement,user_agreement,status,add_time,update_time,remark,is_del,ywkg,ywms,ywgz)
+values(#{user_id},#{user_role_type},#{user_role_value},#{name},#{call_index},#{channel_id},#{content},#{valid_time},#{deposit},#{poundage},#{percentage},#{user_deposit},#{user_poundage},#{user_percentage},#{agreement},#{user_agreement},#{status},#{add_time},#{update_time},#{remark},#{is_del},#{ywkg},#{ywms},#{ywgz})
+</insert>
+
+<update id="updCooperate" parameterType="Cooperate" >
+update dt_business_user set
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+name=#{name},
+call_index=#{call_index},
+channel_id=#{channel_id},
+content=#{content},
+valid_time=#{valid_time},
+deposit=#{deposit},
+poundage=#{poundage},
+percentage=#{percentage},
+user_deposit=#{user_deposit},
+user_poundage=#{user_poundage},
+user_percentage=#{user_percentage},
+agreement=#{agreement},
+user_agreement=#{user_agreement},
+status=#{status},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark},
+is_del=#{is_del},
+ywkg=#{ywkg},
+ywms=#{ywms},
+ywgz=#{ywgz}
+where id=#{id}
+</update>
+<delete id="delCooperate" parameterType="int">
+delete from dt_business_user where id=#{0}
+</delete>
+
+
+
+
+
+<select id="countOtherInfo" parameterType="OtherInfoVo" resultType="int">
+select count(*) from dt_user_role_shopinfo_other where 1=1
+		<if test="shop_id != null and shop_id != ''">
+	      and shop_id=#{shop_id}
+	    </if>
+		<if test="shop_user_id != null and shop_user_id != ''">
+	      and shop_user_id=#{shop_user_id}
+	    </if>
+	    <if test="title != null and title != ''">
+	      and title like '%${title}%'
+	    </if>
+</select>
+<select id="queryOtherInfo" parameterType="OtherInfoVo" resultType="OtherInfo">
+select * from dt_user_role_shopinfo_other dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_role_shopinfo_other  where 1=1
+		<if test="shop_id != null and shop_id != ''">
+	      and shop_id=#{shop_id}
+	    </if>
+		<if test="shop_user_id != null and shop_user_id != ''">
+	      and shop_user_id=#{shop_user_id}
+	    </if>
+	    <if test="title != null and title != ''">
+	      and title like '%${title}%'
+	    </if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getOtherInfo" parameterType="int" resultType="OtherInfo">
+select * from dt_user_role_shopinfo_other where id=#{0}
+</select>
+
+<insert id="addOtherInfo" parameterType="OtherInfo" >
+insert into dt_user_role_shopinfo_other
+(shop_id,shop_user_id,category_id,add_user_id,title,file_url,add_time,is_del)
+values(#{shop_id},#{shop_user_id},#{category_id},#{add_user_id},#{title},#{file_url},#{add_time},#{is_del})
+</insert>
+
+<update id="updOtherInfo" parameterType="OtherInfo" >
+update dt_user_role_shopinfo_other set
+shop_id=#{shop_id},
+shop_user_id=#{shop_user_id},
+category_id=#{category_id},
+add_user_id=#{add_user_id},
+title=#{title},
+file_url=#{file_url},
+add_time=#{add_time},
+is_del=#{is_del}
+where id=#{id}
+</update>
+
+<delete id="delOtherInfo" parameterType="int">
+delete from dt_user_role_shopinfo_other where id=#{0}
+</delete>
+
+
+
+
+<select id="countScopeInfo" parameterType="ScopeInfoVo" resultType="int">
+select count(*) from dt_user_role_shopinfo_scope where 1=1
+<if test="user_id != null and user_id != ''">
+		      and user_id=#{user_id}
+		    </if>
+			<if test="status != null and status != '-1'">
+		      and status=#{status}
+		    </if>
+</select>
+<select id="queryScopeInfo" parameterType="ScopeInfoVo" resultType="ScopeInfo">
+select * from dt_user_role_shopinfo_scope dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_role_shopinfo_scope  where 1=1
+			<if test="user_id != null and user_id != ''">
+		      and user_id=#{user_id}
+		    </if>
+			<if test="status != null and status != '-1'">
+		      and status=#{status}
+		    </if>
+		    
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getScopeInfo" parameterType="int" resultType="ScopeInfo">
+select * from dt_user_role_shopinfo_scope where id=#{0}
+</select>
+
+<insert id="addScopeInfo" parameterType="ScopeInfo" >
+insert into dt_user_role_shopinfo_scope
+(user_id,user_role_type,user_role_value,scope_values,status,local_area)
+values(#{user_id},#{user_role_type},#{user_role_value},#{scope_values},#{status},#{local_area})
+</insert>
+
+<update id="updScopeInfo" parameterType="ScopeInfo">
+update dt_user_role_shopinfo_scope set
+user_id =#{user_id},
+user_role_type =#{user_role_type},
+user_role_value =#{user_role_value},
+scope_values =#{scope_values},
+status =#{status},
+local_area =#{local_area}
+where id=#{id}
+</update>
+
+<delete id="delScopeInfo" parameterType="int">
+delete from dt_user_role_shopinfo_scope where id=#{0}
+</delete>
+
+
+
+<select id="countBuyerInfo" parameterType="BuyerInfoVo" resultType="int">
+select count(*) from dt_user_role_buyerinfo where 1=1
+<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+</if>
+</select>
+
+<select id="queryBuyerInfo" parameterType="BuyerInfoVo" resultType="BuyerInfo">
+select * from dt_user_role_buyerinfo dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_role_buyerinfo  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getBuyerInfo" parameterType="int" resultType="BuyerInfo">
+select * from dt_user_role_buyerinfo where id=#{0}
+</select>
+
+<delete id="delBuyerInfo" parameterType="int">
+delete from dt_user_role_buyerinfo where id=#{0}
+</delete>
+
+<insert id="addBuyerInfo" parameterType="BuyerInfo">
+insert into dt_user_role_buyerinfo
+(user_id,user_exp,damage_times,damage_money,damage_date,review_times,review_score,buy_tags,view_tags,areas,update_time)
+values(#{user_id},#{user_exp},#{damage_times},#{damage_money},#{damage_date},#{review_times},#{review_score},#{buy_tags},#{view_tags},#{areas},#{update_time})
+
+</insert>
+
+<update id="updBuyerInfo" parameterType="BuyerInfo" >
+update dt_user_role_buyerinfo set
+user_id =#{user_id},
+user_exp =#{user_exp},
+damage_times =#{damage_times},
+damage_money =#{damage_money},
+damage_date =#{damage_date},
+review_times =#{review_times},
+review_score =#{review_score},
+buy_tags =#{buy_tags},
+view_tags =#{view_tags},
+areas =#{areas},
+update_time =#{update_time}
+where id=#{id}
+</update>
+
+
+
+
+
+
+<select id="countComplaint" parameterType="ComplaintVo" resultType="long">
+select count(*) from dt_business_complaint
+</select>
+
+<select id="queryComplaint" parameterType="ComplaintVo" resultType="Complaint">
+select * from dt_business_complaint dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_business_complaint  where 1=1
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getComplaint" parameterType="long" resultType="Complaint">
+select * from dt_business_complaint where id=#{0}
+</select>
+
+<insert id="addComplaint" parameterType="Complaint">
+insert into dt_business_complaint 
+(from_user_id,from_user_role,from_user_role_value,to_user_id,to_user_role,to_user_role_value,type,title,content,pics,correlation_order_id,addtime,handle_user_id,state,mobile,name,area,is_del,orderid_type,order_status)
+values(#{from_user_id},#{from_user_role},#{from_user_role_value},#{to_user_id},#{to_user_role},#{to_user_role_value},#{type},#{title},#{content},#{pics},#{correlation_order_id},#{addtime},#{handle_user_id},#{state},#{mobile},#{name},#{area},#{is_del},#{orderid_type},#{order_status})
+
+</insert>
+<update id="updComplaint" parameterType="Complaint">
+update dt_business_complaint set
+from_user_id =#{from_user_id},
+from_user_role =#{from_user_role},
+from_user_role_value =#{from_user_role_value},
+to_user_id =#{to_user_id},
+to_user_role =#{to_user_role},
+to_user_role_value =#{to_user_role_value},
+type =#{type},
+title =#{title},
+content =#{content},
+pics =#{pics},
+correlation_order_id =#{correlation_order_id},
+addtime =#{addtime},
+handle_user_id =#{handle_user_id},
+state =#{state},
+mobile =#{mobile},
+name =#{name},
+area =#{area},
+is_del =#{is_del},
+orderid_type =#{orderid_type},
+order_status =#{order_status}
+where id=#{id}
+</update>
+<delete id="delComplaint" parameterType="long" >
+delete from dt_business_complaint where id=#{0}
+</delete>
+
+
+
+
+<select id="countCompContent" parameterType="CompContentVo" resultType="int">
+select count(*) from dt_business_complaint_content
+</select>
+
+<select id="queryCompContent" parameterType="CompContentVo" resultType="CompContent">
+select * from dt_business_complaint_content dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_business_complaint_content  where 1=1
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getCompContent" parameterType="long" resultType="CompContent">
+select * from dt_business_complaint_content where id=#{0}
+</select>
+
+<insert id="addCompContent" parameterType="CompContent">
+insert into dt_business_complaint_content 
+(complaint_id,type,content,supplement_content,img,time)
+values(#{complaint_id},#{type},#{content},#{supplement_content},#{img},#{time})
+</insert>
+<update id="updCompContent" parameterType="CompContent">
+update dt_business_complaint_content set
+complaint_id =#{complaint_id},
+type =#{type},
+content =#{content},
+supplement_content =#{supplement_content},
+img=#{img},
+time=#{time}
+where id=#{id}
+</update>
+<delete id="delCompContent" parameterType="long" >
+delete from dt_business_complaint_content where id=#{0}
+</delete>
+
+
+
+
+<select id="countCompHandle" parameterType="CompHandleVo" resultType="int">
+select count(*) from dt_business_complaint_handle
+</select>
+
+<select id="queryCompHandle" parameterType="CompHandleVo" resultType="CompHandle">
+select * from dt_business_complaint_handle dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_business_complaint_handle  where 1=1
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getCompHandle" parameterType="long" resultType="Comphandle">
+select * from dt_business_complaint_handle where id=#{0}
+</select>
+
+<insert id="addCompHandle" parameterType="CompHandle" >
+insert into dt_business_complaint_handle
+(complaint_id,user_id,role_type,role_value,update_time,remark,is_satisfaction,service_type,service_value,service_point)
+values(#{complaint_id},#{user_id},#{role_type},#{role_value},#{update_time},#{remark},#{is_satisfaction},#{service_type},#{service_value},#{service_point})
+</insert>
+<update id="updCompHandle" parameterType="Comphandle">
+update dt_business_complaint_handle set
+complaint_id =#{complaint_id},
+ user_id=#{user_id},
+role_type =#{role_type},
+ role_value=#{role_value},
+ update_time=#{update_time},
+ remark=#{remark},
+ is_satisfaction=#{is_satisfaction},
+ service_type=#{service_type},
+ service_value=#{service_value},
+ service_point=#{service_point}
+where id=#{id}
+</update>
+<delete id="delCompHandle" parameterType="long" >
+delete from dt_business_complaint_handle where id=#{0}
+</delete>
+
+
+
+</mapper>

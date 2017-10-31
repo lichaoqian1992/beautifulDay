@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.account.AccountMapper" >
+
+
+<!-- 账户状态统计 -->
+<select id="countAccountGroup" resultType="map">
+select case state
+  when 0 then '冻结'
+  when 1 then '正常'
+  else '异常' end as state,count(*) as count from dt_user_accountinfo group by state 
+</select>
+
+<select id ="getAccount" parameterType="int" resultType="Account">
+	select * from dt_user_accountinfo where id=#{0}
+</select>
+
+<select id="countAccount" parameterType="AccountVo" resultType="int">
+	select count(*) from dt_user_accountinfo where 1=1
+	<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+	<if test="role_type != null and role_type != '-1'">
+			and role_type=#{role_type}
+		</if>
+
+			and state=#{state}
+
+
+</select>
+
+<select id="queryAccount" parameterType="AccountVo" resultType="Account">
+
+select * from dt_user_accountinfo dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_accountinfo  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		<if test="role_type != null and role_type != '-1'">
+				and role_type=#{role_type}
+			</if>
+		
+				and state=#{state}
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+</select>
+
+<select id="countRecharge" parameterType="RechargeVo" resultType="int">
+select count(*) from dt_user_recharge where 1=1
+	<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+	<if test="status != null and status != '-1'">
+			and status=#{status}
+			</if>
+	<if test="account_id != null and account_id != ''">
+			and account_id=#{account_id}
+			</if>
+	<if test="recharge_no != null and recharge_no != ''">
+			and recharge_no=#{recharge_no}
+			</if>
+</select>
+
+<select id="queryRecharge" parameterType="RechargeVo" resultType="Recharge">
+
+select * from dt_user_recharge dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_recharge  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		
+		<if test="account_id != null and account_id != ''">
+				and account_id=#{account_id}
+				</if>
+		<if test="recharge_no != null and recharge_no != ''">
+				and recharge_no=#{recharge_no}
+				</if>
+		<if test="status != null and status != '-1'">
+				and status=#{status}
+				</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+</select>
+
+
+<select id="countTransaction" parameterType="TransactionVo" resultType="int">
+	select count(*) from dt_user_transaction where 1=1
+	<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+	<if test="touser_id != null and touser_id != ''">
+			and touser_id=#{touser_id}
+			</if>
+	<if test="transaction_no != null and transaction_no != ''">
+			and transaction_no=#{transaction_no}
+			</if>
+	<if test="status != null and status != '-1'">
+			and status=#{status}
+			</if>
+	
+</select>
+
+
+<select id="queryTransaction" parameterType="TransactionVo" resultType="Transaction">
+
+select * from dt_user_transaction dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_transaction  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		<if test="touser_id != null and touser_id != ''">
+				and touser_id=#{touser_id}
+				</if>
+		<if test="transaction_no != null and transaction_no != ''">
+				and transaction_no=#{transaction_no}
+				</if>
+		<if test="status != null and status != '-1'">
+				and status=#{status}
+				</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+</select>
+
+
+<select id="countWithdrawals" parameterType="WithdrawalsVo" resultType="int">
+	select count(*) from dt_user_withdrawals where 1=1
+		<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+				</if>
+		<if test="account_id != null and account_id != ''">
+				and account_id=#{account_id}
+				</if>
+		<if test="withdrawals_no != null and withdrawals_no != ''">
+				and withdrawals_no=#{withdrawals_no}
+				</if>
+		<if test="status != null and status != '-1'">
+				and status=#{status}
+				</if>
+</select>
+
+<select id="queryWithdrawals" parameterType="WithdrawalsVo" resultType="Withdrawals">
+
+select * from dt_user_withdrawals dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_withdrawals  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+				and user_id=#{user_id}
+				</if>
+		<if test="account_id != null and account_id != ''">
+				and account_id=#{account_id}
+				</if>
+		<if test="withdrawals_no != null and withdrawals_no != ''">
+				and withdrawals_no=#{withdrawals_no}
+				</if>
+		<if test="status != null and status != '-1'">
+				and status=#{status}
+				</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+</select>
+
+<select id="getRecharge" parameterType="int" resultType="Recharge">
+select * from dt_user_recharge where id=#{0}
+</select>
+
+<select id="getTransaction" parameterType="int" resultType="Transaction">
+select * from dt_user_transaction where id=#{0}
+</select>
+
+<select id="getWithdrawals" parameterType="int" resultType="Withdrawals">
+select * from dt_user_withdrawals where id=#{0}
+</select>
+<update id="updAccount" parameterType="Account">
+update dt_user_accountinfo
+set
+user_id=#{user_id},
+role_type=#{role_type},
+role_value=#{role_value},
+amount=#{amount},
+point=#{point},
+reputation=#{reputation},
+credit=#{credit},
+voucher=#{voucher},
+is_fastpay=#{is_fastpay},
+state=#{state},
+remark=#{remark},
+update_time=#{update_time},
+float_amount=#{float_amount},
+float_voucher=#{float_voucher},
+float_point=#{float_point},
+allow_amount=#{allow_amount},
+allow_voucher=#{allow_voucher},
+withdrawals_commission=#{withdrawals_commission}
+where id=#{id}
+
+</update>
+
+<update id="updRecharge" parameterType="Recharge">
+update dt_user_recharge
+set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+account_id=#{account_id},
+recharge_no=#{recharge_no},
+payment_id=#{payment_id},
+amount=#{amount},
+status=#{status},
+add_time=#{add_time},
+complete_time=#{complete_time},
+transaction_no=#{transaction_no},
+is_del=#{is_del},
+voucher=#{voucher}
+where id=#{id}
+
+</update>
+
+
+<update id="updTransaction" parameterType="Transaction">
+update dt_user_transaction set
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+touser_id=#{touser_id},
+touser_role_type=#{touser_role_type},
+touser_role_value=#{touser_role_value},
+transaction_no=#{transaction_no},
+amount=#{amount},
+status=#{status},
+add_time=#{add_time},
+complete_time=#{complete_time},
+remark=#{remark},
+is_del=#{is_del}
+where id=#{id}
+
+</update>
+
+
+<select id="countYiJiAccount" parameterType="YiJiAccountVo" resultType="int">
+select count(*) from dt_yiji_account where 1=1
+<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+</if>
+       <if test="mobile != null and mobile != ''">
+      and mobile=#{mobile}
+    </if>
+
+</select>
+<select id="queryYiJiAccount" parameterType="YiJiAccountVo" resultType="YiJiAccount">
+select * from dt_yiji_account dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_yiji_account  where 1=1
+    
+    <if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+       <if test="mobile != null and mobile != ''">
+      and mobile=#{mobile}
+    </if>
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addYiJiAccount" parameterType="YiJiAccount">
+insert into dt_yiji_account
+(user_id,user_name,mobile,user_type,client_type,yjf_user_id,yjf_user_name,result_source,add_time,is_del)
+values(#{user_id},#{user_name},#{mobile},#{user_type},#{client_type},#{yjf_user_id},#{yjf_user_name},#{result_source},#{add_time},#{is_del})
+</insert>
+
+<select id="getYiJiAccount" parameterType="int" resultType="YiJiAccount">
+select * from dt_yiji_account where id=#{0}
+</select>
+
+<update id="updYiJiAccount" parameterType="YiJiAccount">
+update dt_yiji_account set
+user_id=#{user_id},
+user_name=#{user_name},
+mobile=#{mobile},
+user_type=#{user_type},
+client_type=#{client_type},
+yjf_user_id=#{yjf_user_id},
+yjf_user_name=#{yjf_user_name},
+result_source=#{result_source},
+add_time=#{add_time},
+is_del=#{is_del}
+where id=#{id}
+</update> 
+
+<delete id="delYiJiAccount" parameterType="int">
+delete from dt_yiji_account where id=#{0}
+</delete>
+
+</mapper>

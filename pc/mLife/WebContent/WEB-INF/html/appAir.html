@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>机票预订 </title>
+    <link rel="stylesheet" href="css/frozen.css">
+    <link rel="stylesheet" href="css/validate.css">
+    <link rel="stylesheet" href="css/appstyle.css">
+    <script src="js/lib/zeptojs/zepto.min.js"></script>
+    <script src="js/zepto-mvalidate.js"></script>
+    <script src="js/frozen.js"></script>
+    <!-- <script src="My97DatePicker/WdatePicker.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="css/zepto.mdater.css">
+    <script src="js/zepto.mdater.js"></script>
+    <!-- 飞机站点js -->
+	<script src="js/air_stations.js"></script>
+</head>
+<!-- 检测用户设备 -->
+<script type="text/javascript">
+        var browser = { 
+           versions: function() { 
+               var u = navigator.userAgent; 
+               return { 
+                   trident: u.indexOf('Trident') > -1, //IE内核 
+                   presto: u.indexOf('Presto') > -1, //opera内核 
+                   webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+                   gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+                   mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+                   ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+                   android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+                   iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+                   iPad: u.indexOf('iPad') > -1, //iPad 
+                   webApp: u.indexOf('Safari') > -1 //Safari 
+               }; 
+           }() 
+        } 
+        function closePage(){
+             var jsonstr = "{\"action\":\"close\"}";
+            if ( browser.versions.ios 
+               || browser.versions.iPhone 
+               || browser.versions.iPad) { 
+               window.webkit.messageHandlers.Native.postMessage(jsonstr);
+            }
+            if ( browser.versions.android ) { 
+                window.paySucess.clickOnAndroid(jsonstr);
+            }
+             
+         }
+</script>
+<body ontouchstart="">
+<section id="searchWrap" class="hide">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="back()"></i><h1>机票预订 </h1>
+    </header>
+    <script type="text/javascript">
+        function back(){
+            $("#searchWrap").addClass("hide");
+        }
+    </script>
+    <input type="text" autocomplete="off" class="City" placeholder="请输入出发城市">
+    <input type="text" autocomplete="off" class="City2" placeholder="请输入到达城市">
+    <div class="divinput_hide" id="divcity">
+        <ul id="citybox">
+        </ul>
+    </div>
+    <div id="hotCity">
+        <h3>热门城市</h3>
+        <ul class="cityList">
+            <li>北京</li>
+            <li>上海</li>
+            <li>广州</li>		
+            <li>天津</li>
+            <li>重庆</li>
+            <li>武汉</li>
+            <li>杭州</li>
+            <li>苏州</li>
+            <li>成都</li>
+            <li>南京</li>
+        </ul>
+    </div>
+    <div id="hotCity2">
+        <h3>热门城市</h3>
+        <ul class="cityList">
+            <li>北京</li>
+            <li>上海</li>
+            <li>广州</li>		
+            <li>天津</li>
+            <li>重庆</li>
+            <li>武汉</li>
+            <li>杭州</li>
+            <li>苏州</li>
+            <li>成都</li>
+            <li>南京</li>
+        </ul>
+    </div>
+</section>
+    <section class="page" id="searchP">
+        <header class="ui-header ui-header-positive ui-border-b">
+            <i class="ui-icon-return" onclick="closePage()"></i><h1>机票预订 </h1>
+        </header>
+        <section class="ui-container">
+            <section style="background:#FFF;">
+                <section class="cityInfo clearfix">
+                    <div class="ui-form-item startCity">
+                        <label class="input-label" for="">出发城市</label>
+                        <input type="text" autocomplete="off" id="startstr" name="startstr" placeholder="请输入出发城市">
+                        <input type="hidden" id="from" name="from" />
+                        <input type="hidden" id="startCity"/>
+                    </div>
+                    <div class="ui-form-item endCity">
+                        <label class="input-label" for="">到达城市</label>
+                        <input type="text" autocomplete="off" id="endstr" name="endstr" placeholder="请输入到达城市">
+                        <input type="hidden" id="to" name="to" />
+                        <input type="hidden" id="endCity" />
+                    </div>
+                </section>
+                <div class="ui-form-item border-b">
+                    <label class="input-label" for="">出发日期</label>
+                    <input id ="starttime"  class="form-control" readonly="true" type="text" placeholder="请选择日期"/>
+                </div>
+                <script type="text/javascript">
+                    $('#starttime').mdater({ 
+                        minDate : new Date()
+                    });
+                </script>
+                <div class="ui-btn-wrap">
+                    <input class="ui-btn-lg ui-btn-main" id="search" type="submit" value="搜索航线"/>
+                </div>
+            </section>
+            <section class="section">
+                <div class="ui-form-item  ui-whitespace border-b">
+                    <h2>购票须知</h2><span class="squire"></span>
+                </div>
+                <div class="ui-row" style="padding:15px;">
+                    <p class="ui-txt-info">1、机票相关业务处理时间为8:00-22:00 </p>
+                    <p class="ui-txt-info">2、机票业务不做改签处理 </p>
+                    <p class="ui-txt-info">3、机票支持在线申请退废票和自愿退票，非自愿退票请根据平台规则联系客服处理 </p>
+                    <p class="ui-txt-info">4、出票当日提交"退废票"，具体以航司规定为准 </p>
+                    <p class="ui-txt-info">5、请仔细核对用户身份证号以及姓名，以免造成不必要的损失 </p>
+                    <p class="ui-txt-info">6、行程单(报销凭证)机场提供打印服务 </p>
+                    <p class="ui-txt-info">7、目前不支持飞机票保险货源</p>
+                </div>
+            </section>
+        </section>
+    </section>
+    <section class="page" id="listP" style="padding-bottom: 60px;">
+        <header class="ui-header ui-header-positive ui-border-b">
+            <i class="ui-icon-return" onclick="showSearchP()"></i><h1 class="place-title" style="padding-left: 130px;"align="center"><span id="start-t">重庆</span><span class="arr"></span><span id="end-t">成都</span></h1>
+        </header>
+        <section class="ui-container">
+            <section style="background:#fff8d7; font-size: 12px; padding:5px 15px;">
+                <p class="ui-txt-warning">1、以下票面价不包含机场建设费、燃油附加税。</p>
+                <p class="ui-txt-warning">2、特殊舱位价格变化快，以下特殊舱位价格仅作参考，以订座成功后价格为准。</p>
+            </section>
+            <ul class="list" id="airLines">
+                
+            </ul>
+        </section>
+        <footer class="ui-footer ui-footer-stable ui-border-t" id="trainfooter">
+            <ul class="ui-tiled">
+                <li id="shiduan"><i style="background-image:url(images/app/time1.png);"></i><div>起飞时间</div></li>
+                <li id="companys"><i style="background-image:url(images/app/plan1.png);"></i><div>航空公司</div></li>
+                <li id="seate"><i style="background-image:url(images/app/cw1.png);"></i><div>舱位</div></li>
+            </ul>
+        </footer>
+        <div class="ui-actionsheet shiduan">  
+            <div class="ui-actionsheet-cnt">
+                <div class="input-content horizontal">
+                    <a href="javascript:onclick=findairs();" class="text-label text-label-primary item">全部</a>
+                    <label class="checkbox item"><input name="timeCheckName" value="0-6" type="radio">早晨（0~6点）</label>
+                    <label class="checkbox item"><input name="timeCheckName" value="6-12" type="radio">上午（6~12点）</label>
+                    <label class="checkbox item"><input name="timeCheckName" value="12-13" type="radio">中午（12~13点）</label>
+                    <label class="checkbox item"><input name="timeCheckName" value="13-18" type="radio">下午（13~18点）</label>
+                    <label class="checkbox item"><input name="timeCheckName" value="18-24" type="radio">晚上（18~24点）</label>
+                </div>
+                <button class="close">确定</button> 
+            </div>         
+        </div>
+        <div class="ui-actionsheet company">  
+            <div class="ui-actionsheet-cnt">
+                <div class="input-content horizontal">
+                    <a href="javascript:onclick=findairsCompany();" class="text-label text-label-primary item">全部</a>
+                    <label class="checkbox item"><input name="flightCompany" value="CA" type="radio">中国航空</label>
+                    <label class="checkbox item"><input name="flightCompany" value="CZ" type="radio">南方航空</label>
+                    <label class="checkbox item"><input name="flightCompany" value="FM" type="radio">上海航空</label>
+                    <label class="checkbox item"><input name="flightCompany" value="MU" type="radio">东方航空</label>
+                    <label class="checkbox item"><input name="flightCompany" value="HO" type="radio">吉祥航空</label>
+                    <label class="checkbox item"><input name="flightCompany" value="HU" type="radio">航海集团</label>
+                    <label class="checkbox item"><input name="flightCompany" value="3U" type="radio">四川航空</label>
+                    <label class="checkbox item"><input name="flightCompany" value="SC" type="radio">山东航空</label>
+                </div>
+                <button class="close">确定</button> 
+            </div>         
+        </div>
+        <div class="ui-actionsheet seate">  
+            <div class="ui-actionsheet-cnt">
+                <div class="input-content horizontal">
+                    <a href="javascript:onclick=findairsSeatCode();" class="text-label text-label-primary item">全部</a>
+                    <label class="checkbox item"><input name="seatCode" value="经济舱" type="radio">经济舱</label>
+                    <label class="checkbox item"><input name="seatCode" value="特价舱位" type="radio">特价舱位</label>
+                    <label class="checkbox item"><input name="seatCode" value="商务舱" type="radio">商务舱</label>
+                    <label class="checkbox item"><input name="seatCode" value="头等舱" type="radio">头等舱</label>
+                </div>
+                <button class="close">确定</button> 
+            </div>         
+        </div>
+    </section>
+    <section class="page" id="order">
+        <header class="ui-header ui-header-positive ndiff">
+            <i class="ui-icon-return" onclick="showListP()"></i><h1 class="order-title">航班信息</h1>
+        </header>
+        <section class="ui-container" id="airInfo">
+            <div class="head">
+                <h2 class="hbtitle">南方航空123456</h2>
+                <ul class="head-top ui-tiled">
+                    <li>
+                        <p class="place1">重庆</p>
+                        <p class="time1">08:00</p>
+                        <p class="station-1">首都机场01</p>
+                    </li>
+                    <li class="arrss">
+                        <p class="date1">2016-09-24起飞</p>
+                        <p class="date2">2016-09-24到达</p>
+                    </li>
+                    <li>
+                        <p class="place2">重庆</p>
+                        <p class="time2">08:00</p>
+                        <p class="station-2">首都机场01</p>
+                    </li>
+                </ul>
+                <p class="tips">单张票价:¥<span class="totalprice"></span> / 成人(含票面价<span class="price"></span>+机建燃油<span class="AirportTax"></span>+<span class="FuelTax"></span>)<span 
+
+class="airtype"></span></p>
+            </div>
+            <section>
+                <ul id="airTicke"></ul>
+            </section>
+            <section class="backTicke">
+                <p>退票规定</p>
+                <p>1、 交易完成，退订订单，支持选择子单退订。<p>
+                <p>2、“退废票”时间限制：下单当天同时距离起飞时间四小时以上，详细见平台规则。<p>
+            </section>
+            <section class="ui-panel ui-panel-pure ui-border-t ui-btn-wrap">
+                <h3>乘客<button class="ui-btn ui-btn-main position" id="addC">增加乘客</button></h3>
+                <ul class="ui-list ui-list-pure ui-border-tb Customer">
+                
+                </ul>
+            </section>
+            <section>
+                <div class="ui-form-item ui-border-b border-b">
+                    <label>联系人</label>
+                    <input type="text" placeholder="请输入联系人姓名" id="catch" >
+                </div>
+                <div class="ui-form-item ui-border-b border-b">
+                    <label>二代身份证号</label>
+                    <input type="text" placeholder="请输入身份证号" id="catchid" >
+                </div>
+                <div class="ui-form-item ui-border-b border-b">
+                    <label>联系电话</label>
+                    <input type="text" placeholder="用于接收取票信息" id="catchtel" >
+                </div>
+                <!-- <div class="ui-form-item ui-border-b border-b">
+                    <label>购买保险</label>
+                    <label class="ui-switch onoff">
+                        <input type="checkbox" checked="">
+                    </label>
+                </div> -->
+            </section>
+            <section>
+                <p style="margin:15px 0;line-height: 30px;font-size: 14px; text-align: center"> 
+                <label class="ui-checkbox-s">
+                    <input type="checkbox" name="checkbox" checked="">
+                </label>
+                 我已阅读理解并同意<span style="color: #3a6ca2;" onclick="showVVV()">《平台飞机票服务协议》</span>
+            </p>
+            </section>
+            <section class="hide" id="vvv">
+                <div class="content">
+                    <p>欢迎使用本站飞机票网上代购服务，使用本服务前必须仔细阅读本协议，用户同意本协议中所有内容后方可对接使用。</p>
+                    <h5>一、购票时间</h5>
+                    <p>
+                        本站机票购票为8：00-22：00，在购票时间段内，你可以查询、购买。 <span class="text-danger">售后处理时间8:00-22:00，请仔细关注下我们的处理时间，处理时间外如果无法乘机、无法退票等问题，本站不承担
+
+相应责任。</span>
+                    </p>
+                    <h5>二、出票</h5>
+                    <p>购票成功后，会收到确认出票短信及电子票号；出票成功后，带着订票时有效身份证去值机柜台拿登机牌，请提前2小时办理登机。</p>
+                    <p>
+                        <span class="text-danger">报销凭证：行程单。</span> 可以在机场打印。
+                    </p>
+                    <p>小贴士：什么是行程单，如何获取？</p>
+                    <p>a. 什么是行程单？</p>
+                    <p>电子机票行程单是旅客购买电子机票的付款报销凭证，但不作为机场办理乘机手续和安全检查的必要证明。行程单最晚在航班起飞后7天内打印。电子客票行程单就是国内机票的报销凭证。国家规定行程单只能
+
+打印一次，无法再次打印。</p>
+                    <p>b.如何获取？</p>
+                    <p>目前暂不支持行程单的打印及快递服务，如有需要，请自行前往机场寻找对应的航空公司柜台处打印。</p>
+                    <h5>机票行程单打印须知：</h5>
+                    <p>a 在航空公司以及各机票售票处，未能在乘坐飞机后7日内领取行程单的旅客，可以在购票站补打。</p>
+                    <p>b 在机场领取行程单的乘客，请务必在起飞后30天内领取，超过30天以后申请打印行程单服务无效。</p>
+                    <p>c 在指定的机场柜台行程单领取，一般的航空公司都会在机场设置机行程单领取柜台，可以咨询机场工作人员。</p>
+                    <h5>三、退废票</h5>
+                    <p>1.航空公司上班时间内，出票当日可提交退废票，退废票手续费10元/张（奥凯航空废票手续费20元/张），特殊节假日期间航空公司有权随时调整退废票规则，实际请款以航空公司最新公布规定为准；</p>
+                    <p>2.非当天起飞航班在航空公司下班前1小时提交退票申请；</p>
+                    <p>3.当天起飞航班在飞机起飞前3小时提交退废票申请；</p>
+                    <p>4.特殊产品订单废票规则根据出票条件而定；</p>
+                    <p>5.金鹿废票：编号里有多个人的订单，不能分开提交废票申请；</p>
+                    <p>6.特殊节假日不允许废票；</p>
+                    <p>
+                        <span class="text-danger">特别提醒：</span>
+                        凡是客票中备注了"不得退票"的客票，按照航空公司规定均只退机建然后税费。另本站展示信息均来源于航空公司客规，仅供参考，一切规定以航空公司最新标准为准；因此产生的问题，我站不承担相应责任。
+                    </p>
+                    <p>各大航空公司退废票规定：http://staticb2b.liantuo.com/liantuo/html/tuip.html。（请复制到浏览器地址栏中打开）</p>
+                    <p class="text-info">注意：退废票类型</p>
+                    <p class="text-info">无需联系客服，用户自行在线退废票：</p>
+                    <p class="text-info">【当日废票】：当日作废，收取10元手续费，退票选"退废票"选项</p>
+                    <p class="text-info">【当日废票】：当日作废，奥凯航空公司收取20元手续费，退票选"退废票"选项</p>
+                    <p class="text-info">【自愿退票】：客人自愿退票，按客规收取手续费</p>
+                    <p class="text-info">请根据以下情况联系平台客服处理退票：</p>
+                    <p class="text-info">【非自愿退票】：航班延误、取消，申请全退</p>
+                    <p class="text-info">【非自愿退票】：客人因病无法乘机，申请全退，需病退证明</p>
+                    <p class="text-info">【非自愿退票】：前段延误导致后期无法乘坐，申请全退（填写前段票号）</p>
+                    <p class="text-info">【升舱换开】：申请全退（填写新票号）</p>
+                    <p class="text-info">【升舱换开】：升舱换开，申请自愿退票</p>
+                    <p class="text-info">【升舱换开】：名字错，换开重出，申请全退（填写新票号）</p>
+                    <h5>四、退废票款项到账时间</h5>
+                    <p>自愿退票订单，将在三个工作日内完成退款；</p>
+                    <p>非自愿的或者异常订单按照航空公司相关规定处理；</p>
+                    <p>非自愿退票PNR中有UN的，升舱重购的，7个工作日内退款；</p>
+                    <p>正常非自愿退票10个工作日退款；</p>
+                    <p>升舱换开、差额退款的在7-15工作日退款；</p>
+                    <p>病退、迫降，航空公司倒闭等特殊原因导致需要退票的在一个月内完成退款；</p>
+                    <p>注：以上规定在用户提交相应证明后完成提交退废票的订单，按照航空公司客票规定处理退票退款；</p>
+                    <p>如因航班延误、天气原因等需出具航空公司相关证明全退处理的客票，请用户及时提交证明加快处理速度；</p>
+                    <p>注：以上规定未涉及的情况按国内运输客规规定执行。</p>
+                    <h5>五、改签</h5>
+                    <p>目前暂不支持改签业务，需用户自行联系航空公司办理。</p>
+                    <p class="text-danger">注意：姓名填写错误，将无法更改，只能废票，请仔细核对用户身份证号及姓名。</p>
+                    <h5>六、免责声明</h5>
+                    <p>1.本站提供的机票查询的班次信息、票价信息（包括但不限于）仅作为参考，用户以具体付款为准，在本站上代购的机票的班次、票价、始飞时间、抵达时间等以实际为准。</p>
+                    <p>2.本站对此等信息的准确性、完整性、合法性或真实性均不承担责任，此外，本站对任何使用或者提供网站信息的商业活动及风险不承担任何责任。</p>
+                    <p>3.本站禁止代理商未经用户的允许出售保险，因此产生的纠纷与本站无关。</p>
+                    <p>4.您应该对使用本站提供的服务结果自行承担风险。</p>
+                    <p>5.本站有补充此协议的权利。</p>
+                </div>
+            </section>
+        </section>
+        <footer class="ui-footer ui-border-t" style="height: 50px;">
+            <div class="ui-form-item border-b" style="padding-right:0;">
+                <label>总金额：<span id="total">¥3.00</span></label>
+                <p class="priceList">机票：¥<span class="prc price-air">0.00</span>  机建燃油：¥<span class="prc price-y">0</span></p>
+                <button class="btn-confirm" type="submit" id="createBill">确认</button>
+            </div>
+        </footer>
+    </section>
+    <section class="page" id="edit">
+        <header class="ui-header ui-header-positive">
+            <i class="ui-icon-return" onclick="showOrder()"></i><h1>增加乘客</h1>
+        </header>
+        <section class="ui-container">
+            <div class="ui-form-item ui-border-b">
+                <label>乘客类型</label>
+                <select id="tickeType" class="text" style="height:40px;border-radius:4px;padding-top: 10px;padding-left: 95px;"> 
+                    <option>成人票</option>
+                </select>
+            </div>
+            <div class="ui-form-item ui-border-b">
+                <label>乘客姓名</label>
+                <input type="text" placeholder="请输入真实姓名" id="cname" >
+            </div>
+            <div class="ui-form-item ui-border-b">
+                <label>证件类型</label>
+                <select id="ident" class="text" style="height:40px;border-radius:4px;padding-top: 10px;padding-left: 95px;"> 
+                    <option>身份证</option>
+                </select> 
+            </div>
+            <div class="ui-form-item ui-border-b">
+                <label>证件号码</label>
+                <input type="text" placeholder="请输入证件号码" id="idnum" >
+            </div>
+            <div class="ui-btn-wrap">
+                <input class="ui-btn-lg ui-btn-main" id="addOK" type="button" value="确定"/>
+            </div>
+        </section>
+        
+    </section>
+    
+    <div class="ui-loading-block">
+        <div class="ui-loading-cnt">
+            <i class="ui-loading-bright"></i>
+            <p>正在加载中...</p>
+        </div>
+    </div>
+    <script type="text/javascript">
+    	var last;
+        showSearchP();
+        function showSearchP(){
+            $("#searchP").show().siblings('.page').hide();
+        }
+        function showListP(){
+            $("#listP").show().siblings('.page').hide();
+        }
+        function showOrder(){
+            $("#order").show().siblings('.page').hide();
+        }
+        function showEdit(){
+            $("#edit").show().siblings('.page').hide();
+        }
+        // 显示协议
+        function showVVV(){
+            var content = $("#vvv .content").html();
+            var dia=$.dialog({
+                content:content,
+                button:["确认"]
+            });
+
+            dia.on("dialog:action",function(e){
+                console.log(e.index)
+            });
+            dia.on("dialog:hide",function(e){
+                console.log("dialog hide")
+            });
+        }
+        // 增加乘客
+        $("#addOK").click(function(){
+            var tickeType = $("#tickeType").val();
+            var name = $("#cname").val();
+            var ident = $("#ident").val();
+            var idnum = $("#idnum").val();
+
+            var namereg = /^([\u4e00-\u9fa5]){2,7}$/; //只能是中文，长度为2-7位
+            var isIDCard1=/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/;
+            var isIDCard2=/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+            if(!namereg.test(name)){       
+                alert("请输入真实姓名")
+                return false;
+            }
+            if(!isIDCard1.test(idnum) && !isIDCard2.test(idnum)){       
+                alert("请输入真实真实证件号")
+                return false;
+            }
+
+            var list = '<li class="ui-border-t">'+
+                        '<div class="fl del1"></div>'+
+                        '<div class="l-content fl">'+
+                            '<p class="c-name"><span class="name">'+name+'</span><span class="ui-badge-muted t-type">'+tickeType+'</span></p>'+
+                            '<p class="c-id">'+ident+'<span class="identf">'+idnum+'</span></p>'+
+                        '</div>'+
+                        '<div class="fr edit "></div>'+
+                        '<div class="fr del2 hide">删除</div>'+
+                    '</li>';
+            $("#order ul.Customer").append(list);
+            showOrder();
+
+            resumemoney();
+        });
+        // 删除
+        $(document).on('click',".del1",function(){
+            $(this).siblings('.del2').removeClass("hide");
+            $(this).siblings('.edit').addClass("hide");
+            $(this).addClass('rotate');
+        });
+        $(document).on('click',".del2",function(){
+            $(this).parent().remove();
+        });
+
+        // 编辑
+        $(document).on('click',".edit",function(){
+            var name = $(this).siblings('.l-content').find(".name").text();
+            var idnum = $(this).siblings('.l-content').find(".identf").text();
+            $("#cname").val(name);
+            $('#idnum').val(idnum);
+            $(this).parent().remove();
+            showEdit();
+        });
+      //对话框
+        function showDialog(content){
+    		var dia=$.dialog({
+                content:content,
+                button:["确认"]
+            });
+
+            dia.on("dialog:action",function(e){
+                console.log(e.index)
+            });
+            dia.on("dialog:hide",function(e){
+                console.log("dialog hide")
+            });
+    	}
+        // 搜索
+        $("#search").on("click",function(){
+        	var name1 = $("#startstr").val().split("(")[0];
+       		var name2 = $("#endstr").val().split("(")[0];
+       		if($("#from").val().trim() == $("#to").val().trim()){
+       			showDialog("出发城市和到达城市不能相同");
+       			return;
+       		}
+       		if($("#starttime").val() == null || undefined == $("#starttime").val() || $("#starttime").val() == ""){
+       			showDialog("出发日期不能为空");
+       			return;
+       		}
+            var queryData={
+                    "from" : $("#from").val(),
+                    "to" : $("#to").val(),
+                    "date" : $("#starttime").val(),
+                    "start" : name1,
+                    "end" : name2
+            };
+            
+            $(".ui-loading-block").addClass("show");
+            $.ajax({
+                type : "GET",
+                url : "app/air/lineslist",
+                dataType : "*.json",
+                contentType : "application/json; charset=utf-8",
+                data : queryData,
+                success : function(data){
+                    $(".ui-loading-block").removeClass("show");
+                    $("#start-t").text($("#startCity").val());
+                    $("#end-t").text($("#endCity").val());
+                    lineList = $.parseJSON(data);
+                    airsListInfo = lineList;
+                    var da = "";
+                    if(lineList[0] != null ){ // 有车票信息
+                        for (var i = 0; i < lineList.length; i++) {
+                            var airLine = lineList[i];
+                            var seatList =airLine.airSeats;
+                            var sList = "";
+                            sList = "";
+                            for (var j = 0; j < seatList.length; j++) {
+                                 sList += '<option value="">经济舱</option>';
+                             }
+                             //余票状态seatStatus
+                            var seatStatus = "";
+                            if(airLine.airSeats[0].seatStatus=='A'){
+                                seatStatus = '<p class="type tickers" style="margin-top:35px;">充足</p>';
+                            }else{
+                                seatStatus = '<p class="type tickers warning" style="margin-top:35px;">余票'+airLine.airSeats[0].seatStatus+'</p>';
+                            }
+                            var txt ='<li class="book">'+
+                                        '<div class="list-top">'+
+                                            '<div class="begin fl">'+
+                                                '<p class="begin-time">'+airLine.depTime+'</p>'+
+                                                '<p class="begin-place">'+airLine.orgCityName.split("航站楼:")[0]+airLine.orgCityName.split("航站楼:")[1]+'</p>'+
+                                            '</div>'+
+                                            '<div class="leadarr fl"></div>'+
+                                            '<div class="ends fl">'+
+                                                '<p class="end-time">'+airLine.arriTime+'</p>'+
+                                                '<p class="end-place">'+airLine.dstCityName.split("航站楼:")[0]+airLine.dstCityName.split("航站楼:")[1]+'</p>'+
+                                            '</div>'+
+                                            '<div class="price-wrap fr">'+
+                                                '<p class="price">¥<span>'+airLine.airSeats[0].parPrice+'</span></p>'+
+                                                seatStatus+
+                                            '</div>'+
+                                        '</div>'+
+                                        "<input type='hidden' id='airLineJson' value='"+JSON.stringify(airLine)+"'/>"+
+                                        "<input type='hidden' class='date' value='"+$("#starttime").val()+"'/>"+
+                                        '<div class="list-bottom ui-btn-wrap">'+
+                                            '<div class="fl hangban">'+airLine.flightCompanyName + airLine.flightNo+' | 机型'+airLine.planeType+'</div>'+
+                                        '</div>'+
+                                    '</li>';
+                        da += txt;
+                        }
+                        $("#airLines").html(da);
+                        showListP();
+                    }else{
+                        var dia=$.dialog({
+                            title:'温馨提示',
+                            content:'暂无航班信息',
+                            button:["确认"]
+                        });
+                        dia.on("dialog:hide",function(e){
+                            showSearchP();
+                        });                    
+                    }
+                }
+            });
+        });
+        // 筛选
+        $("#shiduan").tap(function(){
+            $(".shiduan").addClass("show");
+        });
+        $("#companys").tap(function(){
+            $(".company").addClass("show");
+        });
+        $("#seate").tap(function(){
+            $(".seate").addClass("show");
+        });
+        $(".close").click(function(){
+            $(this).parent().parent().removeClass("show");
+        });
+        // 提交
+        $("#createBill").tap(function(){
+            getPassager();
+            var concatName = $("#catch").val();
+            var idnumber = $("#catchid").val();
+            var concatPhone = $("#catchtel").val();
+            var seatJson = airSeats;
+            console.log(airLineJson);
+            var idx = $("#airTicke .active").index();
+            var airJson1 = {
+                "from" : $("#from").val(),
+                "to" : $("#to").val(),
+                "date" : $("#starttime").val(),
+                "flightNo": airLineJson.flightNo,
+                "companyCode": airLineJson.flightCompanyCode,
+                "seatCode": airSeats[idx].seatCode
+            };
+            $(".ui-loading-block").addClass("show");
+            var contactData = {
+                "contactName" : concatName,
+                "idNumber" : idnumber,
+                "contactTel" : concatPhone
+            };
+            var ticket = $("#airTicke .active").length;
+            console.log(ticket);
+            if(passagers != "" && $("#catch").val() != "" && $("#catchid").val().length != "" && $("#catchtel").val() != "" && ticket == 1){
+            	$.ajax({
+                    url:"app/air/orderCreate",
+                    data:{
+                    	passengers: passagers,
+                        contactJson:JSON.stringify(contactData),
+                        airLineJson:JSON.stringify(airJson1)
+                    },
+                    type:"POST",
+                    success:function(data){
+                    	window.location = data;
+                    	$(".ui-loading-block").removeClass("show");
+                    },
+                    error : function(XMLHttpRequest, textStatus, errorThrown){
+                        $("#win-wrapper").hide();
+                        var txt = XMLHttpRequest.responseText.toString();
+                        txt = txt.replace(/[^\u4e00-\u9fa5]/g, "");//只得到所有的字符串里面的汉字
+                        var str1 = txt.replace(/(.).*\1/g,"$1");//去除重复的字符串
+                        var dia=$.dialog({
+                            title:'温馨提示',
+                            content:str1,
+                            button:["确认"]
+                        });
+                    }
+                });
+            }else{
+//             	showDialog("请填写正确乘客信息和联系人信息");
+            	var dia=$.dialog({
+                    title:'温馨提示',
+                    content:'请填写正确乘客信息和联系人信息',
+                    button:["确认"]
+                });
+            	$(".ui-loading-block").removeClass("show");
+            	return;
+            }
+        });
+        $("#orderTimeDataSel").change(function(){
+            var value = $(this).val();
+            loadCoachLine(value);
+        });
+        $("#addC").tap(function(){
+        	 var ticket = $("#airTicke .active").length;
+             console.log(ticket)
+             if(ticket == 0){
+                 var dia=$.dialog({
+                     title:'温馨提示',
+                     content:'请选择舱位',
+                     button:["确认"]
+                 });
+             }else{
+            	 showEdit();
+             }
+            
+        });
+
+        $("#airTicke").on("click","li",function(){
+           $(this).addClass("active").siblings("li").removeClass("active");
+
+           resumemoney();
+        });
+        function resumemoney(){
+            var totalprice =0;
+            var airprice = 0;
+            var num = $(".Customer > li").length;
+
+            var AirportTax = $(".AirportTax").text();
+            var FuelTax = $(".FuelTax").text();
+            var idx = $("#airTicke li.active").index();
+            console.log(idx);
+            $("#order .head .price").text(airLineJson.airSeats[idx].parPrice);
+            $("#order .head .AirportTax").text(airLineJson.adultAirportTax);
+            $("#order .head .FuelTax").text(airLineJson.adultFuelTax);
+            $("#order .head .totalprice").text(Number($("#airTicke .active .price span").text()) + Number(AirportTax) + Number(FuelTax));
+            $("#order .head .airtype").text(airLineJson.airSeats[idx].seatMsg);
+
+            airprice = parseFloat($("#airTicke .active .price span").text()).toFixed(2);
+            totalprice = (Number($("#airTicke .active .price span").text()) + Number(AirportTax) + Number(FuelTax))*num;
+            $(".priceList .price-air").text(airprice);
+            $("#total").text(totalprice);
+            $(".price-y").text(Number(AirportTax) + Number(FuelTax));
+        }
+        var airLineJson="";
+        var airSeats="";
+        // 预订
+        book();
+		function book(){
+			$("#airLines").on("tap",".book",function(){
+                var date = $(this).find(".date").val();
+                airLineJson = $.parseJSON($(this).find('#airLineJson').val());
+               
+                $("#order .hbtitle").text(airLineJson.flightCompanyName+airLineJson.flightNo);
+                $("#order .place1").text(airLineJson.orgCityName.split("(")[0]);
+                $("#order .place2").text(airLineJson.dstCityName.split("(")[0]);
+                $("#order .time1").text(airLineJson.depTime);
+                $("#order .time2").text(airLineJson.arriTime);
+                $("#order .station-1").text(airLineJson.orgCityName.split("航站楼:")[0]+airLineJson.orgCityName.split("航站楼:")[1]);
+                $("#order .station-2").text(airLineJson.dstCityName.split("航站楼:")[0]+airLineJson.dstCityName.split("航站楼:")[1]);
+                $("#order .date1").text(date+"出发");
+                $("#order .date2").text(date+"到达");
+                $("#order .head .price").text(airLineJson.airSeats[0].parPrice);
+                $("#order .head .AirportTax").text(airLineJson.adultAirportTax);
+                $("#order .head .FuelTax").text(airLineJson.adultFuelTax);
+                $("#order .head .totalprice").text(Number(airLineJson.adultAirportTax) + Number(airLineJson.adultFuelTax) + Number(airLineJson.airSeats[0].parPrice));
+                $("#order .head .airtype").text(airLineJson.airSeats[0].seatMsg);
+                $("#total").text($("#order .head .totalprice").text());
+                $("#order footer .price-air").text(airLineJson.airSeats[0].parPrice);
+                $("#order footer .price-y").text(airLineJson.adultFuelTax + airLineJson.adultAirportTax);
+                airSeats = airLineJson.airSeats;
+                console.log(airSeats)
+                 //余票状态seatStatus
+                var airTicke = $("#airTicke");
+                airTicke.empty();
+                for (var i = 0; i < airSeats.length; i++) {
+                    var seatStatus = "";
+                    if(airSeats[i].seatStatus=='A'){
+                        seatStatus = '充足';
+                    }else{
+                        seatStatus = airSeats[i].seatStatus;
+                    }
+                    airTicke.append('<li><span class="type">'+airSeats[i].seatMsg+'</span><p class="tickes">余票<span>'+seatStatus+'</span></p> <p class="price">¥<span>'+airSeats[i].parPrice+'</span></p></li>');
+                }
+                showOrder();
+            });
+		}
+
+        var airsListInfo=new Array();//航班信息集合
+        var airSeatsList=new Array();//航班子集合信息
+
+        // 获取乘客
+        function getPassager(){
+            passager = [];
+            passagers = "";
+            var li = $("#order .ui-panel ul.Customer li");
+            if(li[0]){
+                var num = li.length;
+                
+                if(num >= 5){
+                    $("#addC").tap(function(){
+                        var dia=$.dialog({
+                            title:'温馨提示',
+                            content:'每一单乘客不能超过五个',
+                            button:["确认"]
+                        });
+                    });  
+                }
+               
+
+                // 获取乘客信息
+                for(var i=0; i< num; i++){
+                    var passagerN = $("#order .ui-panel ul.Customer li .name").eq(i).text() + ",1," + $("#order .ui-panel ul.Customer li .identf").eq(i).text();
+                    passager.push(passagerN);
+                }
+                for(var i = 0; i<passager.length; i++){
+                    passagers += passager[i]+";";
+                }
+                passagers = passagers.substring(0,passagers.length-1);
+                console.log(passagers);
+            }
+        }
+        //遍历航班信息
+        function airsList(airlinesList) {
+            //清除之前的航班列表
+            $("#airLines").empty();
+            lineList = airlinesList
+            var da = "";
+            if(lineList[0] != null ){ // 有车票信息
+                for (var i = 0; i < lineList.length; i++) {
+                    var airLine = lineList[i];
+                    var seatList =airLine.airSeats;
+                    var sList = "";
+                    sList = "";
+                    for (var j = 0; j < seatList.length; j++) {
+                         sList += '<option value="">经济舱</option>';
+                     }
+                     //余票状态seatStatus
+                    var seatStatus = "";
+                    if(airLine.airSeats[0].seatStatus=='A'){
+                        seatStatus = '<p class="type tickers">充足</p>';
+                    }else{
+                        seatStatus = '<p class="type tickers warning">余票'+airLine.airSeats[0].seatStatus+'</p>';
+                    }
+                    var txt ='<li class="book">'+
+                                '<div class="list-top">'+
+                                    '<div class="begin fl">'+
+                                        '<p class="begin-time">'+airLine.depTime+'</p>'+
+                                        '<p class="begin-place">'+airLine.orgCityName+'</p>'+
+                                    '</div>'+
+                                    '<div class="leadarr fl"></div>'+
+                                    '<div class="ends fl">'+
+                                        '<p class="end-time">'+airLine.arriTime+'</p>'+
+                                        '<p class="end-place">'+airLine.dstCityName+'</p>'+
+                                    '</div>'+
+                                    '<div class="price-wrap fr">'+
+                                        '<p class="price">¥<span>'+airLine.airSeats[0].parPrice+'</span></p>'+
+                                        seatStatus+
+                                    '</div>'+
+                                '</div>'+
+                                "<input type='hidden' id='airLineJson' value='"+JSON.stringify(airLine)+"'/>"+
+                                "<input type='hidden' class='date' value='"+$("#starttime").val()+"'/>"+
+                                '<div class="list-bottom ui-btn-wrap">'+
+                                    '<div class="fl hangban">'+airLine.flightCompanyName + airLine.flightNo+' | 机型'+airLine.planeType+'</div>'+
+                                '</div>'+
+                            '</li>';
+                da += txt;
+                }
+                $("#airLines").html(da);
+                showListP();
+            }else{
+                var dia=$.dialog({
+                    title:'温馨提示',
+                    content:'暂无车票信息',
+                    button:["确认"]
+                });
+                dia.on("dialog:hide",function(e){
+                    showListP();
+                });                    
+            }
+        }
+        //查询全部航班信息
+        function findairs() {
+            //重置radio按钮
+            $('input[name=timeCheckName]').removeAttr('checked');
+            changeAirs();
+        }
+        function findairsCompany() {
+            //重置radio按钮
+            $('input[name=flightCompany]').removeAttr('checked');
+            changeAirs();
+        }
+        
+        function findairsSeatCode() {
+            //重置radio按钮
+            $('input[name=seatCode]').removeAttr('checked');
+            changeAirs();
+        }
+        //航班信息筛选框
+         $("input[name=timeCheckName]").change(function (){
+            changeAirs();
+         });
+         $("input[name='flightCompany']").change(function (){
+            changeAirs();
+         });
+         $("input[name='seatCode']").change(function (){
+            changeAirs();
+         });
+        // 加载车次
+        function changeAirs() {
+            if(airsListInfo==''){
+                return false;
+             }
+             typearray=[];
+            //时间
+            $("input[name=timeCheckName]").each(function(){
+                if($(this).prop('checked')){
+                    typearray[0]=($(this).attr('value'));
+                 }
+             });
+            //航空公司
+            $("input[name='flightCompany']").each(function(){
+                if($(this).prop('checked')){
+                    typearray[1]=$(this).attr('value');
+                };
+            });
+            
+            //舱位
+            $("input[name='seatCode']").each(function(){
+                if($(this).prop('checked')){
+                    typearray[2]=$(this).attr('value');
+                };
+            });
+            
+            if(typearray.length==0){
+                airsList(airsListInfo);
+            }else{
+                arrryList0=airsListInfo;
+                arrryList1=[];
+                var time=typearray[0];//时间
+                var flightCompany=typearray[1];//航空公司
+                var seatCode=typearray[2];//舱位
+                if(time!=null){
+                    var gotimes= new Array(); 
+                        gotimes=time.split("-"); //字符分割 
+                    var gotime1 =gotimes[0];
+                    var gotime2 =gotimes[1];
+                    
+                        for (var i = 0; i < arrryList0.length; i++) {
+                           //起
+                            var depTime= new Array(); 
+                            depTime=arrryList0[i].depTime.split(":");//时间
+                            var dt =depTime[0];
+                            if(parseInt(dt)>=parseInt(gotime1)&&parseInt(dt)<parseInt(gotime2)){
+                                //添加满足条件的航班
+                                arrryList1.push(arrryList0[i]);
+                            }
+                        }
+                        if(arrryList1.length!=0){
+                            arrryList0=[];
+                            arrryList0=arrryList1;
+                            arrryList1=[];
+                        }else{
+                            arrryList0=[];
+                        }
+                }
+                
+                //航空公司信息
+                if(flightCompany!=null){
+                    for (var i = 0; i < arrryList0.length; i++) {
+                        Code=arrryList0[i].flightCompanyCode;//公司
+                        if(Code==flightCompany){
+                            //添加满足条件的航班
+                            arrryList1.push(arrryList0[i]);
+                        }
+                    }
+                    if(arrryList1.length!=0){
+                         arrryList0=[];
+                         arrryList0=arrryList1;
+                         arrryList1=[];
+                     }else{
+                         arrryList0=[];
+                     }
+                }
+                
+                //舱位信息
+                if(seatCode!=null){
+                    for (var i = 0; i < arrryList0.length; i++) {
+                        var Code=arrryList0[i].airSeats;
+                         for (var int2 = 0; int2 < Code.length; int2++) {
+                            if(Code[0].seatMsg==seatCode){
+                                 //添加满足条件的航班
+                                arrryList1.push(arrryList0[i]);
+                                 break;
+                            }
+                        }
+                    }
+                    
+                    if(arrryList1.length!=0){
+                        arrryList0=[];
+                        arrryList0=arrryList1;
+                        arrryList1=[];
+                    }else{
+                        arrryList0=[];
+                    }
+                }
+                airsList(arrryList0); 
+            }
+        }
+
+        /* 出发站 */
+        var input = $("#searchWrap .City");
+        var input2 = $("#searchWrap .City2");
+        $("#startstr").focus(function(){
+            $("#searchWrap").removeClass("hide");
+            $(".City").removeClass("hide");
+            $(".City2").addClass("hide");
+            input.focus();
+            input.val("");
+            input.prop("placeholder","请输入出发城市");
+            $("#citybox").empty();
+            getstation1();
+        });
+        $("#endstr").focus(function(){
+            $("#searchWrap").removeClass("hide");
+            $(".City2").removeClass("hide");
+            $(".City").addClass("hide");
+            var input2 = $("#searchWrap .City2");
+            input2.focus();
+            input2.val("");
+            input2.prop("placeholder","请输入到达城市");
+            $("#citybox").empty();
+            getstation2();
+        });
+        var exp = /^[a-zA-Z]$/;
+        function getstation1(){
+            console.log('startclick')
+            input.keyup(function(event){
+            	var stationdata = '';
+                var str = $(this).val();
+                var count=0;
+                last=event.timeStamp;
+   	 		 	setTimeout(function(){
+   	 			 if(last-event.timeStamp==0){
+   	 				//******************************
+   	 				$.ajax({
+   	 				type:"GET",
+   	 				url:"app/air/getAirport",
+   	 				dataType:"json",
+   	 				data:{startCity:str,endCity:""}
+   	 				,success:function(data){
+   	 					stationdata = data;
+   	 					//如果输入的是拼音，那么就是字母
+   	 					 $("#citybox").empty();
+   	 					$.each(data,function(i, obj) {
+   	 	                	var name = obj.airName;
+   	 	                    var code = obj.airId;
+   	 	                    var province = obj.airProvince;
+   	 	                    if (str != "" && count < 10) {
+   	 	                        count++;
+   	 	                        $("#citybox").append('<li  value='
+   	 	                                        + code+'+'+province
+   	 	                                        + ' onclick="startclick(this)">'
+   	 	                                        + name
+   	 	                                        + '('
+   	 	                                        + code
+   	 	                                        + ')'
+   	 	                                        + '</li>');
+   	 	                    }
+
+   	 	                });
+   	 	                if($("#citybox li").length>0){
+   	 	                    $("#divcity").removeClass("hide");
+   	 	                }
+   	 	                else{
+   	 	                    $("#divcity").addClass("hide");
+   	 	                }
+   	 				}
+   	 			});
+   	 			//******************************
+   	 			 }
+   	 		 },1000);
+            });
+            $("#hotCity").removeClass("hide");
+			$("#hotCity2").addClass("hide");
+            $("#hotCity ul li").tap(function(){
+                input.val($(this).text());
+                var str = input.val();
+               var stationdata = '';
+                var count=0;
+              //*****************************************
+                $.ajax({
+						type:"GET",
+						url:"app/air/getAirport",
+						dataType:"json",
+						data:{startCity:str,endCity:""}
+						,success:function(data){
+							stationdata = data;
+							 $("#citybox").empty();
+							$.each(data,function(i, obj) {
+			                    var name = obj.airName;
+			                    var code = obj.airId;
+			                    var province = obj.airProvince;
+			                    if (str != "" && count < 10) {
+			                        count++;
+			                        $("#citybox").append('<li  value='
+			                                        + code+'+'+province
+			                                        + ' onclick="startclick(this)">'
+			                                        + name
+			                                        + '('
+			                                        + code
+			                                        + ')'
+			                                        + '</li>');
+			                    }
+
+			                });
+			                if($("#citybox li").length>0){
+			                    $("#divcity").removeClass("hide");
+			                }
+			                else{
+			                    $("#divcity").addClass("hide");
+			                }
+						}
+					});
+                //*****************************************
+            });
+        }
+        
+        //出发站点的值
+        function startclick(obj) {
+            $("#startstr").val($(obj).text());
+            var codeN = $(obj).attr("value").split("+")[0];
+            var provinceN = $(obj).attr("value").split("+")[1];
+            $("#from").attr("value", codeN);
+            $("#startCity").val(provinceN);
+            $("#divcity").addClass("hide");
+            $("#searchWrap").addClass("hide");
+            $("#citybox").empty();
+        }
+
+        /* 到达站 弹出层*/
+        function getstation2(){
+            console.log('endclick')
+            input2.keyup(function(event){
+            	var stationdata = '';
+                var str = $(this).val();
+                var count=0;
+                last=event.timeStamp;
+   	 		 	setTimeout(function(){
+	   	 			 if(last-event.timeStamp==0){
+	   	 			//*****************************************
+	   	          $.ajax({
+	   							type:"GET",
+	   							url:"app/air/getAirport",
+	   							dataType:"json",
+	   							data:{startCity:"",endCity:str}
+	   							,success:function(data){
+	   								stationdata = data;
+                                    $("#citybox").empty();
+	   								
+	   								$.each(data,function(i, obj) {
+	   				                    var name = obj.airName;
+	   				                    var code = obj.airId;
+	   				                    var province = obj.airProvince;
+	   				                    if (str != "" && count < 10) {
+	   				                        count++;
+	   				                        $("#citybox").append('<li  value='
+	   				                                        + code+'+'+province
+	   				                                        + ' onclick="endclick(this)">'
+	   				                                        + name
+	   				                                        + '('
+	   				                                        + code
+	   				                                        + ')'
+	   				                                        + '</li>');
+	   				                    }
+
+	   				                });
+	   				                if($("#citybox li").length>0){
+	   				                    $("#divcity").removeClass("hide");
+	   				                }
+	   				                else{
+	   				                    $("#divcity").addClass("hide");
+	   				                }
+	   							}
+	   						});
+	   	                //*****************************************
+	   	 			 }
+   	 			},1000);
+            });
+            $("#hotCity2").removeClass("hide");
+			$("#hotCity").addClass("hide");
+            $("#hotCity2 ul li").tap(function(){
+                input2.val($(this).text());
+                var str = input2.val();
+                var stationdata = '';
+                var count=0;
+              //*****************************************
+                $.ajax({
+						type:"GET",
+						url:"app/air/getAirport",
+						dataType:"json",
+						data:{startCity:"",endCity:str}
+						,success:function(data){
+							 $("#citybox").empty();
+							$.each(data,function(i, obj) {
+			                    var name = obj.airName;
+			                    var code = obj.airId;
+			                    var province = obj.airProvince;
+			                    if (str != "" && count < 10) {
+			                        count++;
+			                        $("#citybox").append('<li  value='
+			                                        + code+'+'+province
+			                                        + ' onclick="endclick(this)">'
+			                                        + name
+			                                        + '('
+			                                        + code
+			                                        + ')'
+			                                        + '</li>');
+			                    }
+
+			                });
+			                if($("#citybox li").length>0){
+			                    $("#divcity").removeClass("hide");
+			                }
+			                else{
+			                    $("#divcity").addClass("hide");
+			                }
+						}
+					});
+                //*****************************************
+            });
+        }
+        /*  到达站的值*/
+        function endclick(obj) {
+            $("#endstr").val($(obj).text());
+            var codeM = $(obj).attr("value").split("+")[0];
+            var provinceM = $(obj).attr("value").split("+")[1];
+            $("#to").attr("value", codeM);
+            $("#endCity").val(provinceM);
+            $("#divcity").addClass("hide");
+            $("#searchWrap").addClass("hide");
+            $("#citybox").empty();
+        }
+    </script>
+    <script type="text/javascript">
+        /* 获取飞机票站点集合 */
+        var stationdata = '';
+        $(document).ready(function() {
+//             var List = air_stations.air_stations_list_response;
+//             var st = List.stations;
+//             stationdata = st.station;
+            
+          //先查询数据库所有的机场信息
+    		/* $.ajax({
+    			type:"GET",
+    			url:"app/air/getAirport",
+    			dataType:"json"
+    			,success:function(data){
+    				stationdata = data;
+    			}
+    		}); */
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,804 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.content.ContentMapper" >
+
+<!-- 2.3.6.dt_user_code(用户随机码信息表) -->
+
+<select id="countUserCode" parameterType="UserCodeVo" resultType="int">
+select count(*)  from dt_user_code  where 1=1
+</select>
+
+<select id="queryUserCode" parameterType="UserCodeVo" resultType="UserCode">
+select * from dt_user_code dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_code  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserCode" parameterType="int" resultType="UserCode">
+select * from dt_user_code where id=#{0}
+</select>
+<insert id="addUserCode" parameterType="UserCode">
+insert into dt_user_code
+(user_id,user_role_type,user_role_value,type,str_code,count,status,user_ip,eff_time,add_time)
+values(#{user_id},#{user_role_type},#{user_role_value},#{type},#{str_code},#{count},#{status},#{user_ip},#{eff_time},#{add_tim})
+</insert>
+<update id="updUserCode" parameterType="UserCode">
+ update dt_user_code set
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+type=#{type},
+str_code=#{str_code},
+count=#{count},
+status=#{status},
+user_ip=#{user_ip},
+eff_time=#{eff_time},
+add_time=#{add_time}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserCode" parameterType="int">
+delete from dt_user_code where id=#{0}
+</delete>
+
+
+<!-- 2.3.33.dt_user_fixed (买家批量充值记录表) -->
+<select id="countUserFixed" parameterType="UserFixedVo" resultType="long">
+select count(*)  from dt_user_fixed  where 1=1
+</select>
+
+<select id="queryUserFixed" parameterType="UserFixedVo" resultType="UserFixed">
+select * from dt_user_fixed dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_fixed  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserFixed" parameterType="int" resultType="UserFixed">
+select * from dt_user_fixed where id=#{0}
+</select>
+<insert id="addUserFixed" parameterType="UserFixed">
+insert into dt_user_fixed
+(excel_file,row_no,user_key,amount,voucher,user_id,role_type,role_value,state,is_del,remark,add_time,category)
+values(#{excel_file},#{row_no},#{user_key},#{amount},#{voucher},#{user_id},#{role_type},#{role_value},#{state},#{is_del},#{remark},#{add_time},#{category})
+</insert>
+<update id="updUserFixed" parameterType="UserFixed">
+update dt_user_fixed set
+excel_file=#{excel_file},
+row_no=#{row_no},
+user_key=#{user_key},
+amount=#{amount},
+voucher=#{voucher},
+user_id=#{user_id},
+role_type=#{role_type},
+role_value=#{role_value},
+state=#{state},
+is_del=#{is_del}
+
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserFixed" parameterType="long">
+delete from dt_user_fixed where id=#{0}
+</delete>
+
+
+<!-- 2.3.3.dt_user_from_value（用户标识申请信息表） -->
+<select id="countUserFromValue" parameterType="UserFromValueVo" resultType="int">
+select count(*)  from dt_user_from_value  where 1=1
+</select>
+
+<select id="queryUserFromValue" parameterType="UserFromValueVo" resultType="UserFromValue">
+select * from dt_user_from_value dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_from_value  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserFromValue" parameterType="int" resultType="UserFromValue">
+select * from dt_user_from_value where id=#{0}
+</select>
+<insert id="addUserFromValue" parameterType="UserFromValue">
+insert into dt_user_from_value
+(user_id,user_role_type,user_role_value,from_value,wechat_id,img_url,from_type,yx_time,add_time,status,is_del,subscribe_count,reg_count)
+values(#{user_id},#{user_role_type},#{user_role_value},#{from_value},#{wechat_id},#{img_url},#{from_type},#{yx_time},#{add_time},#{status},#{is_del},#{subscribe_count},#{reg_count})
+</insert>
+<update id="updUserFromValue" parameterType="UserFromValue">
+update dt_user_from_value set
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+from_value=#{from_value},
+wechat_id=#{wechat_id},
+img_url=#{img_url},
+from_type=#{from_type},
+yx_time=#{yx_time},
+add_time=#{add_time},
+status=#{status},
+is_del=#{is_del}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserFromValue" parameterType="int">
+delete from dt_user_from_value where id=#{0}
+</delete>
+
+
+<!-- 2.3.5.	dt_user_group_price（用户分组商品价格信息表） -->
+<select id="countUserGroupPrice" parameterType="UserGroupPriceVo" resultType="int">
+select count(*)  from dt_user_group_price  where 1=1
+</select>
+
+<select id="queryUserGroupPrice" parameterType="UserGroupPriceVo" resultType="UserGroupPrice">
+select * from dt_user_group_price dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_group_price  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserGroupPrice" parameterType="int" resultType="UserGroupPrice">
+select * from dt_user_group_price where id=#{0}
+</select>
+<insert id="addUserGroupPrice" parameterType="UserGroupPrice">
+insert into dt_user_group_price
+(article_id,goods_id,group_id,price)
+values(#{article_id},#{goods_id},#{group_id},#{price})
+</insert>
+<update id="updUserGroupPrice" parameterType="UserGroupPrice">
+ update dt_user_group_price set
+ article_id=#{article_id},
+ goods_id=#{goods_id},
+ group_id=#{group_id},
+ price=#{price}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserGroupPrice" parameterType="int">
+delete from dt_user_group_price where id=#{0}
+</delete>
+
+
+<!-- 2.3.31.dt_user_often_use (用户经常使用信息表) -->
+<select id="countUserOftenUse" parameterType="UserOftenUseVo" resultType="int">
+select count(*)  from dt_user_often_use  where 1=1
+</select>
+
+<select id="queryUserOftenUse" parameterType="UserOftenUseVo" resultType="UserOftenUse">
+select * from dt_user_often_use dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_often_use  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserOftenUse" parameterType="int" resultType="UserOftenUse">
+select * from dt_user_often_use where id=#{0}
+</select>
+<insert id="addUserOftenUse" parameterType="UserOftenUse">
+insert into dt_user_often_use
+(user_id,type,value,times,update_times,is_del)
+values(#{user_id},#{type},#{value},#{times},#{update_times},#{is_del})
+</insert>
+<update id="updUserOftenUse" parameterType="UserOftenUse">
+ update dt_user_often_use set
+ user_id=#{user_id},
+ type=#{type},
+ value=#{value},
+ times=#{times},
+ update_times=#{update_times},
+ is_del=#{is_del}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserOftenUse" parameterType="int">
+delete from dt_user_often_use where id=#{0}
+</delete>
+
+
+<!-- 2.8.7.	dt_user_role_buyerinfo（用户买家信息表） -->
+<select id="countUserRoleBuyerinfo" parameterType="UserRoleBuyerinfoVo" resultType="int">
+select count(*)  from dt_user_role_buyerinfo  where 1=1
+</select>
+
+<select id="queryUserRoleBuyerinfo" parameterType="UserRoleBuyerinfoVo" resultType="UserRoleBuyerinfo">
+select * from dt_user_role_buyerinfo dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_role_buyerinfo  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserRoleBuyerinfo" parameterType="int" resultType="UserRoleBuyerinfo">
+select * from dt_user_role_buyerinfo where id=#{0}
+</select>
+<insert id="addUserRoleBuyerinfo" parameterType="UserRoleBuyerinfo">
+insert into dt_user_role_buyerinfo
+(user_id,user_exp,damage_times,damage_money,damage_date,review_times,review_score,buy_tags,view_tags,areas,update_time)
+values(#{user_id},#{user_exp},#{damage_times},#{damage_money},#{damage_date},#{review_times},#{review_score},#{buy_tags},#{view_tags},#{areas},#{update_time})
+</insert>
+<update id="updUserRoleBuyerinfo" parameterType="UserRoleBuyerinfo">
+update dt_user_role_buyerinfo set
+user_id=#{user_id},
+user_exp=#{user_exp},
+damage_times=#{damage_times},
+damage_money=#{damage_money},
+damage_date=#{damage_date},
+review_times=#{review_times},
+review_score=#{review_score},
+buy_tags=#{buy_tags},
+view_tags=#{view_tags},
+areas=#{areas},
+update_time=#{update_time}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserRoleBuyerinfo" parameterType="int">
+delete from dt_user_role_buyerinfo where id=#{0}
+</delete>
+
+
+<!-- 2.3.2.dt_user_wechat（用户微信信息表） -->
+<select id="countUserWechat" parameterType="UserWechatVo" resultType="int">
+select count(*)  from dt_user_wechat  where 1=1
+</select>
+
+<select id="queryUserWechat" parameterType="UserWechatVo" resultType="UserWechat">
+select * from dt_user_wechat dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_wechat  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserWechat" parameterType="int" resultType="UserWechat">
+select * from dt_user_wechat where id=#{0}
+</select>
+<insert id="addUserWechat" parameterType="UserWechat">
+insert into dt_user_wechat
+(user_id,wechat_id,open_id,nick_name,sex,country,province,city,headimg,is_subscribe,update_time,from_id)
+values(#{user_id},#{wechat_id},#{open_id},#{nick_name},#{sex},#{country},#{province},#{city},#{headimg},#{is_subscribe},#{update_time},#{from_id})
+</insert>
+<update id="updUserWechat" parameterType="UserWechat">
+update dt_user_wechat set
+user_id=#{user_id},
+wechat_id=#{wechat_id},
+open_id=#{open_id},
+nick_name=#{nick_name},
+sex=#{sex},
+country=#{country},
+province=#{province},
+city=#{city},
+headimg =#{headimg },
+is_subscribe=#{is_subscribe},
+update_time=#{update_time},
+from_id=#{from_id}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserWechat" parameterType="int">
+delete from dt_user_wechat where id=#{0}
+</delete>
+
+
+<!-- 4.15.1.	dt_user_balance_log(账户结算主表) -->
+<select id="countUserBalanceLog" parameterType="UserBalanceLogVo" resultType="int">
+select count(*)  from dt_user_balance_log  where 1=1
+</select>
+
+<select id="queryUserBalanceLog" parameterType="UserBalanceLogVo" resultType="UserBalanceLog">
+select * from dt_user_balance_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_balance_log  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserBalanceLog" parameterType="int" resultType="UserBalanceLog">
+select * from dt_user_balance_log where id=#{0}
+</select>
+<insert id="addUserBalanceLog" parameterType="UserBalanceLog">
+insert into dt_user_balance_log
+(user_id,role_type,role_value,order_platform,order_type,order_no,balance_hash,order_title,order_url,balance_amount,balance_voucher,balance_point,will_balance_date,real_balance_date,balance_state,add_time,is_del)
+values(#{user_id},#{role_type},#{role_value},#{order_platform},#{order_type},#{order_no},#{balance_hash},#{order_title},#{order_url},#{balance_amount},#{balance_voucher},#{balance_point},#{will_balance_date},#{real_balance_date},#{balance_state},#{add_time},#{is_del})
+</insert>
+<update id="updUserBalanceLog" parameterType="UserBalanceLog">
+update dt_user_balance_log set
+user_id={user_id},
+role_type={role_type},
+role_value={role_value},
+order_platform={order_platform},
+order_type={order_type},
+order_no={order_no},
+balance_hash={balance_hash},
+order_title={order_title},
+order_url={order_url},
+balance_amount={balance_amount},
+balance_voucher={balance_voucher},
+balance_point={balance_point},
+will_balance_date={will_balance_date},
+real_balance_date={real_balance_date},
+balance_state={balance_state},
+add_time={add_time},
+is_del={is_del}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserBalanceLog" parameterType="int">
+delete from dt_user_balance_log where id=#{0}
+</delete>
+
+
+
+<!-- 4.16.2.	dt_user_balance_detail(账户结算子表) -->
+<select id="countUserBalanceDetail" parameterType="UserBalanceDetailVo" resultType="int">
+select count(*)  from dt_user_balance_detail  where 1=1
+</select>
+
+<select id="queryUserBalanceDetail" parameterType="UserBalanceDetailVo" resultType="UserBalanceDetail">
+select * from dt_user_balance_detail dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_balance_detail  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserBalanceDetail" parameterType="int" resultType="UserBalanceDetail">
+select * from dt_user_balance_detail where id=#{0}
+</select>
+<insert id="addUserBalanceDetail" parameterType="UserBalanceDetail">
+insert into dt_user_balance_detail
+(balance_hash,balance_amount,balance_voucher,balance_point,remark,add_time,is_del)
+values(#{balance_hash},#{balance_amount},#{balance_voucher},#{balance_point},#{remark},#{add_time},#{is_del})
+</insert>
+<update id="updUserBalanceDetail" parameterType="UserBalanceDetail">
+update dt_user_balance_detail set
+balance_hash={balance_hash},
+balance_amount={balance_amount},
+balance_voucher={balance_voucher},
+balance_point={balance_point},
+remark={remark},
+add_time={add_time},
+is_del={is_del}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserBalanceDetail" parameterType="int">
+delete from dt_user_balance_detail where id=#{0}
+</delete>
+
+
+
+<!-- 4.17.1.	dt_order_queue (账户结算主表) -->
+<select id="countOrderQueue" parameterType="OrderQueueVo" resultType="int">
+select count(*)  from dt_order_queue  where 1=1
+</select>
+
+<select id="queryOrderQueue" parameterType="OrderQueueVo" resultType="OrderQueue">
+select * from dt_order_queue dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_order_queue  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getOrderQueue" parameterType="int" resultType="OrderQueue">
+select * from dt_order_queue where id=#{0}
+</select>
+<insert id="addOrderQueue" parameterType="OrderQueue">
+insert into dt_order_queue
+(order_id,state,queuetype,executetime,createtime,completiontime)
+values(#{order_id},#{state},#{queuetype},#{executetime},#{createtime},#{completiontime})
+</insert>
+<update id="updOrderQueue" parameterType="OrderQueue">
+update dt_order_queue set
+order_id={order_id},
+state={state},
+queuetype={queuetype},
+executetime={executetime},
+createtime={createtime},
+completiontime={completiontime}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delOrderQueue" parameterType="int">
+delete from dt_order_queue where id=#{0}
+</delete>
+
+
+
+<!-- 4.16.1.dt_order_log(账户结算主表) -->
+<select id="countOrderLog" parameterType="OrderLogVo" resultType="int">
+select count(*)  from dt_order_log  where 1=1
+</select>
+
+<select id="queryOrderLog" parameterType="OrderLogVo" resultType="OrderLog">
+select * from dt_order_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_order_log  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getOrderLog" parameterType="int" resultType="OrderLog">
+select * from dt_order_log where id=#{0}
+</select>
+<insert id="addOrderLog" parameterType="OrderLog">
+insert into dt_order_log
+(order_id,uid,beginstate,endstate,createtime,developername,remark)
+values(#{order_id},#{uid},#{beginstate},#{endstate},#{createtime},#{developername},#{remark})
+</insert>
+<update id="updOrderLog" parameterType="OrderLog">
+update dt_order_log set
+order_id={order_id},
+uid={uid},
+beginstate={beginstate},
+endstate={endstate},
+createtime={createtime},
+developername={developername},
+remark={remark}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delOrderLog" parameterType="int">
+delete from dt_order_log where id=#{0}
+</delete>
+
+
+
+<!-- 2.3.18.dt_user_oauth（用户第三方登录授权信息表） -->
+<select id="countUserOauth" parameterType="UserOauthVo" resultType="int">
+select count(*)  from dt_user_oauth  where 1=1
+</select>
+
+<select id="queryUserOauth" parameterType="UserOauthVo" resultType="UserOauth">
+select * from dt_user_oauth dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_oauth  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserOauth" parameterType="int" resultType="UserOauth">
+select * from dt_user_oauth where id=#{0}
+</select>
+<insert id="addUserOauth" parameterType="UserOauth">
+insert into dt_user_oauth
+(user_id,oauth_name,oauth_access_token,oauth_openid,add_time)
+values(#{user_id},#{oauth_name},#{oauth_access_token},#{oauth_openid},#{add_time})
+</insert>
+<update id="updUserOauth" parameterType="UserOauth">
+update dt_user_oauth set
+user_id={user_id},
+oauth_name={oauth_name},
+oauth_access_token={oauth_access_token},
+oauth_openid={oauth_openid},
+add_time={add_time}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserOauth" parameterType="int">
+delete from dt_user_oauth where id=#{0}
+</delete>
+
+
+<!-- 2.3.20.dt_user_notice_read（用户动态消息读取记录表） -->
+<select id="countUserNoticeRead" parameterType="UserNoticeReadVo" resultType="int">
+select count(*)  from dt_user_notice_read  where 1=1
+</select>
+
+<select id="queryUserNoticeRead" parameterType="UserNoticeReadVo" resultType="UserNoticeRead">
+select * from dt_user_notice_read dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_notice_read  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserNoticeRead" parameterType="int" resultType="UserNoticeRead">
+select * from dt_user_notice_read where id=#{0}
+</select>
+<insert id="addUserNoticeRead" parameterType="UserNoticeRead">
+insert into dt_user_notice_read
+(read_time,user_id,user_role_type,user_role_value)
+values(#{read_time},#{user_id},#{user_role_type},#{user_role_value})
+</insert>
+<update id="updUserNoticeRead" parameterType="UserNoticeRead">
+update dt_user_notice_read set
+read_time={read_time},
+user_id={user_id},
+user_role_type={user_role_type},
+user_role_value={user_role_value},
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserNoticeRead" parameterType="int">
+delete from dt_user_notice_read where id=#{0}
+</delete>
+
+
+<!-- 2.8.1.dt_role_operator_type（角色后台管理操作员类别信息表） -->
+<select id="countRoleOperatorType" parameterType="RoleOperatorTypeVo" resultType="int">
+select count(*)  from dt_role_operator_type  where 1=1
+</select>
+
+<select id="queryRoleOperatorType" parameterType="RoleOperatorTypeVo" resultType="RoleOperatorType">
+select * from dt_role_operator_type dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_role_operator_type  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getRoleOperatorType" parameterType="int" resultType="RoleOperatorType">
+select * from dt_role_operator_type where id=#{0}
+</select>
+<insert id="addRoleOperatorType" parameterType="RoleOperatorType">
+insert into dt_role_operator_type
+(type_name,user_id,role_type,role_type_value,is_sys)
+values(#{type_name},#{user_id},#{role_type},#{role_type_value},#{is_sys})
+</insert>
+<update id="updRoleOperatorType" parameterType="RoleOperatorType">
+update dt_role_operator_type set
+type_name={type_name},
+user_id={user_id},
+role_type={role_type},
+role_type_value={role_type_value},
+is_sys={is_sys}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delRoleOperatorType" parameterType="int">
+delete from dt_role_operator_type where id=#{0}
+</delete>
+
+
+<!-- 2.8.2.dt_role_operator_type_value（角色后台管理操作员类别对应权限值信息表） -->
+
+<select id="countRoleOperatorTypeValue" parameterType="RoleOperatorTypeValueVo" resultType="int">
+select count(*)  from dt_role_operator_type_value  where 1=1
+</select>
+
+<select id="queryRoleOperatorTypeValue" parameterType="RoleOperatorTypeValueVo" resultType="RoleOperatorTypeValue">
+select * from dt_role_operator_type_value dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_role_operator_type_value  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getRoleOperatorTypeValue" parameterType="int" resultType="RoleOperatorTypeValue">
+select * from dt_role_operator_type_value where id=#{0}
+</select>
+<insert id="addRoleOperatorTypeValue" parameterType="RoleOperatorTypeValue">
+insert into dt_role_operator_type_value
+(type_id,nav_name,action_type)
+values(#{type_id},#{nav_name},#{action_type})
+</insert>
+<update id="updRoleOperatorTypeValue" parameterType="RoleOperatorTypeValue">
+update dt_role_operator_type_value set
+type_id={type_id},
+nav_name={nav_name},
+action_type={action_type}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delRoleOperatorTypeValue" parameterType="int">
+delete from dt_role_operator_type_value where id=#{0}
+</delete>
+
+
+<!-- 2.8.4.dt_user_role（用户角色信息表） -->
+<select id="countUserRole" parameterType="UserRoleVo" resultType="int">
+select count(*)  from dt_user_role  where 1=1
+</select>
+
+<select id="queryUserRole" parameterType="UserRoleVo" resultType="UserRole">
+select * from dt_user_role dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_role  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserRole" parameterType="int" resultType="UserRole">
+select * from dt_user_role where id=#{0}
+</select>
+<insert id="addUserRole" parameterType="UserRole">
+insert into dt_user_role
+(user_id,role_type,role_value,operator_type_id,add_time,expired_time,state,update_time,remark,is_online)
+values(#{user_id},#{role_type},#{role_value},#{operator_type_id},#{add_time},#{expired_time},#{state},#{update_time},#{remark},#{is_online})
+</insert>
+<update id="updUserRole" parameterType="UserRole">
+update dt_user_role set
+user_id={user_id},
+role_type={role_type},
+role_value={role_value},
+operator_type_id={operator_type_id},
+add_time={add_time},
+expired_time={expired_time},
+state={state},
+update_time={update_time},
+remark={remark},
+is_online={is_online}
+ where  id=#{id}
+ 
+</update>
+
+<delete id="delUserRole" parameterType="int">
+delete from dt_user_role where id=#{0}
+</delete>
+
+
+<!-- 2.8.3.dt_role_operator_navigation（角色后台管理总菜单信息表） -->
+<select id="countRoleOperatorNavigation" parameterType="RoleOperatorNavigationVo" resultType="int">
+select count(*)  from dt_role_operator_navigation  where 1=1
+</select>
+
+<select id="queryRoleOperatorNavigation" parameterType="RoleOperatorNavigationVo" resultType="RoleOperatorNavigation">
+select * from dt_role_operator_navigation dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_role_operator_navigation  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getRoleOperatorNavigation" parameterType="int" resultType="RoleOperatorNavigation">
+select * from dt_role_operator_navigation where id=#{0}
+</select>
+<insert id="addRoleOperatorNavigation" parameterType="RoleOperatorNavigation">
+insert into dt_role_operator_navigation
+(parent_id,role_type,name,title,sub_title,icon_url,link_url,sort_id,is_lock,remark,action_type)
+values(#{parent_id},#{role_type},#{name},#{title},#{sub_title},#{icon_url},#{link_url},#{sort_id},#{is_lock},#{remark},#{action_type})
+</insert>
+<update id="updRoleOperatorNavigation" parameterType="RoleOperatorNavigation">
+update dt_role_operator_navigation set
+parent_id=#{parent_id},
+role_type=#{role_type},
+name=#{name},
+title=#{title},
+sub_title=#{sub_title},
+icon_url=#{icon_url},
+link_url=#{link_url},
+sort_id=#{sort_id},
+is_lock=#{is_lock},
+remark=#{remark},
+action_type=#{action_type}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delRoleOperatorNavigation" parameterType="int">
+delete from dt_role_operator_navigation where id=#{0}
+</delete>
+
+
+<!-- 2.8.18.dt_user_role_business（用户商务角色信息表） -->
+<select id="countUserRoleBusiness" parameterType="UserRoleBusinessVo" resultType="int">
+select count(*)  from dt_user_role_business  where 1=1
+</select>
+
+<select id="queryUserRoleBusiness" parameterType="UserRoleBusinessVo" resultType="UserRoleBusiness">
+select * from dt_user_role_business dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_role_business  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getUserRoleBusiness" parameterType="int" resultType="UserRoleBusiness">
+select * from dt_user_role_business where id=#{0}
+</select>
+<insert id="addUserRoleBusiness" parameterType="UserRoleBusiness">
+insert into dt_user_role_business
+(user_id,business_type,end_time,status,remark,update_time,add_time,is_del,name,mobile,email,qq,area)
+values(#{user_id},#{business_type},#{end_time},#{status},#{remark},#{update_time},#{add_time},#{is_del},#{name},#{mobile},#{email},#{qq},#{area})
+</insert>
+<update id="updUserRoleBusiness" parameterType="UserRoleBusiness">
+update dt_user_role_business set
+user_id=#{user_id},
+business_type=#{business_type},
+end_time=#{end_time},
+status=#{status},
+remark=#{remark},
+update_time=#{update_time},
+add_time=#{add_time},
+is_del=#{is_del},
+name=#{name},
+mobile=#{mobile},
+email=#{email},
+qq=#{qq},
+area=#{area}
+where  id=#{id}
+ 
+</update>
+
+<delete id="delUserRoleBusiness" parameterType="int">
+delete from dt_user_role_business where id=#{0}
+</delete>
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

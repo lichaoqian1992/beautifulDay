@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.operation.AttriMapper" >
+
+
+
+<select id="attriList" parameterType="int" resultType="Attri">
+
+	select * from dt_mb_shuxing where category_id=#{category_id}
+
+</select>
+
+
+
+<select id="getCategoryList" resultType="Category" parameterType="java.lang.String">
+
+	select * from dt_article_category where class_list like '%,'+#{0}+'%'
+
+</select>
+
+<select  id="getAttri" resultType="Attri" parameterType="int">
+
+select * from dt_mb_shuxing where category_id=#{0}
+
+</select>
+
+<select id="getAttriById" resultType="Attri" parameterType="int">
+
+select * from dt_mb_shuxing where id=#{attri_id}
+
+</select>
+
+<select id="getCategoryById" resultType="Category" parameterType="int">
+
+	select * from dt_article_category where id=#{categoryId}
+
+</select>
+
+<select id="getCategorysByIds" resultType="Category" parameterType="Category">
+
+	select * from dt_article_category where id in (${title})
+
+</select>
+
+<insert id="addAttri" parameterType="Attri" >
+
+insert into dt_mb_shuxing
+(channel_id,category_id,content,status,add_time,update_time,remark)
+values
+(#{channel_id},#{category_id},#{content},#{status},#{add_time},#{update_time},#{remark})
+
+
+</insert>
+
+<update id="updAttri" parameterType="Attri">
+
+update dt_mb_shuxing
+set
+content=#{content},
+update_time=#{update_time}
+where 
+id=#{id}
+
+</update>
+
+<update id="delAttri" parameterType="int" >
+
+update dt_mb_shuxing
+set
+status=0
+where id=#{attri_id}
+
+</update>
+
+
+
+</mapper>

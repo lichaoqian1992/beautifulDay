@@ -1,0 +1,172 @@
+#@layout() 
+#define main()
+
+      <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+          <h2>频道管理系统</h2>
+          <ol class="breadcrumb">
+            <li>
+                            <a href="toMain">主页</a>
+                        </li>
+                        <li>
+                            <strong>新增频道</strong>
+                        </li>
+          </ol>
+        </div>
+        <div class="col-lg-2"></div>
+      </div>
+      <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox-content">
+            <form enctype="multipart/form-data" action="addAdds" method="POST" id="add" role="form" class="form-horizontal">
+              <legend>新增频道信息</legend>
+              
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="name">名称：</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="name" required="required" name="name" placeholder="请输入频道名称">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="title">标题：</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="title" required="required" name="title" placeholder="请输入频道标题">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="sort">序号：</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="sort" required="required" name="sort" placeholder="请输入序号">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="port">端口：</label>
+                <div class="col-sm-5">
+                  <select class="form-control" id="port" required="required" name="port">
+                      <option value="PC">PC</option>
+                      <option value="AP">APP</option>
+                    </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="layer">层级：</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" name="layer" required="required" id="layer" placeholder="请输入层级">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="state">状态：</label>
+                <div class="col-sm-5">
+                  <select class="form-control" id="state" required="required" name="state">
+                      <option value="0">关</option>
+                      <option value="1">开</option>
+                    </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="state">展示开关：</label>
+                <div class="col-sm-5">
+                  <select class="form-control" id="flag" required="required" name="flag">
+                      <option value="1">展示</option>
+                      <option value="2">不展示</option>
+                    </select>
+                </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">跳转方式：</label>
+                  <div class="col-sm-5">
+                      <select id="mode" name="ch_mode" class="form-control">
+                      	<option value="1">首页banner(水平自动滚动)</option>
+                      	<option value="2">首页banner(水平不自动滚动)</option>
+                      	<option value="3">上下自动滚动的广告</option>
+                      	<option value="4">上下不自动滚动的广告</option>
+                      	<option value="5">导航菜单</option>
+                      	<option value="6">平铺屏幕宽的广告</option>
+                      	<option value="7">平铺可超过屏幕宽的广告</option>
+                      	<option value="8">满集秒杀</option>
+                      	<option value="0">不显示</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-sm-3 control-label">底部标识：</label>
+                  <div class="col-sm-5">
+                      <select id="foot"  class="form-control">
+                      	<option value="1">有</option>
+                      	<option value="2">无</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="remark">备注信息：</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" required="required" name="remark" id="remark" placeholder="请输入备注信息">
+                </div>
+              </div>
+              <button  class="btn btn-primary" onclick="addChannel()">提交</button>
+              <a  class="btn btn-info" href="/advert/channel">返回</a>
+            </form>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="pull-right">
+          By：<a href="javascript:void" target="_blank">manjiwang.com</a>
+        </div>
+        <div>
+          <strong>Copyright</strong> manjiwang.com &copy; 2016
+        </div>
+      </div>
+
+
+
+
+  <!-- Mainly scripts -->
+    <script src="#(ctx)/static/js/jquery-2.1.1.min.js"></script>
+    <script src="#(ctx)/static/js/bootstrap.min.js"></script>
+    <script src="#(ctx)/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <!-- Data Tables -->
+    <script src="#(ctx)/static/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="#(ctx)/static/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="#(ctx)/static/js/hplus.js?v=2.2.0"></script>
+    <script src="#(ctx)/static/js/plugins/pace/pace.min.js"></script>
+    <!-- layer javascript -->
+    <script src="#(ctx)/static/js/plugins/layer/layer.min.js"></script>
+  <script>
+      $(document).ready(function () {
+    	  
+    	  
+          });
+    	  
+    	  
+    	 
+    	  /*提交保存数据*/
+    	  
+    	  function addChannel(){
+    		  console.log("123");
+    		  $.ajax({
+                  type : "get",
+                  url : "/advert/channel/insert",
+                  dataType : "json",
+                  contentType : "application/json; charset=utf-8",
+                  data : {
+                      name: $("#name").val(),
+                      title: $("#title").val(),
+                      sort : $("#sort").val(),
+                      port : $("#port").val(),
+                      layer : $("#layer").val(),
+                      state : $("#state").val(),
+                      flag : $("#flag").val(),
+                      mode : $("#mode").val(),
+                      foot : $("#foot").val(),
+                      remark : $("#remark").val()
+                  },
+                  success : function(data) {
+                  	console.info(data);
+                  	
+                  }
+              });
+    	  }
+    	  
+    </script>
+    
+#end

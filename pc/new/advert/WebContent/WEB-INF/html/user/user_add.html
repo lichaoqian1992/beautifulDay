@@ -1,0 +1,76 @@
+#@layout() 
+#define main()
+<div class="row wrapper border-bottom white-bg page-heading">
+				<div class="col-lg-10">
+					<h2>用户管理</h2>
+					<ol class="breadcrumb">
+						<li>
+                            <a href="toMain">主页</a>
+                        </li>
+                        <li>
+                            <strong>添加用户</strong>
+                        </li>
+					</ol>
+				</div>
+				<div class="col-lg-2"></div>
+			</div>
+			<div class="wrapper wrapper-content animated fadeInRight">
+				<form class="form-horizontal m-t" id="signupForm" method="post" action="/advert/user/add" novalidate="novalidate">
+                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">用户名：</label>
+                        <div class="col-sm-8">
+                            <input id="username" name="userName" required="required" class="form-control" type="text" aria-required="true" aria-invalid="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">密码：</label>
+                        <div class="col-sm-8">
+                            <input id="password" name="password" required="required" class="form-control" type="password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">确认密码：</label>
+                        <div class="col-sm-8">
+                            <input id="surePassword" class="form-control" required="required" type="password" onchange="checkPassword()">
+                        </div>
+                        <span id="showMessage" style="color: red;display: none;"></span>
+                    </div>
+                    <input type="hidden" id="message" value="#(aa)">
+                    <div class="form-group" style="padding-left: 18px;">
+                        <button class="btn btn-primary col-sm-offset-3" type="button" onclick="mysubmit()">提交</button>
+                    </div>
+                    
+                </form>
+			</div>
+			<script src="#(ctx)/static/js/jquery-2.1.1.min.js"></script>
+			<script>
+				$(function(){
+					if($("#message").val() == "EXIT"){
+						layer.msg('用户已存在', {
+            				icon: 1,
+            				time: 1000
+            			});
+					}
+				})
+				
+				function mysubmit(){
+					if($("#surePassword").val() == "" || $("#password").val() == "" || $("#userName").val() == ""){
+						layer.msg('请填写所有信息', {
+            				icon: 1,
+            				time: 1000
+            			});
+						return;
+					}
+					if($("#surePassword").val() != $("#password").val()){
+						layer.msg('前后密码不一致', {
+            				icon: 1,
+            				time: 1000
+            			});
+						$("#surePassword").val("");
+						return;
+					}
+					$("#signupForm").submit();
+				}
+			</script>
+			#end

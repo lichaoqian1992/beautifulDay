@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.mlife.mapper.AirMapper" >
+  <resultMap id="BaseResultMap" type="com.manji.mlife.model.Airport" >
+    <id column="airId" property="airId" jdbcType="VARCHAR" />
+    <result column="airName" property="airName" jdbcType="VARCHAR" />
+    <result column="airJm" property="airJm" jdbcType="VARCHAR" />
+    <result column="airProvince" property="airProvince" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="getInfoName" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+  	airId,airName,airJm,airProvince
+  	from airport
+  	where
+  	airName like #{info,jdbcType=VARCHAR}+'%'
+  </select>
+  <select id="getInfoId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+  	airId,airName,airJm,airProvince
+  	from airport
+  	where
+  	airJm like #{info,jdbcType=VARCHAR}+'%'
+  </select>
+</mapper>

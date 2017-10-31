@@ -1,0 +1,41 @@
+						<ul class="nav navbar-nav menu_first">
+
+									<li class="dropdown"><a  class="dropdown-toggle" onclick="onkey(1)"
+										> 运维 </a></li>
+									<li class="dropdown"><a  class="dropdown-toggle" onclick="onkey(2)"
+										> 用户 </a></li>
+									<li class="dropdown"><a  class="dropdown-toggle" onclick="onkey(3)"
+										> 商家 </a></li>
+									<li class="dropdown"><a class="dropdown-toggle" onclick="onkey(4)"
+										> 代理</a></li>
+									<li class="dropdown"><a class="dropdown-toggle" onclick="onkey(5)"
+										> 账户 </a></li>
+									<li class="dropdown"><a class="dropdown-toggle" onclick="onkey(6)"
+										> 交易 </a></li>
+									<li class="dropdown"><a class="dropdown-toggle" onclick="onkey(7)"
+										> 消息 </a></li>
+									<li class="dropdown"><a class="dropdown-toggle" onclick="onkey(8)"
+										> 日志</a></li>
+									<li class="dropdown"><a class="dropdown-toggle" onclick="onkey(9)"
+										> 监控 </a></li>
+									<li class="dropdown"><a class="dropdown-toggle" onclick="onkey(10)"
+										> 配置 </a></li>
+									<li class="dropdown"><a class="dropdown-toggle" onclick="onkey(11)"
+										> 登录 </a></li>
+
+								</ul>
+								
+								
+								<script>
+						function onkey(key){
+				            /* var ul=key+" ul";*/
+				            var li=key+" ul li"; 
+
+				            $('#side-menu li').css("display","none");
+				            $('.abc').css("display","block");
+				            $('.k'+key).css("display","block");
+				            $('.k'+li).css("display","block"); 
+				            /* $('.k'+key).addClass("active");
+				            $('.k'+ul).addClass("in"); */
+				        }
+						</script>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.adds.mapper.InfMapper" >
+
+
+<select  id="getAddsById"   resultType="com.manji.adds.model.InfBean" parameterType="com.manji.adds.model.Place">
+
+	select top ${number} ad_id,title ,brief,type,val value,pic_url,remark from adds where pl_id=#{pl_id} and channel =#{channel} and  code in (${region}) and state=1 order by code desc
+
+</select>
+
+<select  id="getAddsById2"   resultType="com.manji.adds.model.InfBean" parameterType="com.manji.adds.model.Place">
+
+	select * from (
+	select * from (select ad_id,title ,brief,type,val value,pic_url,remark from adds where channel =#{channel} and pl_id=#{pl_id} and state=2 ) t1
+	union
+	select * from (select top ${number} ad_id,title ,brief,type,val value,pic_url,remark from adds where pl_id=#{pl_id} and channel =#{channel} and  code in (${region}) and state=1 order by code desc)t2
+	) t3 order by ad_id desc
+	
+</select>
+
+
+<select id="getPlaces"  resultType="com.manji.adds.model.Place"  parameterType="com.manji.adds.model.Place">
+
+	select * from place where channel= #{channel} and type=#{type} and flag='1'
+
+</select>
+
+<insert id="addCount" parameterType="java.lang.String">
+	insert into addscount values(#{ad_id})
+</insert>
+
+<select id="queryCounts"  resultType="java.util.Map">
+	select ad_id,count(ad_id) count from addscount group by ad_id
+</select>
+
+<update id="addCounts" parameterType="java.util.Map">
+	update adds set count=count+#{1} where ad_id=#{0}
+</update>
+
+
+
+
+
+<delete id="deleteJnl">
+	delete from addscount
+</delete>
+ <!-- -->
+</mapper>

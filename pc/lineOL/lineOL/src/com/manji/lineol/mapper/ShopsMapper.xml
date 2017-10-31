@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.lineol.mapper.ShopsMapper">
+
+	
+	<select id="queryShopsById" resultType="com.manji.lineol.model.Shops">
+		select ID as id,SHOP_ID as shopId,ON_OFF as onOff from SHOPS
+		where SHOP_ID=#{shopId}
+	</select>
+	
+	
+	<select id="queryShopsByIdAndonoff" resultType="com.manji.lineol.model.Shops">
+		select ID as id,SHOP_ID as shopId,ON_OFF as onOff from SHOPS
+		where ON_OFF=0
+	</select>
+	
+	<insert id="insertShops" parameterType="com.manji.lineol.model.Shops">
+		insert into SHOPS(SHOP_ID,ON_OFF)
+		values(#{shopId},1);
+	</insert>
+	
+	<update id="modfiyShops" parameterType="java.util.Map">
+		UPDATE [SHOPS] SET [ON_OFF] = #{onOrOff} WHERE [SHOP_ID]=#{shopId}
+	</update>
+
+
+</mapper>

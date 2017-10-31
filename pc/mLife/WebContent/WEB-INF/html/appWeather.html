@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>天气</title>
+    <link rel="stylesheet" href="css/frozen.css">
+    <link rel="stylesheet" href="css/appstyle.css">
+    <script src="js/lib/zeptojs/zepto.min.js"></script>
+    <script src="js/frozen.js"></script>
+    <script src="js/weather.js"></script>
+    <style type="text/css">
+        @font-face {font-family: 'iconfont';
+            src: url('font/weather/iconfont.eot'); 
+            src: url('font/weather/iconfont.eot?#iefix') format('embedded-opentype'),
+            url('font/weather/iconfont.woff') format('woff'), 
+            url('font/weather/iconfont.ttf') format('truetype'), 
+            url('font/weather/iconfont.svg#iconfont') format('svg'); 
+        }
+        .iconfont{
+            font-family:"iconfont" !important;
+            font-size:16px;font-style:normal;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-stroke-width: 0.2px;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<!-- 检测用户设备 -->
+<script type="text/javascript">
+        var browser = { 
+           versions: function() { 
+               var u = navigator.userAgent; 
+               return { 
+                   trident: u.indexOf('Trident') > -1, //IE内核 
+                   presto: u.indexOf('Presto') > -1, //opera内核 
+                   webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+                   gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+                   mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+                   ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+                   android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+                   iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+                   iPad: u.indexOf('iPad') > -1, //iPad 
+                   webApp: u.indexOf('Safari') > -1 //Safari 
+               }; 
+           }() 
+        } 
+        function closePage(){
+             var jsonstr = "{\"action\":\"close\"}";
+            if ( browser.versions.ios 
+               || browser.versions.iPhone 
+               || browser.versions.iPad) { 
+               window.webkit.messageHandlers.Native.postMessage(jsonstr);
+            }
+            if ( browser.versions.android ) { 
+                window.paySucess.clickOnAndroid(jsonstr);
+            }
+             
+         }
+</script>
+<body ontouchstart="">
+    <section class="page" id="weather">
+        <header class="ui-header ui-border-b" style="background-color:none;">
+            <i class="ui-icon-return" onclick="closePage()" style="color: #FFF;"></i><h1 id="title">#mLife_weather_cityname</h1>
+            <div id="menu" class="btn" style="background: none; border:none !important;">切换</div>
+        </header>
+        <footer class="ui-footer ui-border-t" style="height: 100px; color: #FFF;">
+            <ul class="ui-tiled">                                                                                                                                                                                                     
+                <li class="day1"><div class="week">星期三</div><i class="iconfont icon">&#xe61e;</i><div class="temperature">23℃~19℃</div></li>
+                <li class="day2"><div class="week">星期四</div><i class="iconfont icon">&#xe61e;</i><div class="temperature">23℃~19℃</div></li>
+                <li class="day3"><div class="week">星期五</div><i class="iconfont icon">&#xe61e;</i><div class="temperature">23℃~19℃</div></li>
+            </ul>
+        </footer>
+        <div class="ui-dialog">
+            <div class="ui-dialog-cnt">
+                <header class="ui-dialog-hd ui-border-b">
+                    <h3 style="color: #333;">选择地点</h3>
+                    <i class="ui-dialog-close" data-role="button"></i>
+                </header>
+                <div class="ui-dialog-bd">
+                    <select id="sheng" onchange="findCity()">
+                        <option>#mLife_weather_region</option>
+                    </select>
+                    <select id="shi" onchange="findsWeather()"> 
+                    <option>#mLife_weather_cityname</option>
+                    </select>
+                </div>
+                <div class="ui-dialog-ft">
+                    <button type="button" data-role="button">确定</button>
+                </div>
+            </div>        
+        </div>
+        <section class="ui-container">
+            <div id="detail-temperature" class="clearfix">
+                <i class="iconfont icon fl">&#xe61e;</i>
+                <div class="info fl">
+                    <p class="info1">阵雨</p>
+                    <p class="info2">23℃~19℃</p>
+                    <p class="info3">星期二 2016-09-20</p>
+                </div>
+            </div>
+            <div id="today-temperature">23℃</div>
+            <div id="win">
+                <p class="feng">无持续风向 微风</p>
+                <p class="air">空气质量 <span>89 轻度污染</span></p>
+            </div>
+        </section>
+    </section>
+    <script type="text/javascript">
+        $("#menu").click(function(){
+            $(".ui-dialog").dialog("show");
+        });
+        findsWeather();
+        function findsWeather() {
+            var citycode=isNaN($("#shi").val()) ? "" : $("#shi").val();
+            var cityname=$("#shi option").eq($("#shi").attr("selectedIndex")).text();
+           //默认省市
+            var region = $("#sheng").val();
+            console.log($("#sheng").val(),cityname,citycode)
+            // window.location ="toAppWeather?id=3&cityname="+encodeURI(encodeURI(cityname))+"&citycode="+citycode+"&region="+encodeURI(encodeURI(region));
+            $.ajax({
+            	
+                type: "get",
+                url: "app/weather/getListData",
+                data:{
+                	region  : $("#sheng").val(),
+                    cityname: cityname,
+                    citycode: citycode
+                    
+                },
+                success: function(data){
+                    var data = $.parseJSON(data).retData;
+                    console.log(data);
+                    $("#today-temperature").text(data.today.curTemp);
+                    $(".info .info1").text(data.today.type);
+                    $(".info .info2").text(data.today.lowtemp + "~" + data.today.hightemp);
+                    $(".info .info3").text(data.today.week + " " + data.today.date);
+                    $("#win .feng").text(data.today.fengxiang+" "+ data.today.fengli);
+                    switch (data.today.type) {
+                        case "晴":
+                            $("#detail-temperature .icon").html("&#xe602;");
+                            break;
+                            
+                        case "多云":
+                            $("#detail-temperature .icon").html("&#xe603;");
+                            break;
+                            
+                        case "阴":
+                            $("#detail-temperature .icon").html("&#xe606;");
+                            break;
+                            
+                        case "阵雨":  
+                            $("#detail-temperature .icon").html("&#xe615;");
+                            break;
+                            
+                        case "雷阵雨":
+                            $("#detail-temperature .icon").html("&#xe617;");
+                            break;
+                            
+                        case "雷阵雨伴有冰雹":
+                            $("#detail-temperature .icon").html("&#xe619;");
+                            break;
+                        case "雨夹雪":
+                            $("#detail-temperature .icon").html("&#xe635;");
+                            break;
+                        case "小雨":
+                            $("#detail-temperature .icon").html("&#xe61a;");
+                            break;
+                        case "中雨":
+                            $("#detail-temperature .icon").html("&#xe61b;");
+                            break;
+                        case "大雨":
+                            $("#detail-temperature .icon").html("&#xe61c;");
+                            break;
+                        case "暴雨":
+                            $("#detail-temperature .icon").html("&#xe61f;");
+                            break;
+                        case "大暴雨":
+                            $("#detail-temperature .icon").html("&#xe62e;");
+                            break;
+                        case "特大暴雨":
+                            $("#detail-temperature .icon").html("&#xe62f;");
+                            break;
+                        case "阵雪":
+                            $("#detail-temperature .icon").html("&#xe638;");
+                            break;
+                        case "小雪":
+                            $("#detail-temperature .icon").html("&#xe631;");
+                            break;
+                        case "中雪":
+                            $("#detail-temperature .icon").html("&#xe632;");
+                            break;
+                        case "大雪":
+                            $("#detail-temperature .icon").html("&#xe633;");
+                            break;
+                        case "暴雪":
+                            $("#detail-temperature .icon").html("&#xe634;");
+                            break;
+                        case "雾":
+                            $("#detail-temperature .icon").html("&#xe63a;");
+                            break;
+                        case "冻雨":
+                            $("#detail-temperature .icon").html("&#xe630;");
+                            break;
+                        case "沙尘暴":
+                            $("#detail-temperature .icon").html("&#xe63e;");
+                            break;
+                        case "浮尘":
+                            $("#detail-temperature .icon").html("&#xe63d;");
+                            break;
+                        case "扬沙":
+                            $("#detail-temperature .icon").html("&#xe63c;");
+                            break;
+                        case "强沙尘暴":
+                            $("#detail-temperature .icon").html("&#xe63f;");
+                            break;
+                        case "霾":
+                            $("#detail-temperature .icon").html("&#xe63b;");
+                            break;
+                        case "小到中雨":
+                            $("#detail-temperature .icon").html("&#xe61b;");
+                            break;
+                        case "中到大雨":
+                            $("#detail-temperature .icon").html("&#xe61b;");
+                            break;
+                        case "大到暴雨":
+                            $("#detail-temperature .icon").html("&#xe61c;");
+                            break;
+                        case "暴雨到大暴雨":
+                           $("#detail-temperature .icon").html("&#xe61c;");
+                            break;
+                        case "大暴雨到特大暴雨":
+                            $("#detail-temperature .icon").html("&#xe62f;");
+                            break;
+                        case "小到中雪":
+                            $("#detail-temperature .icon").html("&#xe632;");
+                            break;
+                        case "中到大雪":
+                            $("#detail-temperature .icon").html("&#xe632;");
+                            break;
+                        case "大到暴雪":
+                            $("#detail-temperature .icon").html("&#xe634;");
+                            break;
+                            
+                        default: 
+                            $("#detail-temperature .icon").html("&#xe604;");
+                            break;
+                    }
+
+                    if (data.today.aqi) {
+                        // <!--PM标准    0-35优，35-75良，75-115轻度污染，115-150中度污染，150-250重度污染，250及以上严重污染-->
+                // <!--background 优良(绿色)，轻度中度污染(橙色)，严重污染(红色)-->
+                        if(data.today.aqi <= 35){
+                            $("#win .air span").text(data.today.aqi+ " 优").attr("class","text-green");
+                        }else if( data.today.aqi <= 75){
+                            $("#win .air span").text(data.today.aqi+ " 良").attr("class","text-green");
+                        }else if(data.today.aqi <= 115){
+                            $("#win .air span").text(data.today.aqi+ " 轻度污染").attr("class","text-org");
+                        }else if(data.today.aqi <= 150){
+                            $("#win .air span").text(data.today.aqi+ " 轻中度污染").attr("class","text-org");
+                        }else if(data.today.aqi <= 250){
+                            $("#win .air span").text(data.today.aqi+ " 重度污染").attr("class","text-red");
+                        }else if(data.today.aqi > 250){
+                            $("#win .air span").text(data.today.aqi+ " 严重污染").attr("class","text-red");
+                        }
+                    }else{
+                        $("#win .air span").text("暂无数据");
+                    }
+                    $("#title").text(data.city);
+
+                    $("footer .day1 .week").text(data.forecast[0].week);
+                    $("footer .day1 .temperature").text(data.forecast[0].lowtemp + "~" + data.forecast[0].hightemp);
+                    switch (data.forecast[0].type) {
+                        case "晴":
+                            $("footer .day1 .icon").html("&#xe602;");
+                            break;
+                            
+                        case "多云":
+                            $("footer .day1 .icon").html("&#xe603;");
+                            break;
+                            
+                        case "阴":
+                            $("footer .day1 .icon").html("&#xe606;");
+                            break;
+                            
+                        case "阵雨":  
+                            $("footer .day1 .icon").html("&#xe615;");
+                            break;
+                            
+                        case "雷阵雨":
+                            $("footer .day1 .icon").html("&#xe617;");
+                            break;
+                            
+                        case "雷阵雨伴有冰雹":
+                            $("footer .day1 .icon").html("&#xe619;");
+                            break;
+                        case "雨夹雪":
+                            $("footer .day1 .icon").html("&#xe635;");
+                            break;
+                        case "小雨":
+                            $("footer .day1 .icon").html("&#xe61a;");
+                            break;
+                        case "中雨":
+                            $("footer .day1 .icon").html("&#xe61b;");
+                            break;
+                        case "大雨":
+                            $("footer .day1 .icon").html("&#xe61c;");
+                            break;
+                        case "暴雨":
+                            $("footer .day1 .icon").html("&#xe61f;");
+                            break;
+                        case "大暴雨":
+                            $("footer .day1 .icon").html("&#xe62e;");
+                            break;
+                        case "特大暴雨":
+                            $("footer .day1 .icon").html("&#xe62f;");
+                            break;
+                        case "阵雪":
+                            $("footer .day1 .icon").html("&#xe638;");
+                            break;
+                        case "小雪":
+                            $("footer .day1 .icon").html("&#xe631;");
+                            break;
+                        case "中雪":
+                            $("footer .day1 .icon").html("&#xe632;");
+                            break;
+                        case "大雪":
+                            $("footer .day1 .icon").html("&#xe633;");
+                            break;
+                        case "暴雪":
+                            $("footer .day1 .icon").html("&#xe634;");
+                            break;
+                        case "雾":
+                            $("footer .day1 .icon").html("&#xe63a;");
+                            break;
+                        case "冻雨":
+                            $("footer .day1 .icon").html("&#xe630;");
+                            break;
+                        case "沙尘暴":
+                            $("footer .day1 .icon").html("&#xe63e;");
+                            break;
+                        case "浮尘":
+                            $("footer .day1 .icon").html("&#xe63d;");
+                            break;
+                        case "扬沙":
+                            $("footer .day1 .icon").html("&#xe63c;");
+                            break;
+                        case "强沙尘暴":
+                            $("footer .day1 .icon").html("&#xe63f;");
+                            break;
+                        case "霾":
+                            $("footer .day1 .icon").html("&#xe63b;");
+                            break;
+                        case "小到中雨":
+                            $("footer .day1 .icon").html("&#xe61b;");
+                            break;
+                        case "中到大雨":
+                            $("footer .day1 .icon").html("&#xe61b;");
+                            break;
+                        case "大到暴雨":
+                            $("footer .day1 .icon").html("&#xe61c;");
+                            break;
+                        case "暴雨到大暴雨":
+                           $("footer .day1 .icon").html("&#xe61c;");
+                            break;
+                        case "大暴雨到特大暴雨":
+                            $("footer .day1 .icon").html("&#xe62f;");
+                            break;
+                        case "小到中雪":
+                            $("footer .day1 .icon").html("&#xe632;");
+                            break;
+                        case "中到大雪":
+                            $("footer .day1 .icon").html("&#xe632;");
+                            break;
+                        case "大到暴雪":
+                            $("footer .day1 .icon").html("&#xe634;");
+                            break;
+                            
+                        default: 
+                            $("footer .day1 .icon").html("&#xe604;");
+                            break;
+                    }
+                    $("footer .day2 .week").text(data.forecast[1].week);
+                    $("footer .day2 .temperature").text(data.forecast[1].lowtemp + "~" + data.forecast[1].hightemp);
+                    switch (data.forecast[1].type) {
+                        case "晴":
+                            $("footer .day2 .icon").html("&#xe602;");
+                            break;
+                            
+                        case "多云":
+                            $("footer .day2 .icon").html("&#xe603;");
+                            break;
+                            
+                        case "阴":
+                            $("footer .day2 .icon").html("&#xe606;");
+                            break;
+                            
+                        case "阵雨":  
+                            $("footer .day2 .icon").html("&#xe615;");
+                            break;
+                            
+                        case "雷阵雨":
+                            $("footer .day2 .icon").html("&#xe617;");
+                            break;
+                            
+                        case "雷阵雨伴有冰雹":
+                            $("footer .day2 .icon").html("&#xe619;");
+                            break;
+                        case "雨夹雪":
+                            $("footer .day2 .icon").html("&#xe635;");
+                            break;
+                        case "小雨":
+                            $("footer .day2 .icon").html("&#xe61a;");
+                            break;
+                        case "中雨":
+                            $("footer .day2 .icon").html("&#xe61b;");
+                            break;
+                        case "大雨":
+                            $("footer .day2 .icon").html("&#xe61c;");
+                            break;
+                        case "暴雨":
+                            $("footer .day2 .icon").html("&#xe61f;");
+                            break;
+                        case "大暴雨":
+                            $("footer .day2 .icon").html("&#xe62e;");
+                            break;
+                        case "特大暴雨":
+                            $("footer .day2 .icon").html("&#xe62f;");
+                            break;
+                        case "阵雪":
+                            $("footer .day2 .icon").html("&#xe638;");
+                            break;
+                        case "小雪":
+                            $("footer .day2 .icon").html("&#xe631;");
+                            break;
+                        case "中雪":
+                            $("footer .day2 .icon").html("&#xe632;");
+                            break;
+                        case "大雪":
+                            $("footer .day2 .icon").html("&#xe633;");
+                            break;
+                        case "暴雪":
+                            $("footer .day2 .icon").html("&#xe634;");
+                            break;
+                        case "雾":
+                            $("footer .day2 .icon").html("&#xe63a;");
+                            break;
+                        case "冻雨":
+                            $("footer .day2 .icon").html("&#xe630;");
+                            break;
+                        case "沙尘暴":
+                            $("footer .day2 .icon").html("&#xe63e;");
+                            break;
+                        case "浮尘":
+                            $("footer .day2 .icon").html("&#xe63d;");
+                            break;
+                        case "扬沙":
+                            $("footer .day2 .icon").html("&#xe63c;");
+                            break;
+                        case "强沙尘暴":
+                            $("footer .day2 .icon").html("&#xe63f;");
+                            break;
+                        case "霾":
+                            $("footer .day2 .icon").html("&#xe63b;");
+                            break;
+                        case "小到中雨":
+                            $("footer .day2 .icon").html("&#xe61b;");
+                            break;
+                        case "中到大雨":
+                            $("footer .day2 .icon").html("&#xe61b;");
+                            break;
+                        case "大到暴雨":
+                            $("footer .day2 .icon").html("&#xe61c;");
+                            break;
+                        case "暴雨到大暴雨":
+                           $("footer .day2 .icon").html("&#xe61c;");
+                            break;
+                        case "大暴雨到特大暴雨":
+                            $("footer .day2 .icon").html("&#xe62f;");
+                            break;
+                        case "小到中雪":
+                            $("footer .day2 .icon").html("&#xe632;");
+                            break;
+                        case "中到大雪":
+                            $("footer .day2 .icon").html("&#xe632;");
+                            break;
+                        case "大到暴雪":
+                            $("footer .day2 .icon").html("&#xe634;");
+                            break;
+                            
+                        default: 
+                            $("footer .day2 .icon").html("&#xe604;");
+                            break;
+                    }
+                    $("footer .day3 .week").text(data.forecast[2].week);
+                    $("footer .day3 .temperature").text(data.forecast[2].lowtemp + "~" + data.forecast[2].hightemp);
+                    switch (data.forecast[2].type) {
+                        case "晴":
+                            $("footer .day3 .icon").html("&#xe602;");
+                            break;
+                            
+                        case "多云":
+                            $("footer .day3 .icon").html("&#xe603;");
+                            break;
+                            
+                        case "阴":
+                            $("footer .day3 .icon").html("&#xe606;");
+                            break;
+                            
+                        case "阵雨":  
+                            $("footer .day3 .icon").html("&#xe615;");
+                            break;
+                            
+                        case "雷阵雨":
+                            $("footer .day3 .icon").html("&#xe617;");
+                            break;
+                            
+                        case "雷阵雨伴有冰雹":
+                            $("footer .day3 .icon").html("&#xe619;");
+                            break;
+                        case "雨夹雪":
+                            $("footer .day3 .icon").html("&#xe635;");
+                            break;
+                        case "小雨":
+                            $("footer .day3 .icon").html("&#xe61a;");
+                            break;
+                        case "中雨":
+                            $("footer .day3 .icon").html("&#xe61b;");
+                            break;
+                        case "大雨":
+                            $("footer .day3 .icon").html("&#xe61c;");
+                            break;
+                        case "暴雨":
+                            $("footer .day3 .icon").html("&#xe61f;");
+                            break;
+                        case "大暴雨":
+                            $("footer .day3 .icon").html("&#xe62e;");
+                            break;
+                        case "特大暴雨":
+                            $("footer .day3 .icon").html("&#xe62f;");
+                            break;
+                        case "阵雪":
+                            $("footer .day3 .icon").html("&#xe638;");
+                            break;
+                        case "小雪":
+                            $("footer .day3 .icon").html("&#xe631;");
+                            break;
+                        case "中雪":
+                            $("footer .day3 .icon").html("&#xe632;");
+                            break;
+                        case "大雪":
+                            $("footer .day3 .icon").html("&#xe633;");
+                            break;
+                        case "暴雪":
+                            $("footer .day3 .icon").html("&#xe634;");
+                            break;
+                        case "雾":
+                            $("footer .day3 .icon").html("&#xe63a;");
+                            break;
+                        case "冻雨":
+                            $("footer .day3 .icon").html("&#xe630;");
+                            break;
+                        case "沙尘暴":
+                            $("footer .day3 .icon").html("&#xe63e;");
+                            break;
+                        case "浮尘":
+                            $("footer .day3 .icon").html("&#xe63d;");
+                            break;
+                        case "扬沙":
+                            $("footer .day3 .icon").html("&#xe63c;");
+                            break;
+                        case "强沙尘暴":
+                            $("footer .day3 .icon").html("&#xe63f;");
+                            break;
+                        case "霾":
+                            $("footer .day3 .icon").html("&#xe63b;");
+                            break;
+                        case "小到中雨":
+                            $("footer .day3 .icon").html("&#xe61b;");
+                            break;
+                        case "中到大雨":
+                            $("footer .day3 .icon").html("&#xe61b;");
+                            break;
+                        case "大到暴雨":
+                            $("footer .day3 .icon").html("&#xe61c;");
+                            break;
+                        case "暴雨到大暴雨":
+                           $("footer .day3 .icon").html("&#xe61c;");
+                            break;
+                        case "大暴雨到特大暴雨":
+                            $("footer .day3 .icon").html("&#xe62f;");
+                            break;
+                        case "小到中雪":
+                            $("footer .day3 .icon").html("&#xe632;");
+                            break;
+                        case "中到大雪":
+                            $("footer .day3 .icon").html("&#xe632;");
+                            break;
+                        case "大到暴雪":
+                            $("footer .day3 .icon").html("&#xe634;");
+                            break;
+                            
+                        default: 
+                            $("footer .day3 .icon").html("&#xe604;");
+                            break;
+                    }
+                }
+            });
+
+        }
+        $(function() {
+                $("#sheng").empty();
+                var p=$("#region").val();
+                for (var i = 0; i < prolist.ps.length; i++) {
+                    //var pName =prolist.ps[i].proName;
+                    if(p==i){
+                        $("#sheng").append(
+                                "<option selected=selected    id='"+i+"'  value='"+i+"'>"
+                                        + prolist.ps[i].proName + "</option>");
+                    } else{  
+                        $("#sheng").append(
+                                "<option  id='"+i+"'  value='"+i+"'>"
+                                        + prolist.ps[i].proName + "</option>");
+                        }   
+                }
+                findCity();
+            });
+            function findCity() {
+                var p = $("#sheng").val();
+                var cityid=$("#shiid").val();
+                $("#shi").empty(); 
+                
+                $("#shi").append('<option selected="selected">请选择城市</option>');
+
+                for (var i = 0; i < prolist.ps.length; i++) {
+                    if (i==p) {
+                        for (var j = 0; j < prolist.ps[i].citys.length; j++) {
+                            
+                            if(cityid==prolist.ps[i].citys[j].pcode){
+                                
+                                $("#shi").append(
+                                        "<option  selected=selected   id='"+prolist.ps[i].citys[j].pcode+"'  value='"+prolist.ps[i].citys[j].pcode+"'>"
+                                                + prolist.ps[i].citys[j].proName
+                                                + "</option>");
+                            }else{          
+                            $("#shi").append(
+                                    "<option    id='"+prolist.ps[i].citys[j].pcode+"'  value='"+prolist.ps[i].citys[j].pcode+"'>"
+                                            + prolist.ps[i].citys[j].proName
+                                            + "</option>");
+                           } 
+                       }
+                    }
+                }
+            }
+    </script>
+</body>
+</html>

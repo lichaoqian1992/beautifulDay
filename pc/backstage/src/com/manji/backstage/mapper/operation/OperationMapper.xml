@@ -1,0 +1,910 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.operation.OperationMapper" >
+
+
+<select id="getGoodsFirstCategory" resultType="Category" >
+
+	select id,title from dt_article_category where type=0 and parent_id=0
+
+</select>
+
+<select id="getCategorysByParentId" resultType="Category" parameterType="int">
+
+	select id,title from dt_article_category where parent_id=#{parent_id}
+
+</select>
+
+<select id="getCategoryById" resultType="Category" parameterType="int">
+
+	select id,title from dt_article_category where id=#{id}
+
+</select>
+
+
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoProvince" parameterType="ApoProvinceVo" resultType="int">
+select count(*) from dt_apo_province where 1=1
+
+</select>
+<select id="queryApoProvince" parameterType="ApoProvinceVo" resultType="ApoProvince">
+select * from dt_apo_province dt1,
+(
+	select top 20 province_id from 
+	(
+		select top(#{index}*20) province_id from dt_apo_province  where 1=1
+		order by province_id desc
+	)dt order by dt.province_id asc
+)dt2 where dt1.province_id=dt2.province_id order by dt1.province_id
+</select>
+
+<select id="getApoProvince" parameterType="string" resultType="ApoProvince">
+select * from dt_apo_province where province_id=#{0}
+</select>
+
+<insert id="addApoProvince" parameterType="ApoProvince">
+insert into dt_apo_province 
+(province_id,code,name,fullname)
+values (#{province_id},#{code},#{name},#{fullname})
+</insert>
+
+
+<update id="updApoProvince" parameterType="ApoProvince">
+update dt_apo_province set 
+code=#{code},
+name=#{name},
+fullname=#{fullname}
+where province_id=#{province_id}
+</update>
+
+<delete id="delApoProvince" parameterType="int">
+delete from dt_apo_province where province_id=#{0}
+</delete>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoCity" parameterType="ApoCityVo" resultType="int">
+select count(*) from dt_apo_city where 1=1
+
+</select>
+<select id="queryApoCity" parameterType="ApoCityVo" resultType="ApoCity">
+select * from dt_apo_city dt1,
+(
+	select top 20 city_id from 
+	(
+		select top(#{index}*20) city_id from dt_apo_city  where 1=1
+		order by city_id desc
+	)dt order by dt.city_id asc
+)dt2 where dt1.city_id=dt2.city_id order by dt1.city_id
+</select>
+
+<select id="getApoCity" parameterType="int" resultType="ApoCity">
+select * from dt_apo_city where city_id=#{0}
+</select>
+
+<insert id="addApoCity" parameterType="ApoCity">
+insert into dt_apo_city 
+(city_id,code,name,province_id)
+values (#{city_id},#{code},#{name},#{province_id})
+</insert>
+
+
+<update id="updApoCity" parameterType="ApoCity">
+update dt_apo_city set 
+code=#{code},
+name=#{name},
+province_id=#{province_id}
+where city_id=#{city_id}
+</update>
+
+<delete id="delApoCity" parameterType="int">
+delete from dt_apo_city where city_id=#{0}
+</delete>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoCounty" parameterType="ApoCountyVo" resultType="int">
+select count(*) from dt_apo_county where 1=1
+
+</select>
+<select id="queryApoCounty" parameterType="ApoCountyVo" resultType="ApoCounty">
+select * from dt_apo_county dt1,
+(
+	select top 20 county_id from 
+	(
+		select top(#{index}*20) county_id from dt_apo_county  where 1=1
+		order by county_id desc
+	)dt order by dt.county_id asc
+)dt2 where dt1.county_id=dt2.county_id order by dt1.county_id
+</select>
+
+<select id="getApoCounty" parameterType="int" resultType="ApoCounty">
+select * from dt_apo_county where county_id=#{0}
+</select>
+
+<insert id="addApoCounty" parameterType="ApoCounty">
+insert into dt_apo_county 
+(county_id,code,name,city_id)
+values (#{county_id},#{code},#{name},#{city_id})
+</insert>
+
+
+<update id="updApoCounty" parameterType="ApoCounty">
+update dt_apo_county set 
+code=#{code},
+name=#{name},
+city_id=#{city_id}
+where county_id=#{county_id}
+</update>
+
+<delete id="delApoCounty" parameterType="int">
+delete from dt_apo_county where county_id=#{0}
+</delete>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoTown" parameterType="ApoTownVo" resultType="int">
+select count(*) from dt_apo_town where 1=1
+
+</select>
+<select id="queryApoTown" parameterType="ApoTownVo" resultType="ApoTown">
+select * from dt_apo_town dt1,
+(
+	select top 20 town_id from 
+	(
+		select top(#{index}*20) town_id from dt_apo_town  where 1=1
+		order by town_id desc
+	)dt order by dt.town_id asc
+)dt2 where dt1.town_id=dt2.town_id order by dt1.town_id
+</select>
+
+<select id="getApoTown" parameterType="int" resultType="ApoTown">
+select * from dt_apo_town where town_id=#{0}
+</select>
+
+<insert id="addApoTown" parameterType="ApoTown">
+insert into dt_apo_town 
+(town_id,code,name,county_id)
+values (#{town_id},#{code},#{name},#{county_id})
+</insert>
+
+
+<update id="updApoTown" parameterType="ApoTown">
+update dt_apo_town set 
+code=#{code},
+name=#{name},
+county_id=#{county_id}
+where town_id=#{town_id}
+</update>
+
+<delete id="delApoTown" parameterType="int">
+delete from dt_apo_town where town_id=#{0}
+</delete>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoVillage" parameterType="ApoVillageVo" resultType="int">
+select count(*) from dt_apo_village where 1=1
+
+</select>
+<select id="queryApoVillage" parameterType="ApoVillageVo" resultType="ApoVillage">
+<!--  SELECT  *
+FROM    ( SELECT TOP ( 20 * #{index} )
+                    ROW_NUMBER() OVER ( ORDER BY dt_apo_village.code DESC ) AS rownum ,
+                    *
+          FROM      dt_apo_village
+        ) AS temp
+WHERE   temp.rownum > ( 20 * ( #{index} - 1 ) )
+ORDER BY temp.code -->
+ 
+
+
+ select * from dt_apo_village dt1,
+(
+	select top 20 code from 
+	(
+		select top(#{index}*20) code from dt_apo_village  where 1=1
+		order by code desc
+	)dt order by dt.code asc
+)dt2 where dt1.code=dt2.code order by dt1.code  
+</select>
+
+<select id="getApoVillage" parameterType="int" resultType="ApoVillage">
+select * from dt_apo_village where code=#{0}
+</select>
+
+<insert id="addApoVillage" parameterType="ApoVillage">
+insert into dt_apo_village 
+(code,name,town_id)
+values (#{code},#{name},#{town_id})
+</insert>
+
+
+<update id="updApoVillage" parameterType="ApoVillage">
+update dt_apo_village set 
+name=#{name},
+town_id=#{town_id}
+where code=#{code}
+</update>
+
+<delete id="delApoVillage" parameterType="int">
+delete from dt_apo_village where code=#{0}
+</delete>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoSfz" parameterType="ApoSfzVo" resultType="int">
+select count(*) from dt_apo_sfz where 1=1
+
+</select>
+<select id="queryApoSfz" parameterType="ApoSfzVo" resultType="ApoSfz">
+select * from dt_apo_sfz dt1,
+(
+	select top 20 code from 
+	(
+		select top(#{index}*20) code from dt_apo_sfz  where 1=1
+		order by code desc
+	)dt order by dt.code asc
+)dt2 where dt1.code=dt2.code order by dt1.code
+</select>
+
+<select id="getApoSfz" parameterType="int" resultType="ApoSfz">
+select * from dt_apo_sfz where code=#{0}
+</select>
+
+<insert id="addApoSfz" parameterType="ApoSfz">
+insert into dt_apo_sfz 
+(code,name)
+values (#{code},#{name})
+</insert>
+
+
+<update id="updApoSfz" parameterType="ApoSfz">
+update dt_apo_sfz set 
+name=#{name}
+where code=#{code}
+</update>
+
+<delete id="delApoSfz" parameterType="int">
+delete from dt_apo_sfz where code=#{0}
+</delete>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countAppVersion" parameterType="AppVersionVo" resultType="int">
+select count(*) from dt_app_version where 1=1
+
+</select>
+<select id="queryAppVersion" parameterType="AppVersionVo" resultType="AppVersion">
+select * from dt_app_version dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_app_version  where 1=1
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getAppVersion" parameterType="int" resultType="AppVersion">
+select * from dt_app_version where id=#{0}
+</select>
+
+<insert id="addAppVersion" parameterType="AppVersion">
+insert into dt_app_version 
+(ver_name,ver_url,rel_datetime,ver_category,is_up,count,type)
+values (#{ver_name},#{ver_url},#{rel_datetime},#{ver_category},#{is_up},#{count},#{type})
+</insert>
+
+
+<update id="updAppVersion" parameterType="AppVersion">
+update dt_app_version set 
+ver_name=#{ver_name},
+ver_url=#{ver_url},
+rel_datetime=#{rel_datetime},
+ver_category=#{ver_category},
+is_up=#{is_up},
+count=#{count},
+type=#{type}
+where id=#{id}
+</update>
+
+<delete id="delAppVersion" parameterType="int">
+delete from dt_app_version where id=#{0}
+</delete>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countQrCode" parameterType="QrCodeVo" resultType="int">
+select count(*) from dt_qr_code where 1=1
+
+</select>
+<select id="queryQrCode" parameterType="QrCodeVo" resultType="QrCode">
+select * from dt_qr_code dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_qr_code  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getQrCode" parameterType="int" resultType="QrCode">
+select * from dt_qr_code where id=#{0}
+</select>
+
+<insert id="addQrCode" parameterType="QrCode">
+insert into dt_qr_code 
+(type,name,amount,add_time,invalid_time,status,content,user_id,user_role_type,user_role_value)
+values (#{type},#{name},#{amount},#{add_time},#{invalid_time},#{status},#{content},#{user_id},#{user_role_type},#{user_role_value})
+</insert>
+
+
+<update id="updQrCode" parameterType="QrCode">
+update dt_qr_code set 
+type=#{type},
+name=#{name},
+amount=#{amount},
+add_time=#{add_time},
+invalid_time=#{invalid_time},
+status=#{status},
+content=#{content},
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value} 
+where id=#{id}
+</update>
+
+<delete id="delQrCode" parameterType="int">
+delete from dt_qr_code where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countMenu" parameterType="MenuVo" resultType="int">
+select count(*) from dt_menu where 1=1
+</select>
+
+<select id="queryMenu" parameterType="MenuVo" resultType="Menu">
+select * from dt_menu dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_menu  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getMenu" parameterType="int" resultType="Menu">
+select * from dt_menu where id=#{0}
+</select>
+
+<insert id="addMenu" parameterType="Menu">
+insert into dt_menu 
+(title,icon,url,type,sort_id,show_area,status,site_id)
+values (#{title},#{icon},#{url},#{type},#{sort_id},#{show_area},#{status},#{site_id})
+</insert>
+
+<update id="updMenu" parameterType="Menu">
+update dt_menu set 
+title=#{title},
+icon=#{icon},
+url=#{url},
+type=#{type},
+sort_id=#{sort_id},
+show_area=#{show_area},
+status=#{status},
+site_id=#{site_id}
+where id=#{id}
+</update>
+
+<delete id="delMenu" parameterType="int">
+delete from dt_menu where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countScreen" parameterType="ScreenVo" resultType="int">
+select count(*) from dt_screen where 1=1
+</select>
+
+<select id="queryScreen" parameterType="ScreenVo" resultType="Screen">
+select * from dt_screen dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_screen  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getScreen" parameterType="int" resultType="Screen">
+select * from dt_screen where id=#{0}
+</select>
+
+<insert id="addScreen" parameterType="Screen">
+insert into dt_screen 
+(site_id,title,channel_id,category_id,sort_id,show_area,content,status)
+values (#{site_id},#{title},#{channel_id},#{category_id},#{sort_id},#{show_area},#{content},#{status})
+</insert>
+
+<update id="updScreen" parameterType="Screen">
+update dt_screen set 
+site_id=#{site_id},
+title=#{title},
+channel_id=#{channel_id},
+category_id=#{category_id},
+sort_id=#{sort_id},
+show_area=#{show_area},
+content=#{content},
+status=#{status}
+where id=#{id}
+</update>
+
+<delete id="delScreen" parameterType="int">
+delete from dt_screen where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countAdvertNavigation" parameterType="AdvertNavigationVo" resultType="int">
+select count(*) from dt_advert_navigation where 1=1
+</select>
+
+<select id="queryAdvertNavigation" parameterType="AdvertNavigationVo" resultType="AdvertNavigation">
+select * from dt_advert_navigation dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_advert_navigation  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getAdvertNavigation" parameterType="int" resultType="AdvertNavigation">
+select * from dt_advert_navigation where id=#{0}
+</select>
+
+<insert id="addAdvertNavigation" parameterType="AdvertNavigation">
+insert into dt_advert_navigation 
+(site_id,title,icon,url,parent_id,type,att_value,content_type,content,content_value,update_time,sort_id,pc_sort_id,show_area,status,class_layer,is_hot,count_class_layer,show_type)
+values (#{site_id},#{title},#{icon},#{url},#{parent_id},#{type},#{att_value},#{content_type},#{content},#{content_value},#{update_time},#{sort_id},#{pc_sort_id},#{show_area},#{status},#{class_layer},#{is_hot},#{count_class_layer},#{show_type})
+</insert>
+
+<update id="updAdvertNavigation" parameterType="AdvertNavigation">
+update dt_advert_navigation set 
+site_id=#{site_id},
+title=#{title},
+icon=#{icon},
+url=#{url},
+parent_id=#{parent_id},
+type=#{type},
+att_value=#{att_value},
+content_type=#{content_type},
+content=#{content},
+content_value=#{content_value},
+update_time=#{update_time},
+sort_id=#{sort_id},
+pc_sort_id=#{pc_sort_id},
+show_area=#{show_area},
+status=#{status},
+class_layer=#{class_layer},
+is_hot=#{is_hot},
+count_class_layer=#{count_class_layer},
+show_type=#{show_type}
+where id=#{id}
+</update>
+
+<delete id="delAdvertNavigation" parameterType="int">
+delete from dt_advert_navigation where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countAdvert" parameterType="AdvertVo" resultType="int">
+select count(*) from dt_advert where 1=1
+</select>
+
+<select id="queryAdvert" parameterType="AdvertVo" resultType="Advert">
+select * from dt_advert dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_advert  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getAdvert" parameterType="int" resultType="Advert">
+select * from dt_advert where id=#{0}
+</select>
+
+<insert id="addAdvert" parameterType="Advert">
+insert into dt_advert 
+(title,call_index,price,show_numbers,buy_numbers,remark,type,price_remark,
+view_width,view_height,target,advert_type,add_time)
+values (#{title},#{call_index},#{price},#{show_numbers},#{buy_numbers},#{remark},#{type},#{price_remark},#{view_width},#{view_height},#{target},#{advert_type},#{add_time})
+</insert>
+
+<update id="updAdvert" parameterType="Advert">
+update dt_advert set 
+title=#{title},
+call_index=#{call_index},
+price=#{price},
+show_numbers=#{show_numbers},
+buy_numbers=#{buy_numbers},
+remark=#{remark},
+type=#{type},
+price_remark=#{price_remark},
+view_width=#{view_width},
+view_height=#{view_height},
+target=#{target},
+advert_type=#{advert_type},
+add_time=#{add_time}
+where id=#{id}
+</update>
+
+<delete id="delAdvert" parameterType="int">
+delete from dt_advert where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoSite" parameterType="ApoSiteVo" resultType="int">
+select count(*) from dt_apo_site where 1=1
+</select>
+
+<select id="queryApoSite" parameterType="ApoSiteVo" resultType="ApoSite">
+select * from dt_apo_site dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_apo_site  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getApoSite" parameterType="int" resultType="ApoSite">
+select * from dt_apo_site where id=#{0}
+</select>
+
+<insert id="addApoSite" parameterType="ApoSite">
+insert into dt_apo_site 
+(name,area,area_code,area_level,parent_id,status,remark,shop_status,
+shop_min_number,shop_number,url,add_time,site_banner)
+values (#{name},#{area},#{area_code},#{area_level},#{parent_id},#{status},#{remark},#{shop_status},#{shop_min_number},
+#{shop_number},#{url},#{add_time},#{site_banner})
+</insert>
+
+<update id="updApoSite" parameterType="ApoSite">
+update dt_apo_site set 
+name=#{name},
+area=#{area},
+area_code=#{area_code},
+area_level=#{area_level},
+parent_id=#{parent_id},
+status=#{status},
+remark=#{remark},
+shop_status=#{shop_status},
+shop_min_number=#{shop_min_number},
+shop_number=#{shop_number},
+url=#{url},
+add_time=#{add_time},
+site_banner=#{site_banner}
+where id=#{id}
+</update>
+
+<delete id="delApoSite" parameterType="int">
+delete from dt_apo_site where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoSiteContent" parameterType="ApoSiteContentVo" resultType="int">
+select count(*) from dt_apo_site_content where 1=1
+</select>
+
+<select id="queryApoSiteContent" parameterType="ApoSiteContentVo" resultType="ApoSiteContent">
+select * from dt_apo_site_content dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_apo_site_content  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getApoSiteContent" parameterType="int" resultType="ApoSiteContent">
+select * from dt_apo_site_content where id=#{0}
+</select>
+
+<insert id="addApoSiteContent" parameterType="ApoSiteContent">
+insert into dt_apo_site_content 
+(site_id,navigation_id,content_type,content_value,update_time,remark)
+values (#{site_id},#{navigation_id},#{content_type},#{content_value},#{update_time},#{remark})
+</insert>
+
+<update id="updApoSiteContent" parameterType="ApoSiteContent">
+update dt_apo_site_content set 
+site_id=#{site_id},
+navigation_id=#{navigation_id},
+content_type=#{content_type},
+content_value=#{content_value},
+update_time=#{update_time},
+remark=#{remark}
+where id=#{id}
+</update>
+
+<delete id="delApoSiteContent" parameterType="int">
+delete from dt_apo_site_content where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countApoScreen" parameterType="ApoScreenVo" resultType="int">
+select count(*) from dt_apo_screen where 1=1
+</select>
+
+<select id="queryApoScreen" parameterType="ApoScreenVo" resultType="ApoScreen">
+select * from dt_apo_screen dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_apo_screen  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+</select>
+
+<select id="getApoScreen" parameterType="int" resultType="ApoScreen">
+select * from dt_apo_screen where id=#{0}
+</select>
+
+<insert id="addApoScreen" parameterType="ApoScreen">
+insert into dt_apo_screen 
+(code,name,type,sort_id)
+values (#{code},#{name},#{type},#{sort_id})
+</insert>
+
+<update id="updApoScreen" parameterType="ApoScreen">
+update dt_apo_screen set 
+code=#{code},
+name=#{name},
+type=#{type},
+sort_id=#{sort_id}
+where id=#{id}
+</update>
+
+<delete id="delApoScreen" parameterType="int">
+delete from dt_apo_screen where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countNavigation" parameterType="NavigationVo" resultType="int">
+select count(*) from dt_navigation where 1=1
+</select>
+
+<select id="queryNavigation" parameterType="NavigationVo" resultType="Navigation">
+select * from dt_navigation dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_navigation  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getNavigation" parameterType="int" resultType="Navigation">
+select * from dt_navigation where id=#{0}
+</select>
+
+<insert id="addNavigation" parameterType="Navigation">
+insert into dt_navigation 
+(parent_id,channel_id,nav_type,name,title,sub_title,icon_url,link_url,
+sort_id,is_lock,remark,action_type,is_sys)
+values (#{parent_id},#{channel_id},#{nav_type},#{name},#{title},#{sub_title},#{icon_url},#{link_url},#{sort_id},#{is_lock},#{remark},#{action_type},#{is_sys})
+</insert>
+
+<update id="updNavigation" parameterType="Navigation">
+update dt_navigation set 
+parent_id=#{parent_id},
+channel_id=#{channel_id},
+nav_type=#{nav_type},
+name=#{name},
+title=#{title},
+sub_title=#{sub_title},
+icon_url=#{icon_url},
+link_url=#{link_url},
+sort_id=#{sort_id},
+is_lock=#{is_lock},
+remark=#{remark},
+action_type=#{action_type},
+is_sys=#{is_sys}
+where id=#{id}
+</update>
+
+<delete id="delNavigation" parameterType="int">
+delete from dt_navigation where id=#{0}
+</delete>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="findProvince" resultType="ApoProvince">
+select * from dt_apo_province where 1=1
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="findCityByProvince" parameterType="string" resultType="ApoCity">
+select * from dt_apo_city where province_id=#{0}
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="findCountyByCity" parameterType="string" resultType="ApoCounty">
+select * from dt_apo_county where city_id=#{0}
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="findTownByCounty" parameterType="string" resultType="ApoTown">
+select * from dt_apo_town where county_id=#{0}
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="findVillageByTown" parameterType="string" resultType="ApoVillage">
+select * from dt_apo_village where town_id=#{0}
+</select>
+
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="findCityByProvinceId" parameterType="string" resultType="ApoCity">
+select * from dt_apo_city dt1,
+(
+  select top 20 city_id from 
+  (
+    select top(#{index}*20) city_id from dt_apo_city  where 1=1
+    <if test='province_id!=null and province_id!="" '>
+      and province_id=#{province_id}
+    </if>
+    order by city_id desc
+  )dt order by dt.city_id asc
+)dt2 where dt1.city_id=dt2.city_id order by dt1.city_id
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="countCityByProvinceId" parameterType="ApoCityVo" resultType="int">
+select count(*) from dt_apo_city where province_id=#{province_id}
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="findCountyByCityId" parameterType="string" resultType="ApoCounty">
+select * from dt_apo_county dt1,
+(
+  select top 20 county_id from 
+  (
+    select top(#{index}*20) county_id from dt_apo_county  where 1=1
+    <if test='city_id!=null and city_id!="" '>
+      and city_id=#{city_id}
+    </if>
+    order by county_id desc
+  )dt order by dt.county_id asc
+)dt2 where dt1.county_id=dt2.county_id order by dt1.county_id
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="countCountyByCityId" parameterType="ApoCountyVo" resultType="int">
+select count(*) from dt_apo_county where city_id=#{city_id}
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="findTownByCountyId" parameterType="string" resultType="ApoTown">
+select * from dt_apo_town dt1,
+(
+  select top 20 town_id from 
+  (
+    select top(#{index}*20) town_id from dt_apo_town  where 1=1
+    <if test='county_id!=null and county_id!="" '>
+      and county_id=#{county_id}
+    </if>
+    order by town_id desc
+  )dt order by dt.town_id asc
+)dt2 where dt1.town_id=dt2.town_id order by dt1.town_id
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="countTownByCountyId" parameterType="ApoTownVo" resultType="int">
+select count(*) from dt_apo_town where county_id=#{county_id}
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="findVillageByTownId" parameterType="string" resultType="ApoVillage">
+select * from dt_apo_village dt1,
+(
+  select top 20 code from 
+  (
+    select top(#{index}*20) code from dt_apo_village  where 1=1
+    <if test='town_id!=null and town_id!="" '>
+      and town_id=#{town_id}
+    </if>
+    order by code desc
+  )dt order by dt.code asc
+)dt2 where dt1.code=dt2.code order by dt1.code
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="countVillageByTownId" parameterType="ApoVillageVo" resultType="int">
+select count(*) from dt_apo_village where town_id=#{town_id}
+</select>
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countFiles" parameterType="FilesVo" resultType="int">
+select count(*) from dt_files where 1=1
+
+</select>
+<select id="queryFiles" parameterType="FilesVo" resultType="Files">
+select * from dt_files dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_files  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getFiles" parameterType="string" resultType="Files">
+select * from dt_files where id=#{0}
+</select>
+
+<insert id="addFiles" parameterType="Files">
+insert into dt_files 
+(file_name,file_path,file_md5,file_server,file_uptime,file_upuser,file_usetimes,file_state,file_type,file_endwith,file_fullpath)
+values (#{file_name},#{file_path},#{file_md5},#{file_server},#{file_uptime},#{file_upuser},#{file_usetimes},#{file_state},#{file_type},#{file_endwith},#{file_fullpath})
+</insert>
+
+
+<update id="updFiles" parameterType="Files">
+update dt_files set 
+file_name=#{file_name},
+file_path=#{file_path},
+file_md5=#{file_md5},
+file_server=#{file_server},
+file_uptime=#{file_uptime},
+file_upuser=#{file_upuser},
+file_usetimes=#{file_usetimes},
+file_state=#{file_state},
+file_type=#{file_type},
+file_endwith=#{file_endwith},
+file_fullpath=#{file_fullpath}
+where id=#{id}
+</update>
+
+<delete id="delFiles" parameterType="int">
+delete from dt_files where id=#{0}
+</delete>
+<!-- 上传文件饼图 -->
+<select id="countFilesGroup" resultType="map">
+select  case file_type when '0' then '图片'
+             when '1' then '压缩包'
+             when '2' then 'WORD等文档'
+             else '其他文件'  end as file_type ,  count(*) as count from dt_files group by file_type  order by file_type desc
+</select>
+
+</mapper>

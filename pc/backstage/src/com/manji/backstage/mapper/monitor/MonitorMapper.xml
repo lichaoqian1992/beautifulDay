@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.monitor.MonitorMapper" >
+
+
+<select id="countManager" parameterType="ManagerVo" resultType="int">
+select count(*) from dt_manager where 1=1
+</select>
+
+<select id="queryManager" parameterType="ManagerVo" resultType="Manager">
+select * from dt_manager dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_manager  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getManager" parameterType="int" resultType="Manager">
+select * from dt_manager where id=#{0}
+</select>
+
+<insert id="addManager" parameterType="Manager">
+insert into dt_manager 
+(role_id,role_type,user_name,password,salt,real_name,telephone,email,amount,total,is_lock,add_time)
+values (#{role_id},#{role_type},#{user_name},#{password},#{salt},#{real_name},#{telephone},#{email},#{amount},#{total},#{is_lock},#{add_time})
+</insert>
+
+<update id="updManager" parameterType="Manager">
+update dt_manager set 
+role_id=#{role_id},
+role_type=#{role_type},
+user_name=#{user_name},
+password=#{password},
+salt=#{salt},
+real_name=#{real_name},
+telephone=#{telephone},
+email=#{email},
+amount=#{amount},
+total=#{total},
+is_lock=#{is_lock},
+add_time=#{add_time}
+where id=#{id}
+</update>
+
+<delete id="delManager" parameterType="int">
+delete from dt_manager where id=#{0}
+</delete>
+
+
+
+<select id="countManagerRecharge" parameterType="ManagerRechargeVo" resultType="int">
+select count(*) from dt_manager_recharge where 1=1
+</select>
+
+<select id="queryManagerRecharge" parameterType="ManagerRechargeVo" resultType="ManagerRecharge">
+select * from dt_manager_recharge dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_manager_recharge  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getManagerRecharge" parameterType="int" resultType="ManagerRecharge">
+select * from dt_manager_recharge where id=#{0}
+</select>
+
+<insert id="addManagerRecharge" parameterType="ManagerRecharge">
+insert into dt_manager_recharge 
+(user_id,amount,remark,user_ip,add_time)
+values (#{user_id},#{amount},#{remark},#{user_ip},#{add_time})
+</insert>
+
+<update id="updManagerRecharge" parameterType="ManagerRecharge">
+update dt_manager_recharge set 
+user_id=#{user_id},
+amount=#{amount},
+remark=#{remark},
+user_ip=#{user_ip},
+add_time=#{add_time}
+where id=#{id}
+</update>
+
+<delete id="delManagerRecharge" parameterType="int">
+delete from dt_manager_recharge where id=#{0}
+</delete>
+
+
+<select id="countManagerLog" parameterType="ManagerLogVo" resultType="int">
+select count(*) from dt_manager_log where 1=1
+</select>
+
+<select id="queryManagerLog" parameterType="ManagerLogVo" resultType="ManagerLog">
+select * from dt_manager_log dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_manager_log  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getManagerLog" parameterType="int" resultType="ManagerLog">
+select * from dt_manager_log where id=#{0}
+</select>
+
+<insert id="addManagerLog" parameterType="ManagerLog">
+insert into dt_manager_log 
+(user_id,action_type,remark,user_ip,add_time)
+values (#{user_id},#{action_type},#{remark},#{user_ip},#{add_time})
+</insert>
+
+<update id="updManagerLog" parameterType="ManagerLog">
+update dt_manager_log set 
+user_id=#{user_id},
+action_type=#{action_type},
+remark=#{remark},
+user_ip=#{user_ip},
+add_time=#{add_time}
+where id=#{id}
+</update>
+
+<delete id="delManagerLog" parameterType="int">
+delete from dt_manager_log where id=#{0}
+</delete>
+
+
+<select id="countManagerRole" parameterType="ManagerRoleVo" resultType="int">
+select count(*) from dt_manager_role where 1=1
+</select>
+
+<select id="queryManagerRole" parameterType="ManagerRoleVo" resultType="ManagerRole">
+select * from dt_manager_role dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_manager_role  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getManagerRole" parameterType="int" resultType="ManagerRole">
+select * from dt_manager_role where id=#{0}
+</select>
+
+<insert id="addManagerRole" parameterType="ManagerRole">
+insert into dt_manager_role 
+(role_name,role_type,is_sys)
+values (#{role_name},#{role_type},#{is_sys})
+</insert>
+
+<update id="updManagerRole" parameterType="ManagerRole">
+update dt_manager_role set 
+role_name=#{role_name},
+role_type=#{role_type},
+is_sys=#{is_sys}
+where id=#{id}
+</update>
+
+<delete id="delManagerRole" parameterType="int">
+delete from dt_manager_role where id=#{0}
+</delete>
+
+
+<select id="countManagerRoleValue" parameterType="ManagerRoleValueVo" resultType="int">
+select count(*) from dt_manager_role_value where 1=1
+</select>
+
+<select id="queryManagerRoleValue" parameterType="ManagerRoleValueVo" resultType="ManagerRoleValue">
+select * from dt_manager_role_value dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_manager_role_value  where 1=1
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getManagerRoleValue" parameterType="int" resultType="ManagerRoleValue">
+select * from dt_manager_role_value where id=#{0}
+</select>
+
+<insert id="addManagerRoleValue" parameterType="ManagerRoleValue">
+insert into dt_manager_role_value 
+(role_id,nav_name,action_type)
+values (#{role_id},#{nav_name},#{action_type})
+</insert>
+
+<update id="updManagerRoleValue" parameterType="ManagerRoleValue">
+update dt_manager_role_value set 
+role_id=#{role_id},
+nav_name=#{nav_name},
+action_type=#{action_type}
+where id=#{id}
+</update>
+
+<delete id="delManagerRoleValue" parameterType="int">
+delete from dt_manager_role_value where id=#{0}
+</delete>
+
+
+<select id="countInfoCorrecting" parameterType="InfoCorrectingVo" resultType="int">
+select count(*) from dt_info_correcting where 1=1
+ <if test="user_id!=null and user_id!= '' ">
+   and   user_id = #{user_id}
+ </if>
+</select>
+
+<select id="queryInfoCorrecting" parameterType="InfoCorrectingVo" resultType="InfoCorrecting">
+select * from dt_info_correcting dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_info_correcting  where 1=1
+    <if test="user_id!=null and user_id!= '' ">
+      and user_id = #{user_id}
+    </if>
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getInfoCorrecting" parameterType="int" resultType="InfoCorrecting">
+select * from dt_info_correcting where id=#{0}
+</select>
+
+<insert id="addInfoCorrecting" parameterType="InfoCorrecting">
+insert into dt_info_correcting 
+(user_id,user_role_type,user_role_value,type,record_id,content,add_time,update_time,remark,status)
+values (#{user_id},#{user_role_type},#{user_role_value},#{type},#{record_id},#{content},#{add_time},#{update_time},#{remark},#{status})
+</insert>
+
+<update id="updInfoCorrecting" parameterType="InfoCorrecting">
+update dt_info_correcting set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+type=#{type},
+record_id=#{record_id},
+content=#{content},
+add_time=#{add_time},
+update_time=#{update_time},
+remark=#{remark}
+where id=#{id}
+</update>
+
+<delete id="delInfoCorrecting" parameterType="int">
+delete from dt_info_correcting where id=#{0}
+</delete>
+
+
+</mapper>

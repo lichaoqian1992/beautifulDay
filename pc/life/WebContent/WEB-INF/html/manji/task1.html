@@ -1,0 +1,134 @@
+#@layout() 
+#define main()
+<div id="page-wrapper" class="gray-bg dashbard-1">
+			<div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>内容信息</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="#">主页</a>
+                        </li>
+                        <li>
+                            <a>任务量</a>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                        	<div class="ibox-title" id="cheouseGroup">
+                                <label style="font-size:20px;">工作组：</label>
+                                #for(x : lang)
+                                <label style="font-size:15px;">
+                                	#if(x.value == "组长")
+                                    	<input type="checkbox" value="#(x.key)" checked style="width: 20px;" name="lang">#(x.value)
+                                	#else
+                                		<input type="checkbox" value="#(x.key)" checked style="width: 20px;" name="lang">#(x.value)
+                                	#end  
+                                </label>
+                                #end
+                            </div>
+                            <div class="ibox-title">
+                            	<label style="font-size:20px;">时间：</label>
+                            	<label style="font-size:20px;">
+                            		<input type="text" id="startTime" style="width: 120px;font-size: 16px;" class="laydate-icon-dahong" value="#(s)"> -</label>
+                            	<label style="font-size:20px;">
+                            		<input type="text" id="endTime" style="width: 120px;font-size: 16px;" class="laydate-icon-dahong" value="#(e)"></label>
+                            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            	<label style="font-size:20px;">查询分组：</label>
+	                        		<input type="radio" checked="checked" value="gzz" name="chouseType"><label style="font-size:15px;">工作组</label>
+	                        		<input type="radio" name="chouseType" value="xq" ><label style="font-size:15px;">需求</label>
+                            	<label style="size: 30px;float: right;">
+                               		<a class="btn btn-sm btn-primary" onclick="searchInfo()">搜索</a></label>
+                            </div>
+                             <!-- <div class="ibox-content">
+								<div class="echarts" style="height: 400px;margin-left: -900px" id="echarts-bar-chart"></div>
+		                    </div> -->
+		                    <div class="ibox-content" style="overflow:scroll;" id="table_group">
+                            </div>
+		                    <!-- <div class="ibox-content">
+								<div class="echarts" style="height: 400px;margin-left: -900px" id="echarts-bar-chart2"></div>
+		                    </div> -->
+                            <div class="ibox-content" style="overflow:scroll;" id="table_xuqiu">
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="background" class="background1"></div>   
+			<div id="progressBar" class="progressBar1">正在绘图中，请稍等...</div> 
+         </div>
+    <script type="text/javascript" src="#(ctx)/static/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="#(ctx)/static/laydate/laydate.js"></script>
+    <script type="text/javascript" src="#(ctx)/static/js/plugins/echarts/echarts-all.js"></script>
+    <script>
+    	$(function(){
+	    	  /* $(":radio").click(function(){
+	    		  if($(this).val() == 'xq'){
+	    			  $("#cheouseGroup").hide();
+	    		  }
+ 				  if($(this).val() == 'gzz'){
+ 					  $("#cheouseGroup").show();
+	    		  }
+	    	  }); */
+	    	  ajaxbg.hide(); 
+    	 });
+	    laydate({
+	    	  elem: '#startTime', //目标元素。由于laydate.js封装了一个轻量级的选择器引擎，因此elem还允许你传入class、tag但必须按照这种方式 '#id .class'
+	    	  event: 'focus' //响应事件。如果没有传入event，则按照默认的click
+	    	});
+	    laydate({
+	    	  elem: '#endTime', //目标元素。由于laydate.js封装了一个轻量级的选择器引擎，因此elem还允许你传入class、tag但必须按照这种方式 '#id .class'
+	    	  event: 'focus' //响应事件。如果没有传入event，则按照默认的click
+	    	});
+	    var ajaxbg = $(".background1, .progressBar1"); 
+		var barChart = echarts.init(document.getElementById("echarts-bar-chart"));
+		var barChart2 = echarts.init(document.getElementById("echarts-bar-chart2"));
+	    function searchInfo(){
+	    	var langL = "";
+	    	var lang = document.getElementsByName("lang");
+
+	    	for(var i=0;i<lang.length;i++){
+	    		if(lang[i].checked){
+	    			langL += "'"+lang[i].value+"',";
+	    		}
+	    	}
+	    	if(langL.length == 0){
+	    		alert("请至少选择一个工作组");
+	    		return;
+	    	}
+	    	if($("#startTime").val() == "" || $("#endTime").val() == ""){
+	    		alert("时间不能为空");
+	    		return;
+	    	}
+	    	if(new Date($("#startTime").val()).getTime() > new Date($("#endTime").val()).getTime()){
+	    		alert("开始时间不能大于结束时间");
+	    		return;
+	    	}
+	    	ajaxbg.show();
+	    	var abc = $("input[name='chouseType']:checked").val();
+	    	if(abc == 'gzz'){
+	    		$("#table_xuqiu").html("");
+	    		$("#table_group").load("/life/excel/findTask1?stime=" + $("#startTime").val() + "&etime=" + $("#endTime").val() + "&type=" + langL,function(responseTxt,statusTxt,xhr){
+	    			   if(statusTxt=="success"){
+	    				   ajaxbg.hide(); 
+	    			   }
+	    		});
+	    	}
+	    	if(abc == 'xq'){
+	    		$("#table_group").html("");
+	    		$("#table_xuqiu").load("/life/excel/findTask2?stime=" + $("#startTime").val() + "&etime=" + $("#endTime").val() + "&type=" + langL,function(responseTxt,statusTxt,xhr){
+	    			   if(statusTxt=="success"){
+	    				   ajaxbg.hide(); 
+	    			   }
+	    		});
+	    	}
+	    }
+    </script>
+#end

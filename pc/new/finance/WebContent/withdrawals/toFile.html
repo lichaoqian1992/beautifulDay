@@ -1,0 +1,136 @@
+#@layout() 
+#define main()
+<section class="content-header">
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i> 提现管理</a></li>
+		<li>
+			 账务明细
+		</li>
+	</ol>
+</section>
+<!-- 主要内容 -->
+<section class="invoice">
+	<div class="row">
+		<div class="col-md-12 finance_time finance_time_padding_left">
+			<div class="form-group">
+				<label class="control-label">创建时间：</label>
+				<div class="input-group date">
+					<div class="input-group-addon">
+						<i class="fa fa-calendar"></i>
+					</div>
+					<input type="text" class="form-control pull-right datepicker"
+						data-date-end-date="0d" placeholder="开始时间" id="startTime">
+				</div>
+			</div>
+			<div class="date_striping">-</div>
+			<div class="form-group">
+				<div class="input-group date">
+					<div class="input-group-addon">
+						<i class="fa fa-calendar"></i>
+					</div>
+					<input type="text"
+						class="form-control pull-right datepicker datepickerlast"
+						data-date-end-date="0d" placeholder="截止时间" id="endTime">
+				</div>
+			</div>
+			<button class="btn btn-primary" onclick="findByCondition(1)">查询</button>
+		</div>
+		<div class="col-md-12">
+			<div id="tableDiv" style="width:100%;overflow-x:auto;">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>文件地址</th>
+						<th>文件名称</th>
+						<th>日期</th>
+					</tr>
+				</thead>
+				<tbody id="userAccountData">
+					#for(x:info.getList())
+						<tr>
+							<td>#(x.id)</td>
+							<td>#(x.url)</td>
+							<td>#(x.name)</td>
+							<td>#(x.create_time)</td>
+						</tr>
+					#end
+				</tbody>
+			</table>
+			</div>
+			<div class="page_box">
+				<div class="pull-left">
+					<span id="pageInfo"></span>
+					<input class="page_number" type="text" value="1" id="toPage"/>
+					<button class="btn btn-default" onclick="toPage()">GO</button>
+				</div>	
+				<div class="pull-right">
+					<input id="firstPage" type="hidden"/>
+					<input id="nowPage" type="hidden"/>
+					<input id="lastPage" type="hidden"/>
+					<a class="page_btn" onclick="firstPage()">首页</a>
+					<a class="page_btn" onclick="upPage()">上一页</a>
+					<a class="page_btn" onclick="nextPage()">下一页</a>
+					<a class="page_btn" onclick="lastPage()">尾页</a>
+				</div>	
+			</div>
+		</div>
+	</div>
+</section>
+#include("../common/_js.html")
+<script language=javascript src='../static/js/rec/rec.js'></script>
+<script type="text/javascript">
+	$(function(){
+		/*时间插件调用
+		 */
+		$('.datepicker').datepicker({
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			language: 'cn'
+		});
+		findByCondition(1);
+	});
+	function findByCondition(page){
+		if(page == undefined || page == null){
+			page = 1;	
+		}
+		var txt = "";
+		$.ajax({
+			type:"get",
+			url:"/finance/withdrawals/findFile",
+			dataType:"json",
+			data:{
+				page:page,
+				startTime:$("#startTime").val(),
+				endTime:$("#endTime").val()
+			},success:function(data){
+				console.log(data);
+				if(data.list.length>0){
+					for(var i=0;i<data.list.length;i++){
+						txt +="<tr><td>"
+							+(i+1)+
+							"</td><td id='fileurl'>"
+							+data.list[i].url+
+							"</td><td style='cursor:pointer;color:blue;' onclick='downFile(this)'>"
+							+data.list[i].name+
+							"</td><td>"
+							+data.list[i].create_time+
+							"</td></tr>";
+					}
+				}else{
+					txt = "<tr><td colspan=4 class='table_no_data'>暂无数据</td></tr>"
+				}
+				$("#userAccountData").html(txt);
+				$("#firstPage").val(1);
+				$("#nowPage").val(data.pageNumber);
+				$("#lastPage").val(data.totalPage);
+				$("#pageInfo").html("共"+data.totalRow+"条数据，当前显示第 "+data.pageNumber+" 页  ，到");
+			}
+		});
+	}
+	function downFile(obj){
+		var url = $(obj).parent().find("#fileurl").text();
+		window.location.href="/finance/withdrawals/downFile?url="+url;
+	}
+</script>
+#end

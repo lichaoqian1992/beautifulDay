@@ -1,0 +1,391 @@
+#@layout()
+#define main()
+<!-- 主要内容 -->
+<section class="content withdrawalDepositForm_box">
+	<div class="row">
+		<!--存储账户是否被冻结-->
+		<input type="hidden" value='#(static)' id="userun"/>
+
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header with-border withdrawalDepositForm_type">
+					<h3 class="box-title"> 提现单号：#(withdrawals.withdrawals_no) </h3>
+					#if (withdrawals.status=='4')
+					<span>状态：处理中</span>
+					#end
+					#if (withdrawals.status=='1'&&withdrawals.state!='0'||withdrawals.status=='2'&&withdrawals.state!='0')
+					<span>状态：退回</span>
+					#end
+					#if (withdrawals.status=='3'&&withdrawals.state!='0')
+					<span>状态：冻结本笔提现</span>
+					#end
+					#if(withdrawals.state=='0')
+					<span>状态：冻结账户</span>
+					#end
+				</div>
+				<div class="box-header with-border withdrawalDepositForm_type">
+					<button class="btn btn-primary counterFee">设置提现手续费计算规则</button>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							#if (shopInfo!=null)
+							<table class="table table-bordered">
+								<thead>
+								<tr style="background-color: #009966;color:#fff;">
+									<td colspan="4">基本信息</td>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td class="table_name">商家账号：</td>
+									<td>#(shopInfo.user_name)</td>
+									<td class="table_name">联系人电话：</td>
+									<td>#(shopInfo.mobile)</td>
+								</tr>
+								<tr>
+									<td class="table_name">商家名称：</td>
+									<td>
+										<a class="href_a">#(shopInfo.name)</a>
+									</td>
+									<td class="table_name">店铺联系电话：</td>
+									<td>#(shopInfo.telephone)</td>
+								</tr>
+								<tr>
+									<td class="table_name">商家类别：</td>
+									<td>#(shopInfo.TAG)</td>
+									<td class="table_name">订单消息接收手机：</td>
+									<td>#(shopInfo.msg_mobile)</td>
+								</tr>
+								<tr>
+									<td class="table_name">商家区域：</td>
+									<td>#(shopInfo.area)</td>
+									<td class="table_name">技术服务费</td>
+									#if (business!=null)
+									<td>#(business.user_percentage)</td>
+									#end
+									#if (business==null)
+									<td>0.0</td>
+									#end
+								</tr>
+								<tr>
+									<td class="table_name">资质：</td>
+									<td><a href="/finance/withdrawals/image?userId=#(withdrawals.user_id)" target="_blank">点击查看</a></td>
+								</tr>
+								</tbody>
+							</table>
+							#end
+							#if (buyerInfo!=null)
+							<table class="table table-bordered">
+								<thead>
+								<tr style="background-color: #009966;color:#fff;">
+									<td colspan="4">基本信息</td>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td class="table_name">用户账号：</td>
+									<td>#(buyerInfo.user_name)</td>
+
+								</tr>
+								<tr>
+									<td class="table_name">真实姓名：</td>
+									<td>
+										<a class="href_a">#(buyerInfo.person_name)</a>
+									</td>
+								</tr>
+								<tr>
+									<td class="table_name">身份证号：</td>
+									<td>#(buyerInfo.card_number)</td>
+								</tr>
+								</tbody>
+							</table>
+							#end
+						</div>
+						<div class="col-md-6">
+							<table class="table table-bordered">
+								<thead>
+								<tr style="background-color: #009966;color:#fff;">
+									<td colspan="4">账号信息</td>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td class="table_name">提现在途：</td>
+									<td>#(ZT)</td>
+									<td class="table_name">账户余额：</td>
+									<td><span class="color_red">#(YE)</span></td>
+								</tr>
+								<tr>
+									<td class="table_name">正在处理：</td>
+									<td>
+										<a class="href_a">#(CL)</a>
+									</td>
+									<td class="table_name">可提现金额：</td>
+									<td><span class="color_red">#(KYE)</span></td>
+								</tr>
+								<tr>
+									<td class="table_name">冻结提现：</td>
+									<td>#(DJ)</td>
+									<td class="table_name">不可提现金额：</td>
+									<td>#(BYE)</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-md-12">
+							<table class="table table-bordered">
+								<thead>
+								<tr style="background-color: #009966;color:#fff;">
+									<td colspan="20">提现信息</td>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td>提现金额</td>
+									<td>金融手续费</td>
+									<td>到账金额</td>
+									<td>开户人</td>
+									<td>开户行</td>
+									<td>所属支行</td>
+									<td>银行卡号</td>
+									<td>申请提现时间</td>
+									<td>提现类型</td>
+								</tr>
+								#for (withdrawals :withdrawalsList)
+								<tr>
+									<td>#(withdrawals.total_money)</td>
+									<td>#(withdrawals.commission)</td>
+									<td><span class="color_red">#(withdrawals.total_money-withdrawals.commission)</span></td>
+									<td>#(withdrawals.bank_user)</td>
+									<td>#(withdrawals.bank_name)</td>
+									<td>#(withdrawals.bank_address)</td>
+									<td>#(withdrawals.bank_card)</td>
+									<td>#(withdrawals.add_time)</td>
+									<td></td>
+								</tr>
+								#end
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<label class="label_title">异常原因</label>
+							<div class="abnormalReason">
+								<p>#(withdrawals.alter)</p>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 finance_time finance_time_padding_left">
+							<div class="form-group">
+								<label class="control-label">账户最近变动日志&emsp;&emsp;</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker" data-date-end-date="0d" id="startTime" placeholder="开始时间">
+								</div>
+							</div>
+							<div class="date_striping">-</div>
+							<div class="form-group">
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker datepickerlast" id="endTime" data-date-end-date="0d" placeholder="截止时间">
+								</div>
+							</div>
+							<input type="hidden" value="#(withdrawals.user_id)" id="userid"/>
+							<input type="hidden" value="#(withdrawals.user_role_type)" id="usertype"/>
+							<div class="form-group">
+								<select class="form-control" id="wstatus">
+									<option value="0">全部</option>
+									<option value="1">可提现</option>
+									<option value="2">不可提现</option>
+								</select>
+							</div>
+							<button class="btn btn-primary" onclick="bd()">查询</button>
+						</div>
+						<div class="col-md-12" style="width:100%; height:1024px; overflow:scroll;">
+							<table class="table table-bordered">
+								<thead>
+								<tr>
+									<th>变动时间</th>
+									<th>初期值</th>
+									<th>变动值</th>
+									<th>期末值</th>
+									<th>类型</th>
+									<th>单号</th>
+									<th>备注</th>
+								</tr>
+								</thead>
+								<tbody id="userAccountData">
+
+								</tbody>
+							</table>
+
+							<!--<div class="page_box">-->
+								<!--<div class="pull-left">-->
+									<!--<span>共<span id="number">2</span>条数据，当前显示第 <span id="page">1</span> 页  ，到</span>-->
+									<!--<input class="page_number" type="text" value="1" id="findpages" />-->
+									<!--<button class="btn btn-default" onclick="bd(this)">GO</button>-->
+								<!--</div>-->
+
+								<!--<div class="pull-right">-->
+									<!--<a class="page_btn" onclick="bd(this)">首页</a>-->
+									<!--<a class="page_btn" onclick="bd(this)">下一页</a>-->
+									<!--<a class="page_btn" onclick="bd(this)">上一页</a>-->
+									<!--<a class="page_btn" onclick="bd(this)">尾页</a>-->
+									<!--&lt;!&ndash;保存总页数&ndash;&gt;-->
+									<!--<input type="hidden"  id="totalpage"/>-->
+								<!--</div>-->
+
+							<!--</div>-->
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="col-md-12 finance_time finance_time_padding_left">
+							<div class="form-group">
+								<label class="control-label">代金券变动日志&emsp;&emsp;</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker" data-date-end-date="0d" id="vstartTime" placeholder="开始时间">
+								</div>
+							</div>
+							<div class="date_striping">-</div>
+							<div class="form-group">
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right datepicker datepickerlast" id="vendTime" data-date-end-date="0d" placeholder="截止时间">
+								</div>
+							</div>
+							<button class="btn btn-primary" onclick="findVouchar()">查询</button>
+						</div>
+						<div class="col-md-12" style="width:100%; height:1024px; overflow:scroll;">
+							<table class="table table-bordered">
+								<thead>
+								<tr>
+									<th>变动时间</th>
+									<th>初期值</th>
+									<th>变动值</th>
+									<th>期末值</th>
+									<th>类型</th>
+									<th>单号</th>
+									<th>备注</th>
+								</tr>
+								</thead>
+								<tbody id="vuserAccountData">
+
+								</tbody>
+							</table>
+
+							<!--<div class="page_box">-->
+								<!--<div class="pull-left">-->
+									<!--<span>共<span id="vnumber">2</span>条数据，当前显示第 <span id="vpage">1</span> 页  ，到</span>-->
+									<!--<input class="page_number" type="text" value="1" id="vfindpages" />-->
+									<!--<button class="btn btn-default" onclick="findVouchar(this)">GO</button>-->
+								<!--</div>-->
+
+								<!--<div class="pull-right">-->
+									<!--<a class="page_btn" onclick="findVouchar(this)">首页</a>-->
+									<!--<a class="page_btn" onclick="findVouchar(this)">下一页</a>-->
+									<!--<a class="page_btn" onclick="findVouchar(this)">上一页</a>-->
+									<!--<a class="page_btn" onclick="findVouchar(this)">尾页</a>-->
+									<!--&lt;!&ndash;保存总页数&ndash;&gt;-->
+									<!--<input type="hidden"  id="vtotalpage"/>-->
+								<!--</div>-->
+
+							<!--</div>-->
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="col-md-12">
+
+							<label class="label_title">操作日志</label>
+							<table class="table table-bordered">
+								<thead>
+								<tr>
+									<th>操作人</th>
+									<th>时间</th>
+									<th>操作内容</th>
+									<th>备注</th>
+								</tr>
+								</thead>
+								<tbody>
+								#for (log :loglist)
+								<tr>
+									<td>#(log.user_name)</td>
+									<td>#(log.datetime)</td>
+									<td>#(log.cont)</td>
+									<td>#(log.alert)</td>
+								</tr>
+								#end
+								<!--<tr>
+                                    <td colspan="20" class="table_no_data">没有数据</td>
+                                </tr>-->
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<!--存储提现单id-->
+					<input type="hidden" value="#(withdrawals.id)" id="id"/>
+
+					<!--操作-->
+					<div class="row">
+						<div class="col-md-12">
+							<label class="label_title">处理结果</label>
+							<div class="withdrawalDepositForm_decide">
+								<div class="withdrawalDepositForm_decide_radio">
+									<label>
+										<input type="radio" name="withdrawalType" istype="withdrawal_success" checked="checked"/>提现成功
+									</label>
+									<label>
+										<input type="radio" name="withdrawalType" istype="withdrawal_failure"/>提现失败
+									</label>
+								</div>
+								<!--正常时-->
+								<p class="color_red"></p>
+								<!--冻结时-->
+								<!--<p class="color_red">提示：该提现账户已被冻结，不能进行一下操作！</p>-->
+								<div class="withdrawalDepositForm_decide_textarea_box hide">
+									<textarea class="withdrawalDepositForm_decide_textarea" id="alert" placeholder="输入原因" maxlength="50"></textarea>
+									<span class="withdrawalDepositForm_decide_textarea_max">
+										<em>0</em>/50
+									</span>
+								</div>
+							</div>
+							<!--正常时-->
+							<div class="footer_from_btn">
+								<button class="btn btn-primary" id="commit">确认</button>
+								<button class="btn btn-default" id="close">返回</button>
+							</div>
+							<!--冻结时-->
+							<!--<div class="footer_from_btn hide">
+                                <button class="btn btn-primary">确认</button>
+                                <button class="btn btn-default">返回</button>
+                            </div>-->
+						</div>
+					</div>
+				</div>
+				</div>
+				<!-- /.box-body -->
+
+			</div>
+		</div>
+	</div>
+</section>
+
+#include("../common/_js.html")
+<script src="../static/js/withdrawals/dispose.js" type="text/javascript"></script>
+#end

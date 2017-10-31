@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.property.PropertyMapper">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 短信/////////////////////////////////////////////////////////////////// -->
+<select id="countSmsTemplate" parameterType="SmsTemplateVo" resultType="int">
+select count(*) from dt_sms_template
+</select>
+<select id="querySmsTemplate" parameterType="SmsTemplateVo" resultType="SmsTemplate">
+select * from dt_sms_template dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_sms_template  where 1=1
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getSmsTemplate" parameterType="int" resultType="SmsTemplate">
+select * from dt_sms_template where id=#{0}
+</select>
+<update id="updSmsTemplate" parameterType="SmsTemplate">
+update dt_sms_template set
+title=#{title},
+call_index=#{call_index},
+content=#{content},
+is_sys=#{is_sys}
+where id=#{id}
+</update>
+<delete id="delSmsTemplate" parameterType="int">
+delete from dt_sms_template where id=#{0}
+</delete>
+<insert id="addSmsTemplate" parameterType="SmsTemplate">
+insert into dt_sms_template
+(title,call_index,content,is_sys)
+values(#{title},#{call_index},#{content},#{is_sys})
+</insert>
+<!-- ////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id="countEmailTemplate" parameterType="EmailTemplateVo" resultType="int">
+select count(*) from dt_mail_template
+</select>
+<select id="queryEmailTemplate" parameterType="EmailTemplateVo" resultType="EmailTemplate">
+select * from dt_mail_template dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_mail_template  where 1=1
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+
+<insert id="addEmailTemplate" parameterType="EmailTemplate">
+insert into dt_mail_template
+(title,call_index,maill_title,content,is_sys)
+values(#{title},#{call_index},#{maill_title},#{content},#{is_sys})
+</insert>
+
+<select id="getEmailTemplate" parameterType="int" resultType="EmailTemplate">
+select * from dt_mail_template where id=#{0}
+</select>
+
+<update id="updEmailTemplate" parameterType="EmailTemplate" >
+update dt_mail_template
+set 
+title=#{title},call_index=#{call_index},maill_title=#{maill_title},content=#{content},is_sys=#{is_sys}
+where id=#{id}
+</update>
+
+<delete id="delEmailTemplate" parameterType="int">
+delete from dt_mail_template where id=#{0}
+</delete>
+
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<select id="getConfig" parameterType="int" resultType="Config">
+select * from dt_config where id=#{0}
+</select>
+
+<update id="updConfig" parameterType="Config">
+update dt_config 
+(key,title,content,type,value,status)
+values(#{key},#{title},#{content},#{type},#{value},#{status})
+where id=#{id}
+</update>
+
+<delete id="delConfig" parameterType="int" >
+delete from dt_config where id=#{0}
+</delete>
+
+<select id="countConfig" parameterType="ConfigVo" resultType="int">
+select count(*) from dt_config where type=#{type}
+</select>
+<select id="queryConfig" parameterType="ConfigVo" resultType="Config">
+select * from dt_config dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_config  where 1=1
+		and type=#{type}
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addConfig" parameterType="Config">
+insert into dt_config([key],[title],[content],[type],[value],[status])
+values(#{key},#{title},#{content},#{type},#{value},#{status})
+</insert>
+
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+<select id="countDistribution" parameterType="DistributionVo" resultType="int">
+select count(*) from dt_distribution 
+</select>
+
+<select id="queryDistribution" parameterType="DistributionVo" resultType="Distribution">
+select * from dt_distribution dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_distribution  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+</select>
+
+<insert id="addDistribution" parameterType="Distribution" >
+insert into dt_distribution
+(title,express_code,express_fee,remark,sort_id,is_lock)
+values (#{title},#{express_code},#{express_fee},#{remark},#{sort_id},#{is_lock})
+</insert>
+
+<select id="getDistribution" parameterType="int" resultType="Distribution">
+select * from dt_distribution where id=#{0}
+</select>
+
+<update id="updDistribution" parameterType="Distribution">
+update dt_distribution
+set title=#{title},express_code=#{express_code},express_fee=#{express_fee},
+remark=#{remark},sort_id=#{sort_id},is_lock=#{is_lock}
+where id=#{id}
+</update>
+
+<delete id="delDistribution" parameterType="int">
+delete from dt_distribution where id=#{0}
+</delete>
+
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id ="countExpress" parameterType="ExpressVo" resultType="int">
+select count(*) from dt_express 
+</select>
+
+<select id="queryExpress" parameterType="ExpressVo" resultType="Express">
+select * from dt_express dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_express  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+
+<insert id="addExpress" parameterType="Express">
+insert into dt_express(title,express_code,express_fee,remark,sort_id,is_lock)
+values(#{title},#{express_code},#{express_fee},#{remark},#{sort_id},#{is_lock})
+</insert>
+<select id="getExpress" parameterType="int" resultType="Express">
+select * from dt_express where id=#{0}
+</select>
+
+<update id="updExpress" parameterType="Express" >
+update dt_express 
+set title=#{title},express_code=#{express_code},express_fee=#{express_fee},remark=#{remark},
+sort_id=#{sort_id},is_lock=#{is_lock}
+where id=#{id}
+</update>
+
+<delete id="delExpress" parameterType="int">
+delete from dt_express where id=#{0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+<select id ="countPayment" parameterType="PaymentVo" resultType="int">
+select count(*) from dt_payment 
+</select>
+
+<select id="queryPayment" parameterType="PaymentVo" resultType="Payment">
+select * from dt_payment dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_payment  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addPayment" parameterType="Payment">
+insert into dt_payment(parent_id,title,img_url,remark,type,poundage_type,poundage_amount,sort_id,is_mobile,is_lock,api_path)
+values(#{parent_id},#{title},#{img_url},#{remark},#{type},#{poundage_type},#{poundage_amount},#{sort_id},#{is_mobile},#{is_lock},#{api_path})
+</insert>
+
+<select id="getPayment" parameterType="int" resultType="Payment">
+select * from dt_payment where id=#{0}
+</select>
+
+<update id="updPayment" parameterType="Payment" >
+update dt_payment set
+parent_id=#{parent_id},
+title=#{title},
+img_url=#{img_url},
+remark=#{remark},
+type=#{type},
+poundage_type=#{poundage_type},
+poundage_amount=#{poundage_amount},
+sort_id=#{sort_id},
+is_mobile=#{is_mobile},
+is_lock=#{is_lock},
+api_path=#{api_path}
+where id=#{id}
+</update>
+
+<delete id="delPayment" parameterType="int">
+delete from dt_payment where id={0}
+</delete>
+
+
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+<select id ="countMedal" parameterType="MedalVo" resultType="int">
+select count(*) from dt_medal 
+</select>
+
+<select id="queryMedal" parameterType="MedalVo" resultType="Medal">
+select * from dt_medal dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_medal  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addMedal" parameterType="Medal">
+insert into dt_medal (title,icon,type,link_url,is_lock)
+values (#{title},#{icon},#{type},#{link_url},#{is_lock})
+</insert>
+<select id="getMedal" parameterType="int" resultType="Medal">
+select * from dt_medal where id=#{0}
+</select>
+<update id="updMedal" parameterType="Medal" >
+update dt_medal set
+title=#{title},
+icon=#{icon},
+type=#{type},
+link_url=#{link_url},
+is_lock=#{is_lock}
+where id=#{id}
+</update>
+
+<delete id="delMedal" parameterType="int">
+delete from dt_medal where id=#{0}
+</delete>
+
+
+</mapper>

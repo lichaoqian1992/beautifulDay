@@ -1,0 +1,101 @@
+#define layout()
+
+<html>
+<head>
+<meta charset="UTF-8">
+<title>角色权限管理</title>
+<link rel="stylesheet" type="text/css" href="#(ctx)/static/style/style.css" />
+<link rel="stylesheet" type="text/css" href="#(ctx)/static/style/role.css" />
+<link rel="stylesheet" type="text/css" href="#(ctx)/static/style/workManage.css" />
+<link rel="stylesheet" type="text/css" href="#(ctx)/static/style/home.css"/>
+<link rel="stylesheet" type="text/css" href="#(ctx)/static/style/workOrderTable.css" />
+<link rel="stylesheet" type="text/css" href="#(ctx)/static/style/workOrderType.css" />
+
+</head>
+
+<body>
+	<!-- 顶部 -->
+	<div class="kf_header_box">
+		<img class="kf_header_logo" src="#(ctx)/static/images/logo.png" />
+		<div class="kf_header_user_content">
+			<span class="kf_head_portrait"> <img src="#(ctx)/static/images/shanchu.png" />
+			</span> <span class="kf_header_user">
+			#if(session != null)
+				#(session.user)
+			#end
+			</span> <a href="loginOut">退出</a>
+		</div>
+	</div>
+
+	
+	<!-- 侧边栏 -->
+	<div class="kf_sidebar">
+			#if(session.menu != null)
+				#for(x : session.menu)
+				<div class="kf_sidebar_nav">
+					<a class="kf_icon kf_icon_manage" href="#(x.url)">#(x.title)</a>
+				</div>
+				#end
+			#end
+			<!-- <div class="kf_sidebar_nav">
+				<a class="kf_icon kf_icon_manage" href="/singleSign/user">用户管理</a>
+			</div>
+			<div class="kf_sidebar_nav">
+				<a class="kf_icon kf_icon_lock" href="/singleSign/dept">部门管理</a>
+			</div>
+			<div class="kf_sidebar_nav">
+				<a class="kf_icon kf_icon_set" href="/singleSign/sys">系统管理</a>
+			</div>
+			<div class="kf_sidebar_nav">
+				<a class="kf_icon kf_icon_set" href="/singleSign/role">角色管理</a>
+			</div>
+			<div class="kf_sidebar_nav">
+				<a class="kf_icon kf_icon_set" href="/singleSign/menu">权限管理</a>
+			</div> -->
+		
+		</div>
+
+
+
+ 
+ <div class="kf_content_box">
+ <div class="kf_bg_box">
+ 
+  #@main()
+  
+ </div>
+ 
+ 
+ 
+ 
+ </div>
+
+	#include("../common/_js.html")
+	
+	<script type="text/javascript">
+			$(function() {
+				//侧边栏
+				$(".kf_sidebar").on("click",".kf_sidebar_nav>a",function() {
+					var nav_list = $(this).siblings(".kf_sidebar_nav_list");
+					//其余隐藏
+					nav_list.parent().siblings().find(".kf_sidebar_nav_list").animate({
+						"height": "0px"
+					}, 500);
+
+					//显示
+					var len = nav_list.find("li").length;
+					var hei = nav_list.find("li").height();
+					nav_list.animate({
+						"height": hei * len + "px"
+					}, 500);
+				});
+
+			});
+				
+		
+		</script>
+</body>
+
+</html>
+
+#end

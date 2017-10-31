@@ -1,0 +1,125 @@
+#@layout()
+#define main()
+
+<section class="content-header">
+					<ol class="breadcrumb">
+						<li>
+							<a href="#"><i class="fa fa-dashboard"></i> 系统管理</a>
+						</li>
+						<li>
+							系统设置
+						</li>
+					</ol>
+				</section>
+
+				<!-- 主要内容 -->
+				<section class="invoice">
+					<div class="row">
+						<div class="col-md-12">
+							<ul class="nav nav-tabs">
+								<li>
+									<a href="systemSettings1.html">充值金额权限设置</a>
+								</li>
+								<li>
+									<a href="systemSettings2.html">提现金额权限设置</a>
+								</li>
+								<li>
+									<a href="systemSettings3.html">每日交易报送设置</a>
+								</li>
+								<li class="active">
+									<a href="systemSettings4.html">异常提现条件设置</a>
+								</li>
+							</ul>
+
+							<div class="tab-content">
+								<div class="tab-pane fade in active">
+									<div class="col-md-12">
+										<div class="set_box_list">
+											<div class="set_box">
+												<div class="set_box_itme">
+													在 
+													<input type="text" value="1" disabled="disabled" /> 
+													小时内连续提现，不得超过
+													<input type="text" value="3" disabled="disabled" />
+													 次（不含），如果超过了允许的次数，系统将会判定为异常提现。
+												</div>
+											</div>
+											<div class="set_box">
+												<div class="set_box_itme">
+													新注册用户 
+													<input type="text" value="24" disabled="disabled" />
+													小时内发起提现的，系统将会判定为异常提现。
+												</div>
+											</div>
+											<div class="set_box">
+												<div class="set_box_itme">
+													<input type="text" value="7" disabled="disabled" /> 
+													天以上未登录过的用户发起提现的，系统将会判定为异常提现。
+												</div>
+												
+											</div>
+											<div class="set_box">
+												<div class="set_box_itme">
+													提现金额超过
+													<input type="text" value="5000" disabled="disabled" /> 
+													元（不含），系统将会判定为异常提现。
+												</div>
+											</div>
+											<div class="set_box">
+												<div class="set_box_itme">
+													单笔交易的提现金额大于消费总金额，系统将会判定为异常提现。
+												</div>
+											</div>
+											<div class="set_box">
+												<div class="set_box_itme">
+													从未有过交易发起提现的，系统将会判定为异常提现。
+												</div>
+											</div>
+											<div class="set_box">
+												<div class="set_box_itme">
+													非常用登录地区发起提现的，系统将会判定为异常提现。
+												</div>
+											</div>
+											<div class="set_box">
+												<div class="set_box_itme">
+													账户收支记录异常发起提现的。
+												</div>
+											</div>
+										</div>
+										<div class="set_box_btn">
+											<button type="button" class="btn btn-primary btn_update">修改</button>
+											<button type="submit" class="btn btn-primary btn_save hide">保存</button>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</section>
+
+
+
+#include("../common/_js.html")
+
+	<script type="text/javascript">
+			$(function() {
+
+				//保存和修改切换
+				$(".tab-content").on("click", ".btn_update, .btn_save", function() {
+					$(this).addClass("hide").siblings().removeClass("hide");
+					var sib_box = $(this).parent().siblings(".set_box_list");
+					var sib_input = sib_box.find("input[type='text']");
+					if($(this).hasClass("btn_update")) {
+						sib_input.prop("disabled", false);
+					} else if($(this).hasClass("btn_save")) {
+						sib_input.prop("disabled", true);
+					}
+				});
+
+			});
+		</script>
+
+
+#end

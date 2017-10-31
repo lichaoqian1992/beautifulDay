@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>火车票预订 </title>
+    <link rel="stylesheet" href="css/frozen.css">
+    <link rel="stylesheet" href="css/validate.css">
+    <link rel="stylesheet" href="css/appstyle.css">
+    <script src="js/lib/zeptojs/zepto.min.js"></script>
+    <script src="js/zepto-mvalidate.js"></script>
+    <script src="js/frozen.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/zepto.mdater.css">
+    <script src="js/zepto.mdater.js"></script>
+</head>
+<!-- 检测用户设备 -->
+    <script type="text/javascript">
+            var browser = { 
+               versions: function() { 
+                   var u = navigator.userAgent; 
+                   return { 
+                       trident: u.indexOf('Trident') > -1, //IE内核 
+                       presto: u.indexOf('Presto') > -1, //opera内核 
+                       webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+                       gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+                       mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+                       ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+                       android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+                       iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+                       iPad: u.indexOf('iPad') > -1, //iPad 
+                       webApp: u.indexOf('Safari') > -1 //Safari 
+                   }; 
+               }() 
+            } 
+            function closePage(){
+                 var jsonstr = "{\"action\":\"close\"}";
+                if ( browser.versions.ios 
+                   || browser.versions.iPhone 
+                   || browser.versions.iPad) { 
+                   window.webkit.messageHandlers.Native.postMessage(jsonstr);
+                }
+                if ( browser.versions.android ) { 
+                    window.paySucess.clickOnAndroid(jsonstr);
+                }
+                 
+             }
+    </script>
+<body ontouchstart="">
+    <section id="searchWrap" class="hide">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="back()"></i><h1>火车票预订 </h1>
+    </header>
+    <script type="text/javascript">
+        function back(){
+            $("#searchWrap").addClass("hide");
+        }
+    </script>
+        <input type="text" autocomplete="off" class="City" placeholder="请输入出发城市">
+        <div class="divinput_hide" id="divcity">
+            <ul id="citybox">
+            </ul>
+        </div>
+        <div id="hotCity">
+            <h3>热门城市</h3>
+            <ul class="cityList">
+                <li>北京</li>
+                <li>上海</li>
+                <li>广州</li>
+                <li>天津</li>
+                <li>重庆</li>
+                <li>武汉</li>
+                <li>杭州</li>
+                <li>苏州</li>
+                <li>成都</li>
+                <li>南京</li>
+            </ul>
+        </div>
+    </section>
+    <section class="page" id="searchP">
+        <header class="ui-header ui-header-positive ui-border-b">
+            <i class="ui-icon-return" onclick="closePage()"></i><h1>火车票预订 </h1>
+        </header>
+        <section class="ui-container">
+            <section style="background:#FFF;">
+                <section class="cityInfo clearfix">
+                    <div class="ui-form-item startCity">
+                        <label class="input-label" for="">出发城市</label>
+                        <input type="text" autocomplete="off" id="startCity" name="startCity" placeholder="请输入出发城市">
+                    </div>
+                    <div class="ui-form-item endCity">
+                        <label class="input-label" for="">到达城市</label>
+                        <input type="text" autocomplete="off" id="endCity" name="endCity" placeholder="请输入到达城市">
+                        
+                    </div>
+                </section>
+                <div class="ui-form-item border-b">
+                    <label class="input-label" for="">出发日期</label>
+                    <input id ="starttime" readonly="true" class="form-control" type="text" placeholder="请选择日期"/>
+                </div>
+                <script type="text/javascript">
+                    $('#starttime').mdater({ 
+                        minDate : new Date()
+                    });
+                </script>
+                <div class="ui-btn-wrap">
+                    <input class="ui-btn-lg ui-btn-main" id="search" type="submit" value="查询"/>
+                </div>
+            </section>
+            <section class="section">
+                <div class="ui-form-item  ui-whitespace border-b">
+                    <h2>购票须知</h2><span class="squire"></span>
+                </div>
+                <div class="ui-row" style="padding:15px;">
+                    <p class="ui-txt-info">1、火车票相关业务处理时间为8:00-22:00</p>
+                    <p class="ui-txt-info">2、发车前4小时以内退款不做处理，请自行去火车站退票</p>
+                    <p class="ui-txt-info">3、不受理改签业务，需用户自行在发车前去车站办理</p>
+                    <p class="ui-txt-info">4、火车票新版上线，支持购买卧铺票、硬座</p>
+                    <p class="ui-txt-info">5、禁止代理商向用户收取票面价格以外的手续费</p>
+                    <p class="ui-txt-info">6、提交订单时如提示身份证待核验，乘车人需带二代身份证到火车站通过身份认证才能网上购票</p>
+                    <p class="ui-txt-info">7、若取票过程中出现问题，请在发车前半小时与平台客服联系处理，超过发车时间的订单不予处理。</p>
+                </div>
+            </section>
+        </section>
+    </section>
+    <section class="page" id="listP">
+        <header class="ui-header ui-header-positive ui-border-b">
+            <i class="ui-icon-return" onclick="showSearchP()"></i><h1 class="place-title" style="padding-left: 50px;"><span id="start-t">重庆</span><span class="arr"></span><span id="end-t">成都</span></h1>
+        </header>
+        <section class="ui-container">
+            <ul class="list" id="trainLines">
+                <li>
+                    <div class="list-top">
+                        <div class="date hide">2016-09-25</div>
+                        <div class="time">
+                            <span class="stime">08:30</span>
+                            <span class="endtime">08:30</span>
+                        </div>
+                        <div class="place">
+                            <span class="place-icon"></span>
+                            <p class="place1 ui-nowrap">成都汽车总站</p>
+                            <p class="place2 ui-nowrap">重庆</p>
+                        </div>
+                        <div class="price-wrap">
+                            <p class="trainLine">G20</p>
+                            <p class="runtime">1天07小时17分</p>
+                        </div>
+                    </div>
+                    <div class="list-bottom ui-btn-wrap">
+                        <ol class="ui-tiled">
+                        <li>银座：<span>20</span></li>
+                        <li>软座：<span>20</span></li>
+                        <li>硬卧：<span>20</span></li>
+                    </ol>
+                    </div>
+                </li>
+                <li>
+                    <div class="list-top">
+                        <div class="date hide">2016-09-25</div>
+                        <div class="time">
+                            <span class="stime">08:30</span>
+                            <span class="endtime">08:30</span>
+                        </div>
+                        <div class="place">
+                            <span class="place-icon"></span>
+                            <p class="place1 ui-nowrap">成都汽车总站</p>
+                            <p class="place2 ui-nowrap">重庆</p>
+                        </div>
+                        <div class="price-wrap">
+                            <p class="trainLine">G20</p>
+                            <p class="runtime">1天07小时17分</p>
+                        </div>
+                    </div>
+                    <div class="list-bottom ui-btn-wrap">
+                        <ol class="ui-tiled">
+                        <li>银座：<span>20</span></li>
+                        <li>软座：<span>20</span></li>
+                        <li>硬卧：<span>20</span></li>
+                    </ol>
+                    </div>
+                </li>
+            </ul>
+        </section>
+        <footer class="ui-footer ui-footer-stable ui-border-t" id="trainfooter">
+            <ul class="ui-tiled">
+                <li id="shiduan"><i style="background-image:url(images/app/time1.png);"></i><div>发车时段</div></li>
+                <li id="chexing"><i style="background-image:url(images/app/train1.png);"></i><div>筛选车型</div></li>
+                <li id="price-ticket"><i style="background-image:url(images/app/s1.png);"></i><div>显示价格</div></li>
+            </ul>
+        </footer>
+        <div class="ui-actionsheet shiduan">  
+            <div class="ui-actionsheet-cnt">
+                <div class="input-content">
+                    <a id="timeAll" class="text-label text-label-primary item selectAll" href="javascript:void(0);">全部</a>
+                    <label class="checkbox item" for="zaoshang"><input type="radio"
+                        value="0-360" id="zaoshang" name="gotime">早上（00:00-06:00）</label>
+                    <label class="checkbox item" for="shangwu"><input
+                        type="radio" value="360-720" id="shangwu" name="gotime">上午（06:00-12:00）</label>
+                    <label class="checkbox item" for="xiawu"><input
+                        type="radio" value="720-1080" id="xiawu" name="gotime">下午（12:00-18:00）</label>
+                    <label class="checkbox item" for="wanshang"><input
+                        type="radio" id="wanshang" value="1080-1440" name="gotime">晚上（18:00-24:00）</label>
+                </div>
+                <button class="close">确定</button> 
+            </div>         
+        </div>
+        <div class="ui-actionsheet chexing">  
+            <div class="ui-actionsheet-cnt">
+                <div class="input-content">
+                    <a id="classAll" class="text-label text-label-primary item selectAll"
+                        href="javascript:void(0);">全部</a> <label
+                        class="checkbox item" for="class_G"><input type="checkbox"
+                        name="classRadio" value="高铁" id="class_G">GC-高铁/城际</label> <label
+                        class="checkbox item" for="class_D"><input type="checkbox"
+                        name="classRadio" value="动车" id="class_D">D-动车</label> <label
+                        class="checkbox item" for="class_Z"><input type="checkbox"
+                        name="classRadio" value="直达" id="class_Z">Z-直达</label> <label
+                        class="checkbox item" for="class_T"><input type="checkbox"
+                        name="classRadio" value="特快" id="class_T">T-特快</label> <label
+                        class="checkbox item" for="class_K"><input type="checkbox"
+                        name="classRadio" value="快速" id="class_K">K-快速</label> <label
+                        class="checkbox item" for="class_QT"><input type="checkbox"
+                        name="classRadio" value="其他" id="class_QT">其他</label>
+                </div>
+                <button class="close">确定</button> 
+            </div>         
+        </div>
+
+    </section>
+    <section class="page" id="order">
+        <header class="ui-header ui-header-positive ndiff">
+            <i class="ui-icon-return" onclick="showListP()"></i><h1 class="order-title">火车票详情</h1>
+        </header>
+        <section class="ui-container">
+            <div class="head">
+                <div class="head-top" style="border:none;">
+                    <ul class="ui-tiled">
+                        <li class="start11"></li>
+                        <li class="ui-badge-o ceci-val"  style="font-size: 14px;"></li>
+                        <li class="end11"></li>
+                    </ul>
+                    <ul class="ui-tiled subStation">
+                        <li class="time1"></li>
+                        <li class="" style="background: url('images/app/arr4.png') no-repeat center center; background-size:100% 10px; "></li>
+                        <li class="time2"></li>
+                    </ul>
+                </div>
+                <ul class="ui-tiled">
+                    <li class="t-date1"></li>
+                    <li class="ttime">1天07小时17分</li>
+                    <li class="t-date2"></li>
+                </ul>
+                <input type="hidden" id="datehide">
+                <input type="hidden" id="trainLineJson" value="">
+            </div>
+            <section>
+                <ul id="trainTicke">
+                    
+                </ul>
+            </section>
+            <section class="ui-panel ui-panel-pure ui-border-t ui-btn-wrap">
+                <h3>乘客<button class="ui-btn ui-btn-main position" id="addC">增加乘客</button></h3>
+                <ul class="ui-list ui-list-pure ui-border-tb Customer">
+                </ul>
+            </section>
+            <section>
+                <div class="ui-form-item ui-border-b border-b">
+                    <label>联系人</label>
+                    <input type="text" placeholder="请输入联系人姓名" id="catch" >
+                </div>
+                <div class="ui-form-item ui-border-b border-b">
+                    <label>二代身份证号</label>
+                    <input type="text" placeholder="请输入身份证号" id="catchid" >
+                </div>
+                <div class="ui-form-item ui-border-b border-b">
+                    <label>联系电话</label>
+                    <input type="text" placeholder="用于接收取票信息" id="catchtel" >
+                </div>
+                <div class="ui-form-item ui-border-b border-b">
+                    <label>购买保险</label>
+                    <select id="insuranceName"></select>
+                </div>
+            </section>
+            <section>
+                <p style="margin:15px 0;line-height: 30px;font-size: 14px; text-align: center"> 
+                <label class="ui-checkbox-s">
+                    <input type="checkbox" name="checkbox" checked="">
+                </label>
+                 我已阅读理解并同意<span style="color: #3a6ca2;" onclick="showVVV()">《平台火车票服务协议》</span>
+            </p>
+            </section>
+            <section class="hide" id="vvv">
+                <div class="content">
+                    <p>欢迎使用本站火车票网上代购服务，使用本服务前必须仔细阅读本协议，用户同意本协议中所有内容后方可对接使用。</p>
+
+                    <h3>一、购票</h3>
+                    <h4>1.购票时间</h4>
+                    <p>
+                        本站火车票相关业务处理时间为<span style="color: red;">8:00-22:00</span>，此时间段内您可以进行查询、购买、退票等火车票业务相关操作。请仔细关注下我们的处理时间，处理时间外如果无法乘车、无法退票等问题，本站不承担相应责任。
+                    </p>
+                    <h4>2.购票差价</h4>
+                    <p>由于火车票存在多种坐席及车次满足用户的需要，所以存在在购票过程中存在差价的问题，本站对其差价处理本着多退少补的原则，用户需积极配合补款以保证服务正常完成。</p>
+                    <h4>3.购实名制有效证件及购买数量</h4>
+                    <p>
+                        有效身份证件包括：<span style="color: red;">居民身份证、按规定可使用的有效护照、港澳居民来往内地通行证、中华人民共和国来往港澳通行证、台湾居民来往大陆通行证</span>等24种。为了提高购票速度，目前平台只支持二代居民身份证购票。<span style="color: blue;">一张有效身份证件同一乘车日期同一车次只能购买一张车票。</span>
+                    </p>
+                    <h4>
+                        4.出票失败“<span style="color: red;">身份待核验</span>”
+                    </h4>
+                    <p>“待核验”:指乘车人的身份信息未经核验，需持二代居民身份证原件到车站售票窗口或铁路客票代售点办理核验。</p>
+                    <h4>5.购票手续费</h4>
+                    <p>
+                        <span style="color: red;">禁止代理商向用户收取票面价格以外的手续费。</span>
+                    </p>
+                    <h4>6.保险</h4>
+                    <h4>保险险种：20元列车意外伤害保险，详情如下：</h4>
+                    <p>1、20元保险由新华人寿提供（出行关爱交通意外伤害保险A款 )；</p>
+                    <p>2、保额：20元列车意外伤害保险最高赔付￥50万元人民币；</p>
+                    <p>3、份数限制：每人每车次限购1份；</p>
+                    <p>4、保险有效期：当次列车有效，被保险人以乘客身份乘坐从事合法客运的列车期间（自持有效车票检票进入车厢时起，至抵达车票载明的终点离开所乘客运火车车厢时止）；</p>
+                    <p>5、年龄：凡零周岁(出生满30天)以上；</p>
+                    <p>6、保单：数据电文是合法的合同表现形式，电子保单与纸质保单具有同等法律效力，请妥善保存。
+                        20元电子保单可在新华人寿网站（ www.newchinalife.com ）上查询和下载；</p>
+                    <p>9、理赔：请致电新华人寿客服热线（95567）或登录新华人寿网站（www.newchinalife.com）办理；</p>
+                    <p>10、咨询：产品详细条款可访问新华人寿网站（www.newchinalife.com）或致电新华人寿客服热线（95567）进行垂询</p>
+
+
+                    <h3>二：取票</h3>
+                    <p>购票成功后，可凭订票使用的身份证在全国各火车站售票窗口、自助售票机或者铁路客票代售点取票。</p>
+
+                    <h3>三、退票</h3>
+                    <p>退票处理时间8:00-22:00。</p>
+                    <p>
+                        根据铁道部退票规定，退票手续费根据铁路公司梯次方案收取：<span style="color: red;">票面乘车站开车前48小时以上的，退票时收取票价5%的退票费；开车前24小时以上、不足48小时的，退票时收取票价10%的退票费；开车前不足24小时的，退票时收取票价20%退票费。</span>请给客服30分钟的处理订单时间，处理时间内导致的退票手续费金额变化我站不予承担。
+                    </p>
+                    <h4>1.如果由于铁路系统原因（如无票、身份待核验等）车票预订失败，不需要支付。</h4>
+                    <h4>
+                        2.<span style="color: red;">未取票，发车前大于4小时</span>
+                    </h4>
+                    <p>整单退票：支持在线订单整退。</p>
+                    <p>部分退票：暂不支持部分车票退票在线申请退票。如订单中部分车票需退票，请联系货源客服处理。</p>
+                    <p>分批退票：不支持订单中部分车票分批退票，如需退票请联系客服处理，该退票处理方式与火车站退票处理方式相似，待退款额至平台账户后由客服手动操作退票退款。</p>
+                    <h4>
+                        3.<span style="color: red;">未取票，发车前小于4小时</span>
+                    </h4>
+                    <p>
+                        <span style="color: blue;">退票：需您携带购票时所使用的乘车人有效证件原件取火车票，在发车前去任意火车站退票窗口办理退票。二代居民身份证无法自动识读或使用其他有效身份证件购票的还需订单号码，经售票人员验证一致后按现行规定办理。尽量保留退票凭证加快处理退票流程。</span>
+                    </p>
+                    <p>退款处理：待退款额至平台账户后由客服手动操作退票退款。</p>
+                    <h4>
+                        4.<span style="color: red;">已取票</span>
+                    </h4>
+                    <p>需您携带购票时所使用的乘车人有效证件原件和火车票在发车前去任意火车站退票窗口办理退票。尽量保留退票凭证加快处理退票流程。</p>
+                    <p>退款处理：待退款额至平台账户后由客服手动操作退票退款。</p>
+                    <h4>5.保险退单</h4>
+                    <p>
+                        <span style="color: blue;">保险不能单独退保，</span>
+                    </p>
+                    <p>
+                        <span style="color: blue;">在线退票退保险：在线申请退款时保险可以一并退款；</span>
+                    </p>
+                    <p>
+                        <span style="color: blue;">火车站退票退保险：火车站退票退保险的需根据具体情况判断是否予以退保险。</span>
+                    </p>
+                    <h4>6.退票退款到账时间</h4>
+                    <p>具体以实际到账时间为准，一般3-5个工作日。已取票火车站退票用户，退款到账时间为3-20个工作日。</p>
+
+                    <h3>四、改签</h3>
+                    <h4>1.不受理改签业务，需用户自行在发车前去车站办理。</h4>
+                    <h4>2.在车站窗口办理改签或退票时，须出具购票时所使用的乘车人二代居民身份证原件，二代居民身份证无法自动识读或使用其他有效身份证件购票的还需订单号码，经售票人员验证一致后按现行规定办理。</h4>
+
+                    <h3>五、免责声明</h3>
+                    <p>1.本站提供的火车票查询信息全部来自火车站及政府等信息平台（包括但不限于）。</p>
+                    <p>2.本站提供的车次信息、票价信息（包括但不限于）仅作为参考，用户以政府或者相关单位提供的官方数据为准，在本站上代购的火车票的车次、票价、始发时间、到站时间等以实际为准。</p>
+                    <p>3.本站对此等信息的准确性、完整性、合法性或真实性均不承担责任，此外，本站对任何使用或者提供网站信息的商业活动及风险不承担任何责任。</p>
+                    <p>4.本站禁止代理商向用户收取票面以外的服务费用，因此产生的纠纷与本站无关。</p>
+                    <p>5.本站禁止代理商未经用户的允许出售保险，因此产生的纠纷与本站无关。</p>
+                    <p>6.您应该对使用本站提供的服务结果自行承担风险。</p>
+                    <p>7.本站有补充此协议的权利。</p>
+
+                </div>
+            </section>
+        </section>
+        <footer class="ui-footer ui-border-t" style="height: 50px;">
+            <div class="ui-form-item border-b" style="padding-right:0;">
+                <label>总金额：<span id="total">¥0.00</span></label>
+                <p class="priceList">车票：¥<span class="prc price-air">0.00</span>保险费：¥<span class="prc price-s">0</span></p>
+                <button class="btn-confirm" type="submit" id="createBill">确认</button>
+            </div>
+        </footer>
+    </section>
+    <section class="page" id="edit">
+        <header class="ui-header ui-header-positive">
+            <i class="ui-icon-return" onclick="showOrder()"></i><h1>增加乘客</h1>
+        </header>
+        <section class="ui-container">
+            <div class="ui-form-item ui-border-b">
+                <label>乘客类型</label>
+                <select id="tickeType" class="text" style="height:40px;border-radius:4px;padding-top: 10px;padding-left: 95px;"> 
+                    <option>成人票</option>
+                </select>
+            </div>
+            <div class="ui-form-item ui-border-b">
+                <label>乘客姓名</label>
+                <input type="text" placeholder="请输入真实姓名" id="cname" >
+            </div>
+            <div class="ui-form-item ui-border-b">
+                <label>证件类型</label>
+                <select id="ident" class="text" style="height:40px;border-radius:4px;padding-top: 10px;padding-left: 95px;"> 
+                    <option>身份证</option>
+                </select> 
+            </div>
+            <div class="ui-form-item ui-border-b">
+                <label>证件号码</label>
+                <input type="text" placeholder="请输入证件号码" id="idnum" >
+            </div>
+            <div class="ui-form-item ui-border-b">
+                <label>手机号码</label>
+                <input type="text" placeholder="请输入手机号码" id="telnum" >
+            </div>
+            <div class="ui-btn-wrap">
+                <input class="ui-btn-lg ui-btn-main" id="addOK" type="button" value="确定"/>
+            </div>
+        </section>
+        
+    </section>
+    
+    <div class="ui-loading-block">
+        <div class="ui-loading-cnt">
+            <i class="ui-loading-bright"></i>
+            <p>正在加载中...</p>
+        </div>
+    </div>
+    <script type="text/javascript">
+  //对话框
+    function showDialog(content){
+		var dia=$.dialog({
+			title:"温馨提示",
+            content:content,
+            button:["确认"]
+        });
+
+        dia.on("dialog:action",function(e){
+            console.log(e.index)
+        });
+        dia.on("dialog:hide",function(e){
+            console.log("dialog hide")
+        });
+	}
+        showSearchP();
+        function showSearchP(){
+            $("#searchP").show().siblings('.page').hide();
+        }
+        function showListP(){
+            $("#listP").show().siblings('.page').hide();
+        }
+        function showOrder(){
+            $("#order").show().siblings('.page').hide();
+        }
+        function showEdit(){
+            $("#edit").show().siblings('.page').hide();
+        }
+        trainlist = "";
+        // 显示协议
+        function showVVV(){
+            var content = $("#vvv .content").html();
+            var dia=$.dialog({
+                content:content,
+                button:["确认"]
+            });
+
+            dia.on("dialog:action",function(e){
+                console.log(e.index)
+            });
+            dia.on("dialog:hide",function(e){
+                console.log("dialog hide")
+            });
+        }
+        $(".close").click(function(){
+            $(this).parent().parent().removeClass("show");
+        });
+        passager = [];
+        passagers = "";
+        // 增加乘客
+        $("#addOK").tap(function(){
+            var tickeType = $("#tickeType").val();
+            var name = $("#cname").val();
+            var ident = $("#ident").val();
+            var idnum = $("#idnum").val();
+            var telNumber = $("#telnum").val();
+
+            var namereg = /^([\u4e00-\u9fa5]){2,7}$/; //只能是中文，长度为2-7位
+            var isIDCard1=/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/;
+            var isIDCard2=/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+            if(!namereg.test(name)){  
+                var dia=$.dialog({
+                    title:'温馨提示',
+                    content:'请输入真实姓名',
+                    button:["确认"]
+                });
+                return false;
+            }
+            if(!isIDCard1.test(idnum) && !isIDCard2.test(idnum)){   
+                var dia=$.dialog({
+                    title:'温馨提示',
+                    content:'请输入真实真实证件号',
+                    button:["确认"]
+                });
+                return false;
+            }
+
+            var list = '<li class="ui-border-t">'+
+                        '<div class="fl del1"></div>'+
+                        '<div class="l-content fl">'+
+                            '<p class="c-name"><span class="name">'+name+'</span><span class="ui-badge-muted t-type">'+tickeType+'</span></p>'+
+                            '<p class="c-id">'+ident+'<span class="identf">'+idnum+'</span></p><input type="hidden" class="telNumber" value="'+telNumber+'">'+
+                        '</div>'+
+                        '<div class="fr edit "></div>'+
+                        '<div class="fr del2 hide">删除</div>'+
+                    '</li>';
+            $("#order ul.Customer").append(list);
+            resumemoney();
+            showOrder();
+        });
+        // 删除
+        $(document).on('click',".del1",function(){
+            $(this).siblings('.del2').removeClass("hide");
+            $(this).siblings('.edit').addClass("hide");
+            $(this).addClass('rotate');
+        });
+        $(document).on('click',".del2",function(){
+            $(this).parent().remove();
+            resumemoney();
+        });
+
+        // 编辑
+        $(document).on('click',".edit",function(){
+            var name = $(this).siblings('.l-content').find(".name").text();
+            var idnum = $(this).siblings('.l-content').find(".identf").text();
+            $("#cname").val(name);
+            $('#idnum').val(idnum);
+            $(this).parent().remove();
+            showEdit();
+        });
+
+        // 搜索
+        $("#search").on("click",function(){
+        	var message;
+        	if($("#startCity").val() == "" || null == $("#startCity").val() || undefined == $("#startCity").val()){
+        		message = "请选择出发城市";
+        		showDialog(message);
+        		return false;
+        	}
+        	if($("#endCity").val() == "" || null == $("#endCity").val() || undefined == $("#endCity").val()){
+        		message = "请选择到达城市";
+        		showDialog(message);
+        		return false;
+        	}
+        	if($("#starttime").val() == "" || null == $("#starttime").val() || undefined == $("#starttime").val()){
+        		message = "请选择出发时间";
+        		showDialog(message);
+        		return false;
+        	}
+            var queryData={
+                    "startCity" : $("#startCity").val(),
+                    "endCity" : $("#endCity").val(),
+                    "date" : $("#starttime").val()
+            };
+            $(".ui-loading-block").addClass("show");
+            $.ajax({
+                type : "GET",
+                url : "app/train/getTicket",
+                dataType : "*.json",
+                contentType : "application/json; charset=utf-8",
+                data : queryData,
+                success : function(data){
+                	if(data == ""){
+                		showDialog("此条件查询无数据");
+                		$(".ui-loading-block").removeClass("show");
+                		return;
+                	}
+                    var trainList = eval(data);
+                    trainlist = trainList;
+                    $(".ui-loading-block").removeClass("show");
+                    $("#start-t").text($("#startCity").val());
+                    $("#end-t").text($("#endCity").val());
+                    var da = "";
+                    for (var i = 0; i < trainlist.length; i++) {
+                       
+                    	if ( trainlist[i].runTime != 0) {
+                            var trainline = trainlist[i];
+                            var seatList =trainline.trainSeats;
+                            var sList = "";
+                            sList = "";
+                            for (var j = 0; j < seatList.length; j++) {
+                                var Tickets = seatList[j].remainderTrainTickets ? seatList[j].remainderTrainTickets : 0;
+                                 sList += '<li>'+seatList[j].seatName+'：<span class="seatTicket">'+Tickets+'张</span><span class="hide seatP">¥ '+seatList[j].seatPrice+'</span></li>';
+                             }
+                             var txt ='<li class="list">'+
+                                          '<div class="list-top">'+
+                                              '<div class="date hide">'+$("#starttime").val()+'</div>'+
+                                              '<div class="time">'+
+                                                  '<span class="stime">'+trainline.startTime+'</span><br>'+
+                                                  '<span class="endtime">'+trainline.endTime+'</span>'+
+                                              '</div>'+
+                                              '<div class="place">'+
+                                                  '<span class="place-icon"></span>'+
+                                                  '<p class="place1 ui-nowrap">'+trainline.currentStartStationName+'</p>'+
+                                                  '<p class="place2 ui-nowrap">'+trainline.currentEndStationName+'</p>'+
+                                              '</div>'+
+                                              '<div class="price-wrap">'+
+                                                  '<p class="trainLine">'+trainline.trainTypeName+' '+trainline.trainNumber+'</p>'+
+                                                  '<p class="runtime">'+timeStamp(trainline.runTime)+'</p>'+
+                                              '</div>'+
+                                              "<input type='hidden' value='"+JSON.stringify(trainline)+"' name='trainLineJson'/>"+
+                                          '</div>'+
+                                          '<div class="list-bottom ui-btn-wrap">'+
+                                              '<ol class="ui-tiled">'+
+                                                  sList+
+                                              '</ol>'+
+                                          '</div>'+
+                                      '</li>';
+                              da += txt;
+                            
+                        }
+                    	
+                    	
+                    }
+                    if(da.length == 0)
+                	{
+                        var dia=$.dialog({
+                            title:'温馨提示',
+                            content:'当前无直达列车',
+                            button:["确认"]
+                        });
+
+                    }
+                    $("#trainLines").html(da);
+                    showListP();
+                } 
+            });
+        });
+        $("#shiduan").click(function(){
+            $(".shiduan").addClass("show");
+        });
+        $("#chexing").click(function(){
+            $(".chexing").addClass("show");
+        });
+        $("#addC").tap(function(){
+        	var ticket = $("#trainTicke .active").length;
+            if(ticket == 0){
+                var dia=$.dialog({
+                    title:'温馨提示',
+                    content:'请选择座位',
+                    button:["确认"]
+                });
+            }else{
+           	 showEdit();
+            }
+        });
+        $("#price-ticket").click(function(){
+            $("#trainLines .list ol li .hide").removeClass("hide").siblings("span").addClass("hide");
+        });
+        // 全选
+        var classAll = $(".selectAll");
+        classAll.click(function(){
+            $(this).siblings('.checkbox').find("input").attr("checked",false);
+            loadTrainLine1();
+        });
+        $("input[name=classRadio]").change(function (){
+             loadTrainLine1();
+         });
+         
+         $("input[type='radio']").change(function (){
+            loadTrainLine1();
+         });
+
+         $("#trainTicke").on("click","li",function(){
+        	 //先清除总金额里面的信息
+        	 $(".priceList .price-air").text("0");
+            $(".priceList .price-s").text("0");
+            $("#total").text("0");
+            $(this).addClass("active").siblings("li").removeClass("active");
+            //得到余票的数量
+			if($(this).find(".ps").text() == 0){
+				showDialog("没有剩余的票了，请选择其他类型或者车次！");
+				return false;
+			}else{
+				resumemoney();				
+			}
+         });
+        // 预订
+        book();
+		function book(){
+			$("#listP").on("click",".list",function(){
+                var start = $("#start-t").text();
+                var end = $("#end-t").text();
+                var place1 = $(this).find(".place1").text();
+                var place2 = $(this).find(".place2").text();
+                var ceci = $(this).find(".trainLine").text();
+                var time1 = $(this).find(".stime").text();
+                var time2 = $(this).find(".endtime").text();
+                var runtime = $(this).find(".runtime").text();
+//                 alert(runtime);1天7小时24分/4小时44分
+                var date = $(this).find(".date").text().split("-");
+                $("#datehide").val($(this).find(".date").text());
+                var date1 = date[1]+"月"+date[2]+'日';//出发日期
+                var runday = runtime.split("天");
+                if(!(/^\d+$/.test(runday[0]))){
+                	runday[0] = 0;
+                }else{
+                	//解决小时达到一天的
+                	var Hour = runday[1].split("小时");
+                	var h = time1.split(":");
+                	var min = Hour[1].split("分");
+                	if(Number(h[1]) + Number(min[0]) >=60){
+                		Hour[0] = Number(Hour[0]) + 1;
+                	}
+//                 	alert(parseInt((Number(h[0])+Number(Hour[0]))/24));
+                	if((Number(h[0])+Number(Hour[0]))>=24){
+                		runday[0] = Number(runday[0])+1;
+                	}
+                }
+                var daynum = runday[0];//得到运行的天数
+//                 alert(daynum);
+                var d = new Date(new Date($("#starttime").val()).getTime()+daynum*24*60*60*1000);
+                var m = d.getMonth()+1;
+                var day = d.getDate();
+                var date2 = m+"月"+day+'日';//到达日期
+//                 alert(date1+"-"+date2);
+                // 后期改善一下到达日期计算方式
+                var trainlinesrt = $(this).find('input[name="trainLineJson"]').val();
+                $("#trainLineJson").val(trainlinesrt);
+                var trainLineJson =$.parseJSON(trainlinesrt);
+
+                var trainTicke = $("#trainTicke");
+                trainTicke.empty();
+                
+                var trainSeats = trainLineJson.trainSeats;
+                for (var i = 0; i < trainSeats.length; i++) {
+                    var ticketNum = trainSeats[i].remainderTrainTickets ? trainSeats[i].remainderTrainTickets : 0;
+                    trainTicke.append('<li><span class="type">'+trainSeats[i].seatName+'</span><p class="tickes">余票<span class="ps">'+ticketNum+'</span>张</p> <p class="price">¥<span>'+trainSeats[i].seatPrice+'</span></p></li>');
+                }
+                
+
+                $("#order .start11").text(place1);
+                $("#order .end11").text(place2);
+                $("#order .time1").text(time1);
+                $("#order .time2").text(time2);
+                $("#order .ceci-val").text(trainLineJson.trainNumber);
+                $("#order .ttime").text(runtime);
+                $("#order .t-date1").text(date1);
+                $("#order .t-date2").text(date2);
+                // var data = "trainLineJson="+trainlinesrt;
+                $(".priceList .price-air").text(0);
+                $(".priceList .price-s").text(0);
+                $("#total").text(0)
+                // $.ajax({
+                //     type : "POST",
+                //     url : "app/train/orderTickets",
+                //     data : data
+                // });
+                showOrder();
+                getInsurance();
+            });
+		}
+        // 提交订单信息
+        $("#createBill").tap(function(){
+        	$(".ui-loading-block").addClass("show");
+        	var mm;
+        	var isIDCard1=/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/;
+            var isIDCard2=/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+            getPassager();
+            var concatName = $("#catch").val();
+            var idnumber = $("#catchid").val();
+            var concatPhone = $("#catchtel").val();
+            if(concatName == "" || null == concatName || undefined == concatName || !(/^[\u4e00-\u9fa5 ]{2,20}$/.test(concatName))){
+            	mm = "联系人姓名有误";
+            	showDialog(mm);
+            	$(".ui-loading-block").removeClass("show");
+            	return false;
+            }
+            if(idnumber == "" || null == idnumber || undefined == idnumber || (!isIDCard1.test(idnumber) && !isIDCard2.test(idnumber))){
+            	mm = "身份证号码有误";
+            	showDialog(mm);
+            	$(".ui-loading-block").removeClass("show");
+            	return false;
+            }
+            if(concatPhone == "" || null == concatPhone || undefined == concatPhone || !(/^1[3|4|5|7|8]\d{9}$/.test(concatPhone))){
+            	mm = "联系电话有误";
+            	showDialog(mm);
+            	$(".ui-loading-block").removeClass("show");
+            	return false;
+            }
+            var trainJson1 = {
+                "from" : $(".start11").text(),
+                "to" : $(".end11").text(),
+                "date" : $("#datehide").val()
+            };
+            var contactData = {
+                "contactName" : concatName,
+                "idNumber" : idnumber,
+                "contactTel" : concatPhone,
+                "insuranceId" : $("#insuranceName option").eq($("#insuranceName").attr("selectedIndex")).val()
+            };
+            if(passagers != "" && $("#catch").val() != "" && $("#catchid").val().length != "" && $("#catchtel").val() != ""){
+	            $.ajax({
+	                url:"app/train/createOrder",
+	                data:{
+	                    trainLineJson:$("#trainLineJson").val(),
+	                    passengers: passagers,
+	                    contactJson:JSON.stringify(contactData),
+	                    trainJson:JSON.stringify(trainJson1),
+	                    totalPrice: Number($("#total").text())
+	                },
+	                type:"POST",
+	                success:function(data){
+	                    window.location.href=data;
+	                    $(".ui-loading-block").removeClass("show");
+	                },
+	                error : function(XMLHttpRequest, textStatus, errorThrown){
+	                    $("#win-wrapper").hide();
+	                    var txt = XMLHttpRequest.responseText.toString();
+	                    txt = txt.replace(/[^\u4e00-\u9fa5]/g, "");//只得到所有的字符串里面的汉字
+	                    var str1 = txt.replace(/(.).*\1/g,"$1");//去除重复的字符串
+	                    
+	                    var dia=$.dialog({
+	                        title:'温馨提示',
+	                        content:str1,
+	                        button:["确认"]
+	                    });
+	                }
+	            });
+            }else{
+            	var dia=$.dialog({
+                    title:'温馨提示',
+                    content:'请填写正确乘客信息和联系人信息',
+                    button:["确认"]
+                });
+            	$(".ui-loading-block").removeClass("show");
+            	return;
+            }
+        });
+        // 获取乘客
+        function getPassager(){
+            passager = [];
+            passagers = "";
+            var li = $("#order .ui-panel ul.Customer li");
+            if(li[0]){
+                var num = li.length;
+                
+                if(num >= 5){
+                    $("#addC").tap(function(){
+                        var dia=$.dialog({
+                            title:'温馨提示',
+                            content:'每一单乘客不能超过五个',
+                            button:["确认"]
+                        });
+                    });  
+                }
+
+                // 获取乘客信息
+                for(var i=0; i< num; i++){
+                    var passagerN = $("#order .ui-panel ul.Customer li .name").eq(i).text()+','+ $("#order .ui-panel ul.Customer li .telNumber").eq(i).val() +','+  $("#order .ui-panel ul.Customer li .identf").eq(i).text() +','+ $("#trainTicke .active .type").text();
+                    passager.push(passagerN);
+                }
+                for(var i = 0; i<passager.length; i++){
+                    passagers += passager[i]+";";
+                }
+                passagers = passagers.substring(0,passagers.length-1);
+            }
+        }
+        // 加载车次
+        function loadTrainLine1(){
+            var typearray = new Array(); // 定义车型数组
+            var gotimes= new Array(); //定义时段数组 
+            var time =""; 
+            $("input[name=classRadio]").each(function(){
+                if($(this).is(':checked')){
+                    typearray.push($(this).attr('value'));
+                }
+             });
+            $("input[type='radio']").each(function(){
+                if($(this).is(':checked')){
+                    time=$(this).attr('value');
+                };
+             });
+            if(time ==""){
+                 time="0-1440";
+             }
+            gotimes=time.split("-"); //字符分割 
+            var gotime1 =gotimes[0];
+            var gotime2 =gotimes[1];
+            
+            var trainlinetxt="";
+            for(var i=0;i<trainlist.length;i++){
+                var trainline =trainlist[i];
+                var time_run = trainline.runTime;
+                if(time_run){
+                    var times= new Array(); //定义一数组 
+                    times=trainline.startTime.split(":"); //字符分割 
+                    var mins =Number(Number(times[0])*Number(60))+Number(times[1]);
+                    
+                    var typeflg=new Boolean();
+                    var timeflg=new Boolean();
+                    typeflg =false;
+                    timeflg =false;
+                    if(typearray.length==0){
+                        typeflg =true;
+                    }else{
+                        for(var j =0;j<typearray.length;j++){
+                            if(typearray[j]==trainline.trainTypeName){
+                                typeflg =true;
+                            }
+                        }
+                    }
+                    
+                    if(parseInt(mins)>=parseInt(gotime1)&&parseInt(mins)<parseInt(gotime2)){
+                        timeflg =true;
+                    }
+                    
+                    if(typeflg&&timeflg){
+                        var seatList =trainline.trainSeats;
+                        var sList = "";
+                        sList = "";
+                        for (var j = 0; j < seatList.length; j++) {
+                            var Tickets = seatList[j].remainderTrainTickets ? seatList[j].remainderTrainTickets : 0;
+                             sList += '<li>'+seatList[j].seatName+'：<span class="seatTicket">'+Tickets+'张</span><span class="hide seatP">¥ '+seatList[j].seatPrice+'</span></li>';
+                         }
+                        var txt ='<li class="list">'+
+                                    '<div class="list-top">'+
+                                        '<div class="date hide">2016-09-25</div>'+
+                                        '<div class="time">'+
+                                            '<span class="stime">'+trainline.startTime+'</span><br>'+
+                                            '<span class="endtime">'+trainline.endTime+'</span>'+
+                                        '</div>'+
+                                        '<div class="place">'+
+                                            '<span class="place-icon"></span>'+
+                                            '<p class="place1 ui-nowrap">'+trainline.currentStartStationName+'</p>'+
+                                            '<p class="place2 ui-nowrap">'+trainline.currentEndStationName+'</p>'+
+                                        '</div>'+
+                                        '<div class="price-wrap">'+
+                                            '<p class="trainLine">'+trainline.trainTypeName+' '+trainline.trainNumber+'</p>'+
+                                            '<p class="runtime">'+timeStamp(trainline.runTime)+'</p>'+
+                                        '</div>'+
+                                        "<input type='hidden' value='"+JSON.stringify(trainline)+"' name='trainLineJson'/>"+
+                                    '</div>'+
+                                    '<div class="list-bottom ui-btn-wrap">'+
+                                        '<ol class="ui-tiled">'+
+                                            sList+
+                                        '</ol>'+
+                                    '</div>'+
+                                '</li>';
+                        trainlinetxt += txt;
+
+                    }
+                }
+            }
+            $("#trainLines").html(trainlinetxt);
+        }
+        $("#insuranceName").change(function(){
+            resumemoney();
+        });
+        function resumemoney(){
+            var totalprice =0;
+            var trainprice = 0;
+            var insuranceprice = 0;
+            var num = $(".Customer > li").length;
+            console.log(num);
+            trainprice = parseFloat($("#trainTicke .active .price span").text()).toFixed(2);
+            insuranceprice = isNaN(Number($("#insuranceName option").eq($("#insuranceName").attr("selectedIndex")).data("price")))?0:Number($("#insuranceName option").eq($("#insuranceName").attr("selectedIndex")).data("price"));
+            totalprice = (Number($("#trainTicke .active .price span").text()) + insuranceprice + 1)*num;
+            $(".priceList .price-air").text(trainprice);
+            $(".priceList .price-s").text(insuranceprice);
+            $("#total").text(totalprice);
+        }
+        /* 获取加载保险 */
+        function getInsurance(){
+            $.ajax({
+                type : "GET",
+                url : "app/train/getInsuranceItems",
+                dataType : "*.json",
+                contentType : "application/json; charset=utf-8",
+                success : function(data){
+                    var insuranceItems = eval(data);
+                    var insuranceName = $("#insuranceName");
+                    insuranceName.empty();
+                    insuranceName.append("<option value='0'>不购买保险</option>");
+                    for(var i = 0; i < insuranceItems.length; i++){
+                        var itemName = insuranceItems[i].itemName.replace(/\s+/g,",");
+                        console.log(insuranceItems[i]);
+                        var price = itemName.replace(/[^0-9]/ig,"");
+                        var option = "<option data-price='"+price+"' value='"+insuranceItems[i].itemId+"'>"+ itemName +"</option>";
+                        insuranceName.append(option);
+                    }
+                }
+            });
+        }
+        function timeStamp( second_time ){ 
+            var time = parseInt(second_time) + "秒";  
+            if( parseInt(second_time )> 60){ 
+                var second = parseInt(second_time) % 60;  
+                var min = parseInt(second_time / 60);  
+                time = min + "分";  
+                  
+                if( min > 60 ){  
+                    min = parseInt(second_time / 60) % 60;  
+                    var hour = parseInt( parseInt(second_time / 60) /60 );  
+                    time = hour + "小时" + min + "分";  
+              
+                    if( hour > 24 ){  
+                        hour = parseInt( parseInt(second_time / 60) /60 ) % 24;  
+                        var day = parseInt( parseInt( parseInt(second_time / 60) /60 ) / 24 );  
+                        time = day + "天" + hour + "小时" + min + "分";  
+                    }  
+                }  
+            }  
+            return time;          
+        }
+    </script>
+    <script type="text/javascript">
+        var stationdata = "";
+        var trainlist ="";
+        $(document).ready(function() {
+            $.ajax({
+                type : "GET",
+                url : "app/train/getStation",
+                dataType : "*.json",
+                contentType : "application/json; charset=utf-8",
+                data : {},
+                success : function(data) {
+                    var list = eval(data);
+                    stationdata =list;
+                }
+
+            });
+        });
+        var input = $("#searchWrap .City");
+        $("#startCity").focus(function(){
+            $("#searchWrap").removeClass("hide");
+            input.focus();
+            input.val("");
+            input.prop("placeholder","请输入出发城市");
+            $("#citybox").empty();
+            getstation1();
+        });
+        $("#endCity").focus(function(){
+            $("#searchWrap").removeClass("hide");
+            var input = $("#searchWrap .City");
+            input.focus();
+            input.val("");
+            input.prop("placeholder","请输入到达城市");
+            $("#citybox").empty();
+            getstation2();
+        });
+
+        function getstation1(){
+            input.keyup(function(){
+                var str = $(this).val();
+                var count=0;
+                $("#citybox").empty();
+                $.each(stationdata, function(i, obj,s) {
+                    var name = obj.name;
+                    var quanpin = obj.quanpin;
+                    if(str!=""&&(name.indexOf(str))!=-1&&count<10){
+                        count++;
+                        $("#citybox").append("<li value="+name+" onclick='startclick(this)'>"+name+"</li>");
+                    }
+                });
+                if($("#citybox li").length>0){
+                    $("#divcity").removeClass("hide");
+                }
+                else{
+                    $("#divcity").removeClass("hide");
+                    $("#citybox").append("<li value='' onclick=''>没有到达此地的票</li>");
+                }
+            });
+
+            $("#hotCity ul li").tap(function(){
+                input.val($(this).text());
+                var str = input.val();
+                var count=0;
+                $("#citybox").empty();
+                $.each(stationdata, function(i, obj,s) {
+                    var name = obj.name;
+                    var quanpin = obj.quanpin;
+                    if(str!=""&&(name.indexOf(str))!=-1&&count<10){
+                        count++;
+                        $("#citybox").append("<li value="+name+" onclick='startclick(this)'>"+name+"</li>");
+                    }
+                });
+                if($("#citybox li").length>0){
+                    $("#divcity").removeClass("hide");
+                }
+                else{
+                    $("#divcity").addClass("hide");
+                }
+            });
+        }
+        function startclick(obj1){
+            $("#startCity").val($(obj1).text());
+            $("#citybox li").remove();
+            $("#divcity").addClass("hide");
+            $("#searchWrap").addClass("hide");
+            $("#citybox").empty();
+        }
+
+        function getstation2(){
+            input.keyup(function(){
+                var str = $(this).val();
+                var count=0;
+                $("#citybox").empty();
+                $.each(stationdata, function(i, obj,s) {
+                    var name = obj.name;
+                    var quanpin = obj.quanpin;
+                    if(str!=""&&(name.indexOf(str))!=-1&&count<10){
+                        count++;
+                        $("#citybox").append("<li value="+name+" onclick='endclick(this)'>"+name+"</li>");
+                    }
+                });
+                if($("#citybox li").length>0){
+                    $("#divcity").removeClass("hide");
+                }
+                else{
+                    $("#divcity").removeClass("hide");
+                    $("#citybox").append("<li value='' onclick=''>没有此地的票</li>");
+                }
+            });
+            $("#hotCity ul li").tap(function(){
+                input.val($(this).text());
+                var str = input.val();
+                var count=0;
+                $("#citybox").empty();
+                $.each(stationdata, function(i, obj,s) {
+                    var name = obj.name;
+                    var quanpin = obj.quanpin;
+                    if(str!=""&&(name.indexOf(str))!=-1&&count<10){
+                        count++;
+                        $("#citybox").append("<li value="+name+" onclick='endclick(this)'>"+name+"</li>");
+                    }
+                });
+                if($("#citybox li").length>0){
+                    $("#divcity").removeClass("hide");
+                }
+                else{
+                    $("#divcity").addClass("hide");
+                }
+            });
+        }
+        function endclick(obj1){
+            $("#endCity").val($(obj1).text());
+            $("#citybox li").remove();
+            $("#divcity").addClass("hide");
+            $("#searchWrap").addClass("hide");
+            $("#citybox").empty();
+        }
+
+        
+    </script>
+</body>
+</html>

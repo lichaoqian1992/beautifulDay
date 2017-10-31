@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>满集网财务系统</title>
+</head>
+<style type="text/css">
+	/*演示*/
+
+	.artZoom {
+		padding:3px;
+		background:#FFF;
+		border:1px solid #EBEBEB;
+	}
+	body {
+		font-size:75%;
+		font-family:'微软雅黑';
+		padding-bottom:200px;
+	}
+	img {
+		border:0 none;
+	}
+	#demo {
+		width:540px;
+		padding:5px;
+		background:#FBFCFD;
+	}
+	#demo p, #demo ul {
+		padding:0;
+		margin:0;
+	}
+	#demo ul, #demo ol, #demo li {
+		list-style:none;
+	}
+	#about {
+		width:550px;
+		padding-bottom:20px;
+		border-bottom:1px solid #CCC;
+		font-size:14px;
+	}
+	#about .planeart, #about .planeart a {
+		color:#CCC;
+	}
+	.footer { color:#666; width:550px; }
+	.content {
+		padding:20px;
+		background:#f3f6fa;
+		border:1px solid #e3e7ed;
+		border-radius: 10px;
+	}
+	.help {
+		font-size:12px;
+		font-weight:normal;
+		color:#808080;
+		cursor:help;
+	}
+	dt {
+		font-size:18px;
+		font-weight:bold;
+	}
+	dd {
+		padding:20px 0;
+	}
+	ul.imgList {
+	}
+	ul.imgList li {
+		margin-top:10px;
+	}
+	img {
+		width: 500px;
+		height: 500px;
+	}
+
+	li{list-style-type:none}
+
+</style>
+
+
+
+
+
+	<section class="invoice">
+
+		<ul class="imgList">
+			<li> <a href="#(companyinfo.card_pics)" rel="#(companyinfo.card_pics)"><img class="artZoom" src="#(companyinfo.card_pics)" /></a> </li>
+			<li> <a href="#(bankinfo.pics)" rel="#(bankinfo.pics)" ><img class="artZoom" src="#(bankinfo.pics)" /></a> </li>
+			#for (s :ShopinfoOthers)
+			<li> <a href="#(s.file_url)" rel="#(s.file_url)"> <img class="artZoom" src="#(s.file_url)" /> </a> </li>
+			#end
+			#for (w :strArray)
+			<li> <a href="#(w)" rel="#(w)"><img class="artZoom" src="#(w)" /></a> </li>
+			#end
+		</ul>
+
+
+	</section>
+
+</html>
+<script type="text/javascript" src="../static/js/withdrawals/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../static/js/withdrawals/jquery.artZoom.js"></script>
+<link href="../static/css/jquery.artZoom.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+	$(function(){
+		$('.artZoom').artZoom({
+			path: '../image',   // 设置artZoom图片文件夹路径
+			preload: true,      // 设置是否提前缓存视野内的大图片
+			blur: true,         // 设置加载大图是否有模糊变清晰的效果
+			left: '左旋转',        // 左旋转按钮文字
+			right: '右旋转',       // 右旋转按钮文字
+			source: '看原图',       // 查看原图按钮文字
+		});
+	});
+</script>
+

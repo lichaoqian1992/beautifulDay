@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>充值中心</title>
+    <link rel="stylesheet" href="css/frozen.css">
+    <link rel="stylesheet" href="css/validate.css">
+    <link rel="stylesheet" href="css/appstyle.css">
+    <script src="js/lib/zeptojs/zepto.min.js"></script>
+    <script src="js/zepto-mvalidate.js"></script>
+    <script src="js/frozen.js"></script>
+</head>
+
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="closePage()"></i><h1>充值中心 </h1>
+    </header>
+    <section class="ui-container">
+        <div class="ui-tab">
+            <ul class="ui-tab-nav ui-border-b">
+                <li class="current" style="border-right: 1px solid #ddd;">话费充值</li>
+                <li class="">流量充值</li>
+            </ul>
+            <ul class="ui-tab-content" style="width: 200%; transition-property: transform; transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px);">
+                <li class="current" style="height: auto;">
+                    <form action="app/mobile/createBill" id="form1"  method="POST">
+                        <div class="ui-form-item ui-border-b">
+                            <label>充值号码</label>
+                            <input type="text" name="mobileNo" maxlength="11" autocomplete="off" placeholder="请输入手机号" id="billTel" >
+                            <a href="javascript:;" class="ui-icon-close clearval">
+                            </a>
+                        </div>
+                        <p class="ui-row ui-whitespace" id="showTel" style="font-size:28px;color:#F60; display:none;"><span class="confirmTel"></span><span class="Telarea" style="color:#666;font-size:20px;margin-left:20px;"></span></p>
+                            
+                        <div class="select-bill select-box">
+                            <div class="ui-row-flex ui-whitespace btns ui-btn-wrap">
+                                <div class="ui-col"><label>10元</label></div>
+                                <div class="ui-col"><label>20元</label></div>
+                                <div class="ui-col"><label>30元</label></div>
+                            </div>
+                            <div class="ui-row-flex ui-whitespace btns ui-btn-wrap">
+                                <div class="ui-col"><label>50元</label></div>
+                                <div class="ui-col"><label>100元</label></div>
+                                <div class="ui-col"><label>200元</label></div>
+                            </div>
+                            <p class="ui-row ui-whitespace hide">商品名称：<span id="itemName">¥0.00</span></p>
+                            <p class="ui-row ui-whitespace hide">零售价格：<span id="salePrice">¥0.00</span></p>
+                            <input type="hidden" name="mobileAmount" id="mobileAmount" >
+                            <input type="hidden" name="mobilePrice" id="mobilePrice" >
+                            <input type="hidden" name="mobileItemId" id="mobileItemId" >
+                            <input type="hidden" name="mobileItemName" id="mobileItemName" >
+                            <input type="hidden" name="mobileNum" value="1" >
+                            <input type="hidden" name="mobileArea" id="mobileArea" >
+                            <div class="ui-btn-wrap">
+                                <input class="ui-btn-lg ui-btn-main" id="billSubmit" disabled="disabled" type="submit" value="确认充值"/>
+                            </div>
+                        </div>
+                    </form>
+                </li>
+                <li class="" style="height: auto;">
+                    <form action="app/mobileFlow/flowCreateBill" id="form2"  method="get">
+                        <div class="ui-form-item ui-border-b">
+                            <label>
+                                充值号码
+                            </label>
+                            <input type="text" name="mobileNo" placeholder="请输入手机号" id="flowTel" maxlength="11" autocomplete="off" >
+                            <a href="javascript:;" class="ui-icon-close clearval">
+                            </a>
+                        </div>
+                        <p class="ui-row ui-whitespace" id="showflowTel" style="font-size:28px;color:#F60; display:none;"><span class="confirmTel"></span><span class="Telarea" style="color:#666;font-size:20px;margin-left:20px;"></span></p>
+                        <div class="select-flow select-box">
+                            <div id="faceValues">
+                            	<div class="ui-row-flex ui-whitespace btns ui-btn-wrap">
+                                <div class="ui-col"><label>20M</label></div>
+                                <div class="ui-col"><label>50M</label></div>
+                                <div class="ui-col"><label>100M</label></div>
+                            </div>
+                            <div class="ui-row-flex ui-whitespace btns ui-btn-wrap">
+                                <div class="ui-col"><label>200M</label></div>
+                                <div class="ui-col"><label>500M</label></div>
+                                <div class="ui-col"><label>1G</label></div>
+                            </div>
+                            </div>
+                            <p class="ui-row ui-whitespace" id="gcateTr" style="display:none;">商品名称：<span id="flowName"></span></p>
+                            <p class="ui-row ui-whitespace" id="salePriceTr" style="display:none;">零售价格：<span id="flowPrice">¥0.00</span></p>
+                            <div class="ui-btn-wrap">
+                                <input type="hidden" name="itemId" id="itemId"  autocomplete="off">
+                                <input type="hidden" name="mobileNo" id="flowNo"  autocomplete="off">
+                                <input id="submitdisabled" class="ui-btn-lg ui-btn-main" type="submit" disabled="disabled" value="确认充值"/>
+                            </div>
+                        </div>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <script class="demo-script">
+        (function (){
+            var tab = new fz.Scroll('.ui-tab', {
+                role: 'tab',
+                autoplay: false
+            });
+
+            
+            var clearval = $(".clearval");
+            clearval.on("click",function(){
+                $(this).siblings('input').val("").focus();
+            });
+            /* 话费 */
+            $("#billTel").keyup(function(){
+            	$(".confirmTel").text($("#billTel").val());
+            	var mobileNum = $("#billTel").val();
+                var exp = /^(13[0-9]|14[0-9]|15[0-9]|18[0-9]|177)\d{8}$/;
+                if(mobileNum.length == 11){
+                	if (exp.test($("#billTel").val())){
+                		$.ajax({
+                			type : "GET",
+							url : "app/mobile/getArea",
+							dataType : "*.json",
+							contentType : "application/json; charset=utf-8",
+							data : {
+								mobileNo :mobileNum
+							},
+							success : function(data) {
+								$("#showTel").show();
+								var mobileAreaJson = $.parseJSON(data);
+								console.log(mobileAreaJson);
+								var areaInfo =mobileAreaJson.province+" "+mobileAreaJson.operator;
+								$(".Telarea").text(areaInfo);
+                                $("#mobileArea").val(areaInfo);
+								
+							}
+                		});
+                	}
+                }
+            });
+            var bill = $(".select-bill label");
+            bill.on("click",function(){
+                var mobileNum = $("#billTel").val();
+                var exp = /^(13[0-9]|14[0-9]|15[0-9]|18[0-9]|177)\d{8}$/;
+                if(mobileNum.length == 11){
+                    if (exp.test($("#billTel").val())) {
+
+                        bill.removeClass("active");
+                        $(this).addClass("active");
+
+                        var value = $(this).text();
+                        var amount =value.substring(0,(value.length-1));
+                        var mobileNum = $("#billTel").val();
+
+                        $.ajax({
+                            type : "GET",
+                            url : "app/mobile/getPrice",
+                            dataType : "*.json",
+                            contentType : "application/json; charset=utf-8",
+                            data : {
+                                "mobileNo" : mobileNum,
+                                "amount" : amount
+                            },
+                            success : function(data) {
+                                var mobileitemjson = $.parseJSON(data);
+                                //销售价格
+                                $("#salePrice").text(Number(amount).toFixed(2));
+                                $("#salePrice").parent().removeClass("hide");
+                                //商品名称
+                                $("#itemName").text(mobileitemjson.itemName);
+                                $("#itemName").parent().removeClass("hide");
+                                
+                                $("#mobilePrice").val(mobileitemjson.advicePrice);
+                                $("#mobileItemId").val(mobileitemjson.itemId);
+                                $("#mobileAmount").val(amount);
+                                $("#mobileItemName").val(mobileitemjson.itemName);
+                                
+                                $("#billSubmit").removeAttr("disabled");
+                            }
+                        });
+                    }else{
+                        console.log(0)
+                    }
+                }
+            });
+			
+            /* 流量 */
+            $("#flowTel").keyup(function(){
+            	$("#showflowTel .confirmTel").text($("#flowTel").val());
+            	var mobileNum = $("#flowTel").val();
+                var exp = /^(13[0-9]|14[0-9]|15[0-9]|18[0-9]|177)\d{8}$/;
+                if(mobileNum.length == 11){
+                	if (exp.test($("#flowTel").val())){
+                        $("#flowNo").val(mobileNum);
+                		$.ajax({
+                			type : "GET",
+							url : "app/mobileFlow/getPhoneInfo",
+							dataType : "*.json",
+							contentType : "application/json; charset=utf-8",
+							data : {
+								mobileNo :mobileNum
+							},
+							success : function(data) {
+								$("#showflowTel").show();
+								var mobileAreaJson = data;
+								$("#showflowTel .Telarea").text(mobileAreaJson);
+								
+								var a=mobileAreaJson.substring(data.length-2,data.length);
+						 		  //设置商品运营商
+						 		  if(a=='移动'){
+						 			  $("#faceValues").empty();
+						 			  var li='<ul class="ui-grid-trisect ui-border-b btns ui-btn-wrap">'+
+			                                '<li class="ui-col"><label>30M</label></li>'+
+			                                '<li class="ui-col"><label>70M</label></li>'+
+			                                '<li class="ui-col"><label>150M</label></li>'+
+			                            '</ul>'+
+			                            '<ul class="ui-grid-trisect ui-border-b btns ui-btn-wrap">'+
+			                                '<li class="ui-col"><label>1G</label></li>'+
+			                            '</ul>';
+						 			  $("#faceValues").append(li);
+						 		  }
+						 		  
+						 		  if(a=='电信'){
+						 			  
+						 			 $("#faceValues").empty();
+						 			  var li='<ul class="ui-grid-trisect ui-border-b btns ui-btn-wrap">'+
+			                                '<li class="ui-col"><label>30M</label></li>'+
+			                                '<li class="ui-col"><label>50M</label></li>'+
+			                                '<li class="ui-col"><label>100M</label></li>'+
+			                            '</ul>'+
+			                            '<ul class="ui-grid-trisect ui-border-b btns ui-btn-wrap">'+
+			                                '<li class="ui-col"><label>200M</label></li>'+
+			                                '<li class="ui-col"><label>500M</label></li>'+
+			                                '<li class="ui-col"><label>1G</label></li>'+
+			                            '</ul>';
+						 			  $("#faceValues").append(li);
+						 			  
+						 		  }
+						 		  if(a=='联通'){
+						 			 $("#faceValues").empty();
+						 			  var li='<ul class="ui-grid-trisect ui-border-b btns ui-btn-wrap">'+
+			                                '<li class="ui-col"><label>20M</label></li>'+
+			                                '<li class="ui-col"><label>50M</label></li>'+
+			                                '<li class="ui-col"><label>100M</label></li>'+
+			                            '</ul>'+
+			                            '<ul class="ui-grid-trisect ui-border-b btns ui-btn-wrap">'+
+			                                '<li class="ui-col"><label>200M</label></li>'+
+			                                '<li class="ui-col"><label>500M</label></li>'+
+			                                '<li class="ui-col"><label>1G</label></li>'+
+			                            '</ul>';
+						 			  $("#faceValues").append(li);
+						 		  }
+						 		  
+						 		 var flow = $("#faceValues label");
+						            flow.on("click",function(){
+						                flow.removeClass("active");
+						                $(this).addClass("active");
+
+						                var value = $(this).text();
+						                var amount =value.substring(0,(value.length-1));
+						                var mobileNo = $("#flowTel").val();
+						                var price = 0;
+						                var value =$(this).text();
+										if(value == "20M"){
+											price = 3;
+										}else if(value == "50M"){
+											price = 6;
+										}else if(value == "100M"){
+											price = 15;
+										}else if(value == "200M"){
+											price = 25;
+										}else if(value == "500M"){
+											price = 45;
+										}else if(value == "1G"){
+											price = 50;
+										}
+										
+										
+										$.ajax({
+											type : "get",
+											url : "app/mobileFlow/flowItems",
+											data : 'mobileNo=' + mobileNo + '&flow='+value,
+											complete : function(data) {
+												var jsonData = eval("(" + data.responseText + ")"); //才可以通过jsonData.name访问，而且这种情况下，需要是complete而不是success  
+												
+												if (jsonData == 0) {
+													//商品名称
+													$("#gcateTr").show();
+													$("#flowName").text("暂无货源");
+													//销售价格
+													$("#salePriceTr").show();
+													$("#flowPrice").text(Number(0).toFixed(2));
+													
+													$("#submitdisabled").attr("disabled",true);
+
+												} else {
+													//销售价格
+													$("#salePriceTr").show();
+													$("#flowPrice").text(Number(jsonData.advicePrice).toFixed(2));
+													//商品名称
+													$("#gcateTr").show();
+													$("#salePriceTr").show();
+													$("#flowName").text(jsonData.itemName);
+													
+												 	$("#itemId").val(jsonData.itemId);
+												 	$("#submitdisabled").removeAttr("disabled");
+												}
+											}
+										});
+						            });
+							}
+                		});
+                	}
+                }
+            });
+            
+            /* 表单验证 */
+            $.mvalidateExtend({
+                phone:{
+                    required : true,   
+                    pattern : /^(13[0-9]|14[0-9]|15[0-9]|18[0-9]|177)\d{8}$/,
+                    each:function(){
+                       
+                    },
+                    descriptions:{
+                        required : '<div class="field-invalidmsg">请输入手机号码</div>',
+                        pattern : '<div class="field-invalidmsg">您输入的手机号码格式不正确</div>',
+                        valid : '<div class="field-validmsg">正确</div>'
+                    }
+                }
+            });
+            $("#form1").mvalidate({
+                type:1,
+                onKeyup:true,
+                sendForm:true,
+                firstInvalidFocus:false,
+                valid:function(event,options){
+                    //点击提交按钮时,表单通过验证触发函数
+                    $("#form1").submit();
+                     event.preventDefault();
+                },
+                invalid:function(event, status, options){
+                    //点击提交按钮时,表单未通过验证触发函数
+                },
+                eachField:function(event,status,options){
+                    //点击提交按钮时,表单每个输入域触发这个函数 this 执向当前表单输入域，是jquery对象
+                },
+                eachValidField:function(val){},
+                eachInvalidField:function(event, status, options){}
+            });
+            $("#form2").mvalidate({
+                type:1,
+                onKeyup:true,
+                sendForm:true,
+                firstInvalidFocus:false,
+                valid:function(event,options){
+                    //点击提交按钮时,表单通过验证触发函数
+                    
+                    $("#form2").submit();
+                     event.preventDefault();
+                },
+                invalid:function(event, status, options){
+                    //点击提交按钮时,表单未通过验证触发函数
+                },
+                eachField:function(event,status,options){
+                    //点击提交按钮时,表单每个输入域触发这个函数 this 执向当前表单输入域，是jquery对象
+                },
+                eachValidField:function(val){},
+                eachInvalidField:function(event, status, options){}
+            });
+        })();
+        
+        
+    </script>
+    <!-- 检测用户设备 -->
+<script type="text/javascript">
+
+function closePage(){
+    var jsonstr = "{\"action\":\"close\"}";
+    if ( browser.versions.ios  || browser.versions.iPhone || browser.versions.iPad) { 
+       window.webkit.messageHandlers.Native.postMessage(jsonstr);
+    }
+    if ( browser.versions.android ) { 
+        window.paySucess.clickOnAndroid(jsonstr);
+    }
+     
+ }
+        var browser = { 
+           versions: function() { 
+               var u = navigator.userAgent; 
+               return { 
+                   trident: u.indexOf('Trident') > -1, //IE内核 
+                   presto: u.indexOf('Presto') > -1, //opera内核 
+                   webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+                   gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+                   mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+                   ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+                   android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+                   iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+                   iPad: u.indexOf('iPad') > -1, //iPad 
+                   webApp: u.indexOf('Safari') > -1 //Safari 
+               }; 
+           }()
+        }
+        
+</script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>水电气缴费 </title>
+    <link rel="stylesheet" href="css/frozen.css">
+    <link rel="stylesheet" href="css/appstyle.css">
+    <script src="js/lib/zeptojs/zepto.min.js"></script>
+    <script src="js/frozen.js"></script>
+</head>
+<!-- 检测用户设备 -->
+<script type="text/javascript">
+        var browser = { 
+           versions: function() { 
+               var u = navigator.userAgent; 
+               return { 
+                   trident: u.indexOf('Trident') > -1, //IE内核 
+                   presto: u.indexOf('Presto') > -1, //opera内核 
+                   webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+                   gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+                   mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+                   ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+                   android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+                   iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+                   iPad: u.indexOf('iPad') > -1, //iPad 
+                   webApp: u.indexOf('Safari') > -1 //Safari 
+               }; 
+           }() 
+        } 
+        
+        function closePage(){
+             var jsonstr = "{\"action\":\"close\"}";
+            if ( browser.versions.ios 
+               || browser.versions.iPhone 
+               || browser.versions.iPad) { 
+               window.webkit.messageHandlers.Native.postMessage(jsonstr);
+            }
+            if ( browser.versions.android ) { 
+                window.paySucess.clickOnAndroid(jsonstr);
+            }
+             
+         }
+</script>
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="closePage()"></i><h1>水电气缴费 </h1>
+    </header>
+    <footer class="ui-footer ui-border-t" style="height: 50px;">
+        <div class="ui-form-item border-b" style="padding-right:0;">
+            <label>总金额：<span id="total">¥0.00</span></label>
+            <button class="btn-confirm" id="submit">确认</button>
+        </div>
+    </footer>
+    <section class="ui-container" id="waterCoal">
+        <div class="ui-tab">
+            <ul class="ui-tab-nav ui-border-b" id="waterCoalMode">
+                <li class="current" data-param="c2670" style="border-right: 1px solid #ddd;">水费</li>
+                <li data-param="c2680" style="border-right: 1px solid #ddd;">电费</li>
+                <li data-param="c2681" class="">燃气费</li>
+            </ul>
+            <ul class="ui-tab-content" style="width: 200%; transition-property: transform; transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px); margin-bottom: 0;">
+                <li class="current" style="height: auto;">
+                    <form action="app/waterCoal/createBill" id="myForm" method="post">
+                    	
+                        <div class="ui-form-item border-b">
+                            <label>城市选择</label>
+                            <div id="area">
+                                <select id="city" onchange="getItem()">
+                                    <option>请选择城市</option>
+                                </select>
+                                <select id="province" onchange="getcity()"></select>
+                            </div>
+                        </div>
+                        <div class="ui-form-item border-b">
+                            <label>缴费单位</label>
+                            <select id="company">
+                                <option>请选择缴费单位</option>
+                            </select>
+                        </div>
+                        <div class="ui-form-item border-b" style="margin-top:15px; ">
+                            <label>户号</label>
+                            <input type="text" id="account" placeholder="请填写户号" name="waterCoalAccount">
+                        </div>
+                         <input type="hidden" id="itemIDN" name="waterCoalItemId">
+                            <input type="hidden" id="moneyN" name="waterCoalAmount">
+                            <input type="hidden" id="customerNameN" name="customerName">
+                            <input type="hidden" id="customerAddressN" name="customerAddress">
+                            <input type="hidden" id="contractNoN" name="contractNo">
+                            <input type="hidden" id="billCycleN" name="billCycle">
+                        <div class="ui-form-item border-b">
+                            <label>查询账单</label>
+                            <input type="text" value="请先核对账单" id="showO" readonly style="color: #F60;">
+                        </div>
+                        <div class="ui-form-item border-b">
+                            <label>缴费金额</label>
+                            <input type="text" onchange="numberfixed(this)" placeholder="请填写缴费金额" name="waterCoalAmount1">
+                        </div><!-- 
+                        <div class="ui-form-item ui-form-item-textarea ui-border-b" style="margin-top:15px; ">
+                            <label>备注</label>
+                            <textarea placeholder="请填写备注"></textarea>
+                        </div> -->
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <input type="hidden" name="billCycle" id="billCycle" value="">
+        <input type="hidden" name="contractNo" id="contractNo" value="">
+        <section class="section">
+            <div class="ui-form-item  ui-whitespace border-b">
+                <h2>服务说明</h2><span class="squire"></span>
+            </div>
+            <div class="ui-row" style="padding:15px;">
+                <p class="ui-txt-info">1、请先查询后缴费</p>
+                <p class="ui-txt-info">2、处理时限为T 3工作日</p>
+                <p class="ui-txt-info">3、除湖南地区外，请勿重复缴费 </p>
+                <p class="ui-txt-info">4、支持全国90%地区</p>
+            </div>
+        </section>
+    </section>
+    <section id="showDetail" class="">
+        <header class="ui-header ui-header-positive ui-border-b">
+            <i class="ui-icon-return" onclick="showOrder()"></i><h1>订单详情 </h1>
+            <div id="payBack"><span class="payBackBtn">退款</span><input type="hidden" value="" id="payBackID"></div>
+        </header>
+        <section class="content">
+            <div>
+                <div class="top">
+                    <div class="ui-form-item ui-border-b">
+                        <label>订单账号：</label>
+                        <input type="text" value="" disabled="true" id="accountno" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>开始日期：</label>
+                        <input type="text" value="" disabled="true" id="beginDate" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>结束日期：</label>
+                        <input type="text" value="" disabled="true" id="endDate" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>地址：</label>
+                        <input type="text" value="" disabled="true" id="customerAddress" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>公司名称：</label>
+                        <input type="text" value="" disabled="true" id="customerName" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>付款金额：</label>
+                        <input type="text" value="" disabled="true" id="payAmount" >
+                    </div>                        
+                    <div class="ui-form-item ui-border-b">
+                        <label>滞纳金：</label>
+                        <input type="text" value="" disabled="true" id="penalty" >
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+    <div class="ui-loading-block" id="loading">
+        <div class="ui-loading-cnt">
+            <i class="ui-loading-bright"></i>
+            <p>正在加载中...</p>
+        </div>
+    </div>
+    <script class="demo-script">
+        (function (){
+            $(".ui-tab-nav li").tap(function(){
+                $(this).addClass("current").siblings('li').removeClass("current");
+                getItem();
+            });
+            
+            var clearval = $(".clearval");
+            clearval.on("click",function(){
+                $(this).siblings('input').val("").focus();
+            });
+        })();
+        showOrder();
+        function showOrder(){
+            $("#waterCoal").removeClass("hide");
+            $("#showDetail").addClass("hide");
+        }
+        function showDetail(){
+            $("#waterCoal").addClass("hide");
+            $("#showDetail").removeClass("hide");
+        }
+        $("#showO").tap(function(){
+            $("#loading").addClass("show");
+            var account = $("#account").val();
+            var itemId = $("#company").val();
+            console.log(account,itemId)
+            $.ajax({
+                type : "GET",
+                url : "app/waterCoal/queryWaterCoalBill",
+                dataType : "*.json",
+                contentType : "application/json; charset=utf-8",
+                data : {
+                    account : account,
+                    itemId : itemId
+                },
+                success : function(data){
+                    $("#loading").removeClass("show");
+                    console.log(data);
+                    var data = $.parseJSON(data);
+                    if (data.errCode) {
+                        if(data.errMsg){
+                            var dia=$.dialog({
+                                title:'温馨提示',
+                                content:data.errMsg,
+                                button:["确认"]
+                            });
+                            return false;
+                        }else{
+                            var dia=$.dialog({
+                                title:'温馨提示',
+                                content:"查询错误",
+                                button:["确认"]
+                            });
+                            return false;
+                        }
+                    }
+                    if(data[0].accountNo == "" && data[0].beginDate == "" && data[0].endDate == ""){
+                        var dia=$.dialog({
+                            title:'温馨提示',
+                            content:'该账户没有需缴纳的账单',
+                            button:["确认"]
+                        });
+                        return false;
+                    }
+                    $("#billCycle").val(data[0].billCycle);
+                    $("#contractNo").val(data[0].contractNo);
+                    $("#accountno").text(data[0].accountNo);
+                    $("#beginDate").text(data[0].beginDate);
+                    $("#endDate").text(data[0].endDate);
+                    $("#customerAddress").text(data[0].customerAddress);
+                    $("#payAmount").text(data[0].payAmount);
+                    $("#customerName").text(data[0].customerName);
+                    $("#penalty").text(data[0].penalty);
+                    showDetail();
+                }
+            });
+        });
+      //对话框
+        function showDialog(content){
+    		var dia=$.dialog({
+    			title:"温馨提示",
+                content:content,
+                button:["确认"]
+            });
+
+            dia.on("dialog:action",function(e){
+                console.log(e.index)
+            });
+            dia.on("dialog:hide",function(e){
+                console.log("dialog hide")
+            });
+    	}
+        // 获取公司
+        function getItem(){
+            var province = $("#province").val();
+            var city = $("#city").val();
+            var waterCoalMode = $("#waterCoalMode li.current").data("param");
+            $.ajax({
+                type : "GET",
+                url : "app/waterCoal/getProps",
+                dataType : "*.json",
+                contentType : "application/json; charset=utf-8",
+                data : {
+                    province : province,
+                    city : city,
+                    waterCoalMode : waterCoalMode
+                },
+                success : function(data){
+                    var props = eval(data);
+                    var prop = $("#company");
+                    prop.empty();//删除所有的option 
+                    prop.append(new Option("--请选择缴费公司--", "0"), "");
+                    for (var i = 0; i < props.length; i++) {
+                        prop.append(new Option(props[props.length - i - 1].itemName,
+                                props[props.length - i - 1].itemId), "");
+                    }
+                }
+            });
+        }
+        // 市
+        function getcity() {
+            var city = $("#city");
+            // document.getElementById("unitList").options.length=1;//选择城市之前清查询到的空燃气公司 
+            switch ($("#province").val()) {
+            case "安徽":
+                var cityOptions = new Array("合肥", "滁州","马鞍山","芜湖", "池州");
+                break;
+            case "北京":
+                var cityOptions = new Array("北京");
+                break;
+            case "重庆":
+                var cityOptions = new Array("重庆");
+                break;
+            case "福建":
+                var cityOptions = new Array("福州", "龙岩", "南平", "宁德", "莆田","泉州", "厦门", "漳州");
+                break;
+            case "广东":
+                var cityOptions = new Array("汕头", "深圳");
+                break;
+            case "广西":
+                var cityOptions = new Array("南宁");
+                break;
+            case "贵州":
+                var cityOptions = new Array("贵阳","毕节","遵义");
+                break;
+            case "海南":
+                var cityOptions = new Array("海口");
+                break;
+            case "河北":
+                var cityOptions = new Array("石家庄", "保定", "沧州", "承德","邯郸", "衡水","唐山","邢台");
+                break;
+            case "黑龙江":
+                var cityOptions = new Array("哈尔滨");
+                break;
+            case "河南":
+                var cityOptions = new Array("郑州","开封","南阳", "周口", "驻马店");
+                break;
+            case "湖北":
+                var cityOptions = new Array("武汉","咸宁");
+                break;
+            case "湖南":
+                var cityOptions = new Array("长沙", "娄底", "邵阳", "湘潭", "岳阳", "永州", "衡阳");
+                break;
+            case "江苏":
+                var cityOptions = new Array("南京", "常州", "淮安",
+                        "连云港", "南通", "宿迁", "苏州",
+                        "泰州", "无锡", "徐州", "盐城", "扬州", "宜兴","镇江");
+                break;
+            case "江西":
+                var cityOptions = new Array("南昌","九江","新余");
+                break;
+            case "吉林":
+                var cityOptions = new Array("白城","四平");
+                break;
+            case "辽宁":
+                var cityOptions = new Array("沈阳");
+                break;
+            case "山东":
+                var cityOptions = new Array("济南", "滨州","德州", "东营",
+                        "济宁", "莱芜", "聊城", "临沂", "青岛", "日照", "泰安", "潍坊",
+                        "威海", "烟台", "枣庄", "淄博");
+                break;
+            case "上海":
+                var cityOptions = new Array("浦东");
+                break;
+            case "山西":
+                var cityOptions = new Array("太原", "长治", "大同","晋城","吕梁","晋中",
+                        "临汾", "朔州", "忻州", "阳泉", "榆次", "运城");
+                break;
+            case "陕西":
+                var cityOptions = new Array("西安", "安康", "宝鸡", "汉中", "渭南", "商州",
+                        "铜川", "咸阳", "延安", "榆林");
+                break;
+            case "四川":
+                var cityOptions = new Array("成都", "巴中", "达州", "德阳","广安", "广元","乐山", "泸州", "马尔康", "绵阳",
+                        "眉山", "南充", "内江", "攀枝花", "遂宁", "西昌", "雅安", "宜宾","自贡", "资阳");
+                break;
+            case "天津":
+                var cityOptions = new Array("天津");
+                break;
+            case "新疆":
+                var cityOptions = new Array("克拉玛依");
+                break;
+            case "云南":
+                var cityOptions = new Array("昆明");
+                break;
+            case "浙江":
+                var cityOptions = new Array("杭州","湖州", "嘉兴", "金华","丽水", "宁波","衢州","绍兴","台州","温州");
+                break;
+            default:
+                var cityOptions = new Array("--请选择城市--", "0");
+                break;
+            }
+            city.empty();
+            city.append(new Option("请选择城市", "0"), "");
+            for (var i = 0; i < cityOptions.length; i++) {
+
+                city.append(new Option(cityOptions[cityOptions.length - i - 1],
+                        cityOptions[cityOptions.length - i - 1]), "");
+
+            }
+            
+        };
+        //省份选择
+        $(document).ready(
+        function() {
+            var province = $("#province");
+            var provinces = new Array("北京", "上海", "重庆", "安徽", "福建", "甘肃",
+                    "广东", "广西", "贵州", "海南", "河北", "黑龙江", "河南", "香港", "湖北",
+                    "湖南", "江苏", "江西", "吉林", "辽宁", "澳门", "内蒙古", "宁夏", "青海",
+                    "山东", "山西", "陕西", "四川", "台湾", "天津", "新疆", "西藏", "云南",
+                    "浙江");
+            province.append("<option value='0'>请选择省份</option>");
+            for (var i = 0; i < provinces.length; i++) {
+                //province.Options[i].value=provinces[i];
+                //province.Options[i].txt=provinces[i];
+
+                province.append("<option value='"+provinces[i]+"'>"+provinces[i]+"</option>");
+            }
+            
+            $("#water").addClass("selected");
+            $("#waterCoalMode").val($("#water").attr("data-param"));
+            
+        });
+        function numberfixed(obj){
+            var num1 =$(obj).val();
+            var num2 =Number(num1).toFixed(2);
+            $(obj).val(num2);
+            
+            var num3 =Number(Number(num1)+Number(1)).toFixed(2);
+            
+            $("#total").html("¥"+num3);
+            
+        };
+        // 提交订单
+    $("#submit").click(function(){
+        var waterCoalItemId = $("#company").val();//商品编号 1
+        var waterCoalAmount = parseFloat($("#total").text().split("¥")[1]);//总金额 1
+        var waterCoalAccount = $("#account").val();//缴费账号 1 
+        var customerName = $("#customerName").text();//用户名
+        var customerAddress = $("#customerAddress").text();//用户地址
+        var contractNo = $("#contractNo").val();//联系方式
+        var billCycle = $("#billCycle").val();//账期
+        if($("#province").val() == "0"){
+        	showDialog("请选择省份");
+        	return;
+        }
+        if($("#city").val().trim() == "0"){
+        	showDialog("请选择城市");
+        	return;
+        }
+        if(waterCoalItemId.trim() == "0"){
+        	showDialog("请选择缴费公司");
+        	return;
+        }
+        if(waterCoalAccount == "" || null == waterCoalAccount || undefined == waterCoalAccount){
+        	showDialog("请填写户号");
+        	return;
+        }
+        if(waterCoalAmount == "" || null == waterCoalAmount || undefined == waterCoalAmount){
+        	showDialog("请填写缴费金额");
+        	return;
+        }
+        $("#itemIDN").val(waterCoalItemId);
+        $("#moneyN").val(waterCoalAmount);
+        $("#customerNameN").val(customerName);
+        $("#customerAddressN").val(customerAddress);
+        $("#billCycleN").val(billCycle);
+        $("#contractNoN").val(contractNo);
+        $("#myForm").submit();
+    });
+    </script>
+</body>
+</html>

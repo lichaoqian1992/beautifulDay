@@ -1,0 +1,125 @@
+ #@layout() #define main()
+
+<section class="content-header">
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i> 订单管理</a></li>
+		<li>结算信息</li>
+	</ol>
+</section>
+
+<!-- 主要内容 -->
+<section class="invoice">
+	<div class="row">
+		
+		<div class="col-md-12">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>用户身份</th>
+						<th>订单号</th>
+						<th>金额</th>
+						<th>满意券</th>
+						<th>积分</th>
+						<th>添加日期</th>
+						<th>预计结算日期</th>
+						<th class="realDate">实际结算日期</th>
+						<th>状态</th>
+					</tr>
+				</thead>
+				<tbody id="orderInfo">
+				</tbody>
+			</table>
+
+		<button id="balance" class="btn btn-primary">结算</button>&nbsp;&nbsp;<a class="btn btn-default" href="order">返回</a>
+		</div>
+		
+	</div>
+
+</section>
+
+
+#include("../common/_js.html")
+
+<script type="text/javascript">
+$(function() {
+	
+	var settle = #(settleInfo);
+	var table = '';
+	var role = '';
+	var infor = '';
+	var state = '';
+	for(var i in settle){
+		role = settle[i].columns.role_type;
+		switch(role){
+		case 'Shop':
+			infor = '[卖家]' + settle[i].columns.name;
+			break;
+		case 'Manager':
+			infor = '[管理:'+settle[i].columns.real_name+']'+settle[i].columns.user_name;
+			break;
+		default:
+			infor = '';
+		}
+		state = settle[i].columns.balance_state;	
+		switch(state){
+		case 2:
+			state = '已结算';
+			$("#balance").attr("disabled","disabled");
+			break;
+		default :
+			state = '未结算';
+	}
+		table += '<tr>'+
+					'<td>'+infor+'</td>'+
+					'<td>'+settle[i].columns.order_no+'</td>'+
+					'<td>'+settle[i].columns.balance_amount+'</td>'+
+					'<td>'+settle[i].columns.balance_voucher+'</td>'+
+					'<td>'+settle[i].columns.balance_point+'</td>'+
+					'<td>'+settle[i].columns.add_time+'</td>'+
+					'<td>'+settle[i].columns.will_balance_date+'</td>'+
+					'<td class="realDate">'+settle[i].columns.real_balance_date+'</td>'+
+					'<td>'+state+'</td>'+
+				 '</tr>';
+	}
+	$("#orderInfo").html(table); 
+	if(settle[0].columns.balance_state == 1){
+		$(".realDate").hide();
+	}
+	$("#balance").click(function(){
+			
+			$.ajax({
+				type:"get",
+				url:"/finance/ord/updSettleStatus",
+				dateType:"json",
+				data:{
+	 				order_no:settle[0].columns.order_no,
+					order_type:settle[0].columns.order_type 
+				},
+				success:function(data){
+					
+					if(data.isok == 'success'){
+						layer.alert('结算成功！', {
+							  skin: 'layui-layer-molv' 
+							  ,closeBtn: 0
+							},function(){
+							location.reload(); 
+							})
+					}else if(data.isok == 'error'){
+						layer.alert(data.message, {
+							  skin: 'layui-layer-molv' 
+							  ,closeBtn: 0
+							})
+					}else{
+						layer.alert('未知原因，结算失败！', {
+							  skin: 'layui-layer-molv' 
+							  ,closeBtn: 0
+							})
+					}
+				}
+			})
+		});
+});
+
+</script>
+
+#end

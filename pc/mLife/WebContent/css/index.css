@@ -1,0 +1,167 @@
+﻿body, div, dl, dt, dd, ul, ol, li, img, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td {
+    border: 0 none;
+    margin: 0;
+    outline: 0 none;
+    padding: 0;
+}
+body{
+	min-width: 1200px;
+    position: absolute;
+    width: 100%;
+}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1.5;
+    font-family:'Microsoft YaHei';
+    font-size:12px;
+}
+ol, ul {
+    list-style: outside none none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote::before, blockquote::after, q::before, q::after {
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+a {
+    text-decoration: none;
+    font-size:12px;
+    font-family:'Microsoft YaHei';
+}
+.pure-g [class *="pure-u"] {
+    font-family: 'Microsoft YaHei' !important;
+}
+.wraper {
+    position:absolute;
+    width:100%;
+    height:100%;
+    min-width:1200px;
+}
+.pure-u-1-1,.container ,.maintitle-wrap ,.col-xs-3 {
+    width:1200px !important;
+    position:absolute;
+    left:50%;
+    margin-left:-600px !important;
+}
+.maintitle-wrap {
+    margin:0 !important;
+    margin-left:-600px !important;
+}
+.pure-u-1-3 h2 {
+    margin-top:10px !important;
+}
+.container {
+    margin-top:50px;
+}
+.pure-g {
+    margin-left:0 !important;
+}
+#maincontaint.row {
+    width:1200px;
+    margin-left: -15px !important;
+}
+#menu .p-m-h-style {
+    text-align:left;
+    text-indent:20px;
+    font-size:16px;
+}
+#menu ul li a {
+    font-size:14px;
+}
+.pure-form-aligned .pure-control-group {
+    margin-top:1em;
+}
+.pure-form select {
+    width:320px;
+    height:35px;
+    line-height:10px;
+}
+.pure-button-primary {
+    width: 100px;
+    float: left;
+    margin-top: 20px;
+    margin-left:-20px;
+}
+h3, .h3 {
+    font-size:20px !important;
+    font-weight:700 !important;
+}
+h3 {
+        line-height: 50px;
+}
+.pd-20 {
+    padding-left:0 !important;
+    line-height:1;
+}
+.pure-form label{
+    text-align: right;
+    display: inline-block;
+    vertical-align: middle;
+    width: 10em;
+    margin: 0 1em 0 0;
+    font-size:13px;
+}
+.pure-control-group input[name=flow] {
+    margin-top:0;
+    height:40px;
+}
+.bus_content {
+    width:950px;
+    min-height:500px;
+    margin-bottom:20px;
+    height:auto;
+    float:left;
+    padding-bottom:20px;
+}
+.pure-g .pure-u-1-1 p{
+    height:25px;
+    float:left;
+    width:950px;
+    margin-left:200px;
+    font-size:14px !important;
+    line-height:25px;
+    font-family:SimSun !important;
+}
+.pure-u-23-24 {
+    float:left;
+    margin-top:30px;
+}
+.table input[type=text] {
+    border:1px solid #dcdcdc;
+    height:25px;
+    line-height:25px;
+}
+.btn-default {
+    height:30px;
+    line-height:15px;
+    margin-bottom:20px;
+}
+.btn-primary {
+    float:left;
+    margin-left:35px;
+}
+.selects select {
+    width: 150px;
+    margin-right: 30px;
+    height: 35px;
+    line-height: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: .5em .6em;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px #ddd;
+    border-radius: 4px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}

@@ -1,0 +1,475 @@
+#@layout() 
+#define main()
+
+ <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>广告位列表</h2>
+                    <ol class="breadcrumb">
+                        <li>
+                            <a href="/advert/toMain">主页</a>
+                        </li>
+                        <li>
+                            <strong>广告位列表</strong>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-lg-2">
+    
+                </div>
+            </div>
+            
+            
+            
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            
+                            <div class="row adds-header ibox-content form-horizontal">
+                                <div class="row adds-header form-horizontal">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">频道：</label>
+                                            <div class="col-sm-8">
+                                                <select id="channel" class="form-control">
+								                   <option value="">不限</option>
+								                 </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">广告位状态：</label>
+                                            <div class="col-sm-8">
+                                                <select id="state" class="form-control">
+								                   <option value="">不限</option>
+								                   <option value="0">关闭</option>
+								                   <option value="1">开启</option>
+								                 </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-sm-2">
+                                        <button type="button" id="searchPl" class="btn btn-primary pull-right" onclick="query('1')">查询</button>
+                                        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPlace">新增</button> -->
+                                    </div>
+                                </div>
+                                
+                                <table class="table table-striped table-bordered table-hover " >
+                                    <thead>
+                                        <tr>
+                                            <th>编号</th>
+                                            <th>序号</th>
+                                            <th>标题</th>
+                                            <th>最大广告数</th>
+                                            <th>宽度百分比</th>
+                                            <th>长度百分比</th>
+                                            <th>状态</th>
+                                            <th>备注信息</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="placeList">
+                                       
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="row adds-header ibox-content form-horizontal">
+                            	<div class="pull-left">
+									<span id="pageInfo"></span>
+									<input class="page_number" type="text" value="1" id="toPage" style="width:48px;height: 34px; text-align: center; border:1px solid #31AD8B; border-radius:4px;"/>&nbsp
+									<button class="btn btn-primary pull-right" onclick="toPage()">GO</button>
+								</div>	
+								<div class="pull-right">
+									<input id="firstPage" type="hidden"/>
+									<input id="nowPage" type="hidden"/>
+									<input id="lastPage" type="hidden"/>
+									<a class="page_btn btn btn-primary" onclick="firstPage()">首页</a>
+									<a class="page_btn btn btn-primary" onclick="upPage()">上一页</a>
+									<a class="page_btn btn btn-primary" onclick="nextPage()">下一页</a>
+									<a class="page_btn btn btn-primary" onclick="lastPage()">尾页</a>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+			<div class="modal inmodal" id="updatePlace" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content animated bounceInRight">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span>
+                            </button>
+                            <h4 class="modal-title">修改广告位</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal m-t" id="updateForm" novalidate="novalidate" method="POST" action="update">
+                            	<div><input type="hidden" id="id"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">序号：</label>
+                                    <div class="col-sm-8">
+                                        <input id="sort"  class="form-control"  type="text" aria-required="true" aria-invalid="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">频道：</label>
+                                    <div class="col-sm-8">
+                                        <select id="plchannel"  class="form-control">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">标题：</label>
+                                    <div class="col-sm-8">
+                                        <input id="title"  class="form-control" type="text" aria-required="true" aria-invalid="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">最的广告数：</label>
+                                    <div class="col-sm-8">
+                                        <input id="max"  class="form-control" type="text" aria-required="true" aria-invalid="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">宽度百分比：</label>
+                                    <div class="col-sm-8">
+                                        <input id="wpercen" maxlength="3" class="form-control" type="text" aria-required="true" aria-invalid="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">长度百分比：</label>
+                                    <div class="col-sm-8">
+                                        <input id="hpercen" maxlength="9"  class="form-control" type="text" aria-required="true" aria-invalid="false">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">状态：</label>
+                                    <div class="col-sm-8">
+                                        <select id="plstate"  class="form-control">
+                                        	<option value="0">关闭</option>
+                                        	<option value="1">开启</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">备注信息：</label>
+                                    <div class="col-sm-8">
+                                        <input id="remark"  class="form-control" type="text">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-primary" id="updateSubmit" data-dismiss="modal">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+    <!-- Mainly scripts -->
+    <script src="#(ctx)/static/js/jquery-2.1.1.min.js"></script>
+    <script src="#(ctx)/static/js/bootstrap.min.js"></script>
+    <script src="#(ctx)/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <!-- Data Tables -->
+    <script src="#(ctx)/static/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="#(ctx)/static/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="#(ctx)/static/js/hplus.js?v=2.2.0"></script>
+    <script src="#(ctx)/static/js/plugins/pace/pace.min.js"></script>
+    <!-- layer javascript -->
+    <script src="#(ctx)/static/js/plugins/layer/layer.min.js"></script>
+		
+  <script>
+    $(document).ready(function () {
+    	getchannel();
+    	query(1);
+    	
+    	/* 弹出修改广告位 */
+    	
+    	 $("#placeList").on('click',".updatebtn",function(){
+    		var id = Number($(this).parent().parent().find('td:first').text());
+   			var r = /^([0-9][0-9]?|100)$/;
+    		$("#wpercen").blur(function(){
+        		if(!r.test($("#wpercen").val())){
+        			
+        			layer.msg('请输入0-100的整数!', {icon: 6} ,function(){
+        				$("#wpercen").focus();
+        			});
+        		}
+        		
+    		});
+    		$("#hpercen").blur(function(){
+    			
+    			var a = /^[1-9][0-9]{0,3}:[1-9][0-9]{0,3}$/;
+        		if(!a.test($("#hpercen").val())){
+        			layer.msg('请输入1:1这种格式,范围1-9999!', {icon: 6} ,function(){
+        				$("#hpercen").focus();
+        			});
+        		}
+        		
+    		});
+    		$.ajax({
+    			type : "GET",
+    			url : "/advert/place/change",
+    			dataType : "json",
+    			contentType : "application/json; charset = utf-8",
+    			data : {
+    				"id" : id
+    			},
+    			success : function(data){
+    				console.log(data);
+    				if(data != null){
+    					$("#id").val(data.id);
+    					$("#plchannel").val(data.pl_channel);
+    					$("#hpercen").val(data.pl_hpercen);
+    					$("#max").val(data.pl_max);
+    					$("#remark").val(data.pl_remark);
+    					$("#sort").val(data.pl_sort);
+    					$("#plstate").val(data.pl_state);
+    					$("#title").val(data.pl_title);
+    					$("#wpercen").val(data.pl_wpercen);
+    				}
+    			}
+    		});
+    	}) 
+    	
+    	/* 保存修改结果 */
+    	
+    	$("#updateSubmit").click(function(){
+    		
+    		
+    		$.ajax({
+                type : "get",
+                url : "/advert/place/update",
+                dataType : "json",
+                contentType : "application/json; charset=utf-8",
+                data : {
+                    id: $("#id").val(),
+                    channel: $("#plchannel").val(),
+                    hpercen: $("#hpercen").val(),
+                    max : $("#max").val(),
+                    remark : $("#remark").val(),
+                    sort : $("#sort").val(),
+                    state : $("#plstate").val(),
+                    title : $("#title").val(),
+                    wpercen : $("#wpercen").val()
+                },
+                success : function(data) {
+                	console.info(data);
+                	console.log("----");
+                	if(data>0){
+                		 location.reload();
+                	} 
+                }
+            });
+            
+    	});
+      } )
+      
+      
+
+			function getchannel() {
+
+				$.ajax({
+					type : "GET",
+					url : "/advert/channel/simpleList",
+					dataType : "json",
+					contentType : "application/json; charset=utf-8",
+					
+					success : function(data) {
+
+						if (data.code == "0000") {
+							
+							var list =data.data;
+							
+							$.each(list, function(i, obj) {
+								
+								var value =obj.id;
+								var title =obj.ch_title;
+								
+								$("#channel").append("<option value ='"+value+"'>"+title+"</option>");
+								$("#plchannel").append("<option value ='"+value+"'>"+title+"</option>");
+								
+							})
+							
+							
+						}else{
+							
+							alert(data.data);
+						}
+						
+						
+					}
+				})
+
+			}
+
+			function query(page) {
+
+				if (page == undefined) {
+					page = 1;
+				}
+
+				var ajaxdatas = "page=" + page;
+
+				if ($("#channel").val() != "" && $("#channel").val() != null) {
+					ajaxdatas += "&channel=" + $("#channel").val();
+				}
+
+				if ($("#state").val() != "" && $("#state").val() != null) {
+					ajaxdatas += "&state=" + $("#state").val();
+				}
+
+				$.ajax({
+					type : "GET",
+					url : "/advert/place/query",
+					dataType : "json",
+					contentType : "application/json; charset=utf-8",
+					data : ajaxdatas,
+					success : function(data) {
+
+						if (data.code == "0000") {
+
+							var index = data.data.pageNumber;
+							var totalRow = data.data.totalRow;
+							var totalPage = data.data.totalPage;
+							var pageSize = data.data.pageSize;
+							var list = data.data.list;
+
+							var tablehtml = "";
+							$.each(list, function(i, item) {
+
+								var id = item.id;
+
+								var pl_channel = item.pl_channel;
+								var pl_sort = item.pl_sort;
+								var pl_title = item.pl_title;
+								var pl_max = item.pl_max;
+								var pl_wpercen = item.pl_wpercen;
+								var pl_hpercen = item.pl_hpercen;
+								var pl_state = item.pl_state;
+								var pl_remark = item.pl_remark;
+								var pl_statestr = "";
+								if (pl_state == 1) {
+									pl_statestr = "开启";
+								} else {
+									pl_statestr = "关闭";
+								}
+
+								var rowhtml = "<tr>" + "<td>" + id + "</td>"
+										+ "<td>" + pl_sort + "</td>" + "<td>"
+										+ pl_title + "</td>" + "<td>" + pl_max
+										+ "</td>" + "<td>" + pl_wpercen
+										+ "</td>" + "<td>" + pl_hpercen
+										+ "</td>" + "<td>" + pl_statestr
+										+ "</td>" + "<td>" + pl_remark
+										+ "</td>" + "<td>" + "<button type='button' data-toggle='modal' data-target='#updatePlace' class='un-margin btn btn-xs btn-outline btn-info updatebtn'>修改</button>"
+										+ "</td>" + "</tr>";
+
+								tablehtml += rowhtml;
+
+							})
+							$("#placeList").html(tablehtml);
+							$("#firstPage").val(1);
+		     				$("#nowPage").val(data.data.pageNumber);
+		     				$("#lastPage").val(data.data.totalPage);
+		     				$("#pageInfo").html("共"+data.data.totalRow+"条数据，当前显示第 "+data.data.pageNumber+" 页  ，到");
+						} else {
+
+							layer.msg('查无数据！', {
+		         				icon: 1,
+		         				time: 1000
+		         			});
+						}
+
+					}
+				});
+
+			}
+			
+		     
+			  //点击首页
+				function firstPage(){
+					if(1 == $("#nowPage").val()){
+						layer.msg('已经是第一页', {
+							icon: 1,
+							time: 1000
+						});
+						return;
+					}
+					query(1);
+				}
+				//点击上一页
+				function upPage(){
+					var page = $("#nowPage").val()*1-1;
+					if(page<1){
+						layer.msg('已经是第一页', {
+							icon: 1,
+							time: 1000
+						});
+						return;
+					}
+					query(page);
+				}
+				//点击下一页
+				function nextPage(){
+					var page = $("#nowPage").val()*1+1;
+					if(page>$("#lastPage").val()){
+						layer.msg('已经是最后一页', {
+							icon: 1,
+							time: 1000
+						});
+						return;
+					}
+					query(page);
+				}
+				//点击末页
+				function lastPage(){
+					var page = $("#lastPage").val();
+					if(page == $("#nowPage").val()){
+						layer.msg('已经是最后一页', {
+							icon: 1,
+							time: 1000
+						});
+						return;
+					}
+					query(page);
+				}
+				//跳转到指定页
+				function toPage(){   
+					var page =parseInt($("#toPage").val().trim());
+
+					if(page>$("#lastPage").val()){
+						layer.msg('没有那么多页', {
+							icon: 1,
+							time: 1000
+						});
+						return;
+					}
+					if(page<=0){
+						layer.msg('页码不能小于1', {
+							icon: 1,
+							time: 1000
+						});
+						return;
+					}
+					if(page == $("#nowPage").val()){
+						layer.msg('已经是第'+page+'页', {
+							icon: 1,
+							time: 1000
+						});
+						return;
+					}
+					query(page);
+				}
+			
+		</script>
+
+
+
+#end

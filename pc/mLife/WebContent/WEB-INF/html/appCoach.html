@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>汽车票预订 </title>
+    <link rel="stylesheet" href="css/frozen.css">
+    <link rel="stylesheet" href="css/validate.css">
+    <link rel="stylesheet" href="css/appstyle.css">
+    <script src="js/lib/zeptojs/zepto.min.js"></script>
+    <script src="js/zepto-mvalidate.js"></script>
+    <script src="js/frozen.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/zepto.mdater.css">
+    <script src="js/zepto.mdater.js"></script>
+</head>
+<!-- 检测用户设备 -->
+<script type="text/javascript">
+        var browser = { 
+           versions: function() { 
+               var u = navigator.userAgent; 
+               return { 
+                   trident: u.indexOf('Trident') > -1, //IE内核 
+                   presto: u.indexOf('Presto') > -1, //opera内核 
+                   webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+                   gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+                   mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+                   ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+                   android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+                   iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+                   iPad: u.indexOf('iPad') > -1, //iPad 
+                   webApp: u.indexOf('Safari') > -1 //Safari 
+               }; 
+           }() 
+        } 
+        function closePage(){
+             var jsonstr = "{\"action\":\"close\"}";
+            if ( browser.versions.ios 
+               || browser.versions.iPhone 
+               || browser.versions.iPad) { 
+               window.webkit.messageHandlers.Native.postMessage(jsonstr);
+            }
+            if ( browser.versions.android ) { 
+                window.paySucess.clickOnAndroid(jsonstr);
+            }
+             
+         }
+</script>
+<body ontouchstart="">
+<section id="searchWrap" class="hide">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="back()"></i><h1>汽车票预订 </h1>
+    </header>
+    <script type="text/javascript">
+        function back(){
+            $("#searchWrap").addClass("hide");
+        }
+    </script>
+    <input type="text" autocomplete="off" class="City" placeholder="请输入出发城市">
+    <div class="divinput_hide" id="divcity">
+        <ul id="citybox">
+        </ul>
+    </div>
+    <div id="hotCity">
+        <h3>热门城市</h3>
+        <ul class="cityList">
+            <li>北京</li>
+            <li>上海</li>
+            <li>广州</li>
+            <li>天津</li>
+            <li>重庆</li>
+            <li>武汉</li>
+            <li>杭州</li>
+            <li>苏州</li>
+            <li>成都</li>
+            <li>南京</li>
+        </ul>
+    </div>
+</section>
+    <section class="page" id="searchP">
+        <header class="ui-header ui-header-positive ui-border-b">
+            <i class="ui-icon-return" onclick="closePage()"></i><h1>汽车票预订 </h1>
+        </header>
+        <section class="ui-container">
+            <section style="background:#FFF;">
+                <section class="cityInfo clearfix">
+                    <div class="ui-form-item startCity">
+                        <label class="input-label" for="">出发城市</label>
+                        <input type="text" autocomplete="off" id="startCity" name="startCity" placeholder="请输入出发城市">
+                        
+                    </div>
+                    <div class="ui-form-item endCity">
+                        <label class="input-label" for="">到达城市</label>
+                        <input type="text" autocomplete="off" id="endCity" name="endCity" placeholder="请输入到达城市">
+                        
+                    </div>
+                </section>
+                <div class="ui-form-item border-b">
+                    <label class="input-label" for="">出发日期</label>
+                    <input id ="starttime"  class="form-control" readonly="true" type="text" placeholder="请选择日期"/>
+                </div>
+                <script type="text/javascript">
+                    $('#starttime').mdater({ 
+                        minDate : new Date()
+                    });
+                </script>
+                <div class="ui-btn-wrap">
+                    <input class="ui-btn-lg ui-btn-main" id="search" type="submit" value="查询"/>
+                </div>
+            </section>
+            <section class="section">
+                <div class="ui-form-item  ui-whitespace border-b">
+                    <h2>购票须知</h2><span class="squire"></span>
+                </div>
+                <div class="ui-row" style="padding:15px;">
+                    <p class="ui-txt-info">1、汽车票相关业务处理时间为8:00-22:00</p>
+                    <p class="ui-txt-info">2、平台不支持退票或改签，请自行去汽车站办理</p>
+                    <p class="ui-txt-info">3、目前购买汽车票无需实名制，乘客可以由亲友代为购票</p>
+                    <p class="ui-txt-info">4、只支持购买成人票，不支持儿童票、学生票</p>
+                    <p class="ui-txt-info">5、每个订单最多可以购买3张车票</p>
+                    <p class="ui-txt-info">6、由于订票时无法在线选座，因此取票信息中不包含座位号，您去车站取票时取票系统会自动生成座位号</p>
+                    <p class="ui-txt-info">7、若取票过程中出现问题，请在发车前半小时与平台客服联系处理，超过发车时间的订单不予处理。</p>
+                </div>
+            </section>
+        </section>
+    </section>
+    <section class="page" id="listP">
+        <header class="ui-header ui-header-positive ui-border-b">
+            <i class="ui-icon-return" onclick="showSearchP()"></i><h1 class="place-title"><span id="start-t"></span><span class="arr"></span><span id="end-t"></span></h1>
+            <span class="angl"></span>
+            <select id="orderTimeDataSel" class="text" style="height:40px;background-color: #fff;color:#333;border-radius:4px; float: right;"> 
+                <option value="0-1440">全部时段</option> 
+                <option value="360-720">上午时段</option> 
+                <option value="720-1080">下午时段</option> 
+                <option value="1080-1440">晚上时段</option> 
+            </select> 
+        </header>
+        <section class="ui-container">
+            <ul class="list" id="coachLines">
+              
+            </ul>
+        </section>
+    </section>
+    <section class="page" id="order">
+        <header class="ui-header ui-header-positive ndiff">
+            <i class="ui-icon-return" onclick="showListP()"></i><h1 class="order-title">2016-09-22 08:00 出发</h1>
+        </header>
+        <section class="ui-container">
+            <div class="head">
+                <div class="head-top">
+                    <p><span class="start">重庆</span><span class="arr"></span><span class="end">重庆</span></p>
+                    <p class="subStation"><span class="station1 ui-nowrap-flex">杨家坪车展</span><span class="station2 ui-nowrap-flex">重庆</span></p>
+                </div>
+                <p class="ceci fl"><i class="ceci-icon"></i><span class="ceci-val" style="margin-right: 20px; color: #ffe4cb;">111111</span>票价 ¥ <span class="price">123</span></p>
+            </div>
+            <section class="ui-panel ui-panel-pure ui-border-t ui-btn-wrap">
+                <input type="hidden" id="coachLineJson" value="">
+                <h3>乘客<button class="ui-btn ui-btn-main position" id="addC">增加乘客</button></h3>
+                <ul class="ui-list ui-list-pure ui-border-tb passager">
+                </ul>
+            </section>
+            <section>
+                <div class="ui-form-item ui-border-b border-b">
+                    <label>联系人</label>
+                    <input type="text" placeholder="请输入联系人姓名" id="catch" >
+                </div>
+                <div class="ui-form-item ui-border-b border-b">
+                    <label>二代身份证号</label>
+                    <input type="text" placeholder="请输入身份证号" id="catchid" >
+                </div>
+                <div class="ui-form-item ui-border-b border-b">
+                    <label>联系电话</label>
+                    <input type="text" placeholder="用于接收取票信息" id="catchtel" >
+                </div>
+                <!-- <div class="ui-form-item ui-border-b border-b">
+                    <label>购买保险</label>
+                    <label class="ui-switch onoff">
+                        <input type="checkbox" checked="">
+                    </label>
+                </div> -->
+            </section>
+            <section>
+                <p style="margin:15px 0;line-height: 30px;font-size: 14px; text-align: center"> 
+                <label class="ui-checkbox-s">
+                    <input type="checkbox" name="checkbox" checked="">
+                </label>
+                 我已阅读理解并同意<span style="color: #3a6ca2;" onclick="showVVV()">《平台汽车票服务协议》</span>
+            </p>
+            </section>
+            <section class="hide" id="vvv">
+
+                <div class="content">
+                    购票须知<br> 非常感谢您使用千米网汽车票
+                    (下称本网站)提供的售票服务。为了保护您的合法权益请您在使用服务前仔细阅读以下内容。一旦您选择提交订单按钮，将视为您完全同意本网站的《服务条款》、《购票须知》以及其他提示条款。如您不同意完全接受以上条款，请放弃使用本网站提供的服务，由此造成的不便，请您谅解。<br>
+                    本网站为您提供本汽车票售票服务。为了持续为旅客提供便捷服务，需要向使用购票服务的用户收取一定服务费。如您不愿意支付此项购票服务费，请放弃购票服务，选择前往车站购票。<br>
+                    第一条 关于购票<br> 1：网上可以提前几天购票？<br>
+                    各地网上订票预售期一般在1-7天不等，重大节假日车站可能会提前预售期，请您留意！<br> 2：千米网网上订票收取手续费吗？<br>
+                    由于运营成本的考虑，千米网会收取一定的手续费，具体请以网站最新变化为准！<br>
+                    3：网上订票能否用护照、香港身份证、台胞证或其他有效证件购票呢？<br>
+                    网上订票只支持大陆居民第二代身份证号码，其他证件无法下单购票。<br> 4：身份证丢失或过期影响网上订票吗？<br>
+                    过期的身份证号码可能会导致无法顺利取票，建议您用其他有效身份证号码进行订票。<br>
+                    5：汽车票有没有实施实名制？可以让亲朋好友代购票吗？<br> 目前购买汽车票无需实名制，乘客可以由亲友代为购票。<br>
+                    6：订票成功后为什么没显示座位号信息？<br>
+                    由于订票时无法在线选座，因此取票信息中不包含座位号，您去车站取票时取票系统会自动生成座位号。<br>
+                    7：一次性购买多张车票要如何操作？<br>
+                    每个订单最多可以购买3张车票，由于不同车站要求不同，单个身份信息可能存在不能连续购买同一个车站的多个车次的车票。<br>
+                    8：网上订票能同时预订往返汽车票吗？<br> 预订下单时不能同时购买往返汽车票，返程车次需要单独预订呢~<br>
+                    9：网上可以预订儿童票吗？<br> 目前网上暂时无法预订儿童票，请您到发车站指定窗口进行咨询购买，感谢您的理解！<br>
+                    10：儿童票购买标准是怎样的？<br>
+                    一般情况下，持一张全价票的旅客可免费携带1.20米以下儿童一人乘车，但购票时应事先向售票员声明，不供给座位；儿童身高1.20-1.50米需购买儿童票，提供座位；超过1.50米应购买全价票。由于每个汽车站的规定不同，具体要以当地汽车站信息为准。<br>
+                    11：网上可以用学生证或其他优待证购买优惠票吗？<br> 千米网目前仅售全价票，暂无活动优惠和折扣票出售。<br>
+                    12：什么时间段可以预订汽车票？<br> 千米网提供08:00-22:00网上订票服务。<br>
+                    13：预订并提交订单后必须要立即支付吗？<br>
+                    提交订单后请您在系统提示时间内完成支付，一旦支付超时，订单会自动取消，需要您重新预订下单。<br>
+                    14：为什么付款成功后系统会提示出票失败？<br>
+                    因网络繁忙、余票不足、或者车站临时调整班次等原因，您付款成功后也不能保证100%出票，如付款成功后出票失败，建议您更换其他班次或前往车站购买，系统会在3个工作日内退款至您的付款账户中。感谢您的理解！<br>
+                    第二条 车次咨询问题<br> 1：为什么出发地栏提示找不到输入的城市名称？<br>
+                    该区域暂未开通网上预售票功能，您暂不能预订。<br> 2：为什么车次信息中没显示目的地车站名？<br>
+                    千米网暂时无法查询到目的地车站信息，建议您向乘车站窗口或咨询台工作人员进行咨询。<br>
+                    3：为什么车次信息中没显示抵达目的地的时间？<br>
+                    由于长途汽车行驶途中存在不确定因素，所以暂无法查询到准确的抵达时间，请您向车站窗口或咨询台工作人员进行咨询。<br>
+                    4：为什么去往同一地点的不同车次票价有差异？<br>
+                    由于不同车次的车型、行车路线有所差异，同一路线的不同车次票价会略有不同，详细情况您可以向乘车站进行咨询呢。<br> 第三条
+                    取票问题<br> 1：网上预订车票后要如何取票呢？<br>
+                    购票成功后，千米网会生成取票信息并发送短信给您，请您凭该取票短信和身份证原件到发车站自助取票机或服务专窗取票。<br>
+                    2：订票成功后没有收到取票短信怎么办？<br>
+                    如未收到取票短信，您可以联系千米网客服查询取票信息，也可以拨打客服电话咨询。<br>
+                    3：有没有规定发车前多久要去车站取票？<br>
+                    为避免塞车、出行人数较多等因素影响您的顺利出行，建议您提前半小时至一小时前往车站取票。<br>
+                    4：订票成功后发现填写的手机号码错误该怎么办？<br>
+                    订票时填写的手机号码错误会导致您无法收到取票短信，您可以联系千米网客服查询取票信息，凭取票信息和身份证取票。<br>
+                    5：可以由亲朋好友代取票吗？<br> 可以由他人代取票，代取人需凭取票信息和取票人身份证前往自助取票机或人工取票窗口取票。<br>
+                    6：没带身份证/凭身份证号能取票吗？<br> 由于各地车站规定不同，为确保您取票顺利，建议您携带身份证。<br>
+                    7：身份证过期了影响取票吗？<br> 身份证过期可能会导致无法顺利取票，建议您用其他有效的身份证号码进行订票。<br>
+                    8：车站自助取票机取不出来票该怎么办？<br>
+                    第一步请您先确认是否跑错了始发车站，第二步请您检查取票短信是否完整，是否被分成几条显示，避免取票时输入的信息有缺失。此外，核实取票时输入的取票信息（身份证号、取票号、取票密码、订单号）是否有误。如果自助取票机仍然无法出票，则可以去人工服务专窗取票。<br>
+                    9：可以提前几天去车站取票吗？<br> 您成功订票后可以提前几天取票的。<br>
+                    10：超过车站下班时间还能去车站顺利取票吗？<br>
+                    一般情况下车站在最晚班次发车前都不会下班的，您可以前往自助取票机或人工窗口取票，但也有可能个别车站会提前下班，建议在车站上班时间进行取票。<br>
+                    11：可以直接刷身份证取票吗？<br> 不能直接刷身份证取票乘车，您需要凭取票信息前往乘车站换取纸质车票再乘车。<br>
+                    12：网上订票后，可以去同城的其他车站取票上车吗？<br> 您需要按照订票信息在乘车站取票，同城其他车站是无法取票的。<br>
+                    第四条 退票改签问题<br> 1：网上可以直接退票或改签吗？<br>
+                    千米网暂不支持网上退票及改签，您需在先去车站换取纸质车票再前往窗口办理退改签。感谢您的理解！<br>
+                    2：车站退改签要收取多少手续费？<br>
+                    一般情况下，离开车时间2小时前办理退改签，按票面额10%收取手续费；班车离开车时间2小时以内办理退改签，按票面额20%收取手续费；班车开车后1小时内办理退改签，按票面额50%收取手续费；班车开车1小时后不办理退改签。由于每个汽车站的规定不同，具体要以乘车站规定为准呢~<br>
+                    3：错过了发车时间，可以退改签吗？<br>
+                    各地车站规定不同，一般情况下错过发车时间1个小时是不能办理退改签的，具体要以乘车站规定为准。<br>
+                    4：订票时选错了出发日期/车票数量，可以退票或改签吗？<br>
+                    您可以先去车站将订错的车票取出来，然后前往人工窗口办理退票或改签，车站会收取部分手续费。<br>
+                    5：一张订单包含3张车票，其中1张需要退票/改签，该如何操作？<br>
+                    您可以前往车站将3张车票一并取出，然后将需要退票/改签的车票拿到人工窗口办理。<br>
+                    6：我在线下车站申请退票后，网上的订票手续费会退给我吗？<br> 对不起，网上的订票手续费是不退的。<br>
+                    7：我在线下车站申请退票后，车站没有退现金，而是告知我退款到支付账户内，我怎么拿回我订票的钱？<br>
+                    您可以拨打我们客服电话进行咨询。<br> 第五条 订单退款问题：<br>
+                    1：订单出票失败了，需要我发起退款申请吗？<br>
+                    订单出票失败后会自动变更为退款订单，系统会在3个工作日内自动办理原路退款，无需您主动发起退款申请，您可以实时查看订单状态了解退款进度，订单出票失败后，退款时系统会给您发送短信通知，请您留意查收。<br>
+                    2：退款订单什么时候能退款到账？<br>
+                    千米网会在3-7个工作日内自动办理原路退款，视银行或第三方支付平台规定，约1-10个工作日到账。<br>
+                    3：失败订单退款是全额退的吗？手续费会退吗？<br> 失败订单是全额退回至您原先支付的账户的，包括订票手续费。<br>
+                    第六条 免责说明<br>
+                    1、由于全国各客运站会随时调整车次、票价、坐席等信息，故本网显示产品信息，如车次、票价、票价、发车时间等信息仅供参考，最终以实际购买的产品为准。<br>
+                    2、如因客户提供错误的订单信息（姓名、证件号码、日期、车次、座位类型等）或者因客户自身原因导致无法取票、车票丢失、车票损毁等情况所导致的损失，客户需自行承担相关损失费用。<br>
+                    3、配送订单因如下情况造成订单延迟或无法配送等，千米网将不承担责任：<br> ①客户提供错误信息、不详细信息；<br>
+                    ②货物送达无人签收，由此造成的重复配送所产生的费用及相关的后果；<br>
+                    ③不可抗力，例如：自然灾害、交通戒严、突发战争等。<br>
+                    4、订单退款将按承诺时限退款到客户订单支付的原渠道，客户支付渠道到客户账户的时间由支付渠道决定，请您与支付渠道沟通联系。<br>
+                    5、由于汽车票信息可能随时变化，以及网络传输问题，千米网提供的此类信息可能并非最新或存在误差，因此仅供旅客作为一般参考，任何公司或个人不能将此作为千米网做出任何承诺或做出任何保证的依据。<br>
+                    6、千米网提供的是汽车票代购服务，您接受本协议，意味着您同意我们使用您填写的乘客信息及取票信息进行代购，对于您违反购票服务条款引起的争议和法律问题，由您自行承担.<br>
+                    第七条 解决争议适用法律法规约定<br>
+                    在您的预订生效后，如果在本须知或订单约定内容履行过程中，您对相关事宜的履行发生争议，您同意按照中华人民共和国颁布的相关法律法规来解决争议，并同意接受千米所在地人民法院的管辖。<br>
+                </div>
+            </section>
+        </section>
+        <footer class="ui-footer ui-border-t" style="height: 50px;">
+            <div class="ui-form-item border-b" style="padding-right:0;">
+                <label>总金额：<span id="total">¥0.00</span></label>
+                <p class="priceList">车票：¥<span class="prc price-coach">0</span>保险费：¥<span class="prc hide price-s">0</span>服务费：¥<span class="prc price-y">0</span></p>
+                <button class="btn-confirm" id="createBill" type="submit">确认</button>
+            </div>
+        </footer>
+    </section>
+    <section class="page" id="edit">
+        <header class="ui-header ui-header-positive">
+            <i class="ui-icon-return" onclick="showOrder()"></i><h1>增加乘客</h1>
+        </header>
+        <section class="ui-container">
+            <div class="ui-form-item ui-border-b">
+                <label>乘客类型</label>
+                <select id="tickeType" class="text" style="height:40px;border-radius:4px;padding-top: 10px;padding-left: 95px;"> 
+                    <option>成人票</option>
+                </select>
+            </div>
+            <div class="ui-form-item ui-border-b">
+                <label>乘客姓名</label>
+                <input type="text" placeholder="请输入真实姓名" id="cname" >
+            </div>
+            <div class="ui-form-item ui-border-b">
+                <label>证件类型</label>
+                <select id="ident" class="text" style="height:40px;border-radius:4px;padding-top: 10px;padding-left: 95px;"> 
+                    <option>身份证</option>
+                </select> 
+            </div>
+            <div class="ui-form-item ui-border-b">
+                <label>证件号码</label>
+                <input type="text" placeholder="请输入证件号码" id="idnum" >
+            </div>
+            <div class="ui-btn-wrap">
+                <input class="ui-btn-lg ui-btn-main" id="addOK" type="button" value="确定"/>
+            </div>
+        </section>
+        
+    </section>
+    
+    <div class="ui-loading-block">
+        <div class="ui-loading-cnt">
+            <i class="ui-loading-bright"></i>
+            <p>正在加载中...</p>
+        </div>
+    </div>
+    <script type="text/javascript">
+    	showSearchP();
+        function showSearchP(){
+            $("#searchP").show().siblings('.page').hide();
+        }
+        function showListP(){
+            $("#listP").show().siblings('.page').hide();
+        }
+        function showOrder(){
+            $("#order").show().siblings('.page').hide();
+        }
+        function showEdit(){
+            $("#edit").show().siblings('.page').hide();
+        }
+        // 显示协议
+        function showVVV(){
+            var content = $("#vvv .content").html();
+            var dia=$.dialog({
+                content:content,
+                button:["确认"]
+            });
+
+        }
+        // 增加乘客
+        $("#addOK").click(function(){
+            var tickeType = $("#tickeType").val();
+            var name = $("#cname").val();
+            var ident = $("#ident").val();
+            var idnum = $("#idnum").val();
+
+            var namereg = /^([\u4e00-\u9fa5]){2,7}$/; //只能是中文，长度为2-7位
+            var isIDCard1=/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/;
+            var isIDCard2=/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+            if(!namereg.test(name)){       
+            	showDialog("请输入真实姓名")
+                return false;
+            }
+            if(!isIDCard1.test(idnum) && !isIDCard2.test(idnum)){       
+            	showDialog("请输入真实真实证件号")
+                return false;
+            }
+
+            var list = '<li class="ui-border-t">'+
+                        '<div class="fl del1"></div>'+
+                        '<div class="l-content fl">'+
+                            '<p class="c-name"><span class="name">'+name+'</span><span class="ui-badge-muted t-type">'+tickeType+'</span></p>'+
+                            '<p class="c-id">'+ident+'<span class="identf">'+idnum+'</span></p>'+
+                        '</div>'+
+                        '<div class="fr edit "></div>'+
+                        '<div class="fr del2 hide">删除</div>'+
+                    '</li>';
+            $("#order ul").append(list);
+            showOrder();
+            getPassager();
+        });
+        // 删除
+        $(document).on('click',".del1",function(){
+            $(this).siblings('.del2').removeClass("hide");
+            $(this).siblings('.edit').addClass("hide");
+            $(this).addClass('rotate');
+        });
+        $(document).on('click',".del2",function(){
+            $(this).parent().remove();
+            getPassager();
+        });
+
+        // 编辑
+        $(document).on('click',".edit",function(){
+            var name = $(this).siblings('.l-content').find(".name").text();
+            var idnum = $(this).siblings('.l-content').find(".identf").text();
+            $("#cname").val(name);
+            $('#idnum').val(idnum);
+            $(this).parent().remove();
+            showEdit();
+        });
+        function showDialog(content){
+    		var dia=$.dialog({
+                content:content,
+                button:["确认"]
+            });
+    	}
+        // 搜索
+        $("#search").on("click",function(){
+        	var sc = $("#startCity").val();
+        	var ec = $("#endCity").val();
+        	var st = $("#starttime").val();
+        	if(sc == "" || sc == null || undefined == sc){
+        		fp = "请选择出发城市";
+        		showDialog(fp);
+        		return false;
+        	}
+        	if(ec == "" || ec == null || undefined == ec){
+        		fp = "请选择到达城市";
+        		showDialog(fp);
+        		return false;
+        	}
+        	if(st == "" || st == null || undefined == st){
+        		fp = "请选择出发时间";
+        		showDialog(fp);
+        		return false;
+        	}
+            var queryData={
+                    "startCity" : $("#startCity").val(),
+                    "endCity" : $("#endCity").val(),
+                    "date" : $("#starttime").val()
+            };
+            
+            $(".ui-loading-block").addClass("show");
+            $.ajax({
+                type : "GET",
+                url : "app/coach/getLines",
+                dataType : "*.json",
+                contentType : "application/json; charset=utf-8",
+                data : queryData,
+                success : function(data){
+                    $(".ui-loading-block").removeClass("show");
+                    $("#start-t").text($("#startCity").val());
+                    $("#end-t").text($("#endCity").val());
+                    lineList = $.parseJSON(data);
+                    var da = "";
+                    if(lineList[0] != null ){ // 有车票信息
+                        loadCoachLine("0-1440");
+                        showListP();
+                        book();
+                    }else{
+                        var dia=$.dialog({
+                            title:'温馨提示',
+                            content:'暂无车票信息',
+                            button:["确认"]
+                        });
+                        dia.on("dialog:hide",function(e){
+                            showSearchP();
+                        });                    
+                    }
+                }
+            });
+        });
+        $("#orderTimeDataSel").change(function(){
+            var value = $(this).val();
+            loadCoachLine(value);
+        });
+        $("#addC").click(function(){
+            showEdit();
+        });
+
+        var coachLineJson = "";
+        var passager = [];
+        var passagers = "";
+      //勾选我已阅读并同意
+		$("input[name='checkbox']").click(function(){
+			if($(this).is(':checked')){
+				
+			}else{
+				var message = "必须勾选平台汽车服务协议";
+				showDialog(message);
+				return false;
+			}
+		});
+        // 提交订单信息
+        $("#createBill").tap(function(){
+            getPassager();
+            var concatName = $("#catch").val();
+            var idnumber = $("#catchid").val();
+            var concatPhone = $("#catchtel").val();
+            if(concatName == "" || concatName == null || undefined == concatName || !(/^[\u4e00-\u9fa5 ]{2,20}$/.test(concatName))){
+        		fp = "联系人有误";
+        		showDialog(fp);
+        		return false;
+        	}
+            var isIDCard1=/^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$/;
+            var isIDCard2=/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
+        	if(idnumber == "" || idnumber == null || undefined == idnumber || (!isIDCard1.test(idnumber) && !isIDCard2.test(idnumber))){
+        		fp = "身份证号码有误";
+        		showDialog(fp);
+        		return false;
+        	}
+        	if(concatPhone == "" || concatPhone == null || undefined == concatPhone || !(/^1[3|4|5|7|8]\d{9}$/.test(concatPhone))){
+        		fp = "联系电话有误";
+        		showDialog(fp);
+        		return false;
+        	}
+            contactData = {
+                "contactName" : concatName,
+                "idNumber" : idnumber,
+                "contactTel" : concatPhone
+            };
+            $(".ui-loading-block").addClass("show");
+            if(passagers != "" && $("#catch").val() != "" && $("#catchid").val().length != "" && $("#catchtel").val() != ""){
+	            $.ajax({
+	                url:"app/coach/createOrder",
+	                data:{
+	                    coachLineJson:$("#coachLineJson").val(),
+	                    passengersStr: passagers,
+	                    contactJson:JSON.stringify(contactData),
+	                    totalPrice: $("#total").text()
+	                },
+	                
+	                type:"POST",
+	                success:function(data){
+	                	
+	                    window.location.href=data;
+	                    $(".ui-loading-block").removeClass("show");
+	                    
+	                },
+	                error : function(XMLHttpRequest, textStatus, errorThrown){
+	                	$(".ui-loading-block").removeClass("show");
+	                    var txt = XMLHttpRequest.responseText.toString();
+	                    txt = txt.replace(/[^\u4e00-\u9fa5]/g, "");//只得到所有的字符串里面的汉字
+	                    var str1 = txt.replace(/(.).*\1/g,"$1");//去除重复的字符串
+	                    showDialog(str1);
+	                }
+	            });
+            }else{
+            	var dia=$.dialog({
+                    title:'温馨提示',
+                    content:'请填写正确乘客信息和联系人信息',
+                    button:["确认"]
+                });
+            	$(".ui-loading-block").removeClass("show");
+            	return;
+            }
+        });
+        // 预订
+		function book(){
+			$("#listP").on("click",".book",function(){
+                var start = $("#start-t").text();
+                var end = $("#end-t").text();
+                var place1 = $(this).parent().parent().find(".place1").text();
+                var place2 = $(this).parent().parent().find(".place2").text();
+                var ceci = $(this).parent().parent().find(".ceci span").text();
+                var price = ($(this).parent().parent().find(".price").text()).replace("¥ ","");
+                var date = $(this).parent().parent().find(".date").text().split("-");
+                var date1 = date[1]+"月"+date[2]+'日';
+                var time = $(this).parent().parent().find(".time").text();
+                coachLineJson = "";
+                coachLineJson = $(this).siblings('input[name="coachLineJson"]').val();
+                $("#coachLineJson").val($(this).siblings('input[name="coachLineJson"]').val());
+                console.log(coachLineJson);
+
+                $("#order .order-title").text(date1 + " " + time + "出发");
+                $("#order .start").text(start);
+                $("#order .end").text(end);
+                $("#order .station1").text(place1);
+                $("#order .station2").text(place2);
+                $("#order .ceci-val").text(ceci);
+                $("#order .price").text(price);
+                // var data = "coachLineJson="+coachLineJson
+                // $.ajax({
+                //     type : "POST",
+                //     url : "app/coach/orderTickets",
+                //     data : data
+                // });
+
+                var coachLine = $.parseJSON(coachLineJson);
+                $("footer .price-coach").text(Number(coachLine.ticketPrice)+Number(coachLine.fee));
+                $("footer .price-s").text(0);
+                $("footer .price-y").text(Number(1).toFixed(2));
+                total = Number($("footer .price-coach").text()) + Number($("footer .price-s").text()) + Number($("footer .price-y").text());
+                $("#total").text(total);
+                showOrder();
+
+            });
+		}
+        // 获取乘客
+        function getPassager(){
+            passager = [];
+            passagers = "";
+            var li = $("#order .ui-panel ul.passager li");
+            if(li[0]){
+                var num = li.length;
+                console.log(num);
+                var coach = $("footer .price-coach").text();
+                var prices = $("footer .price-s").text();
+                var fw = $("footer .price-y").text();
+                total = Number($("footer .price-coach").text())*num + Number($("footer .price-s").text()) + Number($("footer .price-y").text());
+                $("#total").text(total);
+
+                if(num >= 3){
+                    $("#addC").tap(function(){
+                        var dia=$.dialog({
+                            title:'温馨提示',
+                            content:'每一单乘客不能超过三个',
+                            button:["确认"]
+                        });
+                    });  
+                }
+
+                // 获取乘客信息
+                for(var i=0; i< num; i++){
+                    var passagerN = $("#order .ui-panel ul.passager li .name").eq(i).text() + ",1," + $("#order .ui-panel ul.passager li .identf").eq(i).text();
+                    passager.push(passagerN);
+                }
+                for(var i = 0; i<passager.length; i++){
+                    passagers += passager[i]+";";
+                }
+                passagers = passagers.substring(0,passagers.length-1);
+            }
+        }
+
+        // 加载车次
+        function loadCoachLine(value){
+            var gotime = value;
+            
+            var gotimes= new Array(); //定义一数组 
+            gotimes=gotime.split("-"); //字符分割 
+            var gotime1 =gotimes[0];
+            var gotime2 =gotimes[1];
+            var da="";
+                
+            for (var i = 0; i < lineList.length; i++) {
+                var coachline = lineList[i];
+
+                var time =coachline.dptTime;
+                var times= new Array(); //定义一数组 
+                times=time.split(":"); //字符分割 
+                var mins =Number(Number(times[0])*Number(60))+Number(times[1]);
+                if(gotime1 !=gotime2&&(parseInt(mins)<parseInt(gotime1)||parseInt(mins)>parseInt(gotime2))){
+
+                }else{
+                    var txt = '<li>'+
+                                '<div class="list-top">'+
+                                    '<div class="date hide">'+coachline.dptDate+'</div>'+
+                                    '<div class="time">'+(coachline.dptTime).substring(0,5)+'</div>'+
+                                    '<div class="place">'+
+                                        '<span class="place-icon"></span>'+
+                                        '<p class="place1 ui-nowrap">'+coachline.dptStation+'</p>'+
+                                        '<p class="place2 ui-nowrap">'+coachline.arrStation+'</p>'+
+                                    '</div>'+
+                                    '<div class="price-wrap">'+
+                                        '<p class="price">¥ '+(parseFloat(coachline.ticketPrice) + parseFloat(coachline.fee)).toFixed(2)+'</p>'+
+                                        '<p class="tick">'+coachline.ticketLeft+'张</p>'+
+                                    '</div>'+
+                                '</div>'+
+                                '<div class="list-bottom ui-btn-wrap">'+
+                                    '<p class="ceci"><i class="ceci-icon"></i><span>'+coachline.coachType+"/"+coachline.coachNO+'</span></p>'+
+                                    "<input type='hidden'  name='coachLineJson' value='"+JSON.stringify(coachline)+"'>"+
+                                    '<button type="buttom" class="ui-btn ui-btn-main book">预定</button>'+
+                                '</div>'+
+                            '</li>';
+                    da += txt;
+                }
+            
+            }
+            
+            $("#coachLines").html(da);
+        }
+    </script>
+    <script type="text/javascript">
+        var startstationdata ="";
+        var endstationdata ="";
+        $(document).ready(function() {
+            $.ajax({
+                type : "GET",
+                url : "app/coach/getStartStation",
+                dataType : "*.json",
+                contentType : "application/json; charset=utf-8",
+                data : {},
+                success : function(data) {
+                    var list = eval(data);
+                    startstationdata =list;
+                }
+
+            });
+        });
+        var input = $("#searchWrap .City");
+        $("#startCity").focus(function(){
+            $("#searchWrap").removeClass("hide");
+            input.focus();
+            input.val("");
+            input.prop("placeholder","请输入出发城市");
+
+            input.keyup(function(){
+                 var str =$(this).val();
+                $("#citybox").empty();
+                var count=0;
+                $.each(startstationdata, function(i, obj) {
+                    
+                    var name = obj.name;
+                    if(str!=""&&(name.indexOf(str))!=-1&&count<10){
+                        count++;
+                        $("#citybox").append("<li value="+name+" onclick='startclick(this)'>"+name+"</li>");
+                    }
+                });
+                if($("#citybox li").length>0){
+                    $("#divcity").removeClass("hide");
+                }else{
+                    $("#divcity").addClass("hide");
+                }
+            });
+
+            $("#hotCity ul li").tap(function(){
+                input.val($(this).text());
+                var str = input.val();
+                var count=0;
+                $("#citybox").empty();
+                $.each(startstationdata, function(i, obj) {
+                    
+                    var name = obj.name;
+                    if(str!=""&&(name.indexOf(str))!=-1&&count<10){
+                        count++;
+                        $("#citybox").append("<li value="+name+" onclick='startclick(this)'>"+name+"</li>");
+                    }
+                });
+                if($("#citybox li").length>0){
+                    $("#divcity").removeClass("hide");
+                }
+                else{
+                    $("#divcity").removeClass("hide");
+                    $("#citybox").append("<li>暂无此地车票</li>");
+                }
+            });
+        })
+
+        function startclick(obj){
+             //alert($(obj).text());
+             $("#startCity").val($(obj).text()) ;
+             $("#divcity").addClass("hide");
+            $("#searchWrap").addClass("hide");
+            $("#citybox").empty();
+             $.ajax({
+                    type : "GET",
+                    url : "app/coach/getEndStation",
+                    dataType : "*.json",
+                    contentType : "application/json; charset=utf-8",
+                    data : {
+                        "startCity" : $("#startCity").val()
+                    },
+                    success : function(data) {
+                        var list2 = $.parseJSON(data);
+                        
+                        endstationdata =list2;
+                    }
+
+                });
+        };
+
+        $("#endCity").focus(function(){
+            $("#searchWrap").removeClass("hide");
+            input.focus();
+            input.val("");
+            input.prop("placeholder","请输入到达城市");
+
+            input.keyup(function(){
+                var str =$(this).val();
+                $("#citybox").empty();
+                var count=0;
+                console.log(endstationdata)
+                
+                $.each(endstationdata, function(i, obj) {
+                    var name = obj.name;
+                    //var quanpin = obj.quanpin;
+                    if(str!=""&&(name.indexOf(str))!=-1&&count<10){
+                        count++;
+                        $("#citybox").append("<li value="+name+" onclick='endclick(this)'>"+name+"</li>");
+                        
+                    }
+                    
+                });
+                
+                if($("#citybox li").length>0){
+                    
+                    $("#divcity").removeClass("hide");
+                }
+                else{
+                    $("#divcity").removeClass("hide");
+                    $("#citybox").append("<li value='' onclick=''>没有到达此地的票</li>");
+                }
+            });
+
+            $("#hotCity ul li").tap(function(){
+                input.val($(this).text());
+                var str = input.val();
+                var count=0;
+                $("#citybox").empty();
+                $.each(endstationdata, function(i, obj) {
+                    var name = obj.name;
+                    //var quanpin = obj.quanpin;
+                    if(str!=""&&(name.indexOf(str))!=-1&&count<10){
+                        count++;
+                        $("#citybox").append("<li value="+name+" onclick='endclick(this)'>"+name+"</li>");
+                        
+                    }
+                    
+                });
+                if($("#citybox li").length>0){
+                    $("#divcity").removeClass("hide");
+                }
+                else{
+                    $("#divcity").addClass("hide");
+                }
+            });
+        })
+        
+        function endclick(obj){
+         $("#endCity").val($(obj).text());
+         $("#divcity").addClass("hide");
+        $("#searchWrap").addClass("hide");
+        $("#citybox").empty();
+          
+        };
+    </script>
+</body>
+</html>

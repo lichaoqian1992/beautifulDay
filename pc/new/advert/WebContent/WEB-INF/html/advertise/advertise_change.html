@@ -1,0 +1,248 @@
+#@layout() 
+#define main()
+
+ <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+          <h2>广告列表</h2>
+          <ol class="breadcrumb">
+            <li>
+              <a href="toMain">主页</a>
+            </li>
+            <li>
+              <strong>广告列表</strong>
+            </li>
+          </ol>
+        </div>
+        <div class="col-lg-2"></div>
+      </div>
+            
+            
+            
+             <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row adds-header ibox-content form-horizontal">
+          
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label class="col-sm-4 control-label">广告状态：</label>
+              <div class="col-sm-6">
+                <select id="state" class="form-control">
+                  <option value="">不限</option>
+                  <option value="1">开</option>
+                  <option value="0">关</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label class="col-sm-4 control-label" for="pl_id">广告位：</label>
+              <div class="col-sm-6">
+                <input type="text" maxlength="2" class="form-control" id="pl_id" placeholder="广告位为纯数字">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label class="col-sm-4 control-label">广告渠道：</label>
+              <div class="col-sm-6">
+                <select id="channel" class="form-control">
+                  <option value="">不限</option>
+                  <option value="0">PC端</option>
+                  <option value="1">APP端</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label class="col-sm-4 control-label">广告类型：</label>
+              <div class="col-sm-6">
+                <select class="form-control" required="required" id="type">
+                  <option value="">不限</option>
+                  <option value="0">商家</option>
+                  <option value="1">商品</option>
+                  <option value="2">活动</option>
+                  <option value="3">APP餐饮美食</option>
+                  <option value="4">APP休闲娱乐</option>
+                  <option value="5">APP酒店住宿</option>
+                  <option value="6">APP旅游观光</option>
+                  <option value="7">APP日用百货</option>
+                  <option value="8">APP外卖服务</option>
+                  <option value="9">APP农村电商</option>
+                  <option value="10">APP海外购</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label class="col-sm-4 control-label" for="shop">店铺名：</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" id="shop" placeholder="请输入店铺名">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label class="col-sm-4 control-label">广告标题：</label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" id="title" placeholder="请输入广告标题">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">投放区域：</label>
+              <div class="col-sm-10 row">
+                <div class="col-sm-4">
+                  <select class="form-control" required="required" id="province">
+                    <option>====省===</option>
+                  </select>
+                </div>
+                <div class="col-sm-4">
+                  <select class="form-control" id="city">
+                    <option>===市===</option>
+                  </select>
+                </div>
+                <div class="col-sm-4">
+                  <select class="form-control" id="country">
+                    <option>===县===</option>
+                  </select>
+                </div>
+                <input type="hidden" class="form-control" name="region" id="region">
+                <input type="hidden" class="form-control" name="code" id="code">
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-2 col-sm-offset-1">
+            <button class="btn btn-primary" id="search" onclick="getAdds()">查询</button>
+          </div>
+        </div>
+        <div class="row adds-list ibox-content">
+            
+        </div>
+      </div>
+
+
+
+    <!-- Mainly scripts -->
+    <script src="#(ctx)/static/js/jquery-2.1.1.min.js"></script>
+    <script src="#(ctx)/static/js/bootstrap.min.js"></script>
+    <script src="#(ctx)/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <!-- Data Tables -->
+    <script src="#(ctx)/static/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="#(ctx)/static/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="#(ctx)/static/js/hplus.js?v=2.2.0"></script>
+    <script src="#(ctx)/static/js/plugins/pace/pace.min.js"></script>
+    <!-- layer javascript -->
+    <script src="#(ctx)/static/js/plugins/layer/layer.min.js"></script>
+    
+  <!-- Custom and plugin javascript -->
+
+  	<script src="#(ctx)/static/js/plugins/switchery/switchery.js"></script>
+  <!-- upload -->
+  	<script src="#(ctx)/static/js/fileinput.js" type="text/javascript"></script>
+		
+  <script>
+    $(document).ready(function () {
+    	  
+    	query(1);
+    	
+    	
+      } )
+      
+      
+      function query(index){
+    	
+    	if(index==0||index==""){
+    		index =1;
+    	}
+    	
+    	var ajaxdatas ="index="+index;
+    	
+    	if($("#name").val() !=""&&$("#name").val()!=null){
+    		ajaxdatas+="&title="+$("#name").val();
+    	}
+    	
+    	if($("#type").val() !=""&&$("#type").val()!=null){
+    		ajaxdatas+="&port="+$("#type").val();
+    	}
+    	
+    	if($("#state").val() !=""&&$("#state").val()!=null){
+    		ajaxdatas+="&ch_state="+$("#state").val();
+    	}
+    	
+    	
+    	
+    	
+    	 $.ajax({
+             type : "GET",
+             url : "/advert/channel/query",
+             dataType : "json",
+             contentType : "application/json; charset=utf-8",
+             data : ajaxdatas,
+             success : function(data) {
+                 
+            	 if(data.code =="0000"){
+            		 
+            		 var index =data.data.pageNumber;
+            		 var totalRow =data.data.totalRow;
+            		 var totalPage =data.data.totalPage;
+            		 var pageSize =data.data.pageSize;
+            		 var list =data.data.list;
+            		 
+            		 var tablehtml="";
+            		 $.each(list,function(i,item){
+            			
+            			 var id =item.id;
+            			 var ch_name =item.ch_name;
+            			 var ch_title =item.ch_title;
+            			 var ch_remark =item.ch_remark;
+            			 var ch_sort =item.ch_sort;
+            			 var ch_port =item.port;
+            			 var ch_flag =item.ch_flag;
+            			 var ch_state =item.ch_state;
+            			 var ch_layer =item.ch_layer;
+            			 
+            			 var rowhtml ="<tr>"+
+    					 "<td>"+id+"</td>"+
+    					 "<td>"+ch_name+"</td>"+
+    					 "<td>"+ch_title+"</td>"+
+    					 "<td>"+ch_sort+"</td>"+
+    					 "<td>"+ch_port+"</td>"+
+    					 "<td>"+ch_layer+"</td>"+
+    					 "<td>"+ch_state+"</td>"+
+    					 "<td>"+ch_flag+"</td>"+
+    					 "<td>"+ch_remark+"</td>"+
+    					 "<td>"+"<a href ='/advert/channel/change?id'"+id+"'>修改</a>"+"</td>"+
+    					 "</tr>";
+    					
+    					tablehtml+=rowhtml;
+            			 
+            		 })
+            		 $("#placeList").html(tablehtml);
+            		 
+            		 
+            		 
+            	 }else{
+            		 
+            		 alert(data.data);
+            	 }
+                 
+                 
+                
+                 
+             }
+         });
+    	
+    	
+    	
+    }
+      
+    
+  </script>
+
+
+
+#end

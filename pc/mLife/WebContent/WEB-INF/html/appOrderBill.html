@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>充值订单</title>
+    <link rel="stylesheet" href="css/frozen.css">
+    <link rel="stylesheet" href="css/validate.css">
+    <link rel="stylesheet" href="css/appstyle.css">
+    <script src="js/lib/zeptojs/zepto.min.js"></script>
+    <script src="js/zepto-mvalidate.js"></script>
+    <script src="js/frozen.js"></script>
+    <!-- 日期控件 -->
+    <link rel="stylesheet" type="text/css" href="css/zepto.mdater.css">
+    <script src="js/zepto.mdater.js"></script>
+</head>
+<!-- 检测用户设备 -->
+    <script type="text/javascript">
+            var browser = { 
+               versions: function() { 
+                   var u = navigator.userAgent; 
+                   return { 
+                       trident: u.indexOf('Trident') > -1, //IE内核 
+                       presto: u.indexOf('Presto') > -1, //opera内核 
+                       webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+                       gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+                       mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+                       ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+                       android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+                       iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+                       iPad: u.indexOf('iPad') > -1, //iPad 
+                       webApp: u.indexOf('Safari') > -1 //Safari 
+                   }; 
+               }() 
+            } 
+            function closePage(){
+                 var jsonstr = "{\"action\":\"close\"}";
+                if ( browser.versions.ios 
+                   || browser.versions.iPhone 
+                   || browser.versions.iPad) { 
+                   window.webkit.messageHandlers.Native.postMessage(jsonstr);
+                }
+                if ( browser.versions.android ) { 
+                    window.paySucess.clickOnAndroid(jsonstr);
+                }
+                 
+             }
+    </script>
+<body ontouchstart="">
+    <section id="order" class="">
+        <header class="ui-header ui-header-positive ui-border-b">
+            <i class="ui-icon-return" onclick="closePage()"></i>
+            <ul class="ul">
+              <li class="active">充值订单</li>
+              <li><a href="toAppOrderTicke?sessionId=#mLife_order_sessionId" class="btn">票务订单</a></li>
+            </ul>
+        </header>
+        <section class="ui-container" id="orderDetail">
+            <ul class="top ui-tiled">
+                <li>
+                    <select id="goodsType" name="goodsType" onchange="queryBills()">
+                        <option value="">充值类型</option>
+                        <option value="Mobile">话费充值</option>
+                        <option value="MobileFlow">流量充值</option>
+                        <option value="WaterCoal">水电气缴费</option>
+                        <option value="GK">固话宽带</option>
+                        <option value="TV">有限电视</option>
+                        <option value="Game">游戏充值</option>
+                        <option value="Card">卡密</option>
+                        <option value="Fine">交通罚款</option>
+                        <option value="GasCard">加油卡充值</option>
+                    </select>
+                </li>
+                <li class="border-left">
+                    <select id="orderStatus" name="orderStatus" onchange="queryBills()">
+                        <option value="">订单状态</option>
+                        <option value="0">待付款</option>
+                        <option value="1">充值中</option>
+                        <option value="2">成功</option>
+                        <option value="3">已撤销</option>
+                    </select>
+                </li>
+
+                <li class="border-left" id="order-date">
+                    日期筛选
+                </li>
+            </ul>
+            <ul id="detailqueryitem" style="display:none">
+                <li>
+                    <div class="input-prepend">
+                        <span class="add-on">订单编号</span><span class="placeholder"><input type="text" placeholder="订单编号" class="placeholderB input-text " id="orderNumber" name="orderNumber" onkeyup="queryBills()"></span>
+                    </div>
+                </li>
+                <li>
+                    <div class="input-prepend">
+                        <span class="add-on">充值帐号</span><span class="placeholder"><input type="text" id="rechargeAccount" placeholder="充值帐号" class="placeholderB input-text " name="rechargeAccount" onkeyup="queryBills()"></span>
+                    </div>
+                </li>
+            </ul>
+            <section class="section" style="background:none; ">
+                <ul class="ticketList" id="bills">
+                </ul>
+            </section>
+        </section>
+    </section>
+
+    <section id="showDetail" class="hide">
+        <header class="ui-header ui-header-positive ui-border-b">
+            <i class="ui-icon-return" onclick="showOrder()"></i><h1>订单详情 </h1>
+        </header>
+        <section class="content">
+            <div>
+                <div class="bottom">
+                    <div class="ui-form-item ui-border-b">
+                        <label>订单名称：</label>
+                        <input type="text" value="重庆1000元话费充值" disabled="true" id="orderName" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>订单编号：</label>
+                        <input type="text" value="P1234567489" disabled="true" id="orderID" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>付款编号：</label>
+                        <input type="text" value="P1234567489" disabled="true" id="payID" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>订单金额：</label>
+                        <input type="text" value="1000.00元" disabled="true" id="orderPrice" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>订单状态：</label>
+                        <input type="text" value="待支付" disabled="true" id="orderStatus" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>订单类型</label>
+                        <input type="text" value="话费充值" disabled="true" id="orderType" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>充值账号：</label>
+                        <input type="text" value="" disabled="true" id="acount" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>下单人：</label>
+                        <input type="text" value="张三" disabled="true" id="name" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>下单时间：</label>
+                        <input type="text" value="2016-09-24  08:00" disabled="true" id="createTime" >
+                    </div>
+                    <div class="ui-form-item ui-border-b">
+                        <label>完成时间：</label>
+                        <input type="text" value="2016-09-24  08:00" disabled="true" id="endTime" >
+                    </div>
+                </div>
+                <div align="center" id="myPay"><input class="ui-btn-lg ui-btn-main" id="billSubmit" type="button" value="继续付款"/></div>
+            </div>
+            <form action="app/order/continuePay" method="post" id="payAgain">
+            	<input type="hidden" name="order_id" id="order_id">
+            	<input type="hidden" name="order_title" id="order_title">
+            	<input type="hidden" name="order_money" id="order_money"> 
+            </form>
+        </section>
+    </section>
+    <div class="ui-dialog select-date">
+        <div class="ui-dialog-cnt">
+            <div class="ui-dialog-bd">
+                <ul class="ui-tiled border-b" id="select-day">
+                    <li class="active" id="date_today"><span>今天</span></li>
+                    <li id="date_yesterday" class="y"><span>昨天</span></li>
+                    <li id="date_curMonth" class="y"><span>本月</span></li>
+                </ul>
+                <ul class="ui-tiled border-b" id="date-select">
+                    <li>
+                        <p>初始日期</p>
+                        <input id ="starttime" readonly="true" class="form-control" type="text" onchange="checkDate1()"/>
+                    </li>
+                    <li>
+                        <p>截止日期</p>
+                        <input id ="endtime" readonly="true" class="form-control" type="text" onchange="checkDate2()"/>
+                    </li>
+                </ul>
+            </div>
+            <script type="text/javascript">
+                $('#starttime').mdater({ 
+                    maxDate : new Date()
+                });
+               
+                $('#endtime').mdater({ 
+                    minDate : new Date(1970,0,1),
+                    maxDate : new Date()
+                });
+            </script>
+            <div class="ui-dialog-ft">
+                <button type="button" data-role="button" id="sure">确定</button>
+                <button type="button" data-role="button" onclick="hidedate();" id="quxiao">取消</button>
+            </div>
+        </div>        
+    </div>
+    <script>
+        $("#orderDetail .ticketList").on("click","li",function(){
+            var outerid = $(this).find(".outerid").val();
+            console.log(outerid)
+            var status = $(this).find('.status').text();
+            var type = $(this).find('.ticketType').text();
+            var ctime = $(this).find('.ctime').val();
+            var etime;
+            if ($(this).find('.etime').val() == "") {
+                etime = "待完成";
+            }else{
+                etime = $(this).find('.etime').val();
+            }
+            var name = $(this).find(".name_").val();
+            var acount = $(this).find(".billId span").text();
+            $.ajax({
+                type : "GET",
+                url : "app/order/getChargeDetail",
+                dataType : "*.json",
+                contentType : "application/json; charset=utf-8",
+                data : {
+                    outerId : outerid
+                },
+                success : function(data){
+                    var order = $.parseJSON(data);
+                    console.log(order)
+                    $("#orderName").val(order.itemname);
+                    $("#orderPrice").val(order.saleamount);
+                    $("#orderStatus").val(status);
+                    $("#orderType").val(type);
+                    $("#name").val(name);
+                    $("#orderID").val(order.outerid);
+                    if(order.mjoder == undefined){
+                    	order.mjoder = "";
+                    }
+                    $("#payID").val(order.mjoder);
+                    $("#createTime").val(ctime);
+                    $("#endTime").val(etime);
+                    $("#acount").val(acount);
+                    
+                    $("#order_id").val(order.outerid);
+    				$("#order_title").val(order.itemname);
+    				$("#order_money").val(Number(order.saleamount).toFixed(2));
+                    showDetail();
+                    //根据支付状态动态的显示“继续付款”
+                    if(status == "待付款" || status == "充值失败"){
+                    	$("#myPay").addClass("show");
+                    }else{
+                    	$("#myPay").addClass("hide");
+                    }
+                }
+            })
+        });
+        //继续付款
+        $("#billSubmit").tap(function(){
+        	$("#payAgain").submit();
+        });
+        $("#order-date").tap(function(){
+            $(".select-date").addClass("show");
+            $("#date_today").addClass("active");
+            $(".y").removeClass("active");
+            startTime.val(dateNow());
+            endTime.val(dateNow());
+        });
+        $("#sure").click(function(){
+        	checkDate1();
+        });
+        function hidedate(){
+//         	checkDate1();
+            $(".select-date").removeClass("show");
+        }
+        function showDetail(){
+            $("#showDetail").removeClass("hide");
+            $("#order").addClass("hide");
+        }
+        function showOrder(){
+            $("#showDetail").addClass("hide");
+            $("#order").removeClass("hide");
+            $("#orderStatus option").eq(0).prop("selected",true);
+        }
+      //提醒
+        function showDialog(content){
+    		var dia=$.dialog({
+                content:content,
+                button:["确认"]
+            });
+
+            dia.on("dialog:action",function(e){
+                console.log(e.index)
+            });
+            dia.on("dialog:hide",function(e){
+                console.log("dialog hide")
+            });
+    	}
+
+
+        $("#select-day li").tap(function(){
+            $(this).addClass("active").siblings('li').removeClass('active');
+        });
+
+        /* 日期功能 */
+        var today = $("#date_today");
+        var yesterday = $("#date_yesterday");
+        var curMonth = $("#date_curMonth");
+        var startTime = $("#starttime");
+        var endTime = $("#endtime");
+        
+        function dateNow(){
+            var d = new Date();
+            function addzero(v) {if (v < 10) return '0' + v;return v.toString();}
+            var s = d.getFullYear().toString() + '-'+addzero(d.getMonth() + 1) + '-'+addzero(d.getDate());
+            return s;
+        }
+        function dateYesterday(){
+            var d = new Date();
+            function addzero(v) {if (v < 10) return '0' + v;return v.toString();}
+            var s = d.getFullYear().toString() + '-'+addzero(d.getMonth() + 1) + '-'+addzero(d.getDate()-1);
+            return s;
+        }
+        function dateMonth(){
+            var d = new Date();
+            function addzero(v) {if (v < 10) return '0' + v;return v.toString();}
+            var s = d.getFullYear().toString() + '-'+addzero(d.getMonth() + 1) + '-01';
+            return s;
+        }
+        
+        today.click(function(){
+            startTime.val(dateNow());
+            endTime.val(dateNow());
+            queryBills();
+        });
+        yesterday.click(function(){
+            startTime.val(dateYesterday()); 
+            endTime.val(dateNow());
+            queryBills();
+        });
+        curMonth.click(function(){
+            startTime.val(dateMonth()); 
+            endTime.val(dateNow());
+            queryBills();
+        });
+        //校验开始日期和结束日期
+        function checkDate1(){
+            //1.先得到两个日期
+            var date1 = $("#starttime").val();
+            var date2 = $("#endtime").val();
+            if((new Date(date1)).getTime() > (new Date(date2)).getTime()){
+                var txt=  "初始日期不能大于截止日期";
+                showDialog(txt);
+                return false;
+            }
+            hidedate();
+            queryBills();
+        }
+        //校验开始日期和结束日期
+        function checkDate2(){
+            //1.先得到两个日期
+            var date1 = $("#starttime").val();
+            var date2 = $("#endtime").val();
+            if((new Date(date1)).getTime() > (new Date(date2)).getTime()){
+                var txt=  "结束时间不能小于开始时间";
+                showDialog(txt);
+                $("#endtime").val("");
+                return false;
+            }
+            hidedate();
+        }
+        var pageobj=1;
+
+        var billtxt ="";
+        queryBills();
+        function queryBills(obj){
+                if(obj!=null && obj!=undefined && obj!=""){
+                     pageobj=obj;
+                }else{
+                	pageobj =1;
+                	billtxt = "";
+                }
+//                 alert("类型："+$("#goodsType").val()+"状态："+$("#orderStatus").val()+"页码："+pageobj);
+                var starttime =$("#starttime").val();
+                var endtime =$("#endtime").val();
+                var ordertype =$("#goodsType").val();
+                var orderno =$("#orderNumber").val();
+                var rechargeaccount =$("#rechargeAccount").val();
+                var orderstate =$("#orderStatus").val();
+                //处理结束时间。查询的时候结束时间默认加一天
+                if(endtime != null && undefined != endtime && "" != endtime){
+                    var enddate = new Date(new Date(endtime).getTime()+24*60*60*1000);
+                    function addzero(v) {if (v < 10) return '0' + v;return v.toString();}
+                    endtime = enddate.getFullYear().toString() + '-'+addzero(enddate.getMonth() + 1) + '-'+addzero(enddate.getDate());
+                    //只选择了结束时间，没有选择开始时间
+                    if(starttime == null || undefined == starttime || "" == starttime){
+                        starttime = "1970-01-01";
+                    }
+                }
+                //只选择了开始时间，没有选择结束时间
+                if(starttime != null && undefined != starttime && "" != starttime){
+                    if(endtime == null || undefined == endtime || "" == endtime){
+                        endtime = dateNow();
+                    }
+                }
+                $.ajax({
+                    type : "GET",
+                    url : "app/order/getChargeBills",
+                    dataType : "*.json",
+                    contentType : "application/json; charset=utf-8",
+                    data : {
+                        goodsType : $("#goodsType").val(),//订单类型
+                        starttime:starttime,//开始时间
+                        endtime:endtime,//结束时间
+                        orderNumber:$("#orderNumber").val(),//订单号
+                        rechargeAccount:$("#rechargeAccount").val(),//充值账号
+                        orderStatus:$("#orderStatus").val(),//订单状态
+                        userName:"#mLife_order_username",
+                        page:pageobj
+                    },
+                    success : function(data) {
+                        // if(data==0){
+                        //     var txt = "亲，请登录后查看哟！";
+                        //     window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                        //     return false;
+                        // }
+                        var items =$.parseJSON(data);
+                        console.log(items)
+                        bills=items.list
+                        for(var i =0;i<bills.length;i++){
+                            var bill =bills[i];
+                            var state="";
+                            var type = "";
+                            switch(bill.state){
+                            case '0':
+                                state ="待付款";
+                                break;
+                            case '1':
+                                state ="充值中";
+                                break;
+                            case '2':
+                                state="成功";
+                                break;
+                            case '3':
+                                state="已撤销";
+                                break;
+                            case '4':
+                                state="充值失败";
+                                break;
+                            default :
+                                state="待处理";
+                            
+                            }
+                            switch(bill.type){
+                                case 'Mobile':
+                                    type ="话费充值";
+                                    break;
+                                case 'MobileFlow':
+                                    type ="流量充值";
+                                    break;
+                                case 'WaterCoal':
+                                    type="水电气缴费";
+                                    break;
+                                case 'GK':
+                                    type="固话宽带";
+                                    break;
+                                case 'TV':
+                                    type="有限电视";
+                                    break;
+                                case 'Game':
+                                    type = "游戏充值";
+                                    break;
+                                case 'Card':
+                                    type = "卡密";
+                                    break;
+                                case 'Fine':
+                                    type = "交通罚款";
+                                    break;
+                                case 'GasCard':
+                                    type = "加油卡充值";
+                                    break;
+                                default :
+                                    type="未知";
+                            }
+                            billtxt +='<li>'+
+                                            '<div class="ui-form-item  ui-whitespace border-b">'+
+                                                '<p class="fl title"><span class="ticketType">'+type+'</span>  </p><p class="fr"><span class="status">'+state+'</span></p><span class="squire"></span>'+
+                                            '</div>'+
+                                            '<div class="ui-row" style="padding:15px 15px 0;">'+
+                                                '<div class="info">'+
+                                                    '<p class="infoTitle">'+bill.title+'</p>'+
+                                                    '<p class="billId">充值账号：<span>'+bill.name+'</span></p>'+
+                                                    '<p class="bottomInfo"><span class="date fl">'+(bill.ctime).split(" ")[0]+'</span><div class="fr prc">¥ <span class="price">'+Number(bill.paycash).toFixed(2)+'</span></div></p>'+
+                                                    "<input type='hidden' value='"+bill.outerid+"' class='outerid'/>"+
+                                                    "<input type='hidden' value='"+bill.ctime+"' class='ctime'/>"+
+                                                    "<input type='hidden' value='"+bill.etime+"' class='etime'/>"+
+                                                    "<input type='hidden' value='"+bill.username+"' class='name_'/>"+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</li>';
+                        }
+                        $("#bills").html(billtxt); 
+                        
+                        if(items.totalPage > pageobj){
+                            pageobj ++;
+                            loadMore();
+                        }
+                    }
+                });
+        };
+        function loadMore(){
+        	var $wrap = $("#bills");
+            $(window).scroll(function(){
+                var bW = $wrap.offset().top + $wrap.height() - $(window).scrollTop();
+                if ( bW < $(window).height() )
+                {
+                    queryBills(pageobj);
+                    $ (window).unbind ('scroll');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

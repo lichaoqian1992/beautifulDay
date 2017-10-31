@@ -1,0 +1,75 @@
+<div class="row-fluid">
+		<div class="span12">
+			<div class="dataTables_info" id="dividersummery" style="margin: 20px 0;font-size: 14px;line-height: 30px;"></div>
+		</div>
+		<div class="span12" style="margin-top:-70px;">
+			<div class="dataTables_paginate paging_bootstrap pagination" id="devider" style="text-align:center;">
+				
+			</div>
+		</div>
+</div>
+
+<script>
+
+function deviderset(totalcount,pagecount,pageindex){
+	
+	var summery ="共"+totalcount+"条数据--共"+pagecount+"页";
+	$("#dividersummery").html(summery);
+	
+	var deviderhtml="";
+	if(pageindex==1){
+		deviderhtml+="<ul><li  class='prev ' style='display:none'><a  onclick='queryinfo("+Number(pageindex-1)+")'>← <span class='hidden-480'>Prev</span></a></li>";
+	}else{
+		deviderhtml+="<ul><li  id='firstdiv' class='prev '><a  onclick='queryinfo("+Number(pageindex-1)+")'>← <span class='hidden-480'>Prev</span></a></li>";
+	}
+	
+	
+	if(pagecount<6){
+		
+		for(var i=1;i<=pageindex;i++){
+			
+			deviderhtml+="<li ><a onclick='queryinfo("+i+")'>"+i+"</a></li>";
+			
+		}
+		
+		
+	}else{
+		
+		if(pageindex<3){
+			for(var j=1;j<=6;j++){
+				
+				deviderhtml+="<li ><a onclick='queryinfo("+j+")'>"+j+"</a></li>";
+				
+			}
+			
+		}else if(pageindex<=pagecount-2){
+			
+			var m =pageindex-2;
+			for(var k=0;k<5;k++){
+				
+				deviderhtml+="<li ><a onclick='queryinfo("+m+")'>"+m+"</a></li>";
+				m++;
+			}
+			
+			
+		}else if(pageindex>pagecount-2){
+			var n =pageindex-4;
+			for(var q=0;q<5;q++){
+				deviderhtml+="<li ><a onclick='queryinfo("+n+")'>"+n+"</a></li>";
+				n++;
+			}
+		}
+		
+	}
+	
+
+	if(pageindex ==pagecount){
+		deviderhtml+="<li id='lastdiv ' style='display:none'><a  onclick='queryinfo("+Number(pageindex+1)+")'> <span class='hidden-480'>Next</span> → </a></li></ul>";
+	}else{
+		deviderhtml+="<li id='lastdiv '><a  onclick='queryinfo("+Number(pageindex+1)+")'> <span class='hidden-480'>Next</span> → </a></li></ul>";
+	}
+	
+	$("#devider").html(deviderhtml);
+}
+
+</script>

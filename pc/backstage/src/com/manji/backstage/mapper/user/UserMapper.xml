@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.user.UserMapper" >
+
+
+
+
+<select id="countUser" parameterType="UserVo" resultType="int">
+select count(*) from dt_users
+where 1=1
+		<if test="id != null and id != ''">
+      and id=#{id}
+    </if>
+		<if test="user_name != null and user_name != ''">
+      and user_name like '%${user_name}%'
+    </if>
+
+
+</select>
+<select id="queryUser" parameterType="UserVo" resultType="User">
+select * from dt_users dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_users  where 1=1
+		<if test="id != null and id != ''">
+      and id=#{id}
+    </if>
+		<if test="user_name != null and user_name != ''">
+      and user_name like '%${user_name}%'
+    </if>
+		
+		order by id desc
+	)dt order by dt.id asc 
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+
+<select id="getUser" parameterType="int" resultType="User">
+select * from dt_users where id=#{0}
+</select>
+
+<update id="updUser" parameterType="User">
+update dt_users set 
+group_id=#{group_id},
+user_name=#{user_name},
+salt=#{salt},
+password=#{password},
+mobile=#{mobile},
+email=#{email},
+avatar=#{avatar},
+nick_name=#{nick_name},
+sex=#{sex},
+birthday=#{birthday},
+telphone=#{telphone},
+area=#{area},
+address=#{address},
+qq=#{qq},
+pay_password=#{pay_password},
+status=#{status},
+remark=#{remark},
+reg_time=#{reg_time},
+reg_ip=#{reg_ip},
+from_value=#{from_value},
+is_del=#{is_del}
+where id=#{id}
+</update>
+
+<insert id="addUser" parameterType="User">
+insert into dt_users
+(group_id,user_name,salt,password,mobile,email,avatar,nick_name,sex,birthday,telphone,area,address,qq,pay_password,status,remark,reg_time,reg_ip,from_value,is_del)
+values (#{group_id},#{user_name},#{salt},#{password},#{mobile},#{email},#{avatar},#{nick_name},#{sex},#{birthday},#{telphone},#{area},#{address},#{qq},#{pay_password},#{status},#{remark},#{reg_time},#{reg_ip},#{from_value},#{is_del})
+</insert>
+
+<delete id="delUser" parameterType="int">
+delete from dt_users where id=#{0}
+</delete>
+
+
+
+
+
+
+<select id="countRecAddr" parameterType="RecAddrVo" resultType="int">
+select count(*) from dt_user_addr_book where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>
+<if test="accept_name != null and accept_name != ''">
+  and accept_name like '%${accept_name}%'
+</if>
+<if test="mobile != null and mobile != ''">
+  and mobile like '%${mobile}%'
+</if>
+</select>
+<select id="queryRecAddr" parameterType="RecAddrVo" resultType="RecAddr">
+select * from dt_user_addr_book dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_addr_book  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+		<if test="accept_name != null and accept_name != ''">
+      and accept_name like '%${accept_name}%'
+    </if>
+		<if test="mobile != null and mobile != ''">
+      and mobile like '%${mobile}%'
+    </if>
+		
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getRecAddr" parameterType="int" resultType="RecAddr">
+select * from dt_user_addr_book where id=#{0}
+</select>
+
+<insert id="addRecAddr" parameterType="RecAddr" >
+insert into dt_user_addr_book
+(user_id,user_role_type,user_role_value,accept_name,area,address,mobile,telphone,email,post_code,is_default,add_time,is_del,longitude,latitude,is_distribution,sex,doorplate)
+values(#{user_id},#{user_role_type},#{user_role_value},#{accept_name},#{area},#{address},#{mobile},#{telphone},#{email},#{post_code},#{is_default},#{add_time},#{is_del},#{longitude},#{latitude},#{is_distribution},#{sex},#{doorplate})
+
+</insert>
+
+<update id="updRecAddr" parameterType="RecAddr">
+update dt_user_addr_book set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+accept_name=#{accept_name},
+area=#{area},
+address=#{address},
+mobile=#{mobile},
+telphone=#{telphone},
+email=#{email},
+post_code=#{post_code},
+is_default=#{is_default},
+add_time=#{add_time},
+is_del=#{is_del},
+longitude=#{longitude},
+latitude=#{latitude},
+is_distribution=#{is_distribution},
+sex=#{sex},
+doorplate=#{doorplate}
+where id=#{id}
+</update>
+
+<delete id="delRecAddr" parameterType="int">
+delete from dt_user_addr_book where id=#{0}
+</delete>
+
+
+<select id="countUserFavorites" parameterType="UserFavoritesVo" resultType="int">
+select count(*) from dt_user_favorites where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>
+ <if test="title != null and title != ''">
+      and title like '%${title}%'
+    </if>
+</select>
+<select id="queryUserFavorites" parameterType="UserFavoritesVo" resultType="UserFavorites">
+select * from dt_user_favorites dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_favorites  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+    <if test="title != null and title != ''">
+      and title like '%${title}%'
+    </if>
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getUserFavorites" parameterType="int" resultType="UserFavorites">
+select * from dt_user_favorites where id=#{0}
+</select>
+
+<insert id="addUserFavorites" parameterType="UserFavorites" >
+insert into dt_user_favorites
+(type,value,title,pics,url,user_id,TAG,add_times,is_del)
+values(#{type},#{value},#{title},#{pics},#{url},#{user_id},#{TAG},#{add_times},#{is_del})
+
+</insert>
+
+<update id="updUserFavorites" parameterType="UserFavorites">
+update dt_user_favorites set 
+type=#{type},
+value=#{value},
+title=#{title},
+pics=#{pics},
+url=#{url},
+user_id=#{user_id},
+TAG=#{TAG},
+add_times=#{add_times},
+is_del=#{is_del}
+where id=#{id}
+</update>
+
+<delete id="delUserFavorites" parameterType="int">
+delete from dt_user_favorites where id=#{0}
+</delete>
+
+
+<select id="countPersonInfo" parameterType="PersonInfoVo" resultType="int">
+select count(*) from dt_user_personinfo where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>
+<if test="person_name != null and person_name != ''">
+  and person_name like '%${person_name}%'
+</if>
+<if test="card_type != null and card_type != ''">
+  and card_type like '%${card_type}%'
+</if>
+<if test="card_number != null and card_number != ''">
+  and card_number like '%${card_number}%'
+</if>
+</select>
+<select id="queryPersonInfo" parameterType="PersonInfoVo" resultType="PersonInfo">
+select * from dt_user_personinfo dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_personinfo  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+    <if test="person_name != null and person_name != ''">
+      and person_name like '%${person_name}%'
+    </if>
+    <if test="card_type != null and card_type != ''">
+      and card_type like '%${card_type}%'
+    </if>
+    <if test="card_number != null and card_number != ''">
+      and card_number like '%${card_number}%'
+    </if>
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getPersonInfo" parameterType="int" resultType="PersonInfo">
+select * from dt_user_personinfo where id=#{0}
+</select>
+
+<insert id="addPersonInfo" parameterType="PersonInfo">
+insert into dt_user_personinfo
+(user_id,person_name,card_type,card_number,card_pics,person_area,person_nation,person_brithday,local_area)
+values(#{user_id},#{person_name},#{card_type},#{card_number},#{card_pics},#{person_area},#{person_nation},#{person_brithday},#{local_area})
+</insert>
+
+<update id="updPersonInfo" parameterType="PersonInfo">
+update dt_user_personinfo set
+user_id=#{user_id},
+person_name=#{person_name},
+card_type=#{card_type},
+card_number=#{card_number},
+card_pics=#{card_pics},
+person_area=#{person_area},
+person_nation=#{person_nation},
+person_brithday=#{person_brithday},
+local_area=#{local_area}
+where id=#{id}
+</update>
+
+<delete id="delPersonInfo" parameterType="int">
+delete from dt_user_personinfo where id=#{0}
+</delete>
+
+
+
+
+<select id="countCompanyInfo" parameterType="CompanyInfoVo" resultType="int">
+select count(*) from dt_user_companyinfo where 1=1
+<if test="user_id != null and user_id != ''">
+    and user_id=#{user_id}
+</if>
+<if test="name != null and name != ''">
+	and name like '%${name}%'
+</if>
+</select>
+<select id="queryCompanyInfo" parameterType="CompanyInfoVo" resultType="CompanyInfo">
+select * from dt_user_companyinfo dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_companyinfo  where 1=1
+		<if test="user_id != null and user_id != ''">
+      		and user_id=#{user_id}
+    	</if>
+    	<if test="name != null and name != ''">
+      		and name like '%${name}%'
+    	</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getCompanyInfo" parameterType="int" resultType="CompanyInfo">
+select * from dt_user_companyinfo where id=#{0}
+</select>
+
+<insert id="addCompanyInfo" parameterType="CompanyInfo" >
+insert into dt_user_companyinfo 
+(user_id,type,name,area,website,email,telephone,address,business,card_number,card_pics,card_type,legal_person,legal_person_mobile,legal_person_idcard,license_pics,license_num)
+values(#{user_id},#{type},#{name},#{area},#{website},#{email},#{telephone},#{address},#{business},#{card_number},#{card_pics},#{card_type},#{legal_person},#{legal_person_mobile},#{legal_person_idcard},#{license_pics},#{license_num})
+</insert>
+
+<update id="updCompanyInfo" parameterType="CompanyInfo">
+update dt_user_companyinfo set
+user_id=#{user_id},
+type=#{type},
+name=#{name},
+area=#{area},
+website=#{website},
+email=#{email},
+telephone=#{telephone},
+address=#{address},
+business=#{business},
+card_number=#{card_number},
+card_pics=#{card_pics},
+card_type=#{card_type},
+legal_person=#{legal_person},
+legal_person_mobile=#{legal_person_mobile},
+legal_person_idcard=#{legal_person_idcard},
+license_pics=#{license_pics},
+license_num=#{license_num}
+where id=#{id}
+</update>
+
+<delete id="delCompanyInfo" parameterType="int">
+delete from dt_user_companyinfo where id=#{0}
+</delete>
+
+
+
+
+
+<select id="countBankType" parameterType="BankTypeVo" resultType="int">
+select count(*) from dt_user_banktype where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>
+<if test="bank_type_value != null and bank_type_value != ''">
+  and bank_type_value like '%${bank_type_value}%'
+</if>
+</select>
+<select id="queryBankType" parameterType="BankTypeVo" resultType="BankType">
+select * from dt_user_banktype dt1,
+(
+	select top 20 id from  
+	(
+		select top(#{index}*20) id from dt_user_banktype  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+    <if test="bank_type_value != null and bank_type_value != ''">
+      and bank_type_value like '%${bank_type_value}%'
+    </if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+
+<select id="getBankType" parameterType="int" resultType="BankType">
+select * from dt_user_banktype where id=#{0}
+</select>
+
+<insert id="addBankType" parameterType="BankType">
+insert into dt_user_banktype 
+(bank_type,user_id,user_role_type,user_role_value,bank_type_value,bank_address,bank_area,add_time,is_last_use,failed_times,is_del,usertype,status,remark)
+values(#{bank_type},#{user_id},#{user_role_type},#{user_role_value},#{bank_type_value},#{bank_address},#{bank_area},#{add_time},#{is_last_use},#{failed_times},#{is_del},#{usertype},#{status},#{remark})
+
+</insert>
+
+<update id="updBankType" parameterType="BankType" >
+update dt_user_banktype set
+bank_type =#{bank_type},
+user_id =#{user_id},
+user_role_type =#{user_role_type},
+user_role_value =#{user_role_value},
+bank_type_value =#{bank_type_value},
+bank_address =#{bank_address},
+bank_area =#{bank_area},
+add_time =#{add_time},
+is_last_use =#{is_last_use},
+failed_times =#{failed_times},
+is_del =#{is_del},
+usertype =#{usertype},
+status =#{status},
+remark =#{remark}
+where id=#{id}
+</update>
+
+<delete id="delBankType" parameterType="int">
+delete from dt_user_banktype where id=#{0}
+</delete>
+
+</mapper>

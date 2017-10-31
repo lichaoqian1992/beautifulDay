@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>充值中心</title>
+    <link rel="stylesheet" href="../../css/frozen.css">
+    <link rel="stylesheet" href="../../css/appstyle.css">
+    <script src="../../js/lib/zeptojs/zepto.min.js"></script>
+    <script src="../../js/frozen.js"></script>
+</head>
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="history.back()"></i><h1>
+        游戏充值 
+         </h1>
+    </header>
+    <footer class="ui-footer ui-border-t" style="height: 50px;">
+        <div class="ui-form-item border-b" style="padding-right:0;">
+            <label>总金额：<span id="total">¥0.00</span></label>
+            <button class="btn-confirm" onclick="submit()">确认</button>
+        </div>
+    </footer>
+    <section class="ui-container">
+        <form action="createGameBill" id="gameBill" method="POST">   
+        	<input type="hidden" name="gameId" id="gameId" value="#mLife_GameId"> 
+            <input type="hidden" name="gameName" id="gameName" value="#mLife_GameName">
+            <input type="hidden" name="itemId" id="itemId" value="">
+			<input type="hidden"  id="totalAmount" name="totalAmount" value="">
+            <input type="hidden" name="rechargeAccount2" id="rechargeAccount2">
+            <input type="hidden"  id="GameItemJson" name="GameItemJson" value='#mLife_GameItemJson'>
+            <div class="ui-form-item border-b">
+                <label>商品名称</label>
+                <input type="text" value="#mLife_GameName" readonly>
+            </div>
+            <div class="ui-form-item border-b">
+                <label>
+                    游戏账号
+                </label>
+                <input type="text" id="rechargeAccount" name="rechargeAccount" autocomplete="false" maxlength="50" placeholder="请输入游戏账号  ">
+            </div>
+            
+            <div class="money border-b">
+                <div class="ui-row select-box" style="padding-top: 15px;">
+                    <p class="ui-txt-info ui-whitespace">
+                    充值金额
+                    </p>
+                    <ul class="ui-grid-trisect ui-border-b btns ui-btn-wrap select-money">
+                        
+                    </ul>
+                </div>
+            </div>
+            <div class="ui-form-item border-b bill-num">
+                <label>
+                    购买数量
+                </label>
+                <span class="btn-num sub">-</span>
+                <input name="itemNum" id="itemNum" type="text" class="btn-num number" value="1" style="width: 30px;margin:0;">
+                <span class="btn-num add">+</span>
+            </div>
+        </form>
+    </section>
+   
+    <script class="demo-script">
+	    var gameItemJson = $.parseJSON($("#GameItemJson").val());
+		
+        var money = $(".select-money");
+        var itemPrice = 0;
+        money.on("click","label",function(){
+            var idx = $(this).data("index");
+            money.find('label').removeClass("active");
+            $(this).addClass("active");
+            itemPrice = parseInt($(this).text());
+            $("#itemId").val(gameItemJson[idx].itemId);
+            calc();
+        });
+        $(".add").tap(function(){
+            calc();
+        });
+        $(".sub").tap(function(){
+            calc();
+        });
+        $("#itemNum").keyup(function(){
+            calc();
+        });
+        function calc(){
+            var num = $("#itemNum").val();
+            $("#total").text("¥"+(itemPrice*num).toFixed(2));
+            $("#totalAmount").val((itemPrice*num).toFixed(2));
+        }
+        $("#rechargeAccount").keyup(function(){
+            var val = $(this).val();
+            $("#rechargeAccount2").val(val);
+        });
+        // 加载面值
+        $(function(){
+            console.log(gameItemJson);
+            var money = $(".select-money");
+            money.empty();
+            for(var i = 0; i < gameItemJson.length; i++){
+                var index = i;
+                var item = gameItemJson[i];
+                var amount =gameItemJson.facePriceValue;
+                var id =gameItemJson.itemId;
+                money.append('<li class="ui-col"><label data-index="'+index+'">'+item.facePriceValue+'  元  </label></li>');
+            }
+            
+        });
+        
+        // 提交订单
+        function submit(){
+            if($("#rechargeAccount").val() == ""){
+
+                var dia=$.dialog({
+                    title:'温馨提示',
+                    content:'请输入游戏账号',
+                    button:["确认"]
+                });
+                return false;
+            }
+            if($(".select-money").find(".active").length == 0){
+
+                var dia=$.dialog({
+                    title:'温馨提示',
+                    content:'请选择充值金额',
+                    button:["确认"]
+                });
+                return false;
+            }
+            $("#gameBill").submit();
+        }
+        // 购买数量
+        (function(){
+            var sub = $(".bill-num .sub");
+            var number = $(".bill-num .number");
+            var add = $(".bill-num .add");
+            sub.on("click",function(){
+                var val = number.val();
+                number.val(val-1);
+                if(val<=1){number.val(1)}
+            });
+            add.on("click",function(){
+                var val = number.val();
+                number.val(Number(val)+1);
+                if(val >= 10) {number.val(10);}
+            });
+
+
+        })();
+    </script>
+</body>
+</html>

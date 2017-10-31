@@ -1,0 +1,171 @@
+#@layout()
+#define main()
+	<section class="content-header">
+		<ol class="breadcrumb">
+			<li>
+				<a href="#"><i class="fa fa-dashboard"></i> 系统管理</a>
+			</li>
+			<li>
+				系统设置
+			</li>
+		</ol>
+	</section>
+
+	<!-- 主要内容 -->
+	<section class="invoice">
+		<div class="row">
+			<div class="col-md-12">
+				<ul class="nav nav-tabs">
+					<li>
+						<a href="/finance/sys/recAmountSettings?nav=nav19">充值金额权限设置</a>
+					</li>
+					<li>
+						<a href="/finance/sys/withAmountSettings?nav=nav19">提现金额权限设置</a>
+					</li>
+					<li class="active">
+						<a href="/finance/sys/daylyRepSettings?nav=nav19">每日交易报送设置</a>
+					</li>
+					<li>
+						<a href="/finance/sys/withRulesSettings?nav=nav19">异常提现条件设置</a>
+					</li>
+				</ul>
+
+				<div class="tab-content">
+					<div class="tab-pane fade in active">
+						<div class="col-md-12">
+							<div class="set_box_list">
+							#for(x : aa)
+								<div class="set_box">
+									<div class="set_box_itme">
+										接收人：
+										<input type="hidden" value=#(x.ID) class="id">
+										<input type="text" value=#(x.USER_NAME) disabled="disabled" class="name"/>
+										
+									</div>
+									<div class="set_box_itme">
+										手机号码：
+										<input type="text" value=#(x.MOBILE) disabled="disabled" class="mobile"/>
+									</div>
+			                   </div>
+			                   #end
+		                    </div>
+		                    <div class="set_box_add hide">
+		                   	 	<span class="href_a"><i class="fa fa-plus"></i> 添加接收人</span>
+		                    </div>
+		                    <div class="set_box_btn">
+		                   	 	<button type="button" class="btn btn-primary btn_update">修改</button>
+		                   	 	<button type="button" class="btn btn-primary btn_save hide" onclick="saveOrUpdate()">保存</button>
+		                    </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	<!-- /主要内容 -->
+	#include("../common/_js.html")
+	<script type="text/javascript">
+		$(function() {
+			
+		
+			//保存和修改切换
+			$(".tab-content").on("click",".btn_update, .btn_save",function(){
+				$(this).addClass("hide").siblings().removeClass("hide");
+				var sib_box=$(this).parent().siblings(".set_box_list");
+				var sib_input=sib_box.find("input[type='text']");
+				var sib_label=sib_box.find("label");
+				var sib_span=sib_box.find(".set_box_duty_name");
+				var sib_add=$(this).parent().siblings(".set_box_add");
+				if($(this).hasClass("btn_update")){
+					sib_add.removeClass("hide");
+					sib_input.prop("disabled",false);
+					sib_label.removeClass("hide");
+					sib_span.addClass("hide");
+				}else if($(this).hasClass("btn_save")){
+					sib_add.addClass("hide");
+					sib_input.prop("disabled",true);
+					sib_label.addClass("hide");
+					sib_span.removeClass("hide");
+				}
+			});
+			
+			$(".tab-content").on("click",".set_box_itme input[type='radio']",function(){
+				var par=$(this).parent();
+				par.siblings(".set_box_duty_name").text(par.text());
+			});
+			
+			
+			$(".tab-content").on("click",".set_box_add .href_a",function(){//添加单笔充值权限
+				var html='<div class="set_box">'+
+				'<div class="set_box_itme">接收人：<input type="text" value="0" class="name"/></div>'+
+				'<div class="set_box_itme">手机号码：<input type="text" value="0" class="mobile"/></div>'+
+				'<span class="set_box_close">删除</span>'+
+				'</div>';
+				$(this).parent().siblings(".set_box_list").append(html);
+			});
+			
+			$(".tab-content").on("click",".set_box .set_box_close",function(){//添加单笔充值权限
+				$(this).parents(".set_box").remove();
+			});
+			
+			
+			$(".tab-content").on("change",".set_box_duty",function(){
+				alert("我是改变事件");
+			});
+			
+		});
+		/**
+			*修改或者保存短信接收人
+		**/
+		function saveOrUpdate(){
+			var reg = /^(13[0-9]|14[0-9]|15[0-9]|18[0-9]|177)\d{8}$/;
+			var a = document.getElementsByClassName("id");
+			var b = document.getElementsByClassName("name");
+			var c = document.getElementsByClassName("mobile");
+			var id = [],name = [],mobile = [];
+			for(var i=0;i<b.length;i++){
+				if(i<=a.length-1){
+					id[i] = a[i].value;
+				}else{
+					id[i] = "";
+				}
+				//校验手机号码
+				if(reg.test(c[i].value)){
+					mobile[i] = c[i].value;
+				}else{
+					layer.msg('第'+(i+1)+'行电话号码格式不正确！', {
+						icon: 1,
+						time: 1000
+					});
+					return;
+				}
+				name[i] = b[i].value;
+				
+			}
+			$.ajax({
+				type:"get",
+				url:"/finance/sys/saveOrUpdateSys",
+				dataType:"json",
+				data:{
+					id:id,
+					name:name,
+					mobile:mobile
+				},traditional:true,
+				success:function(data){
+					if(data.aa == "SUCCESS"){
+						window.location.href = "/finance/sys/daylyRepSettings"
+					}else{
+						layer.msg('修改失败，请联系技术人员！', {
+							icon: 1,
+							time: 1000
+						});
+					}
+				}
+				
+			});
+			
+		}
+	</script>
+	<script type="text/javascript" src="../static/js/sys/systemSetting.js"></script>
+#end

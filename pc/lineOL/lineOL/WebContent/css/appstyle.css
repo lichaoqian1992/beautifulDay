@@ -1,0 +1,243 @@
+body {
+    -webkit-user-select: initial;
+    font-family: "microsoft yahei","Helvetica Neue",Helvetica,STHeiTi,sans-serif;
+}
+
+.ui-header-positive, .ui-footer-positive {
+    background-color: #fff;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+}
+.ui-header-positive a, .ui-header-positive a:active, .ui-header-positive i{
+    color: #333;
+}
+.hide{
+	display:none;
+}
+
+.select-box{
+    margin-top: 15px;
+    background: #FFF;
+}
+.select-box label{
+    width: 90%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+    border-radius: 5px;
+    margin: auto;
+    border: 1px solid #f60;
+    color: #f60;
+    display: block;
+}
+.select-box label.active{
+    color: #FFF;
+    background: #F60;
+}
+.ui-btn-main {
+    background-color: #f60;
+    border-color: #F60;
+    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0.5,#F50),to(#f60));
+    color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    width: 80%;
+    margin: 0 auto;
+}
+.border-b{
+    border-bottom: 1px solid #EEE;
+}
+.text-right{
+    text-align: right;
+}
+.padding-right{
+    padding-right: 40px;
+}
+.fl{
+    float: left;
+}
+.fr{
+    float: right;
+}
+.area{
+    position: absolute;
+    left: 98px;
+    top: 0;
+    z-index: 50;
+}
+.squire{
+    display: block;
+    width: 5px;
+    height: 15px;
+    position: absolute;
+    top: 16px;
+    left: 0;
+    background: #f60;
+}
+.section{
+    margin-top: 15px;
+    background: #FFF;
+}
+.btn-confirm{
+    width: 90px;
+    line-height: 51px;
+    background: #f60;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 20px;
+    color: #FFF;
+}
+#total{
+    position: absolute;
+}
+select{
+    -webkit-appearance:none;
+    appearance:none;
+    border:none;
+    font-size:16px;
+    padding:0px 10px;
+    display:block;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    background-color: #fff;
+}
+.select-box option{
+    line-height: 40px;
+}
+.select-box option.active{
+    color: #F60;
+}
+.ui-actionsheet button{
+    color: #F60;
+}
+
+.placeholder{
+    background: rgb(221,221,221);
+    text-align: center;
+    line-height: 40px;
+    color: #666;
+    border-radius: 5px;
+    margin: 0 5px;
+}
+.bill-num .btn-num{
+    width: 30px;
+    height: 25px;
+    position: absolute;
+    top: 12px;
+    background: #f60;
+    color: #FFF;
+    line-height: 25px;
+    z-index: 10;
+    text-align: center;
+    border-radius: 4px;
+}
+.bill-num .sub{
+    right: 95px;
+}
+.bill-num .number{
+    right: 55px;
+    background: #fafafa;
+    padding: 0;
+    color: #333;
+}
+.bill-num .add{
+    right: 15px;
+}
+.show-btn{
+    position: absolute;
+    padding: 0 5px;
+    height: 30px;
+    right: 15px;
+    top: 10px;
+    background: #f60;
+    color: #FFF;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.clearfix{
+	*zoom:1;
+}
+.clearfix:after{
+	content:"";
+	display:block;
+	height:0;
+	clear:both;
+}
+.ui-switch input:checked:before {
+    border-color: #f60;
+    -webkit-box-shadow: #f60 0 0 0 16px inset;
+    box-shadow: #f60 0 0 0 16px inset;
+    background-color: #f60;
+    transition: border .4s,box-shadow .4s,background-color 1.2s;
+    -webkit-transition: border .4s,-webkit-box-shadow .4s,background-color 1.2s;
+    background-color: #f60;
+}
+
+.ui-checkbox input:checked:before, .ui-checkbox-s input:checked:before {
+    content: "";
+    color: #f60;
+}
+
+.text-center{
+    text-align: center;
+}
+.text-red{
+    color: #F00 !important;
+}
+.text-org{
+    color: #F60 !important;
+}
+.text-green{
+    color: green !important;
+}
+#errTitle{
+	font-size:24px;
+}
+#fault .errCon{
+	margin-top:15px;
+}
+.shiduan .input-content,.chexing .input-content,
+.company .input-content,.seate .input-content{
+    background: rgba(255,255,255,.84);
+    padding: 15px;
+    border-radius: 5px;
+}
+.shiduan .input-content label, .chexing .input-content label,
+.company .input-content label, .seate .input-content label{
+    display: block;
+    text-align: center;
+}
+.chexing .input-content label{
+    text-align: left;
+    padding-left: 80px;
+}
+
+header .ui-btn{
+    color: #f60;
+}
+
+.ui-btn-danger {
+    background-color: #f60;
+    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0.5,#f60),to(#f60));
+    color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}
+
+#shopList .item{
+    margin-right: 15px;
+}
+.ui-container{
+    background: #fff;
+    padding-bottom: 15px;
+}
+
+.ui-table {
+    line-height: 40px;
+    text-align: center;
+    background-color: #fff;
+}

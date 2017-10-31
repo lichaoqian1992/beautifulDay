@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.lineol.mapper.ShopConfigMapper">
+
+	<select id="queryShopConfigByShopId" resultType="com.manji.lineol.model.ShopConfig">
+
+		SELECT [ID] as
+		id
+		,[SHOP_ID] as shopId
+		,[LINE_TYPE_NAME] as lineTypeName
+		,[LINE_TYPE_AS] as lineTypeAs
+		,[DESCROPTION] as descroption
+		,[INITAL_VALUE] as initalValue
+		,[CREATE_DATE] as createDate
+		,[MODIFY_DATE] as modifyDate
+		FROM [SHOP_CONFIG]
+		WHERE SHOP_ID=#{shopId}
+
+	</select>
+
+	<insert id="addShopConfig"
+		parameterType="com.manji.lineol.common.reqparam.ShopConfigAddReqParam">
+		INSERT INTO [SHOP_CONFIG]
+		([SHOP_ID]
+		,[LINE_TYPE_NAME]
+		,[LINE_TYPE_AS]
+		,[DESCROPTION]
+		,[INITAL_VALUE]
+		,[CREATE_DATE])
+		VALUES(#{shopId},#{lineTypeName},#{lineTypeAs},#{descroption},#{initalValue},GETDATE())
+	</insert>
+
+	<update id="modifyShopConfig"
+		parameterType="com.manji.lineol.common.reqparam.ShopConfigModifyReqParam">
+		UPDATE [SHOP_CONFIG]
+		<set>
+			<if test="lineTypeName!=null and lineTypeName !=''">
+				[LINE_TYPE_NAME] =#{lineTypeName},
+			</if>
+			<if test="lineTypeAs!=null and lineTypeAs !=''">
+				[LINE_TYPE_AS] =#{lineTypeAs},
+			</if>
+
+			<if test="descroption!=null and descroption !=''">
+				[DESCROPTION] = #{descroption},
+			</if>
+			<if test="initalValue!=null">
+				[INITAL_VALUE] = #{initalValue},
+			</if>
+			[MODIFY_DATE]=GETDATE()
+		</set>
+		WHERE ID=#{id}
+	</update>
+	
+	
+	<delete id="removeShopConfig" parameterType="java.lang.String">
+		delete from SHOP_CONFIG where id=#{id}	
+	</delete>
+	
+	<select id="queryShopConfigInfoById" resultType="com.manji.lineol.model.ShopConfig">
+		SELECT [ID] as
+		id
+		,[SHOP_ID] as shopId
+		,[LINE_TYPE_NAME] as lineTypeName
+		,[LINE_TYPE_AS] as lineTypeAs
+		,[DESCROPTION] as descroption
+		,[INITAL_VALUE] as initalValue
+		,[CREATE_DATE] as createDate
+		,[MODIFY_DATE] as modifyDate
+		FROM [SHOP_CONFIG]
+		 where id=#{id}
+	</select>
+
+
+
+</mapper>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>加油卡充值</title>
+    <link rel="stylesheet" href="css/frozen.css">
+    <link rel="stylesheet" href="css/appstyle.css">
+    <script src="js/lib/zeptojs/zepto.min.js"></script>
+    <script src="js/frozen.js"></script>
+</head>
+<!-- 检测用户设备 -->
+<script type="text/javascript">
+        var browser = { 
+           versions: function() { 
+               var u = navigator.userAgent; 
+               return { 
+                   trident: u.indexOf('Trident') > -1, //IE内核 
+                   presto: u.indexOf('Presto') > -1, //opera内核 
+                   webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+                   gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+                   mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+                   ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+                   android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+                   iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+                   iPad: u.indexOf('iPad') > -1, //iPad 
+                   webApp: u.indexOf('Safari') > -1 //Safari 
+               }; 
+           }() 
+        } 
+        function closePage(){
+             var jsonstr = "{\"action\":\"close\"}";
+            if ( browser.versions.ios 
+               || browser.versions.iPhone 
+               || browser.versions.iPad) { 
+               window.webkit.messageHandlers.Native.postMessage(jsonstr);
+            }
+            if ( browser.versions.android ) { 
+                window.paySucess.clickOnAndroid(jsonstr);
+            }
+             
+         }
+</script>
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="closePage()"></i><h1>加油卡充值 </h1>
+    </header>
+    <footer class="ui-footer ui-border-t" style="height: 50px;">
+        <div class="ui-form-item border-b" style="padding-right:0;">
+            <label>总金额：<span id="total" style="font-size:20px;color: orange;">¥0.00</span></label>
+            <button class="btn-confirm" id="tijiao" type="submit">确认</button>
+        </div>
+    </footer>
+    <section class="ui-container">
+        <form action="app/gasCard/createBill" method="post" id="submit">
+            <div class="ui-row select-box" style="padding-top: 15px;">
+                <p class="ui-txt-info ui-whitespace">选择供应商</p>
+                <ul class="ui-grid-trisect ui-border-b btns ui-btn-wrap select-operator">
+                    <li class="ui-col"><label value="cnpc" for="cnpc" class="gascard">中石油</label></li>
+					<li class="ui-col"><label value="sinopec" for="sinopec" class="gascard">中石化</label></li>
+                </ul>
+                <input type="hidden" name="operator" id="operator"  >
+                 <input type="hidden" name="rechargeAmount" id="rechargeAmount"  >
+                 <input type="hidden" name="itemId" id="itemId"  >
+                 <input type="hidden" name="itemName" id="itemName"  >
+                <p class="ui-txt-info ui-whitespace">选择面值</p>
+                <ul class="ui-grid-trisect ui-border-b btns ui-btn-wrap select-money" id="Eprice">
+                    <!-- <p class="placeholder">改类别暂无商品请选择其他类型</p> -->
+                    <li class="ui-col"><label class="price">10元</label></li>
+                    <li class="ui-col"><label class="price">20元</label></li>
+                    <li class="ui-col"><label class="price">30元</label></li>
+                    <li class="ui-col"><label class="price">50元</label></li>
+                    <li class="ui-col"><label class="price">100元</label></li>
+                    <li class="ui-col"><label class="price">200元</label></li>
+                    <li class="ui-col"><label class="price">500元</label></li>
+                    <li class="ui-col"><label class="price">1000元</label></li>
+                </ul>
+            </div>
+            <div class="ui-form-item border-b" style="margin-top:15px; ">
+                <label>加油卡卡号</label>
+                <input type="text" placeholder="请输入" name="gasCardNo" id="gasCardNo" maxlength="18" onblur="checkCard();">
+                <span class="show-btn">点击查看</span>
+            </div>
+            <div class="ui-form-item border-b" style="margin-top:15px; ">
+                <label>持卡人姓名</label>
+                <input type="text" name="gasCardName" id="gasCardName" placeholder="请输入" onblur="checkName();">
+            </div>
+            <div class="ui-form-item border-b">
+                <label>手机号码</label>
+                <input type="text" placeholder="请输入" name="gasCardTel" id="gasCardTel" onblur="checkTel();">
+            </div>
+            <div class="ui-form-item border-b">
+            	 <label>订单金额</label>
+                <span id="enlargemoney" name="rechargeAmount" style="margin-left: 90px;font-size: 20px;color: orange"></span>
+            </div>
+        </form>
+        <section class="section">
+            <div class="ui-form-item  ui-whitespace border-b">
+                <h2>服务说明</h2><span class="squire"></span>
+            </div>
+            <div class="ui-row" style="padding:15px;">
+                <p class="ui-txt-info">1、支持全国中石油、中石化加油充值卡 </p>
+                <p class="ui-txt-info">2、为保证及时通知到您，请填写接收通知手机号码</p>
+            </div>
+        </section>
+    </section>
+    <script class="demo-script">
+    	var a = false,b=false;
+        (function (){
+            $(".ui-tab-nav li").click(function(){
+                $(this).addClass("current").siblings('li').removeClass("current");
+            });
+
+           
+        })();
+        $(".gascard").click(function(){
+        	$(".gascard").removeClass("active");//移除选择事件
+    		$(this).addClass("active");//设置当前选择的选择事件 
+    		$("#operator").val($(this).attr("value"));
+    		getitems();//查询加油卡的面值 10、20、30、、、 
+    		a = true;
+        });
+      //获得面额列表
+    	function getitems(){
+    		var facevalue =$("#Eprice");
+    		$.ajax({
+    	        type:"GET",   
+    	        url:"gasCard/getCom",   
+    	        dataType:"json",        
+    	        contentType:"application/json; charset=utf-8",                 
+    	        data:{operator :$("#operator").val()} ,   
+    	        success:function(data){
+    	        	var info =eval(data);
+    				var tmp =new Array();
+    				for(var k=0;k<info.length;k++){
+    					tmp[k] =info[k];
+    				}
+    	        	for(var i=0;i<tmp.length;i++){
+    	        		for(var j=0;j<tmp.length-1;j++){
+    	        			var itemi =tmp[j];
+    	        			var itemj =tmp[j+1];
+    		        		var amounti =itemi.itemName.replace(/[^0-9]/ig,""); 
+    		        		var amountj =itemj.itemName.replace(/[^0-9]/ig,""); 
+    		        		if(parseInt(amounti)>parseInt(amountj)){
+    		        			tmp[j] =itemj;
+    		        			tmp[j+1]=itemi;
+    		        		}
+    	        		}
+    	        	}
+    	        	facevalue.empty();
+    	        	
+    	        	$.each(tmp, function(i, item){
+    	        		var id =item.itemId;
+    	        		var name =item.itemName;
+    	        		var amount =name.replace(/[^0-9]/ig,""); 
+    	        		$("#itemId").val(id);
+    	        		$("#itemName").val(name);
+    	        		facevalue
+    					.append("<li><label class='radio' onclick ='itemsel("+id+","+amount+",this)'>"+amount+"</a></li>");
+    				});
+    	        }
+    		}); 
+    	}
+    	//查询货源
+    	function itemsel(id ,amount,obj){
+    		$(".radio").removeClass("active");
+    		$(obj).addClass("active");
+    		$("#enlargemoney")[0].innerText=Number(amount).toFixed(2)+"元"; //设置两位小数
+    		$("#total")[0].innerText="¥"+Number(amount).toFixed(2); //设置两位小数
+    		$("#rechargeAmount").val(Number(amount));
+    		b = true;
+    	}
+    	function showDialog(content){
+    		var dia=$.dialog({
+    			title:"温馨提示：",
+                content:content,
+                button:["确认"]
+            });
+
+            dia.on("dialog:action",function(e){
+                console.log(e.index)
+            });
+            dia.on("dialog:hide",function(e){
+                console.log("dialog hide")
+            });
+    	}
+    	function checkCard(){
+    		if(!(/^\d+(\.\d{2})?$/.test($("#gasCardNo").val()))){
+    			var message = "卡号输入有误";
+    			showDialog(message);
+    			$("#gasCardNo").val("");
+    			return false;
+    		}
+    	}
+    	function checkName(){
+    		var flag;
+    		if(!(/^[\u4e00-\u9fa5 ]{2,20}$/.test($("#gasCardName").val()))){
+    			var message = "持卡人姓名有误";
+    			showDialog(message);
+    			flag = false;
+    			$("#gasCardName").val("");
+    			return false;
+    		}else{
+    			flag = true;
+    		}
+    		return flag;
+    	}
+		function checkTel(){
+			var flag;
+			if(!(/^1[3|4|5|7|8]\d{9}$/.test($("#gasCardTel").val()))){
+    			var message = "电话号码有误";
+    			showDialog(message);
+    			flag = false;
+    			$("#gasCardTel").val("");
+    			return false;
+    		}else{
+    			flag = true;
+    		}
+			return flag;
+    	}
+    	//点击确认按钮，触发校验
+    	$("#tijiao").click(function(){
+    		if(a == false){
+    			var message = "请选择供应商";
+    			showDialog(message);
+    			return false;
+    		}
+    		if(b == false){
+    			var message = "请选择充值金额";
+    			showDialog(message);
+    			return false;
+    		}
+    		if($("#gasCardNo").val() == "" || null == $("#gasCardNo").val() || undefined == $("#gasCardNo").val()){
+    			var message = "加油卡卡号不能为空";
+    			showDialog(message);
+    			return false;
+    		}
+    		if($("#gasCardName").val() == "" || null == $("#gasCardName").val() || undefined == $("#gasCardName").val()){
+    			var message = "持卡人姓名不能为空";
+    			showDialog(message);
+    			return false;
+    		}
+    		if($("#gasCardTel").val() == "" || null == $("#gasCardTel").val() || undefined == $("#gasCardTel").val()){
+    			var message = "电话号码不能为空";
+    			showDialog(message);
+    			return false;
+    		}
+    		$("#submit").submit();
+    	});
+    </script>
+</body>
+</html>

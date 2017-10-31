@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.user.SafeMapper" >
+
+
+<select id="countVerify" parameterType="VerifyVo" resultType="int">
+select count(*) from dt_user_safeprotect where 1=1
+<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+</if>
+</select>
+<select id="queryVerify" parameterType="VerifyVo" resultType="Verify">
+select * from dt_user_safeprotect dt1,
+(
+  select top 20 id from  
+  (
+    select top(#{index}*20) id from dt_user_safeprotect  where 1=1
+    <if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+     <!--<if test="person_name != null and person_name != ''">
+      and person_name like '%${person_name}%'
+    </if> -->
+ 
+    
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getVerify" parameterType="int" resultType="Verify">
+select * from dt_user_safeprotect where id=#{0}
+</select>
+
+<insert id="addVerify" parameterType="Verify">
+insert into dt_user_safeprotect
+(user_id,safe_type,safe_value,safe_state,update_time,update_remark,local_area)
+values(#{user_id},#{safe_type},#{safe_value},#{safe_state},#{update_time},#{update_remark},#{local_area})
+</insert>
+
+<update id="updVerify" parameterType="Verify">
+update dt_user_safeprotect set
+user_id=#{user_id},
+safe_type=#{safe_type},
+safe_value=#{safe_value},
+safe_state=#{safe_state},
+update_time=#{update_time},
+update_remark=#{update_remark},
+local_area=#{local_area}
+where id=#{id}
+</update>
+
+<delete id="delVerify" parameterType="int">
+delete from dt_user_safeprotect where id=#{0}
+</delete>
+
+
+
+
+
+</mapper>
+

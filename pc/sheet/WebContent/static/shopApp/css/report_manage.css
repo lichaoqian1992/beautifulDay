@@ -1,0 +1,46 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+.report_manage .mui-bar{
+	box-shadow: none;
+	border-bottom: 1px solid #EAEAEA;
+}
+.report_manage .mui-bar .mui-icon {
+	color: #333;
+	font-size: 35px;
+	padding: 5px 0;
+	
+}
+.content{
+	padding: 0 10px;
+	
+}
+.content .a1{
+	display: inline-block;
+	background-color: #FFFFFF;
+	width: 100%;
+	text-align: center;
+	padding: 20px 0;
+	border-radius: 5px;
+	margin-top: 20px;
+	
+}
+.content .a1 .span1{
+    background: url(../images/report_manage_icon1.png) no-repeat;
+    display: inline-block;
+    width: 30px;
+    height: 35px;
+}
+.content .a1 .span2{
+    background: url(../images/report_manage_icon2.png) no-repeat;
+    display: inline-block;
+    width: 30px;
+    height: 42px;
+}
+.content .a1 .p1{
+	color: #000000;
+	font-size: 17px;
+}
+
+

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.operation.SpecMapper" >
+
+
+<select id="getCategoryList" resultType="Category" parameterType="String">
+	select * from dt_article_category where class_list like '%,'+#{0}+'%'
+</select>
+
+
+<select id ="getSpec" resultType="Spec" parameterType="int">
+
+	select * from dt_article_spec where id in(select spec_id from dt_article_category_spec where category_id=#{0})
+
+</select>
+
+<select id="getSecondSpecs" resultType="Spec" parameterType="int">
+
+	select * from dt_article_spec where parent_id=#{0}
+
+</select>
+
+<select id="getCategoryById" resultType="Category" parameterType="int">
+
+	select * from dt_article_category where id=#{0}
+
+</select>
+
+<select id="getCategorysByIds" resultType="Category" parameterType="Category">
+
+	select * from dt_article_category where id in (${title})
+
+</select>
+
+
+<insert id="addCategorySpec" parameterType="CategorySpec">
+
+	insert into dt_article_category_spec(category_id,spec_id)
+	values (#{category_id},#{spec_id})
+
+
+</insert>
+
+<update id="updSepcTitle" parameterType="Spec" >
+	update dt_article_spec set title=#{title} where id=#{id}
+</update>
+
+
+
+
+
+
+<insert id="addMainSpec" parameterType="Spec">
+<selectKey resultType="int" keyProperty="id" order="AFTER" >
+    SELECT @@IDENTITY
+  </selectKey>
+insert into dt_article_spec(parent_id,title,remark,sort_id,type)
+values (#{parent_id},#{title},#{remark},#{sort_id},#{type})
+
+</insert>
+
+<insert id="addSecondSpec" parameterType="Spec">
+
+insert into dt_article_spec(parent_id,title,img_url,sort_id)
+values(#{parent_id},#{title},#{img_url},#{sort_id})
+
+</insert>
+
+<delete id="delMainSpec" parameterType="CategorySpec">
+
+delete from dt_article_category_spec 
+where category_id=#{category_id} and spec_id=#{spec_id}
+
+</delete>
+
+<delete id="delSecondSpec" parameterType="Spec">
+delete from dt_article_spec
+where id=#{id}
+
+</delete>
+
+
+<select id="checkCate" parameterType="int" resultType="int">
+
+select count(*) from dt_article_category_spec where category_id=#{0}
+</select>
+
+</mapper>

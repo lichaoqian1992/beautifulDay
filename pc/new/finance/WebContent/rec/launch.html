@@ -1,0 +1,375 @@
+#@layout()
+#define main()
+
+<!-- 标题 -->
+<section class="content-header">
+	<ol class="breadcrumb">
+			<li>
+				<a href="#"><i class="fa fa-dashboard"></i> 充值管理</a>
+			</li>
+			<li>
+				发起充值<input id="id" type="hidden">
+			</li>
+	</ol>
+</section>
+<!-- 内容 -->
+<section class="invoice">
+					<div class="row">
+						<div class="col-md-12">
+							<ul class="nav nav-tabs">
+								<li class="active">
+									<a href="#OAPay" data-toggle="tab" onclick="findRechargeInfo('OA充值')">OA充值</a>
+								</li>
+								<li>
+									<a href="#temporaryPay" data-toggle="tab" onclick="findRechargeInfo('临时充值')">临时充值</a>
+								</li>
+							</ul>
+							<div class="tab-content rechargePay_list">
+								<div class="tab-pane fade" id="temporaryPay">
+								<!-- <input name="rechargeDetail.id"/> -->
+									<div class="col-md-12 temporaryPay_top">
+										<div class="group_box">
+											<label class="group_label">审批金额：</label>
+											<div class="group_content rechargePay_type_tab">
+												<select class="form-control" onchange="findRoleByMoney()" id="checkPeople">
+													<option selected="selected" value=""></option>
+													<option value="1000">0-1000元（含）</option>
+													<option value="5000">1000-5000元（含）</option>
+													<option value="10000">5000-10000元（含）</option>
+													<option value="20000">10000元以上</option>
+												</select>
+												<input id="min" type="hidden">
+												<input id="max" type="hidden">
+												<span class="tips_withdrawalAudit">提示：多笔充值时只能为同一个审批人，且总金额不得超过审批人的每日审批额度。</span>
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label">审批角色：</label>
+											<div class="group_content rechargePay_type_tab">
+												<input class="form-control" id="roleName" type="text" readonly="readonly"/>
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label">审批人：</label>
+											<div class="group_content rechargePay_type_tab">
+												<input id="userId" type="hidden">
+												<input  type="hidden" id="rechargeWay" value="临时充值">
+												<input class="form-control" id="realName" type="text" readonly="readonly"/>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="group_box">
+											<label class="group_label"><i class="color_red">*</i>充值类型：</label>
+											<div class="group_content rechargePay_type_tab">
+												<select class="form-control" id="rechargeType">
+													<option selected="selected" value="0">员工工资</option>
+													<option value="1">工程款</option>
+													<option value="2">行政款</option>
+													<option value="3">营销策划</option>
+												</select>
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label"><i class="color_red">*</i>充值帐户：</label>
+											<div class="group_content rechargePay_type_tab">
+												<input class="form-control" type="text" id="accountName" onchange="findUserInfo('临时充值')"/>
+											</div>
+										</div>
+										<div class="group_box" id="zhlx3">
+											<label class="group_label"><i class="color_red">*</i>帐户类型：</label>
+											<div class="group_content">
+												<select class="form-control" id="role3">
+													
+												</select>
+												<label>
+													<span class="tips_withdrawalAudit">温馨提示：务必确认该项的正确性。</span>
+												</label>
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label">姓名：</label>
+											<div class="group_content rechargePay_type_tab">
+												<input class="form-control" type="text" id="userName"/>
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label">身份证号：</label>
+											<div class="group_content rechargePay_type_tab">
+												<input class="form-control" type="text" id="idCard"/>
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label"><i class="color_red">*</i>充值金额：</label>
+											<div class="group_content rechargePay_type_tab">
+												<input class="form-control" type="text" id="money"/>
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label">充值备注：</label>
+											<div class="group_content">
+												<input class="form-control" type="text" value="" id="backRemark3"/>
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label"><i class="color_red">*</i>可否提现：</label>
+											<div class="group_content rechargePay_type_tab">
+												<label>
+													<input type="radio" name="withDrawls" value="6" />可提现
+												</label>
+												<label>
+													<input type="radio" name="withDrawls" value="4" />不可提现
+												</label>
+												<input type="hidden" id="withDrawls">
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label"></label>
+											<div class="group_content rechargePay_type_tab">
+												<button class="btn btn-primary" onclick="addRechargeOnce('临时充值')" id="add">添加</button>
+											</div>
+										</div>
+										
+										<div class="group_box">
+											<label class="group_label">录入数据列表：</label>
+											<div class="group_content rechargePay_type_tab">
+												<table class="table table-bordered" id="OaRechargeTable3">
+													<thead>
+														<tr>
+															<th>编号</th>
+															<th style="display:none;">充值单号</th>
+															<th>充值类型</th>
+															<th>姓名</th>
+															<th>身份证号</th>
+															<th>充值账户</th>
+															<th>充值金额（元）</th>
+															<th>审批角色</th>
+															<th>审批人</th>
+															<th>提现</th>
+															<th>账户类型</th>
+															<th>充值备注</th>
+															<th>操作</th>
+														</tr>
+													</thead>
+													<tbody id="onceRecharge">
+															
+													</tbody>
+												</table>
+
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label"><i class="color_red">*</i>短信验证码：</label>
+											<div class="group_content rechargePay_type_tab">
+												<input class="form-control" type="text" id="yzm"/>
+												<button class="btn btn-info note_send" onclick="sendMessage(this)" id="message">发送短信验证码</button>
+												<span class="tips_withdrawalAudit">提示：请将充值明细拍照发送审批人，让他知晓具体充值信息!</span>
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label"></label>
+											<div class="group_content rechargePay_type_tab">
+												<button class="btn btn-primary" type="button" onclick="updateCheckStatus('临时充值')">提交充值申请</button>
+											</div>
+										</div>
+									
+									</div>
+								</div>
+								<div class="tab-pane fade in active" id="OAPay">
+									<div class="col-md-12">
+										<div class="pay_tips">
+										<input type="hidden" value=#(session.user.USERNAME) id="creater"/>
+											<i class="fa fa-lightbulb-o"></i>请按照数据模板的格式准备导入数据，模板中的表头名称不可更改。
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="group_box">
+											<label class="group_label">选择录入方式</label>
+											<div class="group_content rechargePay_type_tab">
+												<label>
+													<input type="radio" name="checkType" isid="#pay_type_download" value="1" checked="checked" />导入Excel
+													<!-- <span class="download_tips" onclick="downLoadExcel()" style="cursor: pointer;"><i class="fa fa-download"></i>下载模板</span> -->
+													<a href="../static/files/ExcelModel.xlsx">下载模板</a>
+												</label>
+												<label>
+													<input type="radio" name="checkType" isid="#pay_type_write" value="2" />自主添加
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="rechargePay_type_tab_itme active" id="pay_type_download">
+											<div class="group_box">
+												<label class="group_label"></label>
+												<form id="upload" method="post" action="/finance/rec/uploadExcel" enctype="multipart/form-data">
+												<div class="group_content">
+												<a href="javascript:;" class="file">选择文件
+					                                <input  type="file" name="file" id="file" onchange="getFileName()"/>
+					                            </a>
+													<input class="form-control" type="text" id="fileName" placeholder="请选择EXCEL格式文件" />
+													<button class="btn btn-primary" onclick="uploadExcel()" type="button">上传</button>
+												</div>
+												</form>
+											</div>
+										</div>
+										<div class="rechargePay_type_tab_itme" id="pay_type_write">
+											<div class="group_box">
+												<label class="group_label"><i class="color_red">*</i>OA文件编号：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="oaNo1"/>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label"><i class="color_red">*</i>充值类型：</label>
+												<div class="group_content">
+													<select class="form-control" id="rechargeType1" onchange="checkRType(this)">
+														<option selected="selected" value="0">员工工资</option>
+														<option value="1">工程款</option>
+														<option value="2">行政款</option>
+														<option value="3">营销策划</option>
+														<option value="5">扣减</option>
+													</select>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label"><i class="color_red">*</i>充值帐户：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="accountName1" onchange="findUserInfo('自主添加')"/>
+												</div>
+											</div>
+											<div class="group_box" id="zhlx2">
+												<label class="group_label"><i class="color_red">*</i>帐户类型：</label>
+												<div class="group_content">
+													<select class="form-control" id="role2">
+														
+													</select>
+													<label>
+														<span class="tips_withdrawalAudit">温馨提示：务必确认该项的正确性。</span>
+													</label>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label">姓名：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="userName2"/>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label">身份证号：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="idCard1"/>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label">充值金额：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="rechargeMoney1"/>
+												</div>
+											</div>
+											<div class="group_box" id="mywithdrawls">
+												<label class="group_label"><i class="color_red">*</i>可否提现：</label>
+												<div class="group_content">
+													<label>
+														<input type="radio" name="withDrawls2" id="" value="6" />可提现
+													</label>
+													<label>
+														<input type="radio" name="withDrawls2" id="" value="4" />不可提现
+													</label>
+													<label>
+														<span class="tips_withdrawalAudit">温馨提示：务必确认该项的正确性。</span>
+													</label>
+												</div>
+											</div>
+											<div class="group_box" id="reason" style="display: none;">
+												<label class="group_label">扣减原因：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="backReason"/>
+												</div>
+											</div>
+											<div class="group_box" id="remark">
+												<label class="group_label">充值备注：</label>
+												<div class="group_content">
+													<input class="form-control" type="text" value="" id="backRemark"/>
+												</div>
+											</div>
+											<div class="group_box">
+												<label class="group_label"></label>
+												<div class="group_content">
+													<button type="button" id="temporary1" class="btn btn-primary" onclick="addRechargeOnce('自主添加')">添加</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="group_box">
+											<label class="group_label">录入数据列表：</label>
+											<div class="group_content">
+												<p class="color_red download_table_tips" id="uploadMessage"></p>
+												<table class="table table-bordered">
+													<thead>
+														<tr>
+															<th>编号</th>
+															<th>OA文件编号</th>
+															<th>充值类型</th>
+															<th>姓名</th>
+															<th>身份证号</th>
+															<th>充值账户</th>
+															<th>充值金额（元）</th>
+															<th>提现</th>
+															<th>账户类型</th>
+															<th>充值备注</th>
+															<th>操作</th>
+														</tr>
+													</thead>
+													<tbody id="oaRecharge">
+														
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div class="group_box">
+											<label class="group_label"></label>
+											<div class="group_content">
+												<button class="btn btn-primary" type="button" onclick="updateCheckStatus('非临时充值')">提交充值申请</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</section>
+				
+#include("../common/_js.html")
+<style>
+        .file {
+            position: relative;
+            display: inline-block;
+            background: #D0EEFF;
+            border: 1px solid #99D3F5;
+            border-radius: 4px;
+            padding: 4px 12px;
+            overflow: hidden;
+            color: #1E88C7;
+            text-decoration: none;
+            text-indent: 0;
+            line-height: 20px;
+            top:10px;
+        }
+        .file input {
+            position: absolute;
+            right: 0;
+            top: 0;
+            opacity: 0;
+        }
+        .file:hover {
+            background: #AADFFD;
+            border-color: #78C3F3;
+            color: #004974;
+            text-decoration: none;
+        }
+    </style>
+<script type="text/javascript" src="../static/js/rec/launch.js"></script>
+
+#end

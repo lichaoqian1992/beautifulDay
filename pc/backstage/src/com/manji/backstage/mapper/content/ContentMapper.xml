@@ -1,0 +1,1497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.content.ContentMapper" >
+
+<select id="countArticle" parameterType="ArticleVo" resultType="int">
+select count(*)  from dt_article  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>		
+<if test="title != null and title != ''">
+  and title like '%${title}%'
+</if>
+</select>
+
+<select id="queryArticle" parameterType="ArticleVo" resultType="Article">
+select * from dt_article dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article  where 1=1
+		<if test="user_id != null and user_id != ''">
+     	  and user_id=#{user_id}
+    	</if>
+    	<if test="title != null and title != ''">
+		  and title like '%${title}%'
+		</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+</select>
+
+<select id="getArticle" parameterType="int" resultType="Article">
+select * from dt_article where id=#{0}
+</select>
+
+<delete id="delArticle" parameterType="int">
+delete from dt_article where id=#{0}
+</delete>
+
+<insert id="addArticle" parameterType="Article">
+insert into dt_article (channel_id,category_id,user_category_id,call_index,title,link_url,img_url,seo_title,seo_keywords,seo_description,tags,zhaiyao,sort_id,status,is_msg,is_top,is_red,is_hot,is_slide,user_id,user_role_type,user_role_value,add_time,update_time,is_del,remark)
+values(#{channel_id},#{category_id},#{user_category_id},#{call_index},#{title},#{link_url},#{img_url},#{seo_title},#{seo_keywords},#{seo_description},#{tags},#{zhaiyao},#{sort_id},#{status},#{is_msg},#{is_top},#{is_red},#{is_hot},#{is_slide},#{user_id},#{user_role_type},#{user_role_value},#{add_time},#{update_time},#{is_del},#{remark})
+</insert>
+<update id="updArticle" parameterType="Article">
+update dt_article set
+  channel_id  =#{channel_id},
+  category_id  =#{category_id},
+  user_category_id  =#{user_category_id},
+   call_index =#{call_index},
+   title =#{title},
+   link_url =#{link_url},
+   img_url =#{img_url},
+   seo_title =#{seo_title},
+  seo_keywords  =#{seo_keywords},
+   seo_description=#{seo_description},
+   tags =#{tags},
+   zhaiyao=#{zhaiyao},
+   sort_id =#{sort_id},
+    status=#{status},
+   is_msg =#{is_msg},
+   is_top =#{is_top},
+   is_red =#{is_red},
+    is_hot=#{is_hot},
+    is_slide=#{is_slide},
+    user_id=#{user_id},
+    user_role_type=#{user_role_type},
+    user_role_value=#{user_role_value},
+    add_time=#{add_time},
+   update_time =#{update_time},
+    is_del=#{is_del},
+    remark=#{remark}
+
+where id=#{id}
+
+</update>
+
+
+
+<select id="countArticleInfo" parameterType="ArticleInfoVo" resultType="int">
+select count(*)  from dt_article_info  where 1=1
+<if test="sub_title != null and sub_title != ''">
+  and sub_title like '%${sub_title}%'
+</if>		
+</select>
+
+<select id="queryArticleInfo" parameterType="ArticleInfoVo" resultType="ArticleInfo">
+select * from dt_article_info dt1,
+(
+	select top 20 article_id from 
+	(
+		select top(#{index}*20) article_id from dt_article_info  where 1=1
+		<if test="sub_title != null and sub_title != ''">
+		  and sub_title like '%${sub_title}%'
+		</if>
+		order by article_id desc
+	)dt order by dt.article_id asc
+)dt2 where dt1.article_id=dt2.article_id order by dt1.article_id
+</select>
+<select id="getArticleInfo" parameterType="int" resultType="ArticleInfo">
+select * from dt_article_info where article_id=#{0}
+</select>
+
+<delete id="delArticleInfo" parameterType="int">
+delete from dt_article_info where article_id=#{0}
+</delete>
+<insert id="addArticleInfo" parameterType="ArticleInfo">
+insert into dt_article_info
+(article_id,sub_title,goods_no,stock_quantity,market_price,sell_price,point,brand,is_show,is_distribution,goods_describe,goods_expenses)
+values(#{article_id},#{sub_title},#{goods_no},#{stock_quantity},#{market_price},#{sell_price},#{point},#{brand},#{is_show},#{is_distribution},#{goods_describe},#{goods_expenses})
+</insert>
+<update id="updArticleInfo" parameterType="ArticleInfo">
+update dt_article_info set
+ sub_title=#{sub_title},
+ goods_no=#{goods_no},
+ stock_quantity=#{stock_quantity},
+ market_price=#{market_price},
+ sell_price=#{sell_price},
+ point=#{point},
+ brand=#{brand},
+ is_show=#{is_show},
+ is_distribution=#{is_distribution},
+ goods_describe=#{goods_describe},
+ goods_expenses=#{goods_expenses}
+ where  article_id=#{article_id}
+ 
+</update>
+
+
+
+
+<select id="countArticleContent" parameterType="ArticleContentVo" resultType="int">
+select count(*)  from dt_article_content  where 1=1
+<if test="article_id != null and article_id != ''">
+  and article_id=#{article_id}
+</if>		
+</select>
+
+<select id="queryArticleContent" parameterType="ArticleContentVo" resultType="ArticleContent">
+select * from dt_article_content dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_content  where 1=1
+		<if test="article_id != null and article_id != ''">
+		  and article_id=#{article_id}
+		</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getArticleContent" parameterType="int" resultType="ArticleContent">
+select * from dt_article_content where id=#{0}
+</select>
+<delete id="delArticleContent" parameterType="int" >
+delete from dt_article_content where id=#{0}
+</delete>
+
+<insert id="addArticleContent" parameterType="ArticleContent">
+insert into dt_article_content (article_id,matter,content,content_wap,update_time)
+values(#{article_id},#{matter},#{content},#{content_wap},#{update_time})
+</insert>
+<update id="updArticleContent" parameterType="ArticleContent">
+update dt_article_content set
+article_id=#{article_id},
+matter=#{matter},
+content=#{content},
+content_wap=#{content_wap},
+update_time=#{update_time}
+where id=#{id}
+</update>
+
+
+
+<select id="countArticleCount" parameterType="ArticleCountVo" resultType="int">
+select count(*)  from   dt_article_count  where 1=1
+<if test="article_id != null and article_id != ''">
+  and article_id=#{article_id}
+</if>
+</select>
+
+<select id="queryArticleCount" parameterType="ArticleCountVo" resultType="ArticleCount">
+select * from dt_article_count dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_count  where 1=1
+		<if test="article_id != null and article_id != ''">
+		  and article_id=#{article_id}
+		</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getArticleCount" parameterType="int" resultType="ArticleCount">
+select * from   dt_article_count where id=#{0}
+</select>
+<delete id="delArticleCount" parameterType="int" >
+delete from   dt_article_count where id=#{0}
+</delete>
+
+<insert id="addArticleCount" parameterType="ArticleCount">
+insert into   dt_article_count (article_id,call_index,view_times,fav_times,order_times,goods_vote_times,mid_vote_times,bad_vote_times,update_time,review_score)
+values(#{article_id},#{call_index},#{view_times},#{fav_times},#{order_times},#{goods_vote_times},#{mid_vote_times},#{bad_vote_times},#{update_time},#{review_score})
+</insert>
+<update id="updArticleCount" parameterType="ArticleCount">
+update  dt_article_count set
+article_id=#{article_id},
+call_index=#{call_index},
+view_times=#{view_times},
+fav_times=#{fav_times},
+order_times=#{order_times},
+goods_vote_times=#{goods_vote_times},
+mid_vote_times=#{mid_vote_times},
+bad_vote_times=#{bad_vote_times},
+update_time=#{update_time},
+review_score=#{review_score}
+where id=#{id}
+</update>
+
+<select id="countArticleComment" parameterType="ArticleCommentVo" resultType="int">
+select count(*)  from dt_article_comment  where 1=1
+<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+</if>		
+<if test="article_id != null and article_id != ''">
+  and article_id=#{article_id}
+</if>
+</select>
+
+<select id="queryArticleComment" parameterType="ArticleCommentVo" resultType="ArticleComment">
+select * from dt_article_comment dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_comment  where 1=1
+		<if test="user_id != null and user_id != ''">
+	      and user_id=#{user_id}
+	    </if>
+		<if test="article_id != null and article_id != ''">
+		  and article_id=#{article_id}
+		</if>
+		<if test="content != null and content != ''">
+		  and content like '%${content}%'
+		</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getArticleComment" parameterType="int" resultType="ArticleComment">
+select * from dt_article_comment where id=#{0}
+</select>
+<delete id="delArticleComment" parameterType="int">
+delete from dt_article_comment where id=#{0}
+</delete>
+<insert id="addArticleComment" parameterType="ArticleComment">
+insert into dt_article_comment(channel_id,article_id,order_id,parent_id,user_id,user_role_type,user_role_value,user_ip,content,pics,is_lock,
+add_time,is_reply,reply_content,reply_time,is_del)
+values
+(#{channel_id},#{article_id},#{order_id},#{parent_id},#{user_id},#{user_role_type},#{user_role_value},#{user_ip},#{content},#{pics},#{is_lock},#{add_time},#{is_reply},#{reply_content},#{reply_time},#{is_del})
+</insert>
+
+<update id="updArticleComment" parameterType="ArticleComment">
+update dt_article_comment set 
+channel_id=#{channel_id},
+article_id=#{article_id},
+order_id=#{order_id},
+parent_id=#{parent_id},
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+user_ip=#{user_ip},
+content=#{content},
+pics=#{pics},
+is_lock=#{is_lock},
+add_time=#{add_time},
+is_reply=#{is_reply},
+reply_content=#{reply_content},
+reply_time=#{reply_time},
+is_del=#{is_del}
+where id=#{id}
+
+</update>
+
+
+
+
+
+
+<select id="countArticleAlbums" parameterType="ArticleAlbumsVo" resultType="int">
+select count(*)  from dt_article_albums  where 1=1
+<if test="article_id != null and article_id != ''">
+	      and article_id=#{article_id}
+	    </if>		
+</select>
+
+<select id="queryArticleAlbums" parameterType="ArticleAlbumsVo" resultType="ArticleAlbums">
+select * from dt_article_albums dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_albums  where 1=1
+		<if test="article_id != null and article_id != ''">
+	      and article_id=#{article_id}
+	    </if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getArticleAlbums" parameterType="int" resultType="ArticleAlbums">
+select * from dt_article_albums where id=#{0}
+</select>
+<insert id="addArticleAlbums" parameterType="ArticleAlbums">
+insert into dt_article_albums(article_id,thumb_path,original_path,remark,add_time)
+values(#{article_id},#{thumb_path},#{original_path},#{remark},#{add_time})
+</insert>
+<update id="updArticleAlbums" parameterType="ArticleAlbums">
+update dt_article_albums set
+article_id=#{article_id},
+thumb_path=#{thumb_path},
+original_path=#{original_path},
+remark=#{remark},
+add_time=#{add_time}
+where id=#{id}
+</update>
+<delete id="delArticleAlbums" parameterType="int">
+delete from dt_article_albums where id=#{0}
+</delete>
+
+
+
+
+<select id="countArticleGoods" parameterType="ArticleGoodsVo" resultType="int">
+select count(*)  from dt_article_goods  where 1=1
+<if test="article_id != null and article_id != ''">
+	      and article_id=#{article_id}
+	    </if>
+		<if test="goods_no != null and goods_no != ''">
+		  and goods_no=#{goods_no}
+		</if>		
+</select>
+
+<select id="queryArticleGoods" parameterType="ArticleGoodsVo" resultType="ArticleGoods">
+select * from dt_article_goods dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_goods  where 1=1
+		<if test="article_id != null and article_id != ''">
+	      and article_id=#{article_id}
+	    </if>
+		<if test="goods_no != null and goods_no != ''">
+		  and goods_no=#{goods_no}
+		</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getArticleGoods" parameterType="int" resultType="ArticleGoods">
+select * from dt_article_goods where id=#{0}
+</select>
+<insert id="addArticleGoods" parameterType="ArticleGoods">
+insert into dt_article_goods(article_id,spec_text,stock_quantity,market_price,sell_price)
+values(#{article_id},#{spec_text},#{stock_quantity},#{market_price},#{sell_price})
+</insert>
+<update id="updArticleGoods" parameterType="ArticleGoods">
+update dt_article_goods set
+article_id=#{article_id},
+spec_text=#{spec_text},
+stock_quantity=#{stock_quantity},
+market_price=#{market_price},
+sell_price=#{sell_price}
+where id=#{id}
+</update>
+<delete id="delArticleGoods" parameterType="int">
+delete from dt_article_goods where id=#{0}
+</delete>
+
+
+<select id="countArticleScreen" parameterType="ArticleScreenVo" resultType="int">
+select count(*)  from dt_article_screen  where 1=1
+<if test="shop_id != null and shop_id != ''">
+	      and shop_id=#{shop_id}
+	    </if>
+		<if test="article_id != null and article_id != ''">
+		  and article_id=#{article_id}
+		</if>
+		<if test="article_title != null and article_title != ''">
+		  and article_title like '%${article_title}%'
+		</if>		
+</select>
+
+<select id="queryArticleScreen" parameterType="ArticleScreenVo" resultType="ArticleScreen">
+select * from dt_article_screen dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_screen  where 1=1
+		<if test="shop_id != null and shop_id != ''">
+	      and shop_id=#{shop_id}
+	    </if>
+		<if test="article_id != null and article_id != ''">
+		  and article_id=#{article_id}
+		</if>
+		<if test="article_title != null and article_title != ''">
+		  and article_title like '%${article_title}%'
+		</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getArticleScreen" parameterType="long" resultType="ArticleScreen">
+select * from dt_article_screen where id=#{0}
+</select>
+<insert id="addArticleScreen" parameterType="ArticleScreen">
+insert into dt_article_screen(shop_id,shop_send_area,article_id,article_category_id,article_category_name,article_user_category_id,
+article_user_category_name,article_brand_id,article_brand_name,article_title,article_goods_no,article_img_url,article_tags,article_add_time,
+article_market_price,article_sell_price,article_order_times,article_review_score,article_activity,article_freeshipping_area,article_distribution_area,
+update_time)
+values(#{shop_id},#{shop_send_area},#{article_id},#{article_category_id},#{article_category_name},#{article_user_category_id},
+#{article_user_category_name},#{article_brand_id},#{article_brand_name},#{article_title},#{article_goods_no},#{article_img_url},#{article_tags},
+#{article_add_time},#{article_market_price},#{article_sell_price},#{article_order_times},#{article_review_score},#{article_activity},#{article_freeshipping_area},
+#{article_distribution_area},#{update_time})
+</insert>
+<update id="updArticleScreen" parameterType="ArticleScreen">
+update dt_article_screen set
+shop_id=#{shop_id},
+shop_send_area=#{shop_send_area},
+article_id=#{article_id},
+article_category_id=#{article_category_id},
+article_category_name=#{article_category_name},
+article_user_category_id=#{article_user_category_id},
+article_user_category_name=#{article_user_category_name},
+article_brand_id=#{article_brand_id},
+article_brand_name=#{article_brand_name},
+article_title=#{article_title},
+article_goods_no=#{article_goods_no},
+article_img_url=#{article_img_url},
+article_tags=#{article_tags},
+article_add_time=#{article_add_time},
+article_market_price=#{article_market_price},
+article_sell_price=#{article_sell_price},
+article_order_times=#{article_order_times},
+article_review_score=#{article_review_score},
+article_activity=#{article_activity},
+article_freeshipping_area=#{article_freeshipping_area},
+article_distribution_area=#{article_distribution_area},
+update_time=#{update_time}
+where id=#{id}
+</update>
+<delete id="delArticleScreen" parameterType="int">
+delete from dt_article_screen where id=#{0}
+</delete>
+
+
+
+<select id="countBusiTemp" parameterType="BusiTempVo" resultType="int">
+select count(*)  from dt_mb_yewu  where 1=1
+		
+</select>
+
+<select id="queryBusiTemp" parameterType="BusiTempVo" resultType="BusiTemp">
+select * from dt_mb_yewu dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_mb_yewu  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getBusiTemp" parameterType="BusiTemp" resultType="BusiTemp">
+select * from dt_mb_yewu where id=#{0}
+</select>
+<delete id="delBusiTemp" parameterType="int">
+delete from dt_mb_yewu where id=#{0}
+</delete> 
+<insert id="addBusiTemp" parameterType="BusiTemp">
+
+</insert>
+<update id="updBusiTemp" parameterType="BusiTemp">
+
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countActBusiness" parameterType="ActBusinessVo" resultType="int">
+select count(*)  from dt_activity_business  where 1=1
+		
+</select>
+
+<select id="queryActBusiness" parameterType="ActBusinessVo" resultType="ActBusiness">
+select * from dt_activity_business dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_activity_business  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActBusiness" parameterType="int" resultType="ActBusiness">
+select * from dt_activity_business where id=#{0}
+</select>
+
+<delete id="delActBusiness" parameterType="int">
+delete from dt_activity_business where id=#{0}
+</delete>
+<insert id="addActBusiness" parameterType="ActBusiness">
+insert into dt_activity_business
+(begin_time,end_time,act_area,title,pics,content,act_type,deposit,poundage,percentage,status,add_time)
+values(#{begin_time},#{end_time},#{act_area},#{title},#{pics},#{content},#{act_type},#{deposit},#{poundage},#{percentage},#{status},#{add_time})
+</insert>
+<update id="updActBusiness" parameterType="ActBusiness">
+ update dt_activity_business set
+ begin_time=#{begin_time},
+ end_time=#{end_time},
+ act_area=#{act_area},
+ title=#{title},
+ pics=#{pics},
+ content=#{content},
+ act_type=#{act_type},
+ deposit=#{deposit},
+ poundage=#{poundage},
+ percentage=#{percentage},
+ status=#{status},
+ add_time=#{add_time}
+ where  id=#{id}
+ 
+</update>
+<!-- ///////////////////////////////////// -->
+<select id="countActIndex" parameterType="ActIndexVo" resultType="int">
+select count(*)  from dt_activity_index  where 1=1
+
+		
+</select>
+
+<select id="queryActIndex" parameterType="ActIndexVo" resultType="ActIndex">
+select * from dt_activity_index dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_activity_index  where 1=1
+	
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActIndex" parameterType="int" resultType="ActIndex">
+select * from dt_activity_index where id=#{0}
+</select>
+
+<delete id="delActIndex" parameterType="int">
+delete from dt_activity_index where id=#{0}
+</delete>
+<insert id="addActIndex" parameterType="ActIndex">
+insert into dt_activity_index
+(navigation_id,title,[key],add_user_type,add_content_type,max_request,status)
+values(#{navigation_id},#{title},#{key},#{add_user_type},#{add_content_type},#{max_request},#{status})
+</insert>
+<update id="updActIndex" parameterType="ActIndex">
+ update dt_activity_index set
+ navigation_id=#{navigation_id},
+ title=#{title},
+ [key]=#{key},
+ add_user_type=#{add_user_type},
+ add_content_type=#{add_content_type},
+ max_request=#{max_request},
+ status=#{status}
+ where  id=#{id}
+ 
+</update>
+<!-- ///////////////////////////////////// -->
+<select id="countActIndUser" parameterType="ActIndUserVo" resultType="int">
+select count(*)  from dt_activity_index_user  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>		
+</select>
+
+<select id="queryActIndUser" parameterType="ActIndUserVo" resultType="ActIndUser">
+select * from dt_activity_index_user dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_activity_index_user  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActIndUser" parameterType="int" resultType="ActIndUser">
+select * from dt_activity_index_user where id=#{0}
+</select>
+
+<delete id="delActIndUser" parameterType="int">
+delete from dt_activity_index_user where id=#{0}
+</delete>
+<insert id="addActIndUser" parameterType="ActIndUser">
+insert into dt_activity_index_user
+(index_id,site_id,add_time,title,content,content_value,image_url,user_id,role_type,role_value,status,update_time,remark,show_time,show_endtime,custom_url)
+values(#{index_id},#{site_id},#{add_time},#{title},#{content},#{content_value},#{image_url}
+,#{user_id},#{role_type},#{role_value},#{status},#{update_time},#{remark},#{show_time},#{show_endtime},#{custom_url})
+</insert>
+<update id="updActIndUser" parameterType="ActIndUser">
+ update dt_activity_index_user set
+ index_id=#{index_id},
+ site_id=#{site_id},
+ add_time=#{add_time},
+ title=#{title},
+ content=#{content},
+ content_value=#{content_value},
+ image_url=#{image_url},
+ user_id=#{user_id},
+ role_type=#{role_type},
+ role_value=#{role_value},
+ status=#{status},
+ update_time=#{update_time},
+ remark=#{remark},
+ show_time=#{show_time},
+ show_endtime=#{show_endtime},
+ custom_url=#{custom_url}
+ where  id=#{id}
+ 
+</update>
+<!-- ///////////////////////////////////// -->
+<select id="countActCommon" parameterType="ActCommonVo" resultType="int">
+select count(*)  from dt_activity_common  where 1=1
+		
+</select>
+
+<select id="queryActCommon" parameterType="ActCommonVo" resultType="ActCommon">
+select * from dt_activity_common dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_activity_common  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActCommon" parameterType="int" resultType="ActCommon">
+select * from dt_activity_common where id=#{0}
+</select>
+
+<delete id="delActCommon" parameterType="int">
+delete from dt_activity_common where id=#{0}
+</delete>
+<insert id="addActCommon" parameterType="ActCommon">
+insert into dt_activity_common
+(title,pics,begin_time,end_time,content,link_url,sort_id,state,join_user_groups,join_user_role,join_terminal_type,join_user_count)
+values(#{title},#{pics},#{begin_time},#{end_time},#{content},#{link_url},
+#{sort_id},#{state},#{join_user_groups},#{join_user_role},#{join_terminal_type},#{join_user_count})
+</insert>
+<update id="updActCommon" parameterType="ActCommon">
+ update dt_activity_common set
+ title=#{title},
+ pics=#{pics},
+ begin_time=#{begin_time},
+ end_time=#{end_time},
+ content=#{content},
+ link_url=#{link_url},
+ sort_id=#{sort_id},
+ state=#{state},
+ join_user_groups=#{join_user_groups},
+ join_user_role=#{join_user_role},
+ join_terminal_type=#{join_terminal_type},
+ join_user_count=#{join_user_count}
+ where  id=#{id}
+ 
+</update>
+<!-- ///////////////////////////////////// -->
+<select id="countActShop" parameterType="ActShopVo" resultType="int">
+select count(*)  from dt_activity_shop  where 1=1
+		
+</select>
+
+<select id="queryActShop" parameterType="ActShopVo" resultType="ActShop">
+select * from dt_activity_shop dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_activity_shop  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActShop" parameterType="int" resultType="ActShop">
+select * from dt_activity_shop where id=#{0}
+</select>
+
+<delete id="delActShop" parameterType="int">
+delete from dt_activity_shop where id=#{0}
+</delete>
+<insert id="addActShop" parameterType="ActShop">
+insert into dt_activity_shop
+(apply_begin,apply_end,begin_time,end_time,act_area,channel_id,add_type,title,pics,content,act_type,discount,is_first,status,add_time)
+values(#{apply_begin},#{apply_end},#{begin_time},#{end_time},#{act_area},#{channel_id},
+#{add_type},#{title},#{pics},#{content},#{act_type},#{discount},#{is_first},#{status},#{add_time})
+</insert>
+<update id="updActShop" parameterType="ActShop">
+ update dt_activity_shop set
+ apply_begin=#{apply_begin},
+ apply_end=#{apply_end},
+ begin_time=#{begin_time},
+ end_time=#{end_time},
+ act_area=#{act_area},
+ channel_id=#{channel_id},
+ add_type=#{add_type},
+ title=#{title},
+ pics=#{pics},
+ content=#{content},
+ act_type=#{act_type},
+ discount=#{discount},
+ is_first=#{is_first},
+ status=#{status},
+ add_time=#{add_time}
+ where  id=#{id}
+ 
+</update>
+<!-- ///////////////////////////////////// -->
+<select id="countActShopGoods" parameterType="ActShopGoodsVo" resultType="int">
+select count(*)  from dt_activity_shop_goods  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>		
+</select>
+
+<select id="queryActShopGoods" parameterType="ActShopGoodsVo" resultType="ActShopGoods">
+select * from dt_activity_shop_goods dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_activity_shop_goods  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActShopGoods" parameterType="int" resultType="ActShopGoods">
+select * from dt_activity_shop_goods where id=#{0}
+</select>
+
+<delete id="delActShopGoods" parameterType="int">
+delete from dt_activity_shop_goods where id=#{0}
+</delete>
+<insert id="addActShopGoods" parameterType="ActShopGoods">
+insert into dt_activity_shop_goods
+(activity_id,user_id,user_role_type,user_role_value,article_id,article_price,status,reason,remark,update_time,stars)
+values(#{activity_id},#{user_id},#{user_role_type},#{user_role_value},#{article_id},#{article_price},#{status},
+#{reason},#{remark},#{update_time},#{stars})
+</insert>
+<update id="updActShopGoods" parameterType="ActShopGoods">
+ update dt_activity_shop_goods set
+ activity_id=#{activity_id},
+ user_id=#{user_id},
+ user_role_type=#{user_role_type},
+ user_role_value=#{user_role_value},
+ article_id=#{article_id},
+ article_price=#{article_price},
+ status=#{status},
+ reason=#{reason},
+ remark=#{remark},
+ update_time=#{update_time},
+ stars=#{stars}
+ where  id=#{id}
+ 
+</update>
+<!-- ///////////////////////////////////// -->
+<select id="countActSms" parameterType="ActSmsVo" resultType="int">
+select count(*)  from dt_activity_sms  where 1=1
+		
+</select>
+
+<select id="queryActSms" parameterType="ActSmsVo" resultType="ActSms">
+select * from dt_activity_sms dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_activity_sms  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActSms" parameterType="int" resultType="ActSms">
+select * from dt_activity_sms where id=#{0}
+</select>
+
+<delete id="delActSms" parameterType="int">
+delete from dt_activity_sms where id=#{0}
+</delete>
+<insert id="addActSms" parameterType="ActSms">
+insert into dt_activity_sms
+(begin_time,end_time,act_area,title,pics,content,discount,status,add_time)
+values(#{begin_time},#{end_time},#{act_area},#{title},#{pics},#{content},
+#{discount},#{status},#{add_time})
+</insert>
+<update id="updActSms" parameterType="ActSms">
+ update dt_activity_sms set
+ begin_time=#{begin_time},
+ end_time=#{end_time},
+ act_area=#{act_area},
+ title=#{title},
+ pics=#{pics},
+ content=#{content},
+ discount=#{discount},
+ status=#{status},
+ add_time=#{add_time}
+ where  id=#{id}
+ 
+</update>
+<!-- ///////////////////////////////////// -->
+<select id="countActAdvert" parameterType="ActAdvertVo" resultType="int">
+select count(*)  from dt_activity_advert  where 1=1
+		
+</select>
+
+<select id="queryActAdvert" parameterType="ActAdvertVo" resultType="ActAdvert">
+select * from dt_activity_advert dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_activity_advert  where 1=1
+		
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActAdvert" parameterType="int" resultType="ActAdvert">
+select * from dt_activity_advert where id=#{0}
+</select>
+
+<delete id="delActAdvert" parameterType="int">
+delete from dt_activity_advert where id=#{0}
+</delete>
+<insert id="addActAdvert" parameterType="ActAdvert">
+insert into dt_activity_advert
+(begin_time,end_time,act_area,title,pics,content,discount,status,add_time)
+values(#{begin_time},#{end_time},#{act_area},#{title},#{pics},#{content},
+#{discount},#{status},#{add_time})
+</insert>
+<update id="updActAdvert" parameterType="ActAdvert">
+ update dt_activity_advert set
+ begin_time=#{begin_time},
+ end_time=#{end_time},
+ act_area=#{act_area},
+ title=#{title},
+ pics=#{pics},
+ content=#{content},
+ discount=#{discount},
+ status=#{status},
+ add_time=#{add_time}
+ where  id=#{id}
+ 
+</update>
+<!-- ///////////////////////////////////// -->
+<select id="countActBusShop" parameterType="ActBusShopVo" resultType="int">
+select count(*)  from dt_activity_business_shop  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>		
+</select>
+
+<select id="queryActBusShop" parameterType="ActBusShopVo" resultType="ActBusShop">
+select * from dt_activity_business_shop dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_activity_business_shop  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActBusShop" parameterType="int" resultType="ActBusShop">
+select * from dt_activity_business_shop where id=#{0}
+</select>
+
+<delete id="delActBusShop" parameterType="int">
+delete from dt_activity_business_shop where id=#{0}
+</delete>
+<insert id="addActBusShop" parameterType="ActBusShop">
+insert into dt_activity_business_shop
+(user_id,role_type,role_value,content,begin_time,end_time,title,sub_title,pics,status,add_time,
+update_time,is_del,remark,act_type,is_online,is_good_add,act_business,zk_value,mj_value,lj_value)
+values(#{user_id},#{role_type},#{role_value},#{content},#{begin_time},#{end_time},
+#{title},#{sub_title},#{pics},#{status},#{add_time},#{update_time},#{is_del},
+#{remark},#{act_type},#{is_online},#{is_good_add},#{act_business},#{zk_value},#{mj_value},#{lj_value})
+</insert>
+<update id="updActBusShop" parameterType="ActBusShop">
+ update dt_activity_business_shop set
+ user_id=#{user_id},
+ role_type=#{role_type},
+ role_value=#{role_value},
+ content=#{content},
+ begin_time=#{begin_time},
+ end_time=#{end_time},
+ title=#{title},
+ sub_title=#{sub_title},
+ pics=#{pics},
+ status=#{status},
+ add_time=#{add_time},
+ update_time=#{update_time},
+ is_del=#{is_del},
+ remark=#{remark},
+ act_type=#{act_type},
+ is_online=#{is_online},
+ is_good_add=#{is_good_add},
+ act_business=#{act_business},
+ zk_value=#{zk_value},
+ mj_value=#{mj_value},
+ lj_value=#{lj_value}
+ where  id=#{id}
+ 
+</update>
+<!-- ///////////////////////////////////// -->
+<select id="countActBusGoods" parameterType="ActBusGoodsVo" resultType="int">
+select count(*)  from dt_activity_business_goods  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>		
+</select>
+
+<select id="queryActBusGoods" parameterType="ActBusGoodsVo" resultType="ActBusGoods">
+select * from dt_activity_business_goods dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_activity_business_goods  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActBusGoods" parameterType="int" resultType="ActBusGoods">
+select * from dt_activity_business_goods where id=#{0}
+</select>
+
+<delete id="delActBusGoods" parameterType="int">
+delete from dt_activity_business_goods where id=#{0}
+</delete>
+<insert id="addActBusGoods" parameterType="ActBusGoods">
+insert into dt_activity_business_goods
+(user_id,role_type,role_value,act_bus_shop_id,article_id,spec_id,old_value,new_value,status)
+values(#{user_id},#{role_type},#{role_value},#{act_bus_shop_id},#{article_id},#{spec_id},
+#{old_value},#{new_value},#{status})
+</insert>
+<update id="updActBusGoods" parameterType="ActBusGoods">
+ update dt_activity_business_goods set
+ user_id=#{user_id},
+ role_type=#{role_type},
+ role_value=#{role_value},
+ act_bus_shop_id=#{act_bus_shop_id},
+ article_id=#{article_id},
+ spec_id=#{spec_id},
+ old_value=#{old_value},
+ new_value=#{new_value},
+ status=#{status}
+ where  id=#{id}
+ 
+</update>
+<!-- ///////////////////////////////////// -->
+<select id="countActRecherge" parameterType="ActRechergeVo" resultType="int">
+select count(*)  from dt_recherge_activity  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>		
+</select>
+
+<select id="queryActRecherge" parameterType="ActRechergeVo" resultType="ActRecherge">
+select * from dt_recherge_activity dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_recherge_activity  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActRecherge" parameterType="int" resultType="ActRecherge">
+select * from dt_recherge_activity where id=#{0}
+</select>
+
+<delete id="delActRecherge" parameterType="int">
+delete from dt_recherge_activity where id=#{0}
+</delete>
+<insert id="addActRecherge" parameterType="ActRecherge">
+insert into dt_recherge_activity
+(user_id,from_value,recherge_limit,recherge_give,first_give,max_count,now_count,state,add_time)
+values(#{user_id},#{from_value},#{recherge_limit},#{recherge_give},#{first_give},#{max_count},
+#{now_count},#{state},#{add_time})
+</insert>
+<update id="updActRecherge" parameterType="ActRecherge">
+ update dt_recherge_activity set
+ user_id=#{user_id},
+ from_value=#{from_value},
+ recherge_limit=#{recherge_limit},
+ recherge_give=#{recherge_give},
+ first_give=#{first_give},
+ max_count=#{max_count},
+ now_count=#{now_count},
+ state=#{state},
+ add_time=#{add_time}
+ where  id=#{id}
+ 
+</update>
+
+
+<!-- ///////////////////////////////////// -->
+<select id="countActRecUser" parameterType="ActRecUserVo" resultType="int">
+select count(*)  from dt_recherge_activity_users  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>  		
+</select>
+
+<select id="queryActRecUser" parameterType="ActRecUserVo" resultType="ActRecUser">
+select * from dt_recherge_activity_users dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_recherge_activity_users  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getActRecUser" parameterType="int" resultType="ActRecUser">
+select * from dt_recherge_activity_users where id=#{0}
+</select>
+
+<delete id="delActRecUser" parameterType="int">
+delete from dt_recherge_activity_users where id=#{0}
+</delete>
+<insert id="addActRecUser" parameterType="ActRecUser">
+insert into dt_recherge_activity_users
+(user_id,activity_user_id,recherge_give,first_give,first_state,first_time,first_order_no,first_order_type,state,add_time)
+values(#{user_id},#{activity_user_id},#{recherge_give},#{first_give},#{first_state},
+#{first_time},#{first_order_no},#{first_order_type},#{state},#{add_time})
+</insert>
+<update id="updActRecUser" parameterType="ActRecUser">
+ update dt_recherge_activity_users set
+ user_id=#{user_id},
+ activity_user_id=#{activity_user_id},
+ recherge_give=#{recherge_give},
+ first_give=#{first_give},
+ first_state=#{first_state},
+ first_time=#{first_time},
+ first_order_no=#{first_order_no},
+ first_order_type=#{first_order_type},
+ state=#{state},
+ add_time=#{add_time}
+ where  id=#{id}
+ 
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countChannel" parameterType="ChannelVo" resultType="int">
+select count(*)  from dt_channel  where 1=1
+<!-- <if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if> -->  		
+</select>
+
+<select id="queryChannel" parameterType="ChannelVo" resultType="Channel">
+select * from dt_channel dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_channel  where 1=1
+	<!-- 	<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  --> 
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getChannel" parameterType="int" resultType="Channel">
+select * from dt_channel where id=#{0}
+</select>
+
+<delete id="delChannel" parameterType="int">
+delete from dt_channel where id=#{0}
+</delete>
+<insert id="addChannel" parameterType="Channel">
+insert into dt_channel
+(site_id,name,title,is_albums,is_attach,is_spec,sort_id)
+values(#{site_id},#{name},#{title},#{is_albums},#{is_attach},
+#{is_spec},#{sort_id})
+</insert>
+<update id="updChannel" parameterType="Channel">
+ update dt_channel set
+ site_id=#{site_id},
+ name=#{name},
+ title=#{title},
+ is_albums=#{is_albums},
+ is_attach=#{is_attach},
+ is_spec=#{is_spec},
+ sort_id=#{sort_id}
+ where  id=#{id}
+ 
+</update>
+
+
+
+<!-- ///////////////////////////////////// -->
+<select id="countChannelField" parameterType="ChannelFieldVo" resultType="int">
+select count(*)  from dt_channel_field  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>  		
+</select>
+
+<select id="queryChannelField" parameterType="ChannelFieldVo" resultType="ChannelField">
+select * from dt_channel_field dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_channel_field  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getChannelField" parameterType="int" resultType="ChannelField">
+select * from dt_channel_field where id=#{0}
+</select>
+
+<delete id="delChannelField" parameterType="int">
+delete from dt_channel_field where id=#{0}
+</delete>
+<insert id="addChannelField" parameterType="ChannelField">
+insert into dt_channel_field
+(channel_id,field_id)
+values(#{channel_id},#{field_id})
+</insert>
+<update id="updChannelField" parameterType="ChannelField">
+ update dt_channel_field set
+ channel_id=#{channel_id},
+ field_id=#{field_id}
+ where  id=#{id}
+ 
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countChannelSite" parameterType="ChannelSiteVo" resultType="int">
+select count(*)  from dt_channel_site  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>  		
+</select>
+
+<select id="queryChannelSite" parameterType="ChannelSiteVo" resultType="ChannelSite">
+select * from dt_channel_site dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_channel_site  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getChannelSite" parameterType="int" resultType="ChannelSite">
+select * from dt_channel_site where id=#{0}
+</select>
+
+<delete id="delChannelSite" parameterType="int">
+delete from dt_channel_site where id=#{0}
+</delete>
+<insert id="addChannelSite" parameterType="ChannelSite">
+insert into dt_channel_site
+(title,build_path,templet_path,domain,name,logo,company,address,tel,fax,email,crod,copyright,seo_title,seo_keyword,seo_description,is_mobile,is_default,sort_id)
+values(#{title},#{build_path},#{templet_path},#{domain},#{name},
+#{logo},#{company},#{address},#{tel},#{fax},#{email},#{crod},#{copyright},#{seo_title},#{seo_keyword},#{seo_description},#{is_mobile},#{is_default},#{sort_id})
+</insert>
+<update id="updChannelSite" parameterType="ChannelSite">
+update dt_channel_site set
+title=#{title},
+build_path=#{build_path},
+templet_path=#{templet_path},
+domain=#{domain},
+name=#{name},
+logo=#{logo},
+company=#{company},
+address=#{address},
+tel=#{tel},
+fax=#{fax},
+email=#{email},
+crod=#{crod},
+copyright=#{copyright},
+seo_title=#{seo_title},
+seo_keyword=#{seo_keyword},
+seo_description=#{seo_description},
+is_mobile=#{is_mobile},
+is_default=#{is_default},
+sort_id=#{sort_id}
+where  id=#{id}
+ 
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countChannelSpec" parameterType="ChannelSpecVo" resultType="int">
+select count(*)  from dt_channel_spec  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>  		
+</select>
+
+<select id="queryChannelSpec" parameterType="ChannelSpecVo" resultType="ChannelSpec">
+select * from dt_channel_spec dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_channel_spec  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getChannelSpec" parameterType="int" resultType="ChannelSpec">
+select * from dt_channel_spec where id=#{0}
+</select>
+
+<delete id="delChannelSpec" parameterType="int">
+delete from dt_channel_spec where id=#{0}
+</delete>
+<insert id="addChannelSpec" parameterType="ChannelSpec">
+insert into dt_channel_spec
+(channel_id,spec_id)
+values(#{channel_id},#{spec_id})
+</insert>
+<update id="updChannelSpec" parameterType="ChannelSpec">
+ update dt_channel_spec set
+ channel_id=#{channel_id},
+ spec_id=#{spec_id}
+ where  id=#{id}
+ 
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countArticleCategory" parameterType="ArticleCategoryVo" resultType="int">
+select count(*)  from dt_article_category  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>  		
+</select>
+
+<select id="queryArticleCategory" parameterType="ArticleCategoryVo" resultType="ArticleCategory">
+select * from dt_article_category dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_category  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getArticleCategory" parameterType="int" resultType="ArticleCategory">
+select * from dt_article_category where id=#{0}
+</select>
+
+<delete id="delArticleCategory" parameterType="int">
+delete from dt_article_category where id=#{0}
+</delete>
+<insert id="addArticleCategory" parameterType="ArticleCategory">
+insert into dt_article_category
+(channel_id,type,title,call_index,parent_id,class_list,class_layer,sort_id,link_url,img_url,content,seo_title,seo_keywords,seo_description)
+values(#{channel_id},#{type},#{title},#{call_index},#{parent_id},#{class_list},#{class_layer},#{sort_id},#{link_url},#{img_url},#{content},#{seo_title},#{seo_keywords},#{seo_description})
+</insert>
+<update id="updArticleCategory" parameterType="ArticleCategory">
+channel_id=#{channel_id},
+type=#{type},
+title=#{title},
+call_index=#{call_index},
+parent_id=#{parent_id},
+class_list=#{class_list},
+class_layer=#{class_layer},
+sort_id=#{sort_id},
+link_url=#{link_url},
+img_url=#{img_url},
+content=#{content},
+seo_title=#{seo_title},
+seo_keywords=#{seo_keywords},
+seo_description=#{seo_description}
+where  id=#{id}
+ 
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countArticleCategoryCount" parameterType="ArticleCategoryCountVo" resultType="int">
+select count(*)  from dt_article_category_count  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>  		
+</select>
+
+<select id="queryArticleCategoryCount" parameterType="ArticleCategoryCountVo" resultType="ArticleCategoryCount">
+select * from dt_article_category_count dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_category_count  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getArticleCategoryCount" parameterType="int" resultType="ArticleCategoryCount">
+select * from dt_article_category_count where id=#{0}
+</select>
+
+<delete id="delArticleCategoryCount" parameterType="int">
+delete from dt_article_category_count where id=#{0}
+</delete>
+<insert id="addArticleCategoryCount" parameterType="ArticleCategoryCount">
+insert into dt_article_category_count
+(category_id,type,count,parent_id,update_time)
+values(#{category_id},#{type},#{count},#{parent_id},#{update_time})
+</insert>
+<update id="updArticleCategoryCount" parameterType="ArticleCategoryCount">
+ update dt_article_category_count set
+ category_id=#{category_id},
+ type=#{type},
+ count=#{count},
+ parent_id=#{parent_id},
+ update_time=#{update_time}
+ where  id=#{id}
+ 
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countArticleCategoryUser" parameterType="ArticleCategoryUserVo" resultType="int">
+select count(*)  from dt_article_category_user  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>  		
+</select>
+
+<select id="queryArticleCategoryUser" parameterType="ArticleCategoryUserVo" resultType="ArticleCategoryUser">
+select * from dt_article_category_user dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_category_user  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getArticleCategoryUser" parameterType="int" resultType="ArticleCategoryUser">
+select * from dt_article_category_user where id=#{0}
+</select>
+
+<delete id="delArticleCategoryUser" parameterType="int">
+delete from dt_article_category_user where id=#{0}
+</delete>
+<insert id="addArticleCategoryUser" parameterType="ArticleCategoryUser">
+insert into dt_article_category_user
+(channel_id,user_id,user_role_type,user_role_value,type,title,call_index,parent_id,class_list,class_layer,sort_id,link_url)
+values (#{channel_id},#{user_id},#{user_role_type},#{user_role_value},#{type},#{title},#{call_index},#{parent_id},#{class_list},#{class_layer},#{sort_id},#{link_ur})
+</insert>
+<update id="updArticleCategoryUser" parameterType="ArticleCategoryUser">
+ update dt_article_category_user set
+ channel_id=#{channel_id},
+ user_id=#{user_id},
+ user_role_type=#{user_role_type},
+ user_role_value=#{user_role_value},
+ type=#{type},
+ title=#{title},
+ call_index=#{call_index},
+ parent_id=#{parent_id},
+ class_list=#{class_list},
+ class_layer=#{class_layer},
+ sort_id=#{sort_id},
+ link_ur=#{link_ur}
+ where  id=#{id}
+ 
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countArticleCategoryField" parameterType="ArticleCategoryFieldVo" resultType="int">
+select count(*)  from dt_article_category_field  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>  		
+</select>
+
+<select id="queryArticleCategoryField" parameterType="ArticleCategoryFieldVo" resultType="ArticleCategoryField">
+select * from dt_article_category_field dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_category_field  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getArticleCategoryField" parameterType="int" resultType="ArticleCategoryField">
+select * from dt_article_category_field where id=#{0}
+</select>
+
+<delete id="delArticleCategoryField" parameterType="int">
+delete from dt_article_category_field where id=#{0}
+</delete>
+<insert id="addArticleCategoryField" parameterType="ArticleCategoryField">
+insert into dt_article_category_field
+(category_id,field_id)
+values(#{category_id},#{field_id})
+</insert>
+<update id="updArticleCategoryField" parameterType="ArticleCategoryField">
+ update dt_article_category_field set
+ category_id=#{category_id},
+ field_id=#{field_id}
+ where  id=#{id}
+ 
+</update>
+
+<!-- ///////////////////////////////////// -->
+<select id="countArticleCategorySpec" parameterType="ArticleCategorySpecVo" resultType="int">
+select count(*)  from dt_article_category_spec  where 1=1
+<if test="user_id != null and user_id != ''">
+  and user_id=#{user_id}
+</if>  		
+</select>
+
+<select id="queryArticleCategorySpec" parameterType="ArticleCategorySpecVo" resultType="ArticleCategorySpec">
+select * from dt_article_category_spec dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_article_category_spec  where 1=1
+		<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>  
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getArticleCategorySpec" parameterType="int" resultType="ArticleCategorySpec">
+select * from dt_article_category_spec where id=#{0}
+</select>
+
+<delete id="delArticleCategorySpec" parameterType="int">
+delete from dt_article_category_spec where id=#{0}
+</delete>
+<insert id="addArticleCategorySpec" parameterType="ArticleCategorySpec">
+insert into dt_article_category_spec
+(category_id,spec_id)
+values(#{category_id},#{spec_id})
+</insert>
+<update id="updArticleCategorySpec" parameterType="ArticleCategorySpec">
+ update dt_article_category_spec set
+ category_id=#{category_id},
+ spec_id=#{spec_id}
+ where  id=#{id}
+ 
+</update>
+
+
+</mapper>

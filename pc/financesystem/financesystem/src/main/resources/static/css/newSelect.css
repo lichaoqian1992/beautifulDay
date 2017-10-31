@@ -1,0 +1,2 @@
+.mySelect{background: transparent;  width: 200px;  padding: 5px;  font-size: 16px;  border: 1px solid #a7b5bc;  height: 34px;  -webkit-appearance: none; /*for chrome*/  }
+.styled-select { float: left;  width: 180px;  height: 34px;  overflow: hidden;  background: url(../../static/images/new_arrow.jpg) no-repeat right;  }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.adds.mapper.RecordMapper" >
+
+<insert id="addRecord" parameterType="com.manji.adds.model.Record" useGeneratedKeys="true" keyProperty="id">
+	insert into 
+	record
+	(date,time,username,operate,title,type,val)
+	values
+	(#{date},#{time},#{username},#{operate},#{title},#{type},#{val})
+</insert>
+
+<select id="getFastRecord" resultType="com.manji.adds.model.Record">
+	select top 10 * from record
+	
+	order by id desc
+</select>
+
+<select id="getRecord" resultType="com.manji.adds.model.Record">
+	select * from record
+	
+	order by id desc
+</select>
+
+<select id="queryRecords" parameterType="com.manji.adds.model.Record" resultType="com.manji.adds.model.Record">
+	select * from record 
+	where 1=1
+
+    <if test="username != null and username != ''">
+         and username=#{username}
+    </if>
+    <if test="operate != null and operate != ''">
+         and operate=#{operate}
+    </if>
+    <if test="title != null and title != ''">
+         and title=#{title}
+    </if>
+    <if test="date != null and date != ''">
+         and date=#{date}
+    </if>
+    
+    order by id desc
+ 
+	
+</select>
+
+
+
+
+
+
+</mapper>

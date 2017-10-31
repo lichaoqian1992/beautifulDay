@@ -1,0 +1,163 @@
+#@layout()
+#define main()
+<div class="kf_nav">
+	<a class="kf_nav_home kf_nav_item">首页</a> <span class="kf_nav_item">部门管理</span>
+	<!-- <span class="kf_nav_item kf_nav_item_last">工单受理</span> -->
+	<!-- <input type="hidden" class="status" value="#(status)"/> -->
+</div>
+<div class="kf_box">
+	<div class="kf_search_box">
+
+		<div class="kf_group">
+			<span class="kf_group_title">搜索</span>
+			<div class="kf_group_content">
+				<div class="kf_form_icon kf_search_text">
+					<input class="kf_form_text" type="text" id="dept_name"
+						   placeholder="请输入部门名称" /> <span
+						class="kf_form_text_icon kf_form_icon_search"></span>
+				</div>
+
+			</div>
+		</div>
+		<div class="kf_group">
+			<div class="kf_group_content">
+				<button type="button" class="kf_btn" onclick="Data(1)">查 询</button>
+			</div>
+		</div>
+		<div class="kf_group kf_float_right">
+			<div class="kf_group_content">
+				<a  class="kf_btn kf_add_consult">新 增</a>
+				<!-- <button type="button" class="kf_btn">导出报表</button> -->
+			</div>
+		</div>
+	</div>
+	<div class="kf_table_box">
+		<table class="kf_table kf_table_hover">
+			<thead>
+			<tr>
+				<th>序号</th>
+				<th>部门名称</th>
+				<th>部门类型</th>
+				<th>状态</th>
+				<!--<th>督查部门</th>-->
+				<th>操作</th>
+			</tr>
+			</thead>
+			<tbody id="Data">
+
+			</tbody>
+		</table>
+		<div class="kf_table_page">
+			<div class="kf_page_content kf_float_right ">
+				<span class="kf_page_text">每页<i id="pageSize"></i>个，共<i id="totlepage"></i>页
+				</span>
+				<input type="hidden" value="" id="pageNumber"/>
+				<input type="hidden" value="1" id="lastPageNumber"/>
+				<ul class="kf_page_size">
+					<li><a class="kf_page_prev"></a></li>
+					<span>
+						
+					</span>
+					<li><a class="kf_page_next"></a></li>
+				</ul>
+			</div>
+		</div>
+
+		<!--新增部门-->
+		<div class="kf_mode_box ">
+			<div class="kf_mode_shield"></div>
+			<div class="kf_mode_content kf_mode_add">
+				<div class="kf_mode_header">
+					<label class="kf_mode_title">新增部门</label>
+				</div>
+				<div class="kf_mode_body">
+					<div class="kf_group">
+						<span class="kf_group_title">&emsp;&emsp;部门：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" id="add_dept_name" type="text" placeholder="部门名称" istype="string" style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+					<div class="kf_group">
+						<span class="kf_group_title">部门类型：</span>
+						<div class="kf_group_content">
+							<select class="kf_form_text" id="add_dept_type"  style="width: 370px;">
+								<option value="1">检查部门</option>
+								<option value="2">执行部门</option>
+							</select>
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+				</div>
+				<div class="kf_mode_footer">
+					<button class="kf_btn kf_btn_grey kf_mode_btn_close" type="button">取 消</button>
+					<button class="kf_btn kf_mode_btn_add_ok" type="button">确 定</button>
+				</div>
+			</div>
+		</div>
+
+		<input type="hidden" id="update_dept_id"/>
+		<!--修改部门-->
+		<div class="kf_mode_box ">
+			<div class="kf_mode_shield_update"></div>
+			<div class="kf_mode_content kf_mode_update">
+				<div class="kf_mode_header">
+					<label class="kf_mode_title">修改部门</label>
+				</div>
+				<div class="kf_mode_body">
+					<div class="kf_group">
+						<span class="kf_group_title">&emsp;&emsp;部门：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" id="update_dept_name" type="text" placeholder="部门名称" istype="string" style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+					<div class="kf_group">
+						<span class="kf_group_title">部门类型：</span>
+						<div class="kf_group_content">
+							<select class="kf_form_text" id="update_dept_type"  style="width: 370px;">
+								<option value="1">检查部门</option>
+								<option value="2">执行部门</option>
+							</select>
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+					<div class="kf_group">
+						<span class="kf_group_title">部门状态：</span>
+						<div class="kf_group_content">
+							<select class="kf_form_text" id="updatesataus"  style="width: 370px;">
+								<option value="1">正常</option>
+								<option value="0">异常</option>
+							</select>
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+				</div>
+				<div class="kf_mode_footer">
+					<button class="kf_btn kf_btn_grey kf_mode_btn_close_update" type="button">取 消</button>
+					<button class="kf_btn kf_mode_btn_update_ok" type="button">确 定</button>
+				</div>
+			</div>
+		</div>
+
+		<!--提示消息-->
+		<div class="kf_mode_content kf_mode_tips">
+			<div class="kf_mode_tips_box">
+				保存成功
+			</div>
+		</div>
+		<!--提示消息-->
+	    <div class="kf_mode_content kf_mode_tips tankuang" style="background-color: #087dd1;width: 250px;height: 70px;">
+	        <div class="kf_mode_tips_box kf_mode_tips_error" style="color: #FFFFFF;padding:30px 64px 20px 54px;">
+	           
+	        </div>
+	    </div>
+	</div>
+
+	#include("../common/_js.html")
+	<script type="text/javascript" src="#(ctx)/static/js/dept.js"></script>
+	#end

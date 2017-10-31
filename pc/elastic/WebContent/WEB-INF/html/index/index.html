@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+	<div>
+		<textarea style="height: 200px; width: 800px;" id="str">  </textarea>
+
+	</div>
+
+	<br>
+	<button type="submit" id="button" onclick="send()">提交</button>
+	<br>
+
+	<div>
+
+		<span id="result"> </span>
+
+
+	</div>
+
+	<script type="text/javascript"
+		src="http://code.jquery.com/jquery-latest.js"></script>
+
+	<script>
+		$(document).ready(function() {
+
+			$("#str").val("");
+
+		});
+
+		function send() {
+
+			$.ajax({
+				type : "GET",
+				url : "/elastic/send",
+				dataType : "json",
+				contentType : "application/json; charset=utf-8",
+				data : {
+					"str" : $("#str").val()
+				},
+				success : function(data) {
+					console.log(data);
+					if (data != null) {
+						var s = JSON.stringify(data);
+						var ss = s.replace(/","/g, '",<br>"');
+						ss = ss.replace(/},"/g, '",<br>"');
+						$("#result").html(ss);
+					}
+				},
+				error : function() {
+					alert("数据异常");
+				}
+			});
+
+		}
+	</script>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

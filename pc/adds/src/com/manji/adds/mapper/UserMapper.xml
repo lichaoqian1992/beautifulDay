@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.adds.mapper.UserMapper" >
+
+
+<select id="getUsers"  resultType="com.manji.adds.model.User">
+	select id,username,privilege from users
+</select>
+
+<insert id="insertUser" parameterType="com.manji.adds.model.User" useGeneratedKeys="true" keyProperty="id">
+	insert into
+	users(username,password,privilege)
+	values
+	(#{username},#{password},#{privilege})
+</insert>
+
+<update id="updUser" parameterType="com.manji.adds.model.User">
+	update users set 
+	password =#{password} , privilege=#{privilege}
+	where id =#{id}
+</update>
+
+
+<select id="checkUser" resultType="java.util.Map" >
+  	select 
+  	*
+  	from users
+  	where username =#{0} and password=#{1} 
+</select>
+
+
+
+
+
+<update id="updPrivilege" parameterType="com.manji.adds.model.User">
+	update users set 
+	privilege =#{privilege} 
+	where id =#{id}
+</update>
+
+<update id="updPassword" parameterType="com.manji.adds.model.User">
+	update users set 
+	password =#{password} 
+	where id =#{id}
+</update>
+
+
+<delete id="delUser" parameterType="java.lang.String">
+	delete from users where id=#{id}
+</delete>
+
+
+
+
+<select id="getUserById" resultType="com.manji.adds.model.User" parameterType="java.lang.String">
+	select * from users where id=#{id}
+</select>
+
+
+</mapper>

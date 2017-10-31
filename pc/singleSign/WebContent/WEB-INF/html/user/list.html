@@ -1,0 +1,265 @@
+ #@layout() #define main()
+<div class="kf_nav">
+	<a class="kf_nav_home kf_nav_item">首页</a> <span class="kf_nav_item">用户管理</span>
+	<!-- <span class="kf_nav_item kf_nav_item_last">工单受理</span> -->
+	<!-- <input type="hidden" class="status" value="#(status)"/> -->
+</div>
+<div class="kf_box">
+	<div class="kf_search_box">
+		<div class="kf_group">
+			<span class="kf_group_title">部门</span>
+			<div class="kf_group_content">
+				<select class="kf_form_text" id="dept_id">
+					<option value="-1">全部</option>
+					 #for(dept : deptlist)
+						<option value="#(dept.id)">#(dept.dept_name)</option>
+					#end
+				</select>
+			</div>
+		</div>
+		<div class="kf_group">
+			<span class="kf_group_title">用户名</span>
+			<div class="kf_group_content">
+				<div class="kf_form_icon kf_search_text">
+					<input class="kf_form_text" type="text" id="username"
+						placeholder="请输入用户名查询" />
+				</div>
+
+			</div>
+		</div>
+		<div class="kf_group">
+			<div class="kf_group_content">
+				<button type="button" class="kf_btn" onclick="data(1)">查 询</button>
+			</div>
+		</div>
+		<div class="kf_group kf_float_right">
+			<div class="kf_group_content">
+				<a class="kf_btn kf_add_consult">新 增</a>
+				<!-- <button type="button" class="kf_btn">导出报表</button> -->
+			</div>
+		</div>
+	</div>
+	<div class="kf_table_box">
+		<table class="kf_table">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>用户名</th>
+					<th>部门</th>
+					<th>真实姓名</th>
+					<th>电话号码</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody id="data"></tbody>
+		</table>
+		<div class="kf_table_page">
+			<div class="kf_page_content kf_float_right ">
+				<span class="kf_page_text">每页<i id="pageSize"></i>个，共<i id="totlepage"></i>页
+				</span>
+				<input type="hidden" value="" id="pageNumber"/>
+				<input type="hidden" value="1" id="lastPageNumber"/>
+				<ul class="kf_page_size">
+					<li><a class="kf_page_prev"></a></li>
+					<span>
+						
+					</span>
+					<li><a class="kf_page_next"></a></li>
+				</ul>
+			</div>
+		</div>
+
+		<!--新增模块div-->
+		<form id="insertForm">
+		<div class="kf_mode_box ">
+			<div class="kf_mode_shield"></div>
+			<div class="kf_mode_content kf_mode_add" style="margin: -305px 0 0 -285px;">
+				<div class="kf_mode_header">
+					<label class="kf_mode_title">新增用户</label>
+				</div>
+				<div class="kf_mode_body">
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>登录账号：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" type="text" placeholder="6-20位英文字母和数字的组合" id="saveusername" name="insertUserName" style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>密码：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" type="password" id="savepassword"  placeholder="6-20位字符" name="insertPassword"  style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>确认密码：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" type="password" id="saveqpassword" name="insertPasswordAlso"  placeholder="重新输入密码" style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>部门：</span>
+						<div class="kf_group_content">
+							<select class="kf_form_text" id="savedept"  style="width: 370px;">
+								#for(dept : deptlist)
+								<option value="#(dept.id)">#(dept.dept_name)</option>
+								#end
+							</select>
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>真实姓名：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" type="text" id="insertRealName" name="insertNickName"  placeholder="请输入真实姓名" style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+					
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>手机号码：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" type="number" id="insertMobile" name="insertPhone" placeholder="请输入正确的手机号码" style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+					<div class="kf_group">
+						<div class="kf_group_content"><label style="color: red;">*</label>系统和角色:</div>
+						<div class="systemandrole"></div>
+						<div class="addSystemRole kf_group_content" style="margin-top: 10px;">
+							<span>
+								<select class="kf_form_text" id="savesystemInsert"  style="width: 185px;">
+									#for(system : systemlist)
+									<option value="#(system.id)">#(system.system_name)</option>
+									#end
+								</select><select class="kf_form_text" id="saveroleInsert"  style="width: 185px;"></select>
+							</span>
+							<span><label class="kf_btn" onclick="saveRecord()">添加</label></span>
+						</div>
+					</div>
+				</div>
+				<div class="kf_mode_footer">
+					<button class="kf_btn kf_mode_btn_add_ok" type="submit">确 定</button>
+					<button class="kf_btn kf_btn_grey kf_mode_btn_close" type="button">取 消</button>
+				</div>
+			</div>
+		</div>
+		</form>
+
+
+		<!--修改模块-->
+		<form id="updateForm">
+		<input type="hidden" id="updateuserid"/>
+		<div class="kf_mode_box">
+			<div class="kf_mode_shield_update"></div>
+			<div class="kf_mode_content kf_mode_update" style="margin: -305px 0 0 -285px;">
+				<div class="kf_mode_header">
+					<label class="kf_mode_title">修改用户</label>
+				</div>
+				<div class="kf_mode_body">
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>登录账号：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" type="text" placeholder="6-20位英文字母和数字的组合" name="updateUserName" id="updateusername" style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>密码：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" type="text" id="updatepassword"  placeholder="登录密码" name="updatePassword" style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>真实姓名：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" type="text" id="updateRealName"  placeholder="真实姓名" name="updateNickName" style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+					
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>手机号码：</span>
+						<div class="kf_group_content">
+							<input class="kf_form_text" type="number" id="updateMobile"  placeholder="电话号码" name="updatePhone" style="width: 370px;">
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+					
+
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>部门：</span>
+						<div class="kf_group_content">
+							<select class="kf_form_text" id="updatedept"  style="width: 370px;">
+								#for(dept : deptlist)
+								<option value="#(dept.id)">#(dept.dept_name)</option>
+								#end
+							</select>
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+
+					<div class="kf_group">
+						<span class="kf_group_title"><label style="color: red;">*</label>账户状态：</span>
+						<div class="kf_group_content">
+							<select class="kf_form_text" id="updatesataus"  style="width: 370px;">
+								<option value="1">正常</option>
+								<option value="0">异常</option>
+							</select>
+							<div class="kf_add_consult_tips"></div>
+						</div>
+					</div>
+
+					<div class="kf_group">
+						<div class="kf_group_content"><label style="color: red;">*</label>系统和角色:</div>
+						<div class="systemandrole"></div>
+						<div class="addSystemRole kf_group_content" style="margin-top: 10px;">
+							<span>
+								<select class="kf_form_text" id="savesystemUpdate" style="width: 185px;">
+									#for(system : systemlist)
+									<option value="#(system.id)">#(system.system_name)</option>
+									#end
+								</select><select class="kf_form_text" id="saveroleUpdate"  style="width: 185px;"></select>
+							</span>
+							<span><label class="kf_btn" onclick="addRecord()">添加</label></span>
+						</div>
+					</div>
+				</div>
+				<div class="kf_mode_footer">
+					<button class="kf_btn kf_mode_btn_update_ok" type="submit">确 定</button>
+					<button class="kf_btn kf_btn_grey kf_mode_btn_close_update" type="button">取 消</button>
+				</div>
+			</div>
+		</div>
+		</form>
+	</div>
+</div>
+<!--提示消息-->
+ <div class="kf_mode_content kf_mode_tips">
+	 <div class="kf_mode_tips_box">
+		 保存成功
+	 </div>
+ </div>
+ <!--提示消息-->
+    <div class="kf_mode_content kf_mode_tips tankuang" style="background-color: #087dd1;width: 250px;height: 70px;">
+        <div class="kf_mode_tips_box kf_mode_tips_error" style="color: #FFFFFF;padding:30px 64px 20px 54px;">
+           
+        </div>
+    </div>
+
+#include("../common/_js.html")
+<script type="text/javascript" src="#(ctx)/static/js/users.js"></script>
+
+
+
+#end

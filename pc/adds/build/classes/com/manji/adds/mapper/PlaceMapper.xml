@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.adds.mapper.PlaceMapper" >
+
+
+<select id="getAllPlace" resultType="com.manji.adds.model.Place" >
+
+	select * from place 
+	
+  </select>
+
+<select id="Multiquery" resultType="com.manji.adds.model.Place" parameterType="com.manji.adds.model.Place">
+	
+	select * from place 
+	
+	where 1=1 
+	<if test="channel != null and channel != ''">
+         and channel=#{channel}
+    </if>
+    	<if test="type != null and type != ''">
+         and type=#{type}
+    </if>
+    	<if test="pl_id != null and pl_id != ''">
+         and pl_id=#{pl_id}
+    </if>
+    	<if test="flag != null and flag != ''">
+         and flag=#{flag}
+    </if>
+    	<if test="display != null and display != ''">
+         and display=#{display}
+    </if>
+</select>
+
+<select id="queryPlaceById" resultType="com.manji.adds.model.Place" parameterType="com.manji.adds.model.Place">
+
+	select * from place
+	were channel =#{channel} and pl_id=#{pl_id}
+</select>
+
+<update id="updPlace" parameterType="com.manji.adds.model.Place">
+	
+	update place
+	set 
+	type=#{type},display=#{display},number=#{number},flag=#{flag}
+	where pl_id =#{pl_id} and channel={channel}
+
+</update>
+
+
+
+</mapper>

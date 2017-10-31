@@ -1,0 +1,53 @@
+#@layout() #define main()
+
+<section class="content-header">
+	<ol class="breadcrumb">
+		<li><i class="fa fa-dashboard"></i> 首页</li>
+	</ol>
+</section>
+
+
+<section class="invoice">
+	<div class="row">
+		<div class="col-md-12">
+			#include("_homemenu.html")
+			<div class="tab-content paymentOrderDate_tab_list">
+				<div class="table_no_data">暂时没有数据！</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+#include("../common/_js.html")
+
+<script type="text/javascript">
+			$(function() {
+				/*时间插件调用
+				 */
+				$('.datepicker').datepicker({
+					format: 'yyyy-mm-dd',
+					autoclose: true,
+					language: 'cn'
+				});
+				
+				//弹出窗
+				$(".table").on("click",".check_file",function(event){
+					event.preventDefault();
+					layer.open({
+						type: 2,
+						title: '交易明细',
+						shadeClose: true,
+						shade: 0.8,
+						area: ['1180px', '500px'],
+						content: $(this).attr("href") //iframe的url
+					});
+				});
+
+				
+				$(".pltservice").addClass("active");
+				
+			});
+		</script>
+
+#end

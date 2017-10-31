@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.adds.mapper.BaseMapper" >
+
+
+<select  id="getProvince"   resultType="com.manji.adds.model.Region" >
+
+	select * from region where type='1'
+	
+</select>
+
+<select  id="getCity"   resultType="com.manji.adds.model.Region" >
+
+	select * from region where code like #{code} and   type ='2' 
+	
+</select>
+
+<select  id="getCountry"   resultType="com.manji.adds.model.Region" parameterType="java.lang.String">
+
+	select * from region where type ='3' and code like #{code}
+
+</select>
+
+
+
+
+</mapper>

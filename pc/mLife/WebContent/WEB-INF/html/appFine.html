@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>交通罚款 </title>
+    <link rel="stylesheet" href="css/frozen.css">
+    <link rel="stylesheet" href="css/validate.css">
+    <link rel="stylesheet" href="css/appstyle.css">
+    <!-- <script src="js/jquery-1.11.2.min.js"></script>
+     <script src="js/xcconfirm.js" type="text/javascript"charset="utf-8"></script> -->
+    <script src="js/lib/zeptojs/zepto.min.js"></script>
+    <script src="js/zepto-mvalidate.js"></script>
+    <script src="js/frozen.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/zepto.mdater.css">
+    <script src="js/zepto.mdater.js"></script>
+</head>
+<!-- 检测用户设备 -->
+<script type="text/javascript">
+        var browser = { 
+           versions: function() { 
+               var u = navigator.userAgent; 
+               return { 
+                   trident: u.indexOf('Trident') > -1, //IE内核 
+                   presto: u.indexOf('Presto') > -1, //opera内核 
+                   webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+                   gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+                   mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+                   ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+                   android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+                   iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+                   iPad: u.indexOf('iPad') > -1, //iPad 
+                   webApp: u.indexOf('Safari') > -1 //Safari 
+               }; 
+           }() 
+        } 
+        function closePage(){
+             var jsonstr = "{\"action\":\"close\"}";
+            if ( browser.versions.ios 
+               || browser.versions.iPhone 
+               || browser.versions.iPad) { 
+               window.webkit.messageHandlers.Native.postMessage(jsonstr);
+            }
+            if ( browser.versions.android ) { 
+                window.paySucess.clickOnAndroid(jsonstr);
+            }
+             
+         }
+</script>
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="closePage()"></i><h1>交通罚款 </h1>
+    </header>
+    
+    <section class="ui-container" style="padding-bottom:40px;">
+        <form action="app/fine/createBill" method="post" id="chargeForm" novalidate="novalidate">
+            <div class="ui-form-item border-b padding-right">
+                <label>违章区域</label>
+                <div class="select-box select-box2" id="area">
+                    <select id="city" onchange="getItem()" name="provinceMenu">
+                    	<option>请选择城市</option>
+                    </select>
+                    <select id="province" onchange="getcity();" name="cityMenu"></select>
+                </div>
+            </div>
+            <div id="payMode" class="ui-form-item border-b">
+                <label>处理方式</label>
+                <input type="text" value="手工单" disabled class="" name="payType">
+            </div>
+            <div id="carNumberDiv" class="ui-form-item border-b ui-form-item-link">
+                <label>
+                    车牌号码
+                </label>
+                <div class="area" id="addrChar" style="width: 50px" >
+                    <select class="select-box select-box2" id="carNumber1">
+                </select>
+                <input type="text" placeholder="请输入车牌号码" style="position: absolute;left: 44px; top: 15px; margin: 0; padding: 0;width: 130px;" id="carNumber2"  data-validate="phone" data-describedby="phone-description" onchange="comCarNo()">
+                </div>
+            </div>
+            <div>
+
+
+              <input type="hidden" id="carNo" name="carNo" >
+              <input type="hidden" id="totalFee" name="totalFee">
+              <input type="hidden" id="itemId" name="itemId">
+              <input type="hidden" id="itemName" name="itemName">
+            </div>
+            <div id="ticketNumDiv" class="ui-form-item border-b">
+                <label>
+                    处罚单号
+                </label>
+                <input type="text" placeholder="请输入完整处罚单号" name="fineNo" id="ticketNum">
+                <a href="javascript:;" class="ui-icon-close clearval">
+                </a>
+            </div>
+            <div id="carTypeDiv" style="display: block;"
+				class="ui-form-item border-b">
+				<label class="input-label" for="">车辆类型</label>
+				<div class="input-content">
+					<select class="form-control" id="carType" name="carType">
+						<!-- <option value="" selected="">请选择车辆类型</option>
+						<option value="02">小型车</option>
+						<option value="01">大型车</option>
+						<option value="06">外籍汽车</option>
+						<option value="07">两、三轮摩托车</option>
+						<option value="11">境外摩托车</option>
+						<option value="12">外籍摩托车</option>
+						<option value="15">挂车</option>
+						<option value="26">香港出入境车</option>
+						<option value="27">澳门出入境车</option> -->
+					</select>
+				</div>
+			</div>
+            <div id="driverLicenceNumDiv" class="ui-form-item border-b">
+                <label>
+                    发动机号
+                </label>
+                <input type="text" placeholder="请填写完整发动机号" maxlength="18" id="engineNo" name="engineId" autocomplete="off">
+                <a href="javascript:;" class="ui-icon-close clearval">
+                </a>
+            </div>
+            <div id="driverLicenceNumDiv" class="ui-form-item border-b">
+                <label>
+                    车架号
+                </label>
+                <input type="text" placeholder="请填写完整车架号" maxlength="20" id="frameId" name="frameId" autocomplete="off" >
+                <a href="javascript:;" class="ui-icon-close clearval">
+                </a>
+            </div>
+            <div id="illegalTimeDiv" class="ui-form-item border-b ui-form-item-link padding-right">
+                <label>处罚时间</label>
+                <input type="text" placeholder="请选择时间" readonly="true" name="illegalTime" id="checktime" onchange="checkDate()">
+            </div>
+            <script type="text/javascript">
+                $(function(){
+                    $('#checktime').mdater({
+                        minDate : new Date(2000,10,10),
+                        maxDate : new Date()
+                    });
+                });
+            </script>
+            <div id="carOwnerNameDiv" class="ui-form-item border-b">
+                <label>
+                    车主姓名
+                </label>
+                <input type="text" placeholder="请输入车主姓名" name="name" id="carOwnerName">
+                <a href="javascript:;" class="ui-icon-close clearval">
+                </a>
+            </div>
+            <div id="carOwnerTelDiv" class="ui-form-item border-b">
+                <label>
+                    车主手机
+                </label>
+                <input type="text" name="mobile" id="carOwnerTel" placeholder="请输入车主手机" data-pattern="^0?1[3|4|5|8][0-9]\d{8}$" data-descriptions="telphone">
+                <a href="javascript:;" class="ui-icon-close clearval">
+                </a>
+            </div>
+            <div id="fineAmountDiv" class="ui-form-item border-b">
+                <label>
+                    处罚金额
+                </label>
+                <input type="text" name="fineFee" id="fineFee" placeholder="请输入处罚金额" onchange ="numberfixed(this)" onafterpaste="this.value=this.value.replace(/[^\d]/g,'') ">
+                <a href="javascript:;" class="ui-icon-close clearval">
+                </a>
+            </div>
+            <div id="lateFeesDiv" style="display:none;" class="ui-form-item border-b">
+                <label class="input-label" for=""> 滞纳金：</label>
+                <div class="input-content">
+                    <input type="text" aliasname="滞纳金" class="form-control" 
+                        maxlength="15" id="lateFees" name="delayFee"
+                        autocomplete="off" placeholder="请填写滞纳金">
+                </div>
+                <a href="javascript:;" class="ui-icon-close clearval">
+                </a>
+            </div>
+            <div class="ui-form-item border-b">
+                <label>服务费</label>
+                <input type="text" value="¥0.00" readonly class="text-right" id="serviceFee" name="serviceFee">
+            </div>
+            <span id="enlargeNum" style="width: 50%; display: inline-block; word-break: break-all" class="font-exLarge  orange"></span>
+            
+			<footer class="ui-footer ui-border-t" style="height: 50px;">
+                <div class="ui-form-item border-b" style="padding-right:0;">
+                    <label>总金额：<span id="total">¥0.00</span></label>
+                    <button class="btn-confirm" type="submit" id="sure">确认</button>
+                </div>
+            </footer>
+        </form>
+        <section class="section">
+            <div class="ui-form-item  ui-whitespace border-b">
+                <h2>服务说明</h2><span class="squire"></span>
+            </div>
+            <div class="ui-row" style="padding:15px;">
+                <p class="ui-txt-info">1.暂不支持缴含滞纳金及扣分项的违章。</p>
+                <p class="ui-txt-info">2.需要提供处理单号。</p>
+                <p class="ui-txt-info">3.每天10：30处理前一天订单，周五12:00之后的订单，周一处理。</p>
+                <p class="ui-txt-info">4.需要1-3个工作日处理到账。</p>
+            </div>
+        </section>
+    </section>
+    <script class="demo-script">
+        (function (){        
+            var clearval = $(".clearval");
+            clearval.on("click",function(){
+                $(this).siblings('input').val("").focus();
+            });
+        })();
+        //对话框
+        function showDialog(content){
+    		var dia=$.dialog({
+    			title:"温馨提示：",
+                content:content,
+                button:["确认"]
+            });
+
+            dia.on("dialog:action",function(e){
+                console.log(e.index)
+            });
+            dia.on("dialog:hide",function(e){
+                console.log("dialog hide")
+            });
+    	}
+        //校验罚款时间
+        function checkDate(){
+        	var fineTime = $("#checktime").val();
+        	var nowTime = new Date();
+        	if(new Date(fineTime).getTime() > nowTime.getTime()){
+        		var message = "罚款时间不能大于当前时间,请重新选择";
+    			showDialog(message);
+        		$("#checktime").val("请选择时间");
+                var dia=$.dialog({
+                    content:message,
+                    button:["确认"]
+                });
+        		return false;
+        	}
+        }
+        // 加载省市信息
+        var province = $("#province");
+        var provinces = new Array("北京", "上海", "重庆", "安徽", "福建", "甘肃",
+                "广东", "广西", "贵州", "海南", "河北", "黑龙江", "河南", "香港", "湖北",
+                "湖南", "江苏", "江西", "吉林", "辽宁", "澳门", "内蒙古", "宁夏", "青海",
+                "山东", "山西", "陕西", "四川", "台湾", "天津", "新疆", "西藏", "云南",
+                "浙江");
+        for (var i = 0; i < provinces.length; i++) {
+            province.append("<option value='"+provinces[i]+"'>"+provinces[i]+"</option>");
+        }
+        var city =$("#city");
+        $("#province option").on("click",function(){
+            var areatext = ""
+            var provinceval = $(this).val();
+            $(this).addClass("active").siblings("option").removeClass("active");
+            getcity();
+
+            $("#city option").on("click",function(){
+                var cityval = $(this).val();
+                $(this).addClass("active").siblings("option").removeClass("active");
+                areatext = provinceval+","+cityval;
+                $("#area").val(areatext);
+            });
+        });
+
+		
+        
+      //车辆类型
+		var cartype =$("#carType");
+		cartype.append("<option value=''>请选择车辆类型</option>");
+		cartype.append("<option value='02'>小型车</option>");
+		cartype.append("<option value='01'>大型车</option>");
+		cartype.append("<option value='06'>外籍汽车</option>");
+		cartype.append("<option value='07'>两、三轮摩托车</option>");
+		cartype.append("<option value='11'>境外摩托车</option>");
+		cartype.append("<option value='12'>外籍摩托车</option>");
+		cartype.append("<option value='15'>挂车</option>");
+		cartype.append("<option value='26'>香港出入境车</option>");
+		cartype.append("<option value='27'>澳门出入境车</option>");
+        function comCarNo() {
+    		$("#carNo").val("");
+    		var carnum1 = $("#carNumber1").val();
+    		var carnum2 = $("#carNumber2").val();
+    		var carNo = carnum1 + carnum2;
+    		$("#carNo").val(carNo);
+    		$("#engineDiv").show();
+    		$("#frameDiv").show();
+    		$("#carOwnerNameDiv").show();
+    		$("#carOwnerTelDiv").show();
+    		$("#carTypeDiv").show();
+    	}
+        getItem();
+        function getItem() {
+    		if($("#city").val()!=0)	{
+        		$.ajax({
+        			type : "GET",
+        			url : "app/fine/getItem",
+        			dataType : "*.json",
+        			contentType : "application/json; charset=utf-8",
+        			data : {
+        				"province" : $("#province").val(),
+        				"city" : $("#city").val()
+        			},
+        			success : function(data) {
+        				var fineitem = $.parseJSON(data);
+        				$("#itemId").val(fineitem.itemId);
+        				$("#itemName").val(fineitem.itemName);
+        				$("#serviceFee").val("¥"+Number(fineitem.fineFee).toFixed(2));
+        			}
+        		});
+        	}
+        }
+        
+        function countMoney() {
+
+    		var finefee = $("#fineFee").val();
+    		var delayfee = $("#lateFees").val();
+    		var serviceFee = $("#serviceFee").val();
+    		if (null == finefee) {
+    			finefee = "0";
+    		}
+    		if (null == delayfee) {
+    			delayfee = "0";
+    		}
+    		if (null == serviceFee) {
+    			fee = "0";
+    		}
+
+    		var total = Number(finefee) + Number(delayfee) + Number(fee) +1;
+
+    		$("#totalFee").val(total.toFixed(2));
+
+    	};
+        
+    	function numberfixed(obj){
+    		var num1 =$(obj).val();
+    		var num2 =Number(num1).toFixed(2);
+    		$(obj).val(num2);
+    		var num3 = new Array();
+    		num3 =$("#serviceFee").val().split("¥");
+    		$("#total")[0].innerText =Number(Number(num2)+Number(num3[1])).toFixed(2);
+    		$("#totalFee").val(Number(Number(num2)+Number(num3[1])).toFixed(2));
+//     		$("#enlargeNum").text("1");
+    	};
+        
+        getcity();
+        function getcity() {
+            var city =$("#city");
+            city.html("");
+            switch ($("#province").val()) {
+            case "安徽":
+                var cityOptions = new Array("合肥", "安庆", "蚌埠", "亳州", "巢湖", "滁州",
+                        "阜阳", "贵池", "淮北", "淮化", "淮南", "黄山", "九华山", "六安", "马鞍山",
+                        "宿州", "铜陵", "屯溪", "芜湖", "宣城");
+                $("#carNumber1").val("皖");
+                break;
+            case "北京":
+                var cityOptions = new Array("东城", "西城", "崇文", "宣武", "朝阳", "丰台",
+                        "石景山", "海淀", "门头沟", "房山", "通州", "顺义", "昌平", "大兴", "平谷",
+                        "怀柔", "密云", "延庆");
+                $("#carNumber1").val("京");
+                break;
+            case "重庆":
+                var cityOptions = new Array("重庆");
+                $("#carNumber1").val("渝");
+                break;
+            case "福建":
+                var cityOptions = new Array("福州", "福安", "龙岩", "南平", "宁德", "莆田",
+                        "泉州", "三明", "邵武", "石狮", "永安", "武夷山", "厦门", "漳州");
+                $("#carNumber1").val("闽");
+                break;
+            case "甘肃":
+                var cityOptions = new Array("兰州", "白银", "定西", "敦煌", "甘南", "金昌",
+                        "酒泉", "临夏", "平凉", "天水", "武都", "武威", "西峰", "张掖");
+                $("#carNumber1").val("甘");
+                break;
+            case "广东":
+                var cityOptions = new Array("广州", "潮阳", "潮州", "澄海", "东莞", "佛山",
+                        "河源", "惠州", "江门", "揭阳", "开平", "茂名", "梅州", "清远", "汕头", "汕尾",
+                        "韶关", "深圳", "顺德", "阳江", "英德", "云浮", "增城", "湛江", "肇庆", "中山",
+                        "珠海");
+                $("#carNumber1").val("粤");
+                break;
+            case "广西":
+                var cityOptions = new Array("南宁", "百色", "北海", "桂林", "防城港", "河池",
+                        "贺州", "柳州", "钦州", "梧州", "玉林");
+                $("#carNumber1").val("桂");
+                break;
+            case "贵州":
+                var cityOptions = new Array("贵阳", "安顺", "毕节", "都匀", "凯里", "六盘水",
+                        "铜仁", "兴义", "玉屏", "遵义");
+//                 $("#carNumber1").val("黔");
+                break;
+            case "海南":
+                var cityOptions = new Array("海口", "儋县", "陵水", "琼海", "三亚", "通什",
+                        "万宁");
+                $("#carNumber1").val("琼");
+                break;
+            case "河北":
+                var cityOptions = new Array("石家庄", "保定", "北戴河", "沧州", "承德", "丰润",
+                        "邯郸", "衡水", "廊坊", "南戴河", "秦皇岛", "唐山", "新城", "邢台", "张家口");
+                $("#carNumber1").val("冀");
+                break;
+            case "黑龙江":
+                var cityOptions = new Array("哈尔滨", "北安", "大庆", "大兴安岭", "鹤岗", "黑河",
+                        "佳木斯", "鸡西", "牡丹江", "齐齐哈尔", "七台河", "双鸭山", "绥化", "伊春");
+                $("#carNumber1").val("黑");
+                break;
+            case "河南":
+                var cityOptions = new Array("郑州", "安阳", "鹤壁", "潢川", "焦作", "济源",
+                        "开封", "漯河", "洛阳", "南阳", "平顶山", "濮阳", "三门峡", "商丘", "新乡",
+                        "信阳", "许昌", "周口", "驻马店");
+                $("#carNumber1").val("豫");
+                break;
+            case "香港":
+                var cityOptions = new Array("香港", "九龙", "新界");
+//                 $("#carNumber1").val("港");
+                break;
+            case "湖北":
+                var cityOptions = new Array("武汉", "恩施", "鄂州", "黄冈", "黄石", "荆门",
+                        "荆州", "潜江", "十堰", "随州", "武穴", "仙桃", "咸宁", "襄阳", "襄樊", "孝感",
+                        "宜昌");
+                $("#carNumber1").val("鄂");
+                break;
+            case "湖南":
+                var cityOptions = new Array("长沙", "常德", "郴州", "衡阳", "怀化", "吉首",
+                        "娄底", "邵阳", "湘潭", "益阳", "岳阳", "永州", "张家界", "株洲");
+                $("#carNumber1").val("湘");
+                break;
+            case "江苏":
+                var cityOptions = new Array("南京", "常熟", "常州", "海门", "淮安", "江都",
+                        "江阴", "昆山", "连云港", "南通", "启东", "沭阳", "宿迁", "苏州", "太仓",
+                        "泰州", "同里", "无锡", "徐州", "盐城", "扬州", "宜兴", "仪征", "张家港",
+                        "镇江", "周庄");
+                $("#carNumber1").val("苏");
+                break;
+            case "江西":
+                var cityOptions = new Array("南昌", "抚州", "赣州", "吉安", "景德镇", "井冈山",
+                        "九江", "庐山", "萍乡", "上饶", "新余", "宜春", "鹰潭");
+                $("#carNumber1").val("赣");
+                break;
+            case "吉林":
+                var cityOptions = new Array("长春", "白城", "白山", "珲春", "辽源", "梅河",
+                        "吉林", "四平", "松原", "通化", "延吉");
+                $("#carNumber1").val("吉");
+                break;
+            case "辽宁":
+                var cityOptions = new Array("沈阳", "鞍山", "本溪", "朝阳", "大连", "丹东",
+                        "抚顺", "阜新", "葫芦岛", "锦州", "辽阳", "盘锦", "铁岭", "营口");
+                $("#carNumber1").val("辽");
+                break;
+            case "澳门":
+                var cityOptions = new Array("澳门");
+//                 $("#carNumber1").val("澳");
+                break;
+            case "内蒙古":
+                var cityOptions = new Array("呼和浩特", "阿拉善盟", "包头", "赤峰", "东胜",
+                        "海拉尔", "集宁", "临河", "通辽", "乌海", "乌兰浩特", "锡林浩特");
+                $("#carNumber1").val("蒙");
+                break;
+            case "宁夏":
+                var cityOptions = new Array("银川", "固源", "石嘴山", "吴忠");
+                $("#carNumber1").val("宁");
+                break;
+            case "青海":
+                var cityOptions = new Array("西宁", "德令哈", "格尔木", "共和", "海东", "海晏",
+                        "玛沁", "同仁", "玉树");
+                $("#carNumber1").val("青");
+                break;
+            case "山东":
+                var cityOptions = new Array("济南", "滨州", "兖州", "德州", "东营", "菏泽",
+                        "济宁", "莱芜", "聊城", "临沂", "蓬莱", "青岛", "曲阜", "日照", "泰安", "潍坊",
+                        "威海", "烟台", "枣庄", "淄博");
+                $("#carNumber1").val("鲁");
+                break;
+            case "上海":
+                var cityOptions = new Array("崇明", "黄浦", "卢湾", "徐汇", "长宁", "静安",
+                        "普陀", "闸北", "虹口", "杨浦", "闵行", "宝山", "嘉定", "浦东", "金山", "松江",
+                        "青浦", "南汇", "奉贤");
+                $("#carNumber1").val("沪");
+                break;
+            case "山西":
+                var cityOptions = new Array("太原", "长治", "大同", "候马", "晋城", "离石",
+                        "临汾", "宁武", "朔州", "忻州", "阳泉", "榆次", "运城");
+                $("#carNumber1").val("晋");
+                break;
+            case "陕西":
+                var cityOptions = new Array("西安", "安康", "宝鸡", "汉中", "渭南", "商州",
+                        "绥德", "铜川", "咸阳", "延安", "榆林");
+                $("#carNumber1").val("陕");
+                break;
+            case "四川":
+                var cityOptions = new Array("成都", "巴中", "达川", "德阳", "都江堰", "峨眉山",
+                        "涪陵", "广安", "广元", "九寨沟", "康定", "乐山", "泸州", "马尔康", "绵阳",
+                        "眉山", "南充", "内江", "攀枝花", "遂宁", "汶川", "西昌", "雅安", "宜宾",
+                        "自贡", "资阳");
+                $("#carNumber1").val("川");
+                break;
+            case "台湾":
+                var cityOptions = new Array("台北", "基隆", "台南", "台中", "高雄", "屏东",
+                        "南投", "云林", "新竹", "彰化", "苗栗", "嘉义", "花莲", "桃园", "宜兰", "台东",
+                        "金门", "马祖", "澎湖");
+//                 $("#carNumber1").val("台");
+                break;
+            case "天津":
+                var cityOptions = new Array("天津", "和平", "东丽", "河东", "西青", "河西",
+                        "津南", "南开", "北辰", "河北", "武清", "红挢", "塘沽", "汉沽", "大港", "宁河",
+                        "静海", "宝坻", "蓟县");
+                $("#carNumber1").val("津");
+                break;
+            case "新疆":
+                var cityOptions = new Array("乌鲁木齐", "阿克苏", "阿勒泰", "阿图什", "博乐",
+                        "昌吉", "东山", "哈密", "和田", "喀什", "克拉玛依", "库车", "库尔勒", "奎屯",
+                        "石河子", "塔城", "吐鲁番", "伊宁");
+                $("#carNumber1").val("新");
+                break;
+            case "西藏":
+                var cityOptions = new Array("拉萨", "阿里", "昌都", "林芝", "那曲", "日喀则",
+                        "山南");
+                $("#carNumber1").val("藏");
+                break;
+            case "云南":
+                var cityOptions = new Array("昆明", "大理", "保山", "楚雄", "大理", "东川",
+                        "个旧", "景洪", "开远", "临沧", "丽江", "六库", "潞西", "曲靖", "思茅", "文山",
+                        "西双版纳", "玉溪", "中甸", "昭通");
+//                 $("#carNumber1").val("滇");
+                break;
+            case "浙江":
+                var cityOptions = new Array("杭州", "安吉", "慈溪", "定海", "奉化", "海盐",
+                        "黄岩", "湖州", "嘉兴", "金华", "临安", "临海", "丽水", "宁波", "瓯海", "平湖",
+                        "千岛湖", "衢州", "江山", "瑞安", "绍兴", "嵊州", "台州", "温岭", "温州",
+                        "余姚", "舟山");
+                $("#carNumber1").val("浙");
+                break;
+            default:
+                var cityOptions = new Array("请选择城市");
+                break;
+            }
+            city.html("");
+            for (var i = 0; i < cityOptions.length; i++) {
+                city.append("<option value='"+cityOptions[i]+"'>"+cityOptions[i]+"</option>");
+            }
+        };
+
+        /*加载信息*/
+        (function(){
+            var carnumber1 =$("#carNumber1");
+            carnumber1.append("<option value='京'>京</option>");
+            carnumber1.append("<option value='粤'>粤</option>");
+            carnumber1.append("<option value='津'>津</option>");
+            carnumber1.append("<option value='冀'>冀</option>");
+            carnumber1.append("<option value='晋'>晋</option>");
+            carnumber1.append("<option value='辽'>辽</option>");
+            carnumber1.append("<option value='吉'>吉</option>");
+            carnumber1.append("<option value='黑'>黑</option>");
+            carnumber1.append("<option value='沪'>沪</option>");
+            carnumber1.append("<option value='苏'>苏</option>");
+            carnumber1.append("<option value='浙'>浙</option>");
+            carnumber1.append("<option value='皖'>皖</option>");
+            carnumber1.append("<option value='闽'>闽</option>");
+            carnumber1.append("<option value='赣'>赣</option>");
+            carnumber1.append("<option value='鲁'>鲁</option>");
+            carnumber1.append("<option value='豫'>豫</option>");
+            carnumber1.append("<option value='鄂'>鄂</option>");
+            carnumber1.append("<option value='湘'>湘</option>");
+            carnumber1.append("<option value='蒙'>蒙</option>");
+            carnumber1.append("<option value='桂'>桂</option>");
+            carnumber1.append("<option value='琼'>琼</option>");
+            carnumber1.append("<option value='渝'>渝</option>");
+            carnumber1.append("<option value='川'>川</option>");
+            carnumber1.append("<option value='贵'>贵</option>");
+            carnumber1.append("<option value='云'>云</option>");
+            carnumber1.append("<option value='藏'>藏</option>");
+            carnumber1.append("<option value='陕'>陕</option>");
+            carnumber1.append("<option value='甘'>甘</option>");
+            carnumber1.append("<option value='青'>青</option>");
+            carnumber1.append("<option value='宁'>宁</option>");
+            carnumber1.append("<option value='新'>新</option>");
+
+        })();
+		//校验车牌号
+        function checkCarNumber(){
+    		var r = $("#carNumber2").val();
+    		var flag;
+    		if (!(/^[A-Z]{1}[A-Z_0-9]{5}$/.test(r))) {
+    			flag = false;
+    		}else{
+    			flag = true;
+    		}
+    		return flag;
+    	}
+		//校验车主姓名
+    	function checkName(){
+    		var r = $("#carOwnerName").val();
+    		var flag;
+    		if (!(/^[\u4e00-\u9fa5 ]{2,20}$/.test(r))) {
+    			flag = false;
+    		}else{
+    			flag = true;
+    		}
+    		return flag;
+    	}
+		//校验车主手机
+    	function checkTel(){
+    		var r = $("#carOwnerTel").val();
+    		var flag;
+    		if (!(/^1[3|4|5|7|8]\d{9}$/.test(r))) {
+    			flag = false;
+    		}else{
+    			flag = true;
+    		}
+    		return flag;
+    	}
+    	function check(){
+    		if(checkCarNumber() && checkName() && checkTel()){
+    			$("#btn_submit_manual").attr("disabled",false);
+    		}else{
+    			$("#btn_submit_manual").attr("disabled",true);
+    		}
+    	}
+    	$(document).click(function(){
+    		check();
+    	})
+        $("#sure").click(function(){
+        	if(false == checkCarNumber()){
+    			var message = "请正确填写车牌号码";
+    			showDialog(message);
+    			return  false;
+        	}
+        	if($("#ticketNum").val() == "" || null == $("#ticketNum").val() || undefined == $("#ticketNum").val()){
+        		var message = "请正确填写罚款单号";
+    			showDialog(message);
+        		return false;
+        	}
+        	if($("#carType").val() == "" || null == $("#carType").val() || undefined == $("#carType").val()){
+        		var message = "请选择车辆类型";
+    			showDialog(message);
+        		return false;
+        	}
+        	if($("#engineNo").val() == "" || null == $("#engineNo").val() || undefined == $("#engineNo").val()){
+        		var message = "请正确填写发动机号";
+    			showDialog(message);
+        		return false;
+        	}
+        	if($("#frameId").val() == "" || null == $("#frameId").val() || undefined == $("#frameId").val()){
+        		var message = "请正确填写车架号";
+    			showDialog(message);
+        		return false;
+        	}
+        	if($("#checktime").val() == "" || null == $("#checktime").val() || undefined == $("#checktime").val()){
+        		var message = "请正确填写罚款时间";
+    			showDialog(message);
+        		return false;
+        	}
+        	if(false == checkName()){
+    			var message = "请正确填写车主姓名";
+    			showDialog(message);
+    			return  false;
+        	}
+        	if(false == checkTel()){
+    			var message = "请正确填写电话号码";
+    			showDialog(message);
+    			return  false;
+        	}
+        	if($("#fineFee").val() == "" || null == $("#fineFee").val() || undefined == $("#fineFee").val()){
+        		var message = "请正确填写罚款金额";
+    			showDialog(message);
+        		return false;
+        	}
+        	/* if($("#lateFees").val() == "" || null == $("#lateFees").val() || undefined == $("#lateFees").val()){
+        		var message = "请正确填写滞纳金金额";
+    			showDialog(message);
+        		return false;
+        	} */
+        });
+        function submit(){
+    		$("#chargeForm").submit();
+        }
+    	
+    </script>
+</body>
+</html>

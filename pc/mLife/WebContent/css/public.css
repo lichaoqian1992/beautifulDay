@@ -1,0 +1,41 @@
+@charset "utf-8";
+/* CSS Document */
+html, body {
+    overflow-x:hidden !important;
+}
+
+/* 地区选择 */
+.area{position:relative;z-index:101;display:inline-block;font-size:12px;font-weight:normal;font-family:SimSun;padding-top:4px;color:#696969;}
+.area-selected{cursor:pointer;position:relative;z-index:9999;height:24px;line-height:24px;padding:0 5px 0 10px;border-width:1px 1px 0;border-style:solid;border-color:#f4f4f4;-webkit-border-radius:3px 3px 0 0;-moz-border-radius:3px 3px 0 0;-o-border-radius:3px 3px 0 0;border-radius:3px 3px 0 0;}
+.area-click{border-color:#d7d7d7;background-color:#fff;}
+.area-selected .caret{top:10px;border-top-color:#696969;opacity:1;filter:alpha(opacity=100);margin-left:5px;}
+.area-box{position:absolute;z-index:999;top:28px;left:-42px;padding:14px 13px;width:370px;min-height:180px;height:auto !important;height:180px;border:1px solid #d7d7d7;background-color:#fff;-webkit-border-radius:3px;-moz-border-radius:3px;-o-border-radius:3px;border-radius:3px;}
+.area-box .close{position:absolute;top:8px;right:13px;font-size:14px;}
+.area-info{height:23px;border-bottom:1px solid #f60;}
+.area-info li{cursor:pointer;position:relative;float:left;height:22px;line-height:22px;padding:0 7px 0 11px;border-width:1px 1px 0;border-style:solid;border-color:#d7d7d7;margin-right:6px;}
+.area-info li.cur{height:23px;background-color:#fff;border-color:#f60;color:#f60;}
+.area-info li .caret{top:9px;border-top-color:#cbcbcb;opacity:1;filter:alpha(opacity=100);margin-left:8px;}
+.area-info li.cur .caret{border-top-color:#f60;opacity:1;filter:alpha(opacity=100);}
+.area-detail ul{padding-top:5px;}
+.area-detail ul li{float:left;line-height:18px;padding:6px 0;width:76px;padding-left:14px;}
+.area-detail a{cursor:pointer;display:inline-block;height:18px;line-height:18px;padding:0 6px;color:#2261a0;}
+.area-detail a:hover, .area-detail a.province-selected{text-decoration:none;color:#fff;background-color:#fe6502;}
+.area-selected .caret, .area-info li .caret{position:relative;*top:4px;*left:8px;}
+.area-selected .caret{*left:5px;}
+/* 面值 */
+.value-select{width:460px;}
+.value-select li > label, .value-select li .input-t, .value-select li input[type="text"]{padding:0 0 2px;width:64px;height:28px;line-height:28px;border:1px solid #c7c7c7;transition:none;-webkit-transition:none;-moz-transition:none;-o-transition:none;}
+.value-select li label.selected, .value-select li .input-t:focus, .value-select li input[type="text"]:focus{padding:0 0 2px;width:62px;height:26px;line-height:26px;background-color:#fff7ea;outline:none;}
+.value-select li > label, .value-select li .selected{*padding:2px 0 0;}
+.value-select li .selectContainer-mini{padding:5px 20px 7px 6px;}
+.value-select li .selectContainer-mini .icon{top:7px;}
+.value-select li .selectContainer-mini ul{top:31px;}
+.value-select li span.placeholder label{left:9px;top:4px;*top:7px;font-size:14px;}
+
+@media screen and (min-width:0\0) {
+	.area-info li{height:20px;line-height:20px;padding-top:2px;}
+	.area-info li.cur{height:21px;}
+	.area-info li .caret{top:7px;}
+	.area-detail a{height:16px;line-height:16px;padding-top:2px;}
+	.value-select li .input-t, .value-select li input[type="text"]{padding:2px 0 0;width:64px;height:28px;line-height:28px;}
+}

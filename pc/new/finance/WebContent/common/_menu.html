@@ -1,0 +1,40 @@
+<ul class="sidebar-menu">
+	<li class="header">主要内容导航</li>
+	<li class="active treeview"><a href="/finance/home/toHome"> <i
+			class="fa fa-home"></i> <span>首页</span>
+	</a></li>
+	<li class="treeview"><a href="#"> <i class="fa fa-money"></i>
+			<span>充值管理</span> <i class="fa fa-angle-left pull-right"></i>
+	</a>
+		<ul class="treeview-menu">
+		#for(x : session.rec)
+			<li><a href=#(x.url) nav="nav#(x.id)"><i class="fa fa-circle-o"></i> #(x.descript)</a></li>
+			#end
+		</ul></li>
+	<li class="treeview"><a href="#"> <i class="fa fa-yen"></i> <span>提现管理</span>
+			<i class="fa fa-angle-left pull-right"></i>
+	</a>
+		<ul class="treeview-menu">
+		#for(x : session.withdrawls)
+			<li><a href=#(x.url) nav="nav#(x.id)" target="_blank"><i class="fa fa-circle-o"></i>#(x.descript)</a></li>
+			#end
+		</ul></li>
+	<li class="treeview"><a href="#"> <i class="fa fa-th"></i> <span>集团管理</span>
+	</a></li>
+	<li class="treeview"><a href="#"> <i class="fa fa-list-ol"></i>
+			<span>订单管理</span> <i class="fa fa-angle-left pull-right"></i>
+	</a>
+		<ul class="treeview-menu">
+		#for(x : session.order)
+			<li><a href=#(x.url) nav="nav#(x.id)" target="_blank"><i class="fa fa-circle-o"></i> #(x.descript)</a></li>
+		#end
+		</ul></li>
+	<li class="treeview"><a href="#"> <i class="fa fa-cog"></i> <span>系统管理</span>
+			<i class="fa fa-angle-left pull-right"></i>
+	</a>
+		<ul class="treeview-menu">
+		#for(x : session.sys)
+			<li><a href=#(x.url) nav="nav#(x.id)"><i class="fa fa-circle-o"></i> #(x.descript)</a></li>
+		#end
+		</ul></li>
+</ul>

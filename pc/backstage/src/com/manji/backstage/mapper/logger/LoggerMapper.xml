@@ -1,0 +1,964 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.logger.LoggerMapper" >
+
+<select id="loginLogList" resultType="LoginLog">
+select * from dt_user_login_log
+</select>
+
+<select id="signLogList" resultType="SignLog">
+select * from dt_user_sign_log
+</select>
+
+<select id="smsLogList" resultType="SmsLog">
+select * from dt_user_sms_log;
+</select>
+
+<select id="emailLogList" resultType="EmailLog">
+select * from dt_user_mail_log;
+</select>
+
+<select id="fileDownLogList" resultType="FileDownLog">
+select * from dt_user_attach_log;
+</select>
+
+<select id="amountLogList" resultType="AmountLog">
+select * from dt_user_amount_log where user_id=389980;
+</select>
+
+
+
+<select id="pointLogList" resultType="PointLog">
+select * from dt_user_point_log;
+</select>
+
+<select id="creditLogList" resultType="CreditLog">
+select * from dt_user_credit_log;
+</select>
+
+<select id="reputationLogList" resultType="ReputationLog">
+select * from dt_user_reputation_log;
+</select>
+
+
+<select id="queryLoginLogByUserId" parameterType="int" resultType="LoginLog">
+select * from dt_user_login_log where user_id=#{0}
+</select>
+
+<select id="querySignLogByUserId" parameterType="int" resultType="SignLog">
+select * from dt_user_sign_log where user_id=#{0}
+</select>
+
+
+
+<select id="queryPointLogByUserId" parameterType="int" resultType="PointLog">
+select * from dt_user_point_log where user_id=#{0}
+</select>
+
+<select id="queryCreditLogByUserId" parameterType="int" resultType="CreditLog">
+select * from dt_user_credit_log where user_id=#{0}
+</select>
+
+<select id="queryReputationLogByUserId" parameterType="int" resultType="ReputationLog">
+select * from dt_user_reputation_log where user_id=#{0}
+</select>
+
+
+
+
+
+<select id="queryPointLogByOrder" parameterType="int" resultType="PointLog">
+select * from dt_user_point_log where order_no=#{0}
+</select>
+
+<select id="queryCreditLogByOrder" parameterType="int" resultType="CreditLog">
+select * from dt_user_credit_log where order_no=#{0}
+</select>
+
+<select id="queryReputationLogByOrder" parameterType="int" resultType="ReputationLog">
+select * from dt_user_reputation_log where order_no=#{0}
+</select>
+
+
+
+
+
+
+
+<select id="getKeyWordsList" parameterType="int" resultType="KeyWords">
+select * from dt_110_keywords where id=#{id}
+</select>
+
+<select id="countKeyWords" parameterType="KeyWordsVo" resultType="int">
+select count(*) from dt_110_keywords where 1=1
+
+</select>
+
+<select id="queryKeyWords" parameterType="KeyWordsVo" resultType="KeyWords">
+select * from dt_110_keywords dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_110_keywords  where 1=1
+   
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addKeyWords" parameterType="KeyWords" >
+insert into dt_110_keywords(name,[from],status,add_time)
+values (#{name},#{from},#{status},#{add_time})
+</insert>
+
+<update id="updKeyWords" parameterType="KeyWords">
+update dt_110_keywords set
+name=#{name},[from]=#{from},status=#{status}
+where id=#{id}
+</update> 
+
+<delete id="delKeyWords" parameterType="int">
+delete from dt_110_keywords where id=#{0}
+</delete>
+
+
+<select id="getKeyHashsList" parameterType="int" resultType="KeyHashs">
+select * from dt_110_keyhashs where id=#{id}
+</select>
+
+<select id="countKeyHashs" parameterType="KeyHashsVo" resultType="int">
+select count(*) from dt_110_keyhashs where 1=1
+
+</select>
+
+
+<select id="queryKeyHashs" parameterType="KeyHashsVo" resultType="KeyHashs">
+select * from dt_110_keyhashs dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_110_keyhashs  where 1=1
+    
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addKeyHashs" parameterType="KeyHashs" >
+insert into dt_110_keyhashs(name,value,[from],status,add_time)
+values(#{name},#{value},#{from},#{status},#{add_time})
+</insert>
+
+<update id="updKeyHashs" parameterType="KeyHashs" >
+update dt_110_keyhashs set
+name=#{name},[value]=#{value},[from]=#{from},status=#{status}
+where id=#{id}
+</update>
+
+<delete id="delKeyHashs" parameterType="KeyHashs">
+delete from dt_110_keyhashs where id=#{id}
+</delete>
+
+
+<select id="getWordsFilterLogList" parameterType="int" resultType="WordsFilterLog">
+select * from dt_110_filter_word_log where id=#{id}
+</select>
+
+<select id="countWordsFilterLog" parameterType="WordsFilterLogVo" resultType="int">
+select count(*) from dt_110_filter_word_log where 1=1
+
+</select>
+
+<select id="queryWordsFilterLog" parameterType="WordsFilterLogVo" resultType="WordsFilterLog">
+select * from dt_110_filter_word_log dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_110_filter_word_log  where 1=1
+    
+    <if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+      </if>
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addWordsFilterLog" parameterType="WordsFilterLog" >
+insert into dt_110_filter_word_log(table_name,table_value_id,user_id,user_role_type,user_role_value,keys,keys_count,add_time,add_ip,is_filter,remark)
+values(#{table_name},#{table_value_id},#{user_id},#{user_role_type},#{user_role_value},#{keys},#{keys_count},#{add_time},#{add_ip},#{is_filter},#{remark})
+</insert>
+
+<update id="updWordsFilterLog" parameterType="WordsFilterLog" >
+update dt_110_filter_word_log set
+table_name=#{table_name},table_value_id=#{table_value_id},user_id=#{user_id},user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},keys=#{keys},keys_count=#{keys_count},add_time=#{add_time},add_ip=#{add_ip},is_filter=#{is_filter},remark=#{remark}
+where id=#{id}
+</update>
+
+<delete id="delWordsFilterLog" parameterType="WordsFilterLog">
+delete from dt_110_filter_word_log where id=#{id}
+</delete>
+
+<select id="getFileFilterLogList" parameterType="int" resultType="FileFilterLog">
+select * from dt_110_filter_file_log where id=#{id}
+</select>
+
+<select id="countFileFilterLog" parameterType="FileFilterLogVo" resultType="int">
+select count(*) from dt_110_filter_file_log where 1=1
+
+</select>
+
+
+<select id="queryFileFilterLog" parameterType="FileFilterLogVo" resultType="FileFilterLog">
+select * from dt_110_filter_file_log dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_110_filter_file_log  where 1=1
+    
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addFileFilterLog" parameterType="FileFilterLog" >
+insert into dt_110_filter_file_log(hash_value,hash_type,request_ip,add_time)
+values(#{hash_value},#{hash_type},#{request_ip},#{add_time})
+</insert>
+
+<update id="updFileFilterLog" parameterType="FileFilterLog" >
+update dt_110_filter_file_log set
+hash_value=#{hash_value},hash_type=#{hash_type},request_ip=#{request_ip},add_time=#{add_time}
+where id=#{id}
+</update>
+
+<delete id="delFileFilterLog" parameterType="FileFilterLog">
+delete from dt_110_filter_file_log where id=#{id}
+</delete>
+
+
+<select id="getReportLogList" parameterType="int" resultType="ReportLog">
+select * from dt_110_report_log where id=#{id}
+</select>
+
+<select id="countReportLog" parameterType="ReportLogVo" resultType="int">
+select count(*) from dt_110_report_log where 1=1
+
+</select>
+
+
+<select id="queryReportLog" parameterType="ReportLogVo" resultType="ReportLog">
+select * from dt_110_report_log dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_110_report_log  where 1=1
+    
+    <if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+      </if>
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addReportLog" parameterType="ReportLog" >
+insert into dt_110_report_log(url,title,content,mobile,qq,email,user_id,add_time,add_ip,is_filter,remark)
+values(#{url},#{title},#{content},#{mobile},#{qq},#{email},#{user_id},#{add_time},#{add_ip},#{is_filter},#{remark})
+</insert>
+
+<update id="updReportLog" parameterType="ReportLog" >
+update dt_110_report_log set
+url=#{url},title=#{title},content=#{content},mobile=#{mobile},qq=#{qq},email=#{email},user_id=#{user_id},
+add_time=#{add_time},add_ip=#{add_ip},is_filter=#{is_filter},remark=#{remark}
+where id=#{id}
+</update>
+
+<delete id="delReportLog" parameterType="ReportLog">
+delete from dt_110_report_log where id=#{id}
+</delete>
+
+
+<select id="getBalanceLogList" resultType="BalanceLog">
+select * from dt_user_balance_log
+</select>
+
+<select id="querySmsLogList" parameterType="SmsLog" resultType="SmsLog">
+select * from dt_user_sms_log where 1=1
+<if test="user_id != null and user_id != ''">
+		and user_id =${user_id }
+	</if>
+</select>
+
+<select id="queryEmailLogList" parameterType="EmailLog" resultType="EmailLog">
+select * from dt_user_mail_log where 1=1
+<if test="user_id != null and user_id != ''">
+    and user_id =${user_id }
+  </if>
+</select>
+
+<select id="queryFileDownLogList" parameterType="FileDownLog" resultType="FileDownLog">
+select * from dt_user_attach_log where 1=1
+<if test="user_id != null and user_id != ''">
+    and user_id =${user_id }
+  </if>
+</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<select id="countLoginLog" parameterType="LoginLogVo" resultType="int">
+select count(*) from dt_user_login_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+<select id="queryLoginLog" parameterType="LoginLogVo" resultType="LoginLog">
+select * from dt_user_login_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_login_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getLoginLog" parameterType="int" resultType="LoginLog">
+select * from dt_user_login_log where id=#{id}
+</select>
+<update id="updLoginLog" parameterType="LoginLog" >
+update dt_user_login_log
+set 
+user_id={user_id},
+remark={remark},
+login_time={login_time},
+login_ip={login_ip},
+login_from={login_from}
+where id=#{id}
+</update>
+<delete id="delLoginLog" parameterType="int">
+delete from dt_user_login_log where id=#{0}
+</delete>
+
+
+
+<select id="countSignLog" parameterType="SignLogVo" resultType="int">
+select count(*) from dt_user_sign_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+<select id="querySignLog" parameterType="SignLogVo" resultType="SignLog">
+select * from dt_user_sign_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_sign_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getSignLog" parameterType="int" resultType="SignLog">
+select * from dt_user_Sign_log where id=#{id}
+</select>
+<update id="updSignLog" parameterType="SignLog" >
+update dt_user_sign_log
+set 
+user_id=#{user_id},
+add_time=#{add_time},
+get_point=#{get_point},
+continue_times=#{continue_times},
+longitude=#{longitude},
+latitude=#{latitude},
+address=#{address},
+remark=#{remark}
+where id=#{id}
+</update>
+<delete id="delSignLog" parameterType="int">
+delete from dt_user_sign_log where id=#{0}
+</delete>
+
+
+<select id="countSmsLog" parameterType="SmsLogVo" resultType="int">
+select count(*) from dt_user_sms_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+
+<select id="countEmailLog" parameterType="EmailLogVo" resultType="int">
+select count(*) from dt_user_mail_log where 1=1
+<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+</select>
+
+<select id="countFileDownLog" parameterType="FileDownLogVo" resultType="int">
+select count(*) from dt_user_attach_log where 1=1
+<if test="user_id != null and user_id != ''" >
+      and user_id=#{user_id}
+    </if>
+</select>
+
+<select id="querySmsLog" parameterType="SmsLogVo" resultType="SmsLog">
+select * from dt_user_sms_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_sms_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="queryEmailLog" parameterType="EmailLogVo" resultType="EmailLog">
+select * from dt_user_mail_log dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_user_mail_log  where 1=1
+    
+    <if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+      </if>
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="queryFileDownLog" parameterType="FileDownLogVo" resultType="FileDownLog">
+select * from dt_user_attach_log dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_user_attach_log  where 1=1
+    
+    <if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+      </if>
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<select id="getSmsLog" parameterType="int" resultType="SmsLog">
+select * from dt_user_sms_log where id=#{0}
+</select>
+
+<select id="getEmailLog" parameterType="int" resultType="EmailLog">
+select * from dt_user_mail_log where id=#{0}
+</select>
+
+<select id="getFileDownLog" parameterType="int" resultType="FileDownLog">
+select * from dt_user_attach_log where id=#{0}
+</select>
+
+<update id="updSmsLog" parameterType="SmsLog" >
+update dt_user_sms_log
+set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+type=#{type},
+content=#{content},
+user_ip=#{user_ip},
+Mobile=#{Mobile},
+add_time=#{add_time},
+send_status=#{send_status},
+send_remark=#{send_remark},
+send_time=#{send_time}
+where id=#{id}
+</update>
+
+<update id="updEmailLog" parameterType="EmailLog" >
+update dt_user_mail_log
+set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+type=#{type},
+title=#{title},
+content=#{content},
+user_ip=#{user_ip},
+get_email=#{get_email},
+post_email=#{post_email},
+add_time=#{add_time},
+send_status=#{send_status},
+send_remark=#{send_remark},
+send_time=#{send_time}
+where id=#{id}
+</update>
+
+<update id="updFileDownLog" parameterType="FileDownLog" >
+update dt_user_attach_log
+set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+attach_id=#{attach_id},
+file_name=#{file_name},
+add_time=#{add_time}
+where id=#{id}
+</update>
+
+<insert id="addSmsLog" parameterType="SmsLog" >
+insert into dt_user_sms_log(user_id,user_role_type,user_role_value,type,content,user_ip,Mobile,add_time,send_status,send_remark,send_time)
+values (#{user_id},#{user_role_type},#{user_role_value},#{type},#{content},#{user_ip},#{Mobile},#{add_time},#{send_status},#{send_remark},#{send_time})
+</insert>
+
+<insert id="addEmailLog" parameterType="EmailLog" >
+insert into dt_user_mail_log(user_id,user_role_type,user_role_value,type,title,content,user_ip,get_email,post_email,add_time,send_status,send_remark,send_time)
+values (#{user_id},#{user_role_type},#{user_role_value},#{type},#{title},#{content},#{user_ip},#{get_email},#{post_email},#{add_time},#{send_status},#{send_remark},#{send_time})
+</insert>
+
+<delete id="delSmsLog" parameterType="int">
+delete from dt_user_sms_log where id=#{0}
+</delete>
+
+<delete id="delEmailLog" parameterType="int">
+delete from dt_user_mail_log where id=#{0}
+</delete>
+
+<delete id="delFileDownLog" parameterType="int">
+delete from dt_user_attach_log where id=#{0}
+</delete>
+
+
+<select id="countAmountLog" parameterType="AmountLogVo" resultType="int">
+select count(*) from dt_user_amount_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+<select id="queryAmountLog" parameterType="AmountLogVo" resultType="AmountLog">
+select * from dt_user_amount_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_amount_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getAmountLog" parameterType="int" resultType="AmountLog">
+select * from dt_user_amount_log where id=#{0}
+</select>
+<update id="updAmountLog" parameterType="AmountLog" >
+update dt_user_amount_log
+set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+type=#{type},
+content=#{content},
+user_ip=#{user_ip},
+Mobile=#{Mobile},
+add_time=#{add_time},
+send_status=#{send_status},
+send_remark=#{send_remark},
+send_time=#{send_time}
+where id=#{id}
+</update>
+<delete id="delAmountLog" parameterType="int">
+delete from dt_user_amount_log where id=#{0}
+</delete>
+
+
+<select id="countVoucherLog" parameterType="VoucherLogVo" resultType="int">
+select count(*) from dt_user_voucher_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+<select id="queryVoucherLog" parameterType="VoucherLogVo" resultType="VoucherLog">
+select * from dt_user_voucher_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_voucher_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getVoucherLog" parameterType="int" resultType="VoucherLog">
+select * from dt_user_voucher_log where id=#{0}
+</select>
+<update id="updVoucherLog" parameterType="VoucherLog" >
+update dt_user_voucher_log
+set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+type=#{type},
+content=#{content},
+user_ip=#{user_ip},
+Mobile=#{Mobile},
+add_time=#{add_time},
+send_status=#{send_status},
+send_remark=#{send_remark},
+send_time=#{send_time}
+where id=#{id}
+</update>
+<delete id="delVoucherLog" parameterType="int">
+delete from dt_user_voucher_log where id=#{0}
+</delete>
+
+
+<select id="countPointLog" parameterType="PointLogVo" resultType="int">
+select count(*) from dt_user_point_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+<select id="queryPointLog" parameterType="PointLogVo" resultType="PointLog">
+select * from dt_user_point_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_point_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getPointLog" parameterType="int" resultType="PointLog">
+select * from dt_user_point_log where id=#{0}
+</select>
+<update id="updPointLog" parameterType="PointLog" >
+update dt_user_point_log
+set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+account_id=#{account_id},
+order_no=#{order_no},
+type=#{type},
+remark=#{remark},
+add_time=#{add_time},
+value=#{value},
+old_value=#{old_value},
+new_value=#{new_value},
+user_ip=#{user_ip},
+transaction_no=#{transaction_no}
+where id=#{id}
+</update>
+<delete id="delPointLog" parameterType="int">
+delete from dt_user_point_log where id=#{0}
+</delete>
+
+<select id="countCreditLog" parameterType="CreditLogVo" resultType="int">
+select count(*) from dt_user_credit_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+<select id="queryCreditLog" parameterType="CreditLogVo" resultType="CreditLog">
+select * from dt_user_credit_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_credit_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getCreditLog" parameterType="int" resultType="CreditLog">
+select * from dt_user_credit_log where id=#{0}
+</select>
+<update id="updCreditLog" parameterType="CreditLog" >
+update dt_user_credit_log
+set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+account_id=#{account_id},
+order_no=#{order_no},
+type=#{type},
+remark=#{remark},
+add_time=#{add_time},
+value=#{value},
+old_value=#{old_value},
+new_value=#{new_value},
+user_ip=#{user_ip},
+transaction_no=#{transaction_no}
+where id=#{id}
+</update>
+<delete id="delCreditLog" parameterType="int">
+delete from dt_user_credit_log where id=#{0}
+</delete>
+
+
+
+
+<select id="countReputationLog" parameterType="ReputationLogVo" resultType="int">
+select count(*) from dt_user_reputation_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+<select id="queryReputationLog" parameterType="ReputationLogVo" resultType="ReputationLog">
+select * from dt_user_reputation_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_reputation_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getReputationLog" parameterType="int" resultType="ReputationLog">
+select * from dt_user_reputation_log where id=#{0}
+</select>
+<update id="updReputationLog" parameterType="ReputationLog" >
+update dt_user_reputation_log
+set 
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+account_id=#{account_id},
+order_no=#{order_no},
+type=#{type},
+remark=#{remark},
+add_time=#{add_time},
+value=#{value},
+old_value=#{old_value},
+new_value=#{new_value},
+user_ip=#{user_ip},
+transaction_no=#{transaction_no}
+where id=#{id}
+</update>
+<delete id="delReputationLog" parameterType="int">
+delete from dt_user_reputation_log where id=#{0}
+</delete>
+
+
+<select id="countPageViewLog" parameterType="PageViewLogVo" resultType="int">
+select count(*) from dt_page_view_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+<select id="queryPageViewLog" parameterType="PageViewLogVo" resultType="PageViewLog">
+select * from dt_page_view_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_page_view_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getPageViewLog" parameterType="long" resultType="PageViewLog">
+select * from dt_page_view_log where id=#{0}
+</select>
+<update id="updPageViewLog" parameterType="PageViewLog" >
+update dt_page_view_log
+set 
+user_id=#{user_id},
+title=#{title},
+url=#{url},
+from_url=#{from_url},
+ip=#{ip},
+view_time=#{view_time},
+view_type=#{view_type},
+view_browser=#{view_browser}
+where id=#{id}
+</update>
+<delete id="delPageViewLog" parameterType="int">
+delete from dt_page_view_log where id=#{0}
+</delete>
+
+
+
+<select id="countDeviceLog" parameterType="DeviceLogVo" resultType="int">
+select count(*) from dt_user_online_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+<select id="queryDeviceLog" parameterType="DeviceLogVo" resultType="DeviceLog">
+select * from dt_user_online_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_online_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+<select id="getDeviceLog" parameterType="long" resultType="DeviceLog">
+select * from dt_user_online_log where id=#{0}
+</select>
+<update id="updDeviceLog" parameterType="DeviceLog" >
+update dt_user_online_log
+set 
+user_id=#{user_id},
+from_type=#{from_type},
+from_device=#{from_device},
+from_ip=#{from_ip},
+from_time=#{from_time},
+from_areapoint=#{from_areapoint},
+from_area=#{from_area}
+where id=#{id}
+</update>
+<delete id="delDeviceLog" parameterType="long">
+delete from dt_user_online_log where id=#{0}
+</delete>
+
+
+<select id="countRoleAudit" parameterType="RoleAuditVo" resultType="int">
+select count(*) from dt_user_role_audit_list where 1=1
+<if test="bus_user_id != null and bus_user_id != ''">
+			and bus_user_id=#{bus_user_id}
+		</if>
+
+</select>
+
+<select id="queryRoleAudit" parameterType="RoleAuditVo" resultType="RoleAudit">
+select * from dt_user_role_audit_list dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_role_audit_list  where 1=1
+		
+		<if test="bus_user_id != null and bus_user_id != ''">
+			and bus_user_id=#{bus_user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+</select>
+
+<select id="getRoleAudit" parameterType="int" resultType="RoleAudit">
+select * from dt_user_role_audit_list where id=#{0}
+</select>
+
+<delete id="delRoleAudit" parameterType="int" > 
+delete from dt_user_role_audit_list where id=#{0}
+</delete>
+
+<update id="updRoleAudit" parameterType="RoleAudit" >
+update dt_user_role_audit_list 
+set 
+add_user_id =#{add_user_id},bus_user_id =#{bus_user_id},audit_user_id =#{audit_user_id},input_user_id =#{input_user_id},check_user_id =#{check_user_id},audit_type =#{audit_type},audit_value =#{audit_value},add_time =#{add_time},audit_end_time =#{audit_end_time},audit_result =#{audit_result},input_begin_time =#{input_begin_time},input_end_time =#{input_end_time},input_result =#{input_result},check_end_time =#{check_end_time},check_result =#{check_result}
+where id=#{id}
+</update>
+
+<insert id="addRoleAudit" parameterType="RoleAudit">
+insert into dt_user_role_audit_list(add_user_id,bus_user_id,audit_user_id,input_user_id,check_user_id,audit_type,audit_value,add_time,audit_end_time,audit_result,input_begin_time,input_end_time,input_result,check_end_time,check_result)
+values(#{add_user_id},#{bus_user_id},#{audit_user_id},#{input_user_id},#{check_user_id},#{audit_type},#{audit_value},#{add_time},#{audit_end_time},#{audit_result},#{input_begin_time},#{input_end_time},#{input_result},#{check_end_time},#{check_result})
+
+</insert>
+
+<select id="queryAuditLog" parameterType="AuditLogVo" resultType="AuditLog">
+select * from dt_user_role_audit_log dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_role_audit_log  where 1=1
+		
+		<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+</select>
+
+<select id="countAuditLog" parameterType="AuditLogVo" resultType="int">
+select count(*) from dt_user_role_audit_log where 1=1
+<if test="user_id != null and user_id != ''">
+			and user_id=#{user_id}
+		</if>
+</select>
+
+<select id="getAuditLog" parameterType="int" resultType="AuditLog">
+select * from dt_user_role_audit_log where id=#{0}
+</select>
+
+<insert id="addAuditLog" parameterType="AuditLog" >
+insert into dt_user_role_audit_log(user_id,audit_list_id,type,add_time,login_ip)
+values(#{user_id},#{audit_list_id},#{type},#{add_time},#{login_ip})
+</insert>
+
+<update id="updAuditLog" parameterType="AuditLog">
+update  dt_user_role_audit_log set 
+user_id=#{user_id},
+audit_list_id=#{audit_list_id},
+type=#{type},
+add_time=#{add_time},
+login_ip=#{login_ip}
+where id=#{id}
+</update>
+
+<delete id="delAuditLog" parameterType="int">
+delete from dt_user_role_audit_log where id=#{0}
+</delete>
+
+
+</mapper>

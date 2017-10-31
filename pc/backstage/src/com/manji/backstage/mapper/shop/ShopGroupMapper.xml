@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.shop.ShopGroupMapper" >
+
+<!-- 商家组别管理 -->
+
+<select id="countShopGroup"  resultType="java.util.Map">
+select title,isnull(t2.count,0) count from dt_shop_groups t1 left join
+(select count(group_id) count,group_id from dt_user_role_shopinfo group by group_id )t2
+on t1.id=t2.group_id
+</select>
+
+
+
+<select id="selShopGroups" resultType="ShopGroup">
+
+	select * from dt_shop_groups
+
+</select>
+
+<select id="findShopGroup" resultType="map">
+
+  select id,title from dt_shop_groups
+
+</select>
+
+<insert id="addShopGroup" parameterType="ShopGroup">
+
+	insert into 
+	dt_shop_groups
+	(title,grade,upgrade_exp,amount,point,discount,is_default,is_upgrade,is_lock)
+	values
+	(#{title},#{grade},#{upgrade_exp},#{amount},#{point},#{discount},#{is_default},#{is_upgrade},#{is_lock})
+
+</insert>
+
+<update id="updShopGroup" parameterType="ShopGroup" >
+
+	update dt_shop_groups 
+	set title=#{title},
+	grade=#{grade},
+	upgrade_exp=#{upgrade_exp},
+	amount=#{amount},
+	point=#{point},
+	discount=#{discount},
+	is_default=#{is_default},
+	is_upgrade=#{is_upgrade},
+	is_lock=#{is_lock}
+	where id=#{id}
+
+</update>
+
+<delete id="delShopGroup" parameterType="int">
+
+	delete from dt_shop_groups where id=#{id}
+
+</delete>
+
+
+<select id="shopGroupCounts" resultType="ShopCountsDto">
+
+
+
+</select>
+
+<select id="lastShopGroupCounts" resultType="ShopCountsDto">
+
+</select>
+
+
+<select id="getShopGroup" parameterType="int" resultType="ShopGroup">
+   select * from dt_shop_groups where id=#{0}
+</select>
+
+<select id="queryShopById" parameterType="int" resultType="ShopGroup">
+select * from dt_shop_groups where id=#{0}
+</select>
+
+
+<select id="getShopGroupList" resultType="ShopGroup">
+select id,title from dt_shop_groups
+</select>
+</mapper>

@@ -1,0 +1,107 @@
+<!-- 工作组的task量 -->
+<table class="table table-striped table-bordered table-hover dataTables-example">
+	<thead>
+	    <tr>
+	      	<th style="font-weight:bold;" scope="col">组名</th>
+			<th style="font-weight:bold;" scope="col">task总量</th>
+			<th style="font-weight:bold;" scope="col">操作</th>
+	    </tr>
+	    </thead>
+	    #for(x : list)
+		    <tr>
+				<td>#(x.value)</td>
+				<td>#(x.count)</td>
+				<td>
+					<span style="color: green;cursor: pointer;"  class="fa fa-plus-square btn" onclick="seeInfoZk('zk_#(x.key)')">展收详情</span>
+				</td>
+			</tr>
+			
+			<tr id="zk_#(x.key)" style="display: none">
+				<!-- <td rowspan="1"></td> -->
+				<td colspan="3">
+					<table style="font: 8px" width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered table-hover table-striped" >
+						<tr>
+							<th scope="col">姓名</th>
+							<th scope="col">task量</th>
+							<th scope="col">占比</th>
+						</tr>
+						#for(zlist : x.pserson)
+							<tr>
+								<td scope="col">#(zlist.realname)</td>
+							    <td  scope="col">#(zlist.count)</td>
+							    <td  scope="col">#(zlist.zhanbi) %</td>
+							</tr>
+						 #end
+					</table>
+				</td>
+			</tr>
+	    #end
+</table>
+
+
+<!-- 工作组的工时 -->
+<table class="table table-striped table-bordered table-hover dataTables-example">
+	<thead>
+	    <tr>
+	      	<th style="font-weight:bold;" scope="col">组名</th>
+			<th style="font-weight:bold;" scope="col">task总工时</th>
+			<th style="font-weight:bold;" scope="col">操作</th>
+	    </tr>
+	    </thead>
+	    #for(x : listTime)
+		    <tr>
+				<td>#(x.value)</td>
+				<td>
+				#if(x.count == null)
+                  	0天
+              	#else
+              		#(x.count / 86400)天
+              	#end  
+				</td>
+				<td>
+					<span style="color: green;cursor: pointer;"  class="fa fa-plus-square btn" onclick="seeInfoZk('zkTime_#(x.key)')">展收详情</span>
+				</td>
+			</tr>
+			
+			<tr id="zkTime_#(x.key)" style="display: none">
+				<!-- <td rowspan="1"></td> -->
+				<td colspan="3">
+					<table style="font: 8px" width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered table-hover table-striped" >
+						<tr>
+							<th scope="col">姓名</th>
+							<th scope="col">task工时</th>
+							<th scope="col">占比</th>
+						</tr>
+						#for(zlist : x.pserson)
+							<tr>
+								<td scope="col">#(zlist.realname)</td>
+							    <td  scope="col">
+								    #if(zlist.count == null)
+					                  	0天
+					              	#else
+					              		#(zlist.count / 86400)天
+					              	#end  
+							    </td>
+							    <td  scope="col">
+							    #if(zlist.count == null)
+				                  	0%
+				              	#else
+				              		#(zlist.zhanbi) %
+				              	#end  
+							    </td>
+							</tr>
+						 #end
+					</table>
+				</td>
+			</tr>
+	    #end
+</table>
+
+<script type="text/javascript">
+/**
+ * 收缩 展开
+ */
+function seeInfoZk(haha){
+	$("#"+haha).toggle();
+}
+</script> 

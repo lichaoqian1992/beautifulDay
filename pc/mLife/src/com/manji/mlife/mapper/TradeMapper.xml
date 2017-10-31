@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.mlife.mapper.TradeMapper" >
+  <resultMap id="BaseResultMap" type="com.manji.mlife.model.Trade" >
+    <id column="outerId" property="outerid" jdbcType="VARCHAR" />
+    <result column="tradeNo" property="tradeno" jdbcType="VARCHAR" />
+    <result column="ctime" property="ctime" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="pstate" property="pstate" jdbcType="VARCHAR" />
+    <result column="ptime" property="ptime" jdbcType="VARCHAR" />
+    <result column="etime" property="etime" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="VARCHAR" />
+    <result column="paycash" property="paycash" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="mjoder" property="mjoder" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    outerId, tradeNo, ctime, title, state, pstate, ptime, etime, name, tel, price, paycash, 
+    type, username, mjoder, flag
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from trade
+    where outerId = #{outerid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByPrimaryKeyTradeNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from trade
+    where tradeNo = #{tradeNo,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from trade
+    where outerId = #{outerid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.manji.mlife.model.Trade" >
+    insert into trade (outerId, tradeNo, ctime, 
+      title, state, pstate, 
+      ptime, etime, name, 
+      tel, price, paycash, 
+      type, username, mjoder, 
+      flag)
+    values (#{outerid,jdbcType=VARCHAR}, #{tradeno,jdbcType=VARCHAR}, #{ctime,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{pstate,jdbcType=VARCHAR}, 
+      #{ptime,jdbcType=VARCHAR}, #{etime,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{price,jdbcType=VARCHAR}, #{paycash,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{mjoder,jdbcType=VARCHAR}, 
+      #{flag,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.manji.mlife.model.Trade" >
+    insert into trade
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="outerid != null" >
+        outerId,
+      </if>
+      <if test="tradeno != null" >
+        tradeNo,
+      </if>
+      <if test="ctime != null" >
+        ctime,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="pstate != null" >
+        pstate,
+      </if>
+      <if test="ptime != null" >
+        ptime,
+      </if>
+      <if test="etime != null" >
+        etime,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="paycash != null" >
+        paycash,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="mjoder != null" >
+        mjoder,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="outerid != null" >
+        #{outerid,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeno != null" >
+        #{tradeno,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null" >
+        #{ctime,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="pstate != null" >
+        #{pstate,jdbcType=VARCHAR},
+      </if>
+      <if test="ptime != null" >
+        #{ptime,jdbcType=VARCHAR},
+      </if>
+      <if test="etime != null" >
+        #{etime,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="paycash != null" >
+        #{paycash,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="mjoder != null" >
+        #{mjoder,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.manji.mlife.model.Trade" >
+    update trade
+    <set >
+      <if test="tradeno != null" >
+        tradeNo = #{tradeno,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null" >
+        ctime = #{ctime,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="pstate != null" >
+        pstate = #{pstate,jdbcType=VARCHAR},
+      </if>
+      <if test="ptime != null" >
+        ptime = #{ptime,jdbcType=VARCHAR},
+      </if>
+      <if test="etime != null" >
+        etime = #{etime,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="paycash != null" >
+        paycash = #{paycash,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="mjoder != null" >
+        mjoder = #{mjoder,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where outerId = #{outerid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.manji.mlife.model.Trade" >
+    update trade
+    set outerId = #{outerid,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      pstate = #{pstate,jdbcType=VARCHAR},
+      ptime = #{ptime,jdbcType=VARCHAR},
+      etime = #{etime,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      price = #{price,jdbcType=VARCHAR},
+      paycash = #{paycash,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      mjoder = #{mjoder,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=VARCHAR}
+    where tradeNo = #{tradeno,jdbcType=VARCHAR}
+  </update>
+  
+    
+    <select id="queryChargeBills" resultMap="BaseResultMap">
+ 
+   select * from 
+   
+   (select*,ROW_NUMBER() over(order by ctime desc) as RowNo from trade 
+    
+    where 1=1
+   
+     <if test="vo.orderNumber != null and vo.orderNumber !=''">
+    	and outerId like '%'+#{vo.orderNumber,jdbcType=VARCHAR}+'%'
+    </if>
+    
+     <if test="vo.rechargeAccount != null and vo.rechargeAccount !=''"> 
+     	and name like '%'+#{vo.rechargeAccount,jdbcType=VARCHAR}+'%' 
+     </if>
+     
+    <if test="vo.orderStatus != null and vo.orderStatus !=''">
+    	and state = #{vo.orderStatus,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="vo.goodsType != null and vo.goodsType !=''">
+    	and type = #{vo.goodsType,jdbcType=VARCHAR}
+    </if>
+    
+   <if test="vo.starttime != null and vo.starttime !='' and vo.endtime != null and vo.endtime !=''">
+    	and ctime between #{vo.starttime,jdbcType=VARCHAR} and #{vo.endtime,jdbcType=VARCHAR}
+    </if> 
+    
+    and userName = #{vo.userName,jdbcType=VARCHAR}  and flag='0' 
+   
+   ) 
+   
+    as C   
+    
+    where 1=1
+    
+     
+    and  RowNo &gt; #{begin} and RowNo &lt;= #{limit};
+   
+  </select>
+   <!--充值订单详情  -->
+    <select id="queryChargeBillsShowDetail" resultMap="BaseResultMap">
+ 
+   select * from  trade
+   
+    
+    where 1=1
+   
+     <if test="vo.orderNumber != null and vo.orderNumber !=''">
+    	and outerId like '%'+#{vo.orderNumber,jdbcType=VARCHAR}+'%'
+    </if>
+    
+    and userName = #{vo.userName,jdbcType=VARCHAR}  and flag='0' 
+  
+  </select>
+  
+  
+    <select id="queryTrafficBills"  resultMap="BaseResultMap">
+    select 
+    *
+    from (select*,ROW_NUMBER() over(order by ctime desc) as RowNo from trade 
+    
+    where 1=1
+    <if test="vo.orderNumber != null and vo.orderNumber !=''">
+    	and outerId like '%'+#{vo.orderNumber,jdbcType=VARCHAR}+'%'
+    </if>
+     <if test="vo.startCity != null and vo.startCity !=''"> 
+     	and title like '%'+#{vo.startCity,jdbcType=VARCHAR}+'%' 
+     </if>
+    <if test="vo.orderStatus != null and vo.orderStatus !=''">
+    	and state = #{vo.orderStatus,jdbcType=VARCHAR}
+    </if>
+    <if test="vo.goodsType != null and vo.goodsType !=''">
+    	and type = #{vo.goodsType,jdbcType=VARCHAR}
+    </if>
+   <if test="vo.starttime != null and vo.starttime !='' and vo.endtime != null and vo.endtime !=''">
+    	and ctime between #{vo.starttime,jdbcType=VARCHAR} and #{vo.endtime,jdbcType=VARCHAR}
+    </if> 
+    
+    and userName = #{vo.userName,jdbcType=VARCHAR} and flag='1')
+    as C   
+    
+    where 1=1
+    
+     
+    and  RowNo &gt; #{begin} and RowNo &lt;= #{limit};
+  </select>
+  
+  <!-- 根据用户名查询相应的充值订单总数 -->
+  <select id="findCountCid"  resultType="java.lang.Integer" >
+  
+     select count(*)  from trade
+     
+     where 1=1
+     
+     <if test="vo.orderNumber != null and vo.orderNumber !=''">
+    	and outerId like '%'+#{vo.orderNumber,jdbcType=VARCHAR}+'%'
+    </if>
+    
+     <if test="vo.rechargeAccount != null and vo.rechargeAccount !=''"> 
+     	and name like '%'+#{vo.rechargeAccount,jdbcType=VARCHAR}+'%' 
+     </if>
+     
+    <if test="vo.orderStatus != null and vo.orderStatus !=''">
+    	and state = #{vo.orderStatus,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="vo.goodsType != null and vo.goodsType !=''">
+    	and type = #{vo.goodsType,jdbcType=VARCHAR}
+    </if>
+    
+   <if test="vo.starttime != null and vo.starttime !='' and vo.endtime != null and vo.endtime !=''">
+    	and ctime between #{vo.starttime,jdbcType=VARCHAR} and #{vo.endtime,jdbcType=VARCHAR}
+    </if> 
+    
+    and userName = #{vo.userName,jdbcType=VARCHAR}  and flag='0' 
+  
+  </select>
+  <!-- 根据用户名查询相应的充值订单总数 -->
+  <select id="findCountCid2"  parameterType="com.manji.mlife.Vo.QueryVo" resultType="java.lang.Integer" >
+  
+     select count(*)  from trade where 1=1 
+     <if test="vo.orderNumber != null and vo.orderNumber !=''">
+    	and outerId like '%'+#{vo.orderNumber,jdbcType=VARCHAR}+'%'
+    </if>
+     <if test="vo.startCity != null and vo.startCity !=''"> 
+     	and title like '%'+#{vo.startCity,jdbcType=VARCHAR}+'%' 
+     </if>
+    <if test="vo.orderStatus != null and vo.orderStatus !=''">
+    	and state = #{vo.orderStatus,jdbcType=VARCHAR}
+    </if>
+    <if test="vo.goodsType != null and vo.goodsType !=''">
+    	and type = #{vo.goodsType,jdbcType=VARCHAR}
+    </if>
+   <if test="vo.starttime != null and vo.starttime !='' and vo.endtime != null and vo.endtime !=''">
+    	and ctime between #{vo.starttime,jdbcType=VARCHAR} and #{vo.endtime,jdbcType=VARCHAR}
+    </if> 
+     and userName = #{vo.userName,jdbcType=VARCHAR}  and flag='1' 
+  
+  </select>
+<select id="selectByPrimaryKey2" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    *
+    from Trade
+    where outerId = #{outerid,jdbcType=VARCHAR}
+  </select>  
+  
+  
+</mapper>

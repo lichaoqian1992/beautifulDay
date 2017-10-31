@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.user.UserGroupMapper" >
+
+
+<select id="countGroupId"  resultType="map">
+select title,isnull(t2.count,0) count from dt_user_groups t1 left join
+(select count(group_id) count,group_id from dt_users group by group_id )t2
+on t1.id=t2.group_id
+</select>
+
+<!-- 用户组别 start -->
+<select id="findUserGroup"  resultType="map">
+select id,title from dt_user_groups
+</select>
+
+<select id="userGroupList"  resultType="UserGroup">
+
+	select * from dt_user_groups
+	
+</select>
+
+<insert id="addUserGroup" parameterType="UserGroup">
+
+	insert into 
+	dt_user_groups(title,grade,upgrade_exp,amount,point,discount,is_default,is_upgrade,is_lock)
+	values
+	(#{title},#{grade},#{upgrade_exp},#{amount},#{point},#{discount},#{is_default},#{is_upgrade},#{is_lock})
+
+</insert>
+
+<update id="updUserGroup" parameterType="UserGroup">
+
+	update dt_user_groups 
+	set title=#{title},
+	grade=#{grade},
+	upgrade_exp=#{upgrade_exp},
+	amount=#{amount},
+	point=#{point},
+	discount=#{discount},
+	is_default=#{is_default},
+	is_upgrade=#{is_upgrade},
+	is_lock=#{is_lock}
+	where id=#{id}
+
+</update>
+
+<delete id="delUserGroup" parameterType="int">
+
+	delete from dt_user_groups where id=#{id}
+
+</delete>
+
+
+
+
+<select id="userGroupCounts" resultType="UserCountsDto">
+
+	select a.id ,a.title ,b.count 
+	from dt_user_groups a,(select group_id,count(group_id) count from dt_users   group by group_id) b 
+	where a.id =b.group_id
+
+</select>
+
+<select id="lastUserGroupCounts" resultType="UserCountsDto" parameterType="java.lang.String">
+
+
+		select a.id ,a.title ,b.count 
+		from dt_user_groups a,
+		(select group_id,count(group_id) count from dt_users where reg_time like '%#{date}%' group by group_id) b 
+		where a.id =b.group_id
+
+
+</select>
+
+<select id="getUsersOnluGroup" resultType="User">
+
+	select id,group_id,user_name from dt_users
+
+</select>
+
+
+<update id="chgUserGroup" parameterType ="User">
+
+	update dt_users set group_id =#{group_id} where id=#{id}
+
+</update>
+
+<select id="getUserGroup" parameterType="int" resultType="UserGroup">
+select * from dt_user_groups where id=#{id}
+</select>
+
+<select id="queryUserById" parameterType="int" resultType="UserGroup">
+select * from dt_user_groups where id=#{0}
+</select>
+
+<select id="getUserGroupList" resultType="UserGroup">
+select id,title from dt_user_groups 
+</select>
+<!-- 用户组别 end -->
+
+
+</mapper>

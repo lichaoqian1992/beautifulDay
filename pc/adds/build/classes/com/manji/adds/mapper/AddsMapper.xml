@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.adds.mapper.AddsMapper" >
+
+
+<select id="getSequence"  resultType="java.lang.Map">
+	select  date,serial from sequence
+</select>
+
+<update id="updSequence"  parameterType="com.manji.adds.model.Sequence">
+	update sequence
+	set date=#{date} ,serial=#{serial}
+</update>
+
+
+<insert id="insertAdds" parameterType="com.manji.adds.model.Adds">
+	insert into adds
+	values(
+	ad_id=#{ad_id},title=#{title},brief=#{brief},channel=#{channel},pl_id=#{pl_id},type=#{type},val=#{val},shop=#{shop},url=#{url},region=#{region},code=#{code},
+	)
+</insert>
+
+<select id="queryAddsById" resultType="com.manji.adds.model.Adds" >
+	
+	select * from adds where ad_id=#{ad_id}
+	
+</select>
+
+
+<select  id="queryAdds" resultType="com.manji.adds.model.Adds"  parameterType="com.manji.adds.model.Adds"  >
+
+	select * from adds where 1=1
+	<if test="channel != null and channel != ''">
+         and channel=#{channel}
+    </if>
+    <if test="code != null and code != ''">
+         and code=#{code}
+    </if>
+    <if test="state != null and state != ''">
+         and state=#{state}
+    </if>
+    <if test="pl_id != null and pl_id != ''">
+         and pl_id=#{pl_id}
+    </if>
+   
+    <if test="type != null and type != ''">
+         and type=#{type}
+    </if>
+    <if test="shop != null and shop != ''">
+         and shop like #{shop}
+    </if>
+    <if test="title != null and title != ''">
+         and title like #{title}
+    </if>
+    
+
+</select>
+
+<update id ="updAdds" parameterType="com.manji.adds.model.Adds" >
+
+	update adds 
+	set 
+	title=#{title},brief=#{brief},channel=#{channel},pl_id=#{pl_id},type=#{type},val=#{val},shop=#{shop},url=#{url},region=#{region},code=#{code}
+	where ad_id=#{ad_id}
+	</update>
+
+
+<update id="updState"  parameterType="com.manji.adds.model.Adds" >
+
+	update adds 
+	set state =#{state} 
+	where ad_id=#{ad_id}
+
+</update>
+</mapper>

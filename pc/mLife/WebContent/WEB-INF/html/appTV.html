@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>有线电视充值</title>
+    <link rel="stylesheet" href="css/frozen.css">
+    <link rel="stylesheet" href="css/appstyle.css">
+    <script src="js/lib/zeptojs/zepto.min.js"></script>
+    <script src="js/frozen.js"></script>
+</head>
+<!-- 检测用户设备 -->
+<script type="text/javascript">
+        var browser = { 
+           versions: function() { 
+               var u = navigator.userAgent; 
+               return { 
+                   trident: u.indexOf('Trident') > -1, //IE内核 
+                   presto: u.indexOf('Presto') > -1, //opera内核 
+                   webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+                   gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+                   mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+                   ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+                   android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+                   iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+                   iPad: u.indexOf('iPad') > -1, //iPad 
+                   webApp: u.indexOf('Safari') > -1 //Safari 
+               }; 
+           }() 
+        } 
+        function closePage(){
+             var jsonstr = "{\"action\":\"close\"}";
+            if ( browser.versions.ios 
+               || browser.versions.iPhone 
+               || browser.versions.iPad) { 
+               window.webkit.messageHandlers.Native.postMessage(jsonstr);
+            }
+            if ( browser.versions.android ) { 
+                window.paySucess.clickOnAndroid(jsonstr);
+            }
+             
+         }
+</script>
+<body ontouchstart="">
+    <header class="ui-header ui-header-positive ui-border-b">
+        <i class="ui-icon-return" onclick="wclosePage()"></i><h1>有线电视充值 </h1>
+    </header>
+    <footer class="ui-footer ui-border-t" style="height: 50px;">
+        <div class="ui-form-item border-b" style="padding-right:0;">
+            <label>总金额：<span id="total">¥0.00</span></label>
+            <button class="btn-confirm" onclick="submit()">确认</button>
+        </div>
+    </footer>
+    <section class="ui-container">
+        <form action="app/catv/createBill" id="myForm">
+            <div class="ui-form-item border-b padding-right">
+                <div><label>城市选择</label></div>
+                <div style="padding-top: 8px;margin-right: -20px;">
+                	<select id="city" onchange="choseC()"><option>请选择</option></select>
+                	<select id="province" onchange="choseP()"><option>请选择</option></select>
+                </div>
+            </div>
+            <div class="ui-form-item border-b padding-right">
+                <label>缴费单位</label>
+                <select id="area" onchange="checkD()"><option>请选择</option></select>
+            </div>
+            <div class="ui-form-item border-b" style="margin-top:15px; ">
+                <label>账号</label>
+                <input type="text" name="rechargeAccount" id="no" placeholder="账号/卡号" onblur="checkNo()">
+            </div>
+            <div class="ui-form-item border-b">
+                <label>金额</label>
+                <input type="text" id="money" name="rechargeAmount" placeholder="任意充" onblur="checkMoney()">
+            </div>
+            <p class="ui-txt-info ui-whitespace">*可购买范围:150-6000元 </p>
+            <input type="hidden" id="itemId" name="itemId">
+        </form>
+        <section class="section">
+            <div class="ui-form-item  ui-whitespace border-b">
+                <h2>服务说明</h2><span class="squire"></span>
+            </div>
+            <div class="ui-row" style="padding:15px;">
+                <p class="ui-txt-info">1、尊敬的用户，本次充值可用于有线电视的全部业务种类， 可能激活处于欠费停止的业务。</p>
+                <p class="ui-txt-info">2、如需了解业务办理情况请拨打023-96868查询。</p>
+                <p class="ui-txt-info">3、目前支持的地区重庆、山东、辽宁、陕西、江苏、浙江。</p>
+            </div>
+        </section>
+    </section>
+</body>
+<script type="text/javascript">
+      //对话框
+        function showDialog(content){
+    		var dia=$.dialog({
+    			title:"温馨提示：",
+                content:content,
+                button:["确认"]
+            });
+
+            dia.on("dialog:action",function(e){
+                console.log(e.index)
+            });
+            dia.on("dialog:hide",function(e){
+                console.log("dialog hide")
+            });
+    	}
+        // 地区加载
+        (function(){
+            var province = $("#province");
+            province.append('<option value="v2070">重庆</option>');
+            province.append('<option value="v2129">甘肃</option>');
+            province.append('<option value="v1955">浙江</option>');
+            province.append('<option value="v2089">天津</option>');
+            province.append('<option value="v2101">安徽</option>');
+            province.append('<option value="v1953">北京</option>');
+            province.append('<option value="v2282">湖北</option>');
+            province.append('<option value="v2159">山西</option>');
+            province.append('<option value="v2210">山东</option>');
+            province.append('<option value="v2171">辽宁</option>');
+            province.append('<option value="v1967">河南</option>');
+            province.append('<option value="v1986">海南</option>');
+            province.append('<option value="v2043">内蒙古</option>');
+            province.append('<option value="v2198">河北</option>');
+            province.append('<option value="v2091">贵州</option>');
+            province.append('<option value="v1918">湖南</option>');
+            province.append('<option value="v2142">新疆</option>');
+            province.append('<option value="v1933">四川</option>');
+            province.append('<option value="v1988">西藏</option>');
+            province.append('<option value="v1904">黑龙江</option>');
+            province.append('<option value="v2228">广东</option>');
+            province.append('<option value="v2280">上海</option>');
+            province.append('<option value="v2186">江西</option>');
+            province.append('<option value="v2260">宁夏</option>');
+            province.append('<option value="v2269">陕西</option>');
+            province.append('<option value="v2118">广西</option>');
+            province.append('<option value="v2056">江苏</option>');
+            province.append('<option value="v2072">云南</option>');
+            province.append('<option value="v1892">吉林</option>');
+            province.append('<option value="v2250">青海</option>');
+            province.append('<option value="v2297">福建</option>');
+        })();
+        	function choseP(){
+        		$("#area").empty();
+        		$("#area").append('<option value="-1">请选择</option>');
+        		var obj = document.getElementById("province");
+                var provinceval = obj.options[obj.selectedIndex].value;
+//                 $(this).addClass("active").siblings("option").removeClass("active");
+                getcity(provinceval);
+        	}
+        	function choseC(){
+             $.ajax({
+					type : "get",
+					url  : "app/catv/unitsList",
+					data : 'provinceVid=' + $("#province").val(),
+					success : function(data){
+						if(data=='[]'){
+							$("#area").empty();
+							$("#area").append('<option value="-1">--该地区服务未开通--</option>');
+							var txt=  "该地区服务未开通";
+							showDialog(txt);
+							return false;
+						}
+						var d=eval(data);//解析  
+				    	var select = document.getElementById("area");
+				    	select.length = 1;//设置只能选择一个
+				    	select.options[0].selected = true;//设置默认选中第一个
+					    $(d).each(function(index,entity){
+					    	
+					    	var option = document.createElement("option");
+					    	option.setAttribute("value",entity['vid']);//设置option属性值
+					    	//截取公司名字和充值类型
+					    	var arry=new Array();
+					    	var name =entity['vname'];
+					    	    arry=name.split(" ");
+					    	    var danwei;
+					    	    var neixin;
+					    	    if(arry.length>4){
+					    	    	
+					    	    	danwei=arry[2];
+							    	neixin=arry[4];
+					    	    }else{
+					    	     danwei=arry[1];
+					    	     neixin=arry[2];
+					    	    }
+					    	neixin=neixin.substring(neixin.length-2,neixin.length);
+					    	        
+					    	option.appendChild(document.createTextNode(danwei+" "+neixin));
+					    	
+					    	select.appendChild(option);//向select增加option 
+						
+						});  
+					},
+				});
+        	}
+        	function checkD(){
+        		$("#itemId").val($("#area").val());
+        	}
+        	/* //点击任一城市的时候触发的事件
+            $("#province option").on("click",function(){
+                var areatext = "";
+                var provinceval = $(this).val();
+//                 $(this).addClass("active").siblings("option").removeClass("active");
+                getcity(provinceval);
+          $("#city option").on("click",function(){
+                    var citytext = $(this).text();
+//                     $(this).addClass("active").siblings("option").removeClass("active");
+                    areatext = citytext;
+                    $("#area").val(areatext);
+                    $.ajax({
+						type : "get",
+						url  : "app/catv/unitsList",
+						data : 'provinceVid=' + $("#province").val(),
+						success : function(data){
+							if(data=='[]'){
+								$("#area").empty();
+								$("#area").append('<option value="-1">--该地区服务未开通--</option>');
+								
+								var txt=  "该地区服务未开通";
+								showDialog(txt);
+								return false;
+							}
+							var d=eval(data);//解析  
+					    	var select = document.getElementById("area");
+					    	select.length = 1;//设置只能选择一个
+					    	select.options[0].selected = true;//设置默认选中第一个
+						    $(d).each(function(index,entity){
+						    	
+						    	var option = document.createElement("option");
+						    	option.setAttribute("value",entity['vid']);//设置option属性值
+						    	//截取公司名字和充值类型
+						    	var arry=new Array();
+						    	var name =entity['vname'];
+						    	    arry=name.split(" ");
+						    	    var danwei;
+						    	    var neixin;
+						    	    if(arry.length>4){
+						    	    	
+						    	    	danwei=arry[2];
+								    	neixin=arry[4];
+						    	    }else{
+						    	     danwei=arry[1];
+						    	     neixin=arry[2];
+						    	    }
+						    	neixin=neixin.substring(neixin.length-2,neixin.length);
+						    	        
+						    	option.appendChild(document.createTextNode(danwei+" "+neixin));
+						    	
+						    	select.appendChild(option);//向select增加option 
+							
+							});  
+						},
+					});
+					
+				});
+            }); */
+        	//选择省份加载对应省份下的城市
+            function getcity(provinceval){
+                $("#city").empty();
+                var obj = document.getElementById("province");
+                var provinceName = obj.options[obj.selectedIndex].text;
+                var provincevid = provinceval;
+                if (provincevid == '' || undefined == provincevid || null == provincevid) {
+                    return false;
+                }
+                    $("#city").append('<option selected="selected"  >--城市--</option>');
+                    switch (provinceName) {
+                    
+                    case "重庆":
+                        $("#city").append('<option value="">'+provinceName+'</option>');
+                        break;
+                        
+                    case "北京":
+                        $("#city").append('<option value="">'+provinceName+'</option>');
+
+                        break;
+                    case "上海":
+                        $("#city").append('<option value="">'+provinceName+'</option>');
+
+                        break;
+                    case "天津":
+                        $("#city").append('<option value="">'+provinceName+'</option>');
+
+                        break;
+                    case "内蒙古":
+                        
+                        $("#city").append('<option value="">'+provinceName+'全区</option>');
+
+                        break;
+                        
+                    case "新疆":
+                        
+                        $("#city").append('<option value="">'+provinceName+'全区</option>');
+
+                        break;
+                        
+                    case "西藏":
+                        $("#city").append('<option value="">'+provinceName+'全区</option>');
+
+                        break;
+                        
+                    case "宁夏":
+                        
+                        $("#city").append('<option value="">'+provinceName+'全区</option>');
+
+                        break;
+                        
+                    case "上海":
+                        $("#city").append('<option value="">'+provinceName+'</option>');
+
+                        break;
+                    case "全国":
+                        
+                        $("#city").append('<option value="">'+provinceName+'</option>');
+
+                        break;
+                        
+                    default:
+                        
+                        $("#city").append('<option value="">'+provinceName+'全省</option>');
+                        
+                        break;
+                    }
+            }
+        	//校验输入的账号
+        	function checkNo(){
+        		var no = $("#no").val();
+        		if(!(/^\d+(\.\d{2})?$/.test(no))){
+					showDialog("请正确输入充值账号");
+					$("#no").val("");
+					return false;
+				}
+        	}
+			//校验输入的金额的数量
+			function checkMoney(){
+				var money = $("#money").val();
+				if(Number(money) < 150 || Number(money) > 6000 || !(/^\d+(\.\d{2})?$/.test(money))){
+					showDialog("请输入150-6000范围内的金额");
+					$("#money").val("");
+					$("#total").html("¥0.00");
+					return false;
+				}
+				$("#total").html("¥"+Number(money).toFixed(2));
+			}
+			//提交订单
+			function submit(){
+				
+				if($("#province").val() == "请选择" || $("#city").val() == "--城市--"){
+					showDialog("请选择城市");
+					return false;
+				}
+				if($("#area").val() == "-1"){
+					showDialog("请选择缴费单位");
+					return false;
+				}
+				if($("#no").val() == "" || undefined == $("#no").val() || null == $("#no").val()){
+					showDialog("充值账号不能为空");
+					return false;
+				}
+				if($("#money").val() == "" || undefined == $("#money").val() || null == $("#money").val()){
+					showDialog("充值金额不能为空");
+					return false;
+				}
+				$("#myForm").submit();
+			}
+    </script>
+</html>

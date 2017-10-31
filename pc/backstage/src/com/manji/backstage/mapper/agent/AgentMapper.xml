@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manji.backstage.mapper.agent.AgentMapper" >
+
+
+<select id="countAgentInfo" parameterType="AgentInfoVo" resultType="int">
+select count(*)  from dt_user_role_agentinfo  where 1=1
+		
+		<if test="group_id != null and group_id != ''">
+			and group_id=#{group_id}
+			</if>
+		<if test="state != null and state != '-1'">
+			and state=#{state}
+			</if>
+</select>
+
+<select id="queryAgentInfo" parameterType="AgentInfoVo" resultType="AgentInfo">
+select * from dt_user_role_agentinfo dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_role_agentinfo  where 1=1
+		
+		<if test="group_id != null and group_id != ''">
+			and group_id=#{group_id}
+			</if>
+		<if test="state != null and state != '-1'">
+			and state=#{state}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+
+</select>
+
+<select id="getAgentInfo" parameterType="int" resultType="AgentInfo">
+	select * from dt_user_role_agentinfo where id=#{0}
+</select>
+
+<update id="updAgentInfo" parameterType="AgentInfo" >
+update dt_user_role_agentinfo 
+set group_id=#{group_id},
+user_id=#{user_id},
+agent_area=#{agent_area},
+address=#{address},
+telephone=#{telephone},
+qq=#{qq},
+name=#{name},
+mobile=#{mobile},
+email=#{email},
+begin_time=#{begin_time},
+end_time=#{end_time},
+state=#{state},
+remark=#{remark},
+update_time=#{update_time},
+add_time=#{add_time},
+is_del=#{is_del}
+where id=#{id}
+
+</update>
+
+<insert id="addAgentInfo" parameterType="AgentInfo">
+insert into dt_user_role_agentinfo
+(group_id,user_id,agent_area,address,telephone,qq,name,mobile,email,begin_time,end_time,state,remark,update_time,add_time,is_del)
+values(#{group_id},#{user_id},#{agent_area},#{address},#{telephone},#{qq},#{name},#{mobile},#{email},#{begin_time},#{end_time},#{state},#{remark},#{update_time},#{add_time},#{is_del})
+</insert>
+
+<delete id="delAgentInfo" parameterType="int">
+
+delete from dt_user_role_agentinfo where id = #{0}
+
+</delete>
+
+<select id="countAgentInfoTemp" parameterType="AgentInfoTempVo" resultType="int">
+	select count(*) id from dt_user_role_agentinfo_temp  where 1=1
+		<if test="group_id != null and group_id != ''">
+			and group_id=#{group_id}
+			</if>
+		<if test="state != null and state != '-1'">
+			and state=#{state}
+			</if>
+
+</select>
+
+
+<select id="queryAgentInfoTemp" parameterType="AgentInfoTempVo" resultType="AgentInfoTemp">
+
+select * from dt_user_role_agentinfo_temp dt1,
+(
+	select top 20 id from 
+	(
+		select top(#{index}*20) id from dt_user_role_agentinfo_temp  where 1=1
+		
+		<if test="group_id != null and group_id != ''">
+			and group_id=#{group_id}
+			</if>
+		<if test="state != null and state != '-1'">
+			and state=#{state}
+			</if>
+		order by id desc
+	)dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+
+</select>
+
+<select id="getAgentInfoTemp" parameterType="int" resultType="AgentInfoTemp">
+	select * from dt_user_role_agentinfo_temp where id=#{id}
+</select>
+
+<update id="updAgentInfoTemp" parameterType="AgentInfoTemp" >
+update dt_user_role_agentinfo_temp 
+set 
+record_id=#{record_id},
+group_id=#{group_id},
+user_id=#{user_id},
+agent_area=#{agent_area},
+address=#{address},
+telephone=#{telephone},
+qq=#{qq},
+name=#{name},
+mobile=#{mobile},
+email=#{email},
+begin_time=#{begin_time},
+end_time=#{end_time},
+state=#{state},
+remark=#{remark},
+update_time=#{update_time}
+where id=#{id}
+
+</update>
+
+<insert id="addAgentInfoTemp" parameterType="AgentInfoTemp">
+insert into dt_user_role_agentinfo_temp
+(record_id,group_id,user_id,agent_area,address,telephone,qq,name,mobile,email,begin_time,end_time,state,remark,update_time)
+values(#{record_id},#{group_id},#{user_id},#{agent_area},#{address},#{telephone},#{qq},#{name},#{mobile},#{email},#{begin_time},#{end_time},#{state},#{remark},#{update_time})
+</insert>
+
+<delete id="delAgentInfoTemp" parameterType="int">
+
+delete from dt_user_role_agentinfo_temp where id = #{0}
+
+</delete>
+
+
+
+<select id="countAgentNotice" parameterType="NoticeVo" resultType="int">
+select count(*) from dt_notice where user_role_type='Agent'
+<if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+</if>
+
+
+</select>
+<select id="queryAgentNotice" parameterType="NoticeVo" resultType="Notice">
+select * from dt_notice dt1,
+(
+  select top 20 id from 
+  (
+    select top(#{index}*20) id from dt_notice  where user_role_type='Agent'
+    
+    <if test="user_id != null and user_id != ''">
+      and user_id=#{user_id}
+    </if>
+    order by id desc
+  )dt order by dt.id asc
+)dt2 where dt1.id=dt2.id order by dt1.id
+</select>
+
+<insert id="addAgentNotice" parameterType="Notice">
+insert into dt_notice
+(title,content,get_user_roles,get_user_groups,get_user_area,user_id,user_role_type,user_role_value,state,update_time,remark)
+values(#{title},#{content},#{get_user_roles},#{get_user_groups},#{get_user_area},#{user_id},#{user_role_type},#{user_role_value},#{state},#{update_time},#{remark})
+</insert>
+
+<select id="getAgentNotice" parameterType="int" resultType="Notice">
+select * from dt_notice where id=#{0}
+</select>
+
+<update id="updAgentNotice" parameterType="Notice">
+update dt_notice set
+title=#{title},
+content=#{content},
+get_user_roles=#{get_user_roles},
+get_user_groups=#{get_user_groups},
+get_user_area=#{get_user_area},
+user_id=#{user_id},
+user_role_type=#{user_role_type},
+user_role_value=#{user_role_value},
+state=#{state},
+update_time=#{update_time},
+remark=#{remark}
+where id=#{id}
+</update> 
+
+<delete id="delAgentNotice" parameterType="int">
+delete from dt_notice where id=#{0}
+</delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
