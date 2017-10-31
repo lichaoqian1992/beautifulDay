@@ -1,0 +1,389 @@
+#@pclayout() #define main()
+<link rel="stylesheet" type="text/css" href="#(ctx)/static/pc/style/style.css" />
+<link rel="stylesheet" type="text/css" href="#(ctx)/static/pc/style/workManage.css" />
+		<div class="kf_bg_box">
+			<div class="kf_nav">
+				<a class="kf_nav_home kf_nav_item" href="/sheet/home">首页</a>
+				<a class="kf_nav_item" href="/sheet/manage/list?status=acceptance&nav=nav1">工单管理</a>
+				<span class="kf_nav_item kf_nav_item_last">工单信息查看</span>
+			</div>
+			<div class="kf_box">
+				#if(status=="1")
+					#include("workChild/acceptanceChild.html")
+				#elseif(status=="2")
+					#include("workChild/entertainedChild.html")
+				#elseif(status=="3")
+					#include("workChild/alreadyChild.html")
+				#elseif(status=="4")
+					#include("workChild/processedChild.html")
+				#elseif(status=="5")
+					#include("workChild/completedChild.html")
+				#elseif(status=="6")
+					#include("workChild/solveChild.html")
+				#end
+				#if(OrderHave=="true")
+				#if(BuyersInfo!=null)
+				<div class="kf_block_box">
+					<div class="kf_form_title">
+						<span class="kf_form_content kf_icon kf_icon_list">订单详情</span>
+						<span class="kf_form_content_order">
+							订单号：#(BuyersInfo.order_no)
+							#if(WorkNumber.status=="3")
+								<span>交易完成</span>
+							#elseif(WorkNumber.status=="4")
+								<span>交易取消</span>
+							#else
+								<span>交易中</span>
+							#end
+						</span>
+						<a class="kf_form_content_toggle" href="javascript:void(0);"></a>
+					</div>
+					<div class="kf_form_toggle_box">
+						<div class="kf_form_box_label">
+							买家详细信息
+						</div>
+						<div class="kf_workOrder_info">
+							<div class="kf_workOrder_item"><label>下单时间：</label>#(BuyersInfo.add_time)</div>
+							<div class="kf_workOrder_item"><label>收&nbsp;货&nbsp;&nbsp;人：</label>#(BuyersInfo.accept_name)</div>
+							<div class="kf_workOrder_item"><label>邮&emsp;&emsp;编：</label>#(BuyersInfo.post_code)</div>
+							<div class="kf_workOrder_item"><label>下&nbsp;单&nbsp;&nbsp;人：</label>#(BuyersInfo.nick_name)</div>
+							<div class="kf_workOrder_item"><label>收货地址：</label>#(BuyersInfo.address)</div>
+							<div class="kf_workOrder_item"><label>发票信息：</label>#(BuyersInfo.invoice_title)</div>
+							<div class="kf_workOrder_item"><label>联系电话：</label>#(BuyersInfo.dumobile)</div>
+							<div class="kf_workOrder_item"><label>联系电话：</label>#(BuyersInfo.dogonemobile)</div>
+							<div class="kf_workOrder_item"><label>买家留言：</label>#(BuyersInfo.message)</div>
+						</div>
+						<table class="kf_table">
+							<thead>
+								<tr>
+									<th width="90" class="kf_text_align_center">图片</th>
+									<th width="420" class="kf_text_align_center">商品名称</th>
+									<th>规格</th>
+									<th>单击（元）</th>
+									<th>数量</th>
+									<th>小计（元）</th>
+								</tr>
+							</thead>
+							<tbody>
+							#for(x : BuyersList)
+								<tr>
+									<td class="kf_text_align_center"><img src="#(x.img_url)"></td>
+									<td>
+										<label>#(x.goods_title)</label>
+									</td>
+									<td>
+										<p>#(x.spec_text)</p>
+									</td>
+									<td>#(x.real_price)</td>
+									<td>#(x.quantity)</td>
+									<th>#(x.allmoney)</th>
+								</tr>
+							#end
+							</tbody>
+						</table>
+						<div class="kf_form_table_info">
+							<span>商品总价：￥#(rc.money)</span>
+							<span>运费：￥#(rc.express_fee)</span>
+							<span>优惠：￥#(rc.discount)</span>
+							<span class="kf_float_right">订单总金额：<i class="kf_color_danger">￥#(rc.order_amount)</i></span>
+						</div>
+						<div class="kf_toggle_info_zhu">
+							<div class="kf_toggle_info_box">
+								<label class="kf_toggle_info_box_title">发货地址</label>
+								<div class="kf_group">
+									<label class="kf_group_title">发&nbsp;&nbsp;货&nbsp;人：</label>
+									<div class="kf_group_content">#(ShipAddress.name)</div>
+								</div>
+								<div class="kf_group">
+									<label class="kf_group_title">联系电话：</label>
+									<div class="kf_group_content">#(ShipAddress.telephone)</div>
+								</div>
+								<div class="kf_group">
+									<label class="kf_group_title">地&emsp;&emsp;址：</label>
+									<div class="kf_group_content">#(ShipAddress.Area)</div>
+								</div>
+								<div class="kf_group">
+									<label class="kf_group_title">邮&emsp;&emsp;编：</label>
+									<div class="kf_group_content">#(ShipAddress.code)</div>
+								</div>
+							</div>
+							#if(logistics!=null)
+							<div class="kf_toggle_info_box">
+								<label class="kf_toggle_info_box_title">物流信息</label>
+								<div class="kf_group">
+									<label class="kf_group_title">快递单号：</label>
+									<div class="kf_group_content">
+										#(logistics.express_no)
+										#if(logistics.express_no!="")
+										<a class="kf_check_logistics">查看物流</a>
+										#end
+									</div>
+								</div>
+								<div class="kf_group">
+									<label class="kf_group_title">快递公司：</label>
+									<div class="kf_group_content">#(logistics.title)</div>
+								</div>
+								<div class="kf_group">
+									<label class="kf_group_title">发货时间：</label>
+									<div class="kf_group_content">#(logistics.express_time)</div>
+								</div>
+							</div>
+							#end
+						</div>
+					</div>
+				</div>
+				#end
+				#end
+				#if(RefundList!=null)
+				<div class="kf_block_box">
+					<div class="kf_form_title">
+						<span class="kf_form_content kf_icon kf_icon_book">退单详情</span>
+						<a class="kf_form_content_toggle" href="javascript:void(0);"></a>
+					</div>
+					<div class="kf_form_toggle_box">
+						#for(x : RefundList)
+							<div class="kf_form_box_label">
+								退单信息<i class="kf_color_danger backSum">#(for.count)</i>
+							</div>
+							<table class="kf_table">
+								<thead>
+									<tr>
+										<th width="90" class="kf_text_align_center">图片</th>
+										<th width="420" class="kf_text_align_center">商品名称</th>
+										<th>规格</th>
+										<th>单击（元）</th>
+										<th>数量</th>
+										<th>小计（元）</th>
+									</tr>
+								</thead>
+								<input type="hidden" value="#(x.id)" class="refund"/>
+								<tbody>
+
+								</tbody>
+							</table>
+							<div class="kf_toggle_info">
+
+								<div class="kf_group">
+									<label class="kf_group_title">退单编号：</label>
+									<div class="kf_group_content">#(x.id)</div>
+								</div>
+								<div class="kf_group">
+									<label class="kf_group_title">退款金额：</label>
+									<div class="kf_group_content kf_color_danger">￥#(x.real_back_amount)</div>
+								</div>
+								<div class="kf_group">
+									<label class="kf_group_title">退款类型：</label>
+									<div class="kf_group_content">#(x.back_goods)</div>
+								</div>
+								<div class="kf_group">
+									<label class="kf_group_title">退货单号：</label>
+									<div class="kf_group_content">#(x.back_return_no) （#(x.back_title)）</div>
+								</div>
+								<div class="kf_group">
+									<label class="kf_group_title">退款原因：</label>
+									<div class="kf_group_content">#(x.back_category)</div>
+								</div>
+								<div class="kf_group">
+									<label class="kf_group_title">凭证：</label>
+									<input type="hidden" value="#(x.back_resource)" class="pics" />
+									<div class="kf_group_content"></div>
+								</div>
+							</div>
+						</div>
+					#end
+				</div>
+				#end
+				#if(isShow=="true")
+				<div class="kf_block_box">
+					<div class="kf_form_title">
+						<span class="kf_form_content kf_icon kf_icon_information">评价详情</span>
+					</div>
+					<div class="kf_estimate_serve">
+						<div class="kf_form_box_label">
+							店铺评分
+						</div>
+						<div class="kf_estimate_serve_list kf_float_clear">
+							<div class="kf_estimate_serve_item">
+								<span>产品包装</span>
+								<div class="kf_star kf_star_#(shopCommentScore.pack_review_score)"></div>
+							</div>
+							<div class="kf_estimate_serve_item">
+								<span>服务态度</span>
+								<div class="kf_star kf_star_#(shopCommentScore.service_review_score)"></div>
+							</div>
+							<div class="kf_estimate_serve_item">
+								<span>物流速度</span>
+								<div class="kf_star kf_star_#(shopCommentScore.distribution_review_score)"></div>
+							</div>
+						</div>
+						<div class="kf_form_box_label">
+							商品评分
+						</div>
+						#for(One : commentScore)
+						<div class="kf_estimate_content">
+							<div class="kf_estimate_content_item">
+								<div class="kf_estimate_content_top">
+									<label>#(One.goods_title)</label>
+									<span>规格：#(One.spec_text)</span>
+									<span class="kf_star_x kf_star_x_#(One.goods_score)"></span>
+								</div>
+								#if(One.shopRecord!=null)
+									#for(Tow : One.shopRecord)
+										#if(Tow.i!=1)
+											<div class="kf_estimate_content_top">
+												<label class="kf_color_blue">追评</label>
+												<span>#(Tow.add_time)</span>
+											</div>
+										#end
+										<p>
+											#(Tow.content)
+										</p>
+										<input type="hidden" value="#(Tow.pics)" class="commentImg"/>
+										<div class="kf_estimate_content_img"></div>
+									#end
+								#end
+							</div>
+						</div>
+						#end
+					</div>
+					
+				</div>
+				#end
+				#if(status=="1")
+					#include("examine/acceptanceExamine.html")
+				#elseif(status=="2")
+					#include("examine/entertainedExamine.html")
+				#elseif(status=="3")
+					#include("examine/alreadyExamine.html")
+				#elseif(status=="4")
+					#include("examine/processedExamine.html")
+				#elseif(status=="5")
+					#include("examine/completedExamine.html")
+				#elseif(status=="6")
+					#include("examine/solveExamine.html")
+				#end
+			</div>
+		</div>
+		#include("../common/_js.html")
+		<script src="#(ctx)/static/pc/js/workorder_accept.js" type="text/javascript"></script>
+		#if(status=="1")
+			#include("bombBox/acceptanceBomb.html")
+		#elseif(status=="2")
+			#include("bombBox/entertainedBomb.html")
+		#elseif(status=="3")
+			#include("bombBox/alreadyBomb.html")
+		#elseif(status=="4")
+			#include("bombBox/processedBomb.html")
+		#elseif(status=="5")
+			#include("bombBox/completedBomb.html")
+		#elseif(status=="6")
+			#include("bombBox/solveBomb.html")
+		#end
+		<script type="text/javascript">
+			$(function(){
+
+				$(".pics").each(function(){
+				    if($(this).val()!=""){
+                        var arr=$(this).val().split(',');
+                        for(var i=0;i<arr.length;i++){
+                            $(this).next().append("<span class='kf_problem_img'> <img src='"+arr[i]+"'></span>");
+						}
+                    }else{
+                        $(this).parent().hide();
+					}
+				})
+				
+				$(".commentImg").each(function(){
+				    if($(this).val()!=""){
+                        var arr=$(this).val().split(',');
+                        for(var i=0;i<arr.length;i++){
+                            $(this).next().append("<img src='"+arr[i]+"'>");
+						}
+					}else{
+                        $(this).next().hide();
+					}
+				})
+				
+				$(".backSum").each(function(){
+					$(this).html(" ("+convertToChinese($(this).text())+")");
+				})
+				
+				var UserType=parseInt($(".UserType").text());	
+				switch (UserType) {
+				case 1:
+					$(".UserType").html("商家");
+					break;
+				case 2:
+					$(".UserType").html("媒体");
+					break;	
+				case 3:
+					$(".UserType").html("用户");
+					break;	
+				case 4:
+					$(".UserType").html("政府");
+					break;	
+				case 5:
+					$(".UserType").html("代理商");
+					break;	
+				case 9:
+					$(".UserType").html("其他");
+					break;		
+				default:
+					break;
+				}
+
+				$(".kf_problem:gt(0) .alsotitle").html("补充资料:");
+
+                refundPics();
+
+                $(".president_img").LightBox({
+                    controls: false,
+                    element: "span",
+                    nameClass: "president_img"
+                });
+
+            });
+
+			function convertToChinese(num){
+				var N = [
+				    "零", "一", "二", "三", "四", "五", "六", "七", "八", "九"
+				];
+			    var str = num.toString();
+			    var len = num.toString().length;
+			    var C_Num = [];
+			    for(var i = 0; i < len; i++){
+			        C_Num.push(N[str.charAt(i)]);
+			    }
+			    return C_Num.join('');
+			}
+			
+			function refundPics(){
+			    $(".refund").each(function(){
+                    var txt="";
+                    $.ajax({
+                        url: '/sheet/manage/acceptDetail',
+                        type: 'GET',
+                        dataType: "json",
+                        async:false,
+                        data: {
+                            "id":$(".refund").val(),
+                            "ajax":"ajax"
+                        },
+                        success: function (data) {
+                            $(data).each(function () {
+                                txt += "<tr><td class='kf_text_align_center'><img src='"+this.img_url+"'></td>" +
+                                    "<td><label>"+this.goods_title+"</label></td>" +
+                                    "<td><p>"+this.spec_text+"</p></td>" +
+                                    "<td>"+this.real_price+"</td><td>"+this.quantity+"</td><th>"+this.allmoney+"</th></tr>";
+                            });
+                        }
+                    });
+                    $(".refund").next().html(txt);
+				});
+			}
+			
+			function backBtn(){
+				window.history.go(-1);
+			}
+		</script>
+#end

@@ -1,0 +1,95 @@
+<div class="kf_mode_box ">
+    <div class="kf_mode_shield"></div>
+    <div class="kf_mode_content kf_mode_logistics">
+        <div class="kf_mode_header">
+            <label class="kf_mode_title">物流信息</label>
+            <a class="kf_mode_close"></a>
+        </div>
+        <div class="kf_mode_body">
+            <ul class="kf_logistics_nav">
+                <li class="kf_logistics_nav_itme1 active">
+                    <span>待揽件</span>
+                </li>
+                <li class="kf_logistics_nav_itme2 active">
+                    <span>运输</span>
+                </li>
+                <li class="kf_logistics_nav_itme3 active">
+                    <span>派送</span>
+                </li>
+                <li class="kf_logistics_nav_itme4 active">
+                    <span>签收</span>
+                </li>
+            </ul>
+            <div class="kf_logistics_address">
+                <label class="kf_logistics_address_title">您的包裹正在运输中</label>
+                <ul class="kf_logistics_address_list">
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content"> 感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！您好，因为订单量较多，超过预计送货时间，正在积极送货过程中，麻烦耐心等待</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！您好，因为订单量较多，超过预计送货时间，正在积极送货过程中，麻烦耐心等待</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">2016-07-30 13:59:18    您的订单已经拣货完成</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="kf_group">
+                <label class="kf_group_title">运单号码：</label>
+                <div class="kf_group_content">8828254982541125630</div>
+            </div>
+            <div class="kf_group">
+                <label class="kf_group_title">卖家昵称：</label>
+                <div class="kf_group_content">shenlina李知欣专卖店</div>
+            </div>
+            <div class="kf_group">
+                <label class="kf_group_title">发货地址：</label>
+                <div class="kf_group_content">北京市  昌平区  北七家镇  平西府工业园洪明轩311   	102209   010-57151929</div>
+            </div>
+            <div class="kf_group">
+                <label class="kf_group_title">收货地址：</label>
+                <div class="kf_group_content">重庆市 沙坪坝区  富洲路108号</div>
+            </div>
+            <div class="kf_group">
+                <label class="kf_group_title"></label>
+                <div class="kf_group_content">
+                    <div class="kf_logistics_goods">
+                        <img src="images/shanchu.png">
+                        <label><i class="kf_color_danger">132.00</i>x1</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

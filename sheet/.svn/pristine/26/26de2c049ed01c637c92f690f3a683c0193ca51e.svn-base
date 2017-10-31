@@ -1,0 +1,771 @@
+package com.manji.sheet.service;
+
+import com.jfinal.aop.Before;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.activerecord.tx.Tx;
+import com.manji.sheet.model.reqParam.SheetInfoParam;
+import com.manji.sheet.utils.WorkerNumberUtil;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by lcq on 2017/6/15.
+ */
+public class PCService {
+
+    /**
+     * 根据对应类型获取页面信息
+     *
+     * @param short_title
+     * @param shop_user_id
+     * @return
+     */
+
+    public Page<Record> getInformation(int pageNum,String short_title, Integer shop_user_id, String start_time, String end_time, Integer status, String sheet_no) {
+
+
+        StringBuffer sb = new StringBuffer();
+
+        //根据传入类型显示数据
+        if ("FEB".equals(short_title)) {
+            sb.append(" from dt_sheets s left join dt_sheet_type t  on  s.type_code = t.code " +
+                    " where t.short_title='FEB' and t.layer=2 and s.sponsor_id='" + shop_user_id + "'");
+        } else if ("RMJ".equals(short_title)) {
+            sb.append(" from dt_sheets s left join dt_sheet_type t  on  s.type_code = t.code " +
+                    " where t.short_title='RMJ' and t.layer=2 and s.sponsor_id='" + shop_user_id + "'");
+        } else if ("RGD".equals(short_title) || "RSH".equals(short_title)) {
+            sb.append(" from dt_sheets s " +
+                    "left join dt_sheet_business b on s.id = b.sheet_id " +
+                    "left join dt_sheet_type t on s.type_code=t.code " +
+                    "where t.short_title in ('RSD','RSH') and t.layer=2 and b.shop_user_id= '" + shop_user_id + "'");
+        } else if ("EVD".equals(short_title)) {
+            sb.append(" from dt_sheets s " +
+                    "left join dt_sheet_business b on s.id = b.sheet_id " +
+                    "left join dt_sheet_type t on s.type_code=t.code " +
+                    "where t.short_title = 'EVD' and t.layer=2 and b.shop_user_id= '" + shop_user_id + "'");
+        } else if ("TRD".equals(short_title)) {
+            sb.append(" from dt_sheets s " +
+                    "left join dt_sheet_business b on s.id = b.sheet_id " +
+                    "left join dt_sheet_type t on s.type_code=t.code " +
+                    "where t.short_title = 'TRD' and t.layer=2 and b.shop_user_id= '" + shop_user_id + "'");
+        }
+
+        //根据条件搜索
+        if (start_time != null && !"".equals(start_time)) {
+            sb.append(" and s.start_time>'" + start_time + "'");
+        }
+        if (end_time != null && !"".equals(end_time)) {
+            sb.append(" and s.start_time<'" + end_time + "'");
+        }
+        if (status != null && !"".equals(status)) {
+            sb.append(" and s.status='" + status + "'");
+        }
+        if (sheet_no != null && !"".equals(sheet_no)) {
+            sb.append(" and s.sheet_no like '%" + sheet_no + "%'");
+        }
+
+        sb.append(" order by s.start_time desc");
+        System.out.println(sb.toString());
+        
+        
+        Page<Record> page = paging(pageNum,sb.toString(),short_title);
+
+        return page;
+    }
+
+    /**
+     * 商家PC展示页分页
+     * @param pageNum
+     * @param sql
+     * @param short_title
+     * @return
+     */
+    public Page<Record> paging(int pageNum,String sql,String short_title) {
+    	
+    	StringBuffer sb = new StringBuffer();
+    	
+    	if ("FEB".equals(short_title) || "RMJ".equals(short_title)) {
+    		
+            sb.append("select  t.title,s.status,s.sheet_no,convert(varchar(19),s.start_time,20) start_time,t.merge_title ");
+        } else {
+        	
+            sb.append("select b.shop_user_id,s.sheet_no,convert(varchar(19),s.start_time,20) start_time,s.sponsor,s.status,t.title,t.merge_title ");
+        } 
+    	return Db.paginate(pageNum, 10, sb.toString(), sql);
+    }
+
+    /**
+     * 我要建议详情信息
+     *
+     * @param sheet_no
+     * @param status
+     * @return
+     */
+    /*public Record getAccept(String sheet_no, int status) {
+
+        StringBuffer sb = new StringBuffer();
+
+        if (status == 1) {
+            sb.append("select s.sheet_no,s.start_time,t.title,t.status,i.descr,i.pics from dt_sheets s " +
+                    "left join dt_sheet_type t on s.type_code=t.code " +
+                    "left join dt_sheet_info i on s.id=i.sheet_id " +
+                    "where s.sheet_no = " + sheet_no + " and status =" + status);
+        } else {
+            sb.append("select s.sheet_no,s.start_time,t.title,t.status,i.descr,i.pics,d.content,d.pics as d_pics from dt_sheets s " +
+                    "left join dt_sheet_type t on s.type_code=t.code " +
+                    "left join dt_sheet_info i on s.id=i.sheet_id " +
+                    "left join dt_sheet_detail d on s.id=d.sheet_id " +
+                    "where s.sheet_no =" + sheet_no + " and status =" + status);
+        }
+
+        Record record = Db.findFirst(sb.toString());
+
+        return record;
+    }*/
+
+
+    /**
+     * 获取处理状态和时间ok
+     *
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> dealTime(String sheet_no) {
+
+        String sql = "select convert(varchar(19),opr_time,20) opr_time,result from dt_sheet_flowlog where sheet_id = (select id from dt_sheets where sheet_no =?) order by opr_time";
+
+        List<Record> records = Db.find(sql,sheet_no);
+
+        return records;
+     }
+
+    /**
+     * 详情中通用的工单信息
+     *
+     * @param sheet_no
+     * @return
+     */
+    public Record commonSheet(String sheet_no) {
+
+        String sql = "select s.id,s.sheet_no,convert(varchar(19),s.start_time,20) start_time,t.title from  dt_sheets s,dt_sheet_type t where s.type_code=t.code and s.sheet_no='" + sheet_no + "'";
+        Record record = Db.findFirst(sql);
+
+        return record;
+    }
+
+
+    /**
+     * 产生纠纷的资料信息
+     *
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> disputeInfo(String sheet_no) {
+
+        String sql = "select s.id,s.sheet_no,i.descr,i.pics,convert(varchar(19),i.add_time,20) add_time,i.submitter   from dt_sheets s,dt_sheet_info  i " +
+                "where s.id=i.sheet_id and s.sheet_no=?";
+
+        List<Record> records = Db.find(sql, sheet_no);
+
+        return records;
+    }
+
+    /**
+     * 添加补充资料
+     *
+     * @param record
+     */
+    public boolean addInformation(Record record) {
+
+
+        return Db.save("dt_sheet_info", record);
+    }
+
+    /**
+     * 提交建议和举报
+     * @param record
+     */
+    public void addReport(Record record) {
+
+        Db.save("dt_sheet_info",record);
+        Db.save("dt_sheets",record);
+
+    }
+
+    /**
+     * 仲裁结果
+     *
+     * @param sheet_no
+     * @return
+     */
+    public Record arbResult(String sheet_no) {
+
+        String sql = "select s.id,s.sheet_no,d.content,d.pics from dt_sheets s,dt_sheet_detail d " +
+                "where s.id=d.sheet_id and s.sheet_no=? ";
+
+        Record record = Db.findFirst(sql, sheet_no);
+
+        return record;
+    }
+
+    /**
+     * 处罚结果
+     *
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> punish(String sheet_no) {
+
+        String sql = "select p.* from dt_sheets s,dt_sheet_punish p where s.id=p.sheet_id and s.sheet_no=?";
+
+        List<Record> records = Db.find(sql, sheet_no);
+
+        return records;
+    }
+
+    /**
+     * 根据单号查询商品名
+     *
+     * @param sheet_no
+     * @return
+     */
+    public Record article(String sheet_no) {
+
+        String sql = "select id,category_id,title from dt_article where id=(select article_id from dt_sheet_business where sheet_id=(select id from dt_sheets where sheet_no=?))";
+
+        Record record = Db.findFirst(sql, sheet_no);
+
+        return record;
+    }
+
+    /**
+     * 查询商品规格信息
+     * @param article_id
+     * @return
+     */
+    public List<Record> goodsSpec (int article_id ) {
+
+        String sql = "select * from dt_article_goods where article_id=?";
+
+        List<Record> records = Db.find(sql,article_id);
+
+        return records;
+    }
+
+    /**
+     * 运输方式
+     * @param article_id
+     * @return
+     */
+    public Record tranInfo (int article_id) {
+
+        String sql = "select goods_expenses from dt_article_info where article_id=?";
+
+        Record record = Db.findFirst(sql,article_id);
+
+        return record;
+    }
+
+    /**
+     * 商家自送
+     * @param shop_id
+     * @return
+     */
+    public Record shopZiSong (int shop_id) {
+
+        String sql = "select id,area,convert(varchar(19),update_time,20) update_time,shop_id,remark,free_price,convert(varchar(19),add_time,20) add_time,type,is_free,city from dt_shop_zisong where shop_id=?";
+
+        Record record = Db.findFirst(sql,shop_id);
+
+        return record;
+    }
+
+    /**
+     * 查询城市
+     * @param city
+     * @return
+     */
+    public String getCity (int city) {
+
+        String sql = "select name from dt_apo_city where code=?";
+
+        String record = Db.queryStr(sql,city);
+
+        return record;
+    }
+
+    /**
+     * 查询区县
+     * @param county
+     * @return
+     */
+    public String getCounty (int county) {
+
+        String sql = "select name from dt_apo_county where code=?";
+
+        String record = Db.queryStr(sql,county);
+
+        return record;
+    }
+
+    /**
+     * 物流模板信息
+     * @param shop_id
+     * @return
+     */
+    public Record logisticsInfo (int shop_id) {
+
+        String sql = "select w.name,e.title,e.logo from dt_shop_wuliumuban w,dt_express e where w.expenses_companyId=e.id and w.shop_id=?";
+
+        Record record = Db.findFirst(sql,shop_id);
+
+        return record;
+    }
+
+    /**
+     * 自定义分类
+     * @param article_id
+     * @return
+     */
+    public String category(int article_id) {
+
+        String sql = "select title from dt_article_category_user  where id = (select user_category_id from dt_article where id=?)";
+
+        String title = Db.queryStr(sql,article_id);
+
+        return title;
+    }
+
+    /**
+     * 商品卖点，品牌和属性
+     * @param article_id
+     * @return
+     */
+    public Record shopGoods(int article_id) {
+
+        String sql = "select b.name,i.sub_title,i.goods_describe,i.goods_expenses from dt_article_info i left join dt_brand b on i.brand=b.id and i.article_id=?";
+
+        Record record = Db.findFirst(sql,article_id);
+
+        return record;
+    }
+    /**
+     * 根据分类id查询分类结构
+     *
+     * @param category_id
+     * @return
+     */
+    public String getList(int category_id) {
+
+        String sql = "select class_list from dt_article_category where id=?";
+
+        return Db.queryStr(sql, category_id);
+    }
+
+    public List<Record> articleCategory(String classList) {
+
+        String sql = "select class_layer,title from dt_article_category where id in " +classList;
+
+        return Db.find(sql);
+    }
+
+    /**
+     * 我被举报列表
+     *
+     * @param shop_user_id
+     * @return
+     */
+    public List<Record> reported(long shop_user_id, String start_time, String end_time, Integer status, String sheet_no) {
+
+        StringBuffer sb = new StringBuffer("select b.shop_user_id,s.sheet_no,convert(varchar(19),s.start_time,20) start_time,s.sponsor,s.status,t.title,t.merge_title from dt_sheet_business b " +
+                "left join dt_sheets s on b.sheet_id=s.id " +
+                "left join dt_sheet_type t on s.type_code=t.code " +
+                "where t.layer=2 and b.shop_user_id=' " + shop_user_id + "'");
+        if (start_time != null && !"".equals(start_time)) {
+            sb.append(" and s.start_time>'" + start_time + "'");
+        }
+        if (end_time != null && !"".equals(end_time)) {
+            sb.append(" and s.start_time<'" + end_time + "'");
+        }
+        if (status != null && !"".equals(status)) {
+            sb.append(" and s.status='" + status + "'");
+        }
+        if (sheet_no != null && !"".equals(sheet_no)) {
+            sb.append(" and s.sheet_no like '%" + sheet_no + "%'");
+        }
+        List<Record> records = Db.find(sb.toString());
+
+        return records;
+    }
+
+    /**
+     * 根据sheet_no查询买家详细信息
+     *
+     * @param sheet_no
+     * @return
+     */
+    public Record buyerInfo(String sheet_no) {
+
+        String sql = "select o.order_no,convert(varchar(19),o.add_time,20) add_time,u.nick_name,u.mobile as user_mobile,g.accept_name,g.mobile as accept_mobile,g.post_code,g.address,o.invoice_title,o.message from dt_orders o " +
+                "left join dt_users u on o.user_id=u.id " +
+                "left join dt_order_goodinfo g on o.id=g.order_id " +
+                "where o.id=(select order_id from dt_sheet_business where sheet_id=(select id from dt_sheets where sheet_no=?))";
+
+        Record record = Db.findFirst(sql, sheet_no);
+
+        return record;
+    }
+
+    /**
+     * 根据sheet_no查询商品总价，运费，优惠和订单总金额
+     *
+     * @param sheet_no
+     * @return
+     */
+    public Record orderAmount(String sheet_no) {
+
+        String sql = "select express_fee,voucher,order_amount from dt_orders " +
+                "where id=(select order_id from dt_sheet_business where sheet_id=(select id from dt_sheets where sheet_no=?))";
+
+        Record record = Db.findFirst(sql, sheet_no);
+
+        return record;
+    }
+
+    /**
+     * 查询退单信息
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> backInfo(String sheet_no) {
+
+        String sql = "select id,order_no,back_return_no,real_back_amount,back_goods,back_category,back_resource from dt_order_backinfo " +
+                "where order_id=(select back_order_id from dt_sheet_business where sheet_id=(select id from dt_sheets where sheet_no=?))";
+
+        List<Record> records = Db.find(sql,sheet_no);
+
+        return records;
+    }
+
+    /**
+     * 查询商品规格等信息
+     *
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> specInfo(String sheet_no) {
+
+        String sql = "select order_id,img_url,goods_title,spec_text,real_price,quantity,real_price*quantity as all_money from dt_order_goods where order_id=(select order_id from dt_sheet_business " +
+                "where sheet_id=(select id from dt_sheets where sheet_no=?))";
+
+        List<Record> records = Db.find(sql, sheet_no);
+
+        return records;
+    }
+
+    /**
+     * 退单的规格信息
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> backSpecInfo(String sheet_no) {
+
+        String sql = "select order_id,img_url,goods_title,spec_text,real_price,quantity,real_price*quantity as all_money from dt_order_goods where back_order_id=(select back_order_id from dt_sheet_business " +
+                "where sheet_id=(select id from dt_sheets where sheet_no=?))";
+
+        List<Record> records = Db.find(sql,sheet_no);
+
+        return records;
+    }
+
+    /**
+     * 查询发货信息
+     *
+     * @param sheet_no
+     * @return
+     */
+    public Record shipAddress(String sheet_no) {
+
+        String sql = "select name,telephone,address,code from dt_shop_expensesInfo " +
+                "where shop_id = " +
+                "(select shop_id from dt_sheet_business where sheet_id=" +
+                "(select id from dt_sheets where sheet_no=?))";
+
+        Record record = Db.findFirst(sql, sheet_no);
+
+        return record;
+    }
+
+    /**
+     * 查询物流信息
+     *
+     * @param sheet_no
+     * @return
+     */
+    public Record logisticsInfo(String sheet_no) {
+
+        String sql = "select  g.express_no,e.title,convert(varchar(19),g.express_time,20) express_time  from  dt_order_goodinfo g,dt_express e where g.express_id=e.id and g.order_id = " +
+                "(select order_id from dt_sheet_business where sheet_id =(select id from dt_sheets where sheet_no=?))";
+
+        Record record = Db.findFirst(sql, sheet_no);
+
+        return record;
+    }
+
+    /**
+     * 根据订单id查询订单号，评价时间，买家昵称
+     * @param order_id
+     * @return
+     */
+    public Record ordersInfo (Integer order_id) {
+
+        String sql = "select top 1 o.order_no,u.user_name,convert(varchar(19),c.add_time,20) add_time from dt_orders o " +
+                "left join dt_users u on o.user_id=u.id left join dt_order_comment c on o.id=c.order_id where o.id=? order by c.add_time desc";
+
+        Record record = Db.findFirst(sql,order_id);
+
+        return record;
+    }
+
+    //根据sheet_no查询出用户id和商家id
+    public Record userShopInfo(String sheet_no) {
+
+        String sql = "select id,order_no,user_id,shop_user_id from dt_orders where id= " +
+                "(select order_id from dt_sheet_business where sheet_id = " +
+                "(select id from dt_sheets where sheet_no = ?))";
+        Record record = Db.findFirst(sql, sheet_no);
+
+        return record;
+    }
+
+    /**
+     * 根据传入的sheet_no查出用户的昵称和电话
+     *
+     * @param sheet_no
+     * @return
+     */
+    public Record userInfo(String sheet_no) {
+
+        Record rec = userShopInfo(sheet_no);
+        String sql = "select user_name,mobile from dt_users where id=? ";
+        Record record = Db.findFirst(sql, rec.get("user_id"));
+
+        return record;
+    }
+
+    /**
+     * 根据传入的sheet_no查出商家的名称和电话
+     *
+     * @param sheet_no
+     * @return
+     */
+    public Record shopInfo(String sheet_no) {
+
+        Record rec = userShopInfo(sheet_no);
+        String sql = "select name,mobile from dt_user_role_shopinfo where user_id= ?";
+        Record record = Db.findFirst(sql, rec.get("shop_user_id"));
+
+        return record;
+    }
+
+    /**
+     * 店铺评分
+     * @param order_id
+     * @return
+     */
+    public Record shopCommentScore(Integer order_id) {
+
+        String sql = "select top 1 order_id,service_review_score,pack_review_score,distribution_review_score  from dt_order_comment where order_id=? order by add_time desc";
+
+        Record record = Db.findFirst(sql,order_id);
+
+        return record;
+    }
+
+
+    /**
+     * 根据订单号查询商品评分信息
+     * @param order_id
+     * @return
+     */
+    public List<Record> comment(String order_id){
+        List<Record> shopRecord=new ArrayList<Record>();
+        List<Record> shopCommentInfo=new ArrayList<Record>();
+        shopRecord=Db.find("SELECT * FROM dbo.dt_order_goods WHERE order_id = ?",order_id);
+        for(Record x : shopRecord){
+            int i=1;
+            shopCommentInfo=Db.find("SELECT * FROM dt_article_comment WHERE order_id = ?",x.get("id"));
+            for(Record xx : shopCommentInfo){
+                xx.set("i",Integer.valueOf(i).intValue());
+                i++;
+            }
+            x.set("shopRecord", shopCommentInfo);
+        }
+
+        return shopRecord;
+    }
+
+    /**
+     * 添加举报
+     * @param sheetInfo
+     * @return
+     */
+    public String saveShopReport(SheetInfoParam sheetInfo){
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String stu="";
+        try{
+		/*工单主表*/
+            Record sheet = new Record();
+            //WorkerNumberUtil.getcodeReportNo(sheetInfo.getCodeReport()).get(0).get("title");
+            sheet.set("sheet_no", WorkerNumberUtil.GeneratWorkerNumber(sheetInfo.getReportTitle()));
+            sheet.set("status",3);
+            sheet.set("type_code",sheetInfo.getReportType());
+            sheet.set("sponsor_id",sheetInfo.getReportUserId());
+            sheet.set("sponsor",sheetInfo.getReportUser());
+            sheet.set("sponsor_type",2);
+            sheet.set("sponsor_contact",sheetInfo.getSponsor_contact());
+            sheet.set("start_time",sdf.format(new Date()));
+            sheet.set("source_code","02_01");
+            sheet.set("priority_level",1);
+            sheet.set("is_push",0);
+            Db.save("dt_sheets",sheet);
+
+		/*保存工单资料表*/
+            Record sheetData = new Record();
+            sheetData.set("sheet_id",sheet.get("id"));
+            sheetData.set("descr",sheetInfo.getDescr());
+            sheetData.set("pics",sheetInfo.getPics());
+            sheetData.set("add_time",sdf1.format(new Date()));
+            sheetData.set("submitter",sheetInfo.getReportUser());
+            sheetData.set("submitter_id",sheetInfo.getReportUserId());
+            sheetData.set("submitter_type","Shopper");
+            Db.save("dt_sheet_info",sheetData);
+
+		/*工单业务关系表*/
+            Record sheetRelation = new Record();
+            sheetRelation.set("sheet_id",sheet.get("id"));
+            sheetRelation.set("order_id",0);
+            sheetRelation.set("back_order_id",0);
+            sheetRelation.set("shop_user_id",0);
+            sheetRelation.set("shop_id",0);
+            sheetRelation.set("article_id",0);
+            Db.save("dt_sheet_business",sheetRelation);
+
+		/*工单流程记录*/
+
+            Record flowLog = new Record();
+            flowLog.set("sheet_id", sheet.get("id")).set("opr_time", sdf.format(new Date())).set("opr_type", 3).set("result", "处理中").set("descr", "商家提交举报单").set("is_see", 0);
+            Db.save("dt_sheet_flowlog",flowLog);
+            stu = "SUCCESS";
+        }catch(Exception e){
+            stu = "ERROR";
+            e.printStackTrace();
+        }
+        return stu;
+    }
+
+    /**
+     * 添加建议
+     * @param sheetInfo
+     * @return
+     */
+    public String saveShopSuggestion(SheetInfoParam sheetInfo){
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String stu="";
+        try{
+		/*工单主表*/
+            Record sheet = new Record();
+
+            sheet.set("sheet_no", WorkerNumberUtil.GeneratWorkerNumber(sheetInfo.getReportTitle()));
+            sheet.set("status",3);
+            sheet.set("type_code",sheetInfo.getReportType());
+            sheet.set("sponsor_id",sheetInfo.getReportUserId());
+            sheet.set("sponsor",sheetInfo.getReportUser());
+            sheet.set("sponsor_type",2);
+            sheet.set("sponsor_contact",sheetInfo.getSponsor_contact());
+            sheet.set("start_time",sdf.format(new Date()));
+            sheet.set("source_code","02_02");
+            sheet.set("priority_level",1);
+            sheet.set("is_push",0);
+            Db.save("dt_sheets",sheet);
+
+		/*保存工单资料表*/
+            Record sheetData = new Record();
+            sheetData.set("sheet_id",sheet.get("id"));
+            sheetData.set("descr",sheetInfo.getDescr());
+            sheetData.set("pics",sheetInfo.getPics());
+            sheetData.set("add_time",sdf1.format(new Date()));
+            sheetData.set("submitter",sheetInfo.getReportUser());
+            sheetData.set("submitter_id",sheetInfo.getReportUserId());
+            sheetData.set("submitter_type","Shopper");
+            Db.save("dt_sheet_info",sheetData);
+
+        /*工单业务关系表*/
+            Record sheetRelation = new Record();
+            sheetRelation.set("sheet_id",sheet.get("id"));
+            sheetRelation.set("order_id",0);
+            sheetRelation.set("back_order_id",0);
+            sheetRelation.set("shop_user_id",0);
+            sheetRelation.set("shop_id",0);
+            sheetRelation.set("article_id",0);
+            Db.save("dt_sheet_business",sheetRelation);
+
+		/*工单流程记录*/
+
+            Record flowLog = new Record();
+            flowLog.set("sheet_id", sheet.get("id")).set("opr_time", sdf.format(new Date())).set("opr_type", 3).set("result", "处理中").set("descr", "商家提交建议单");
+            Db.save("dt_sheet_flowlog",flowLog);
+            stu = "SUCCESS";
+        }catch(Exception e){
+            stu = "ERROR";
+            e.printStackTrace();
+        }
+        return stu;
+    }
+
+
+    /**
+     * 获取建议或举报的类型
+     * @param short_title
+     */
+    public List<Record> getSheetType(String short_title) {
+
+        String sql = "select id,code,title,short_title from dt_sheet_type where layer=2 and short_title=?";
+
+        List<Record> records = Db.find(sql,short_title);
+
+        return records;
+    }
+
+    /**
+     * 消息通知
+     * @param shop_id
+     * @return
+     */
+    public List<Record> getMessageInfo(Integer shop_id) {
+
+        String sql = "select id,post_user_id,accept_user_id,title,convert(varchar(19),post_time,20) post_time,picUrl from dt_user_message where  title like '%仲裁结果%' and accept_user_role_type='Shop'  and accept_user_id=?";
+
+        List<Record> records = Db.find(sql,shop_id);
+
+        return  records;
+    }
+
+    /**
+     * 删除消息通知
+     * @param id
+     * @return
+     */
+    public boolean delMessageInfo(Integer id) {
+
+        return Db.deleteById("dt_user_message",id);
+    }
+
+}

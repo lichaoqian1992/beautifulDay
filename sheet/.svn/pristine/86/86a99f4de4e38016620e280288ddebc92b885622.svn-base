@@ -1,0 +1,5 @@
+package com.manji.sheet.intercepter;
+
+public class LocalIntercepter {
+
+}

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>交易纠纷</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/feedback-page.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/trade_dispute_list.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/informant_center.css" />
+	</head>
+
+	<body class="trade_dispute_list">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="closePage()"></a>
+			<h1 class="mui-title"><i class="i1" onclick="closePage()">关闭</i>交易纠纷</h1>
+		</header>
+		<div class="trade_dispute_state">
+			<div class="state_apply1 state_apply2">
+				<span class="span_active">可申请</span>
+			</div>
+			<div class="state_apply1 state_apply3">
+				<span>已申请</span>
+			</div>
+		</div>
+		<div class="mui-content">
+           <div class="state1_container">
+           	<ul class="state1_ul">
+           	#for(x : order)
+           		#if(x.biaoshi == "1")
+           		<li class="state1_li">
+           			<div class="item_top">
+           				<span class="span1">订单号: #(x.order_no)</span>
+           				<a class="a1" href="">#(x.type)</a>
+           			</div>
+           			<div class="item_content" id="ww" onclick="chart(#(x.id))">
+           				#for(y : x.pics.split(","))
+           					#if(for.size <2)
+	           					<img src="#(y)"/>
+	           					<div class="text">
+		           					<p class="p1">#(x.name.split(",")[0])</p>
+		           					<p class="p2">数量x#(x.number.split(",")[0])</p>
+		           				</div>
+	           				#elseif(for.size>=2 && for.size<=4)
+	           					<img src="#(y)"/>
+	           				#elseif(for.size>4)
+	           				...
+	           				#end
+	           			#end
+           			</div>
+           			<div class="item_bottom">
+           				<span class="span1">下单时间: #(x.add_time)</span>
+           				<a class="a1" onclick="shenqing('#(x.order_no)')">申请</a>
+           			</div>
+           		</li>
+           		#end
+           	#end
+           	</ul>
+           </div>
+           <div class="state2_container">
+           	 <ul class="state2_ul">
+           	 	#for(x : list)
+           	 	<li class="state2_li" onclick="showDetails('#(x.sheet_no)','06')">
+           			<div class="item_top">
+           				<span class="span1">纠纷单号: #(x.sheet_no)</span>
+           				<a class="a1" href="">
+           					#if(x.status == "1")
+	        					待受理
+	        				#elseif(x.status == "2")
+	        					不受理
+	        				#elseif(x.status == "3" || x.status == "4")
+	        					处理中
+	        				#elseif(x.status == "5")
+	        					已完成
+	        				#elseif(x.status == "6")
+	        					已解决
+	        				#end
+           				</a>
+           			</div>
+           			<div class="item_content">
+           				#for(y : x.pics.split(","))
+           					#if(for.size <2)
+	           					<img src="#(y)"/>
+	           					<div class="text">
+		           					<p class="p1">#(x.name.split(",")[0])</p>
+		           					<p class="p2">数量x#(x.number.split(",")[0])</p>
+		           				</div>
+	           				#elseif(for.size>=2 && for.size<=4)
+	           					<img src="#(y)"/>
+	           				#elseif(for.size>4)
+	           				...
+	           				#end
+	           			#end	
+           			</div>
+           			<div class="item_bottom">
+           				<span class="span1">订单编号: #(x.order_no)</span>
+           			</div>
+           	 	</li>
+           	 	#end
+           	 </ul>
+           </div>
+		</div>
+		<div class="btn_tip_content3">
+			<img class="img1" src="#(ctx)/static/shopApp/images/report_center_icon4.png"/>
+			<p class="p1" id="content"></p>
+		</div>
+		
+		<script type="text/javascript" src="#(ctx)/static/app/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/trade_dispute_list.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/my_suggest.js"></script>
+		<script type="text/javascript">
+			var browser = { 
+	           versions: function() { 
+	               var u = navigator.userAgent; 
+	               return { 
+	                   trident: u.indexOf('Trident') > -1, //IE内核 
+	                   presto: u.indexOf('Presto') > -1, //opera内核 
+	                   webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+	                   gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+	                   mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+	                   ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+	                   android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+	                   iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+	                   iPad: u.indexOf('iPad') > -1, //iPad 
+	                   webApp: u.indexOf('Safari') > -1 //Safari 
+	               }; 
+	           }() 
+	        }
+			function chart(orderId) {
+				var jsonstr = '{"action":"order_details","data":{"orderId":"'+orderId+'"}}';
+				console.log(jsonstr);
+				if (browser.versions.ios ||
+					browser.versions.iPhone ||
+					browser.versions.iPad) {
+					// alert("");
+					window.webkit.messageHandlers.Native.postMessage(jsonstr);
+				}
+				if (browser.versions.android) {
+					window.android.clickOnAndroid(jsonstr);
+				}
+			}
+		function closePage() {
+			var jsonstr = '{"action":"close"}';
+			console.log(jsonstr);
+			if (browser.versions.ios ||
+				browser.versions.iPhone ||
+				browser.versions.iPad) {
+				// alert("");
+				window.webkit.messageHandlers.Native.postMessage(jsonstr);
+			}
+			if (browser.versions.android) {
+				// alert("");
+				window.android.clickOnAndroid(jsonstr);
+			}
+		}
+		/*点击申请的时候*/
+		function shenqing(order_no){
+			
+			//1.先判断该订单是否还可以发起交易纠纷
+			$.ajax({
+				type:"get",
+				url:"/sheet/buyersApp/check",
+				dataType:"json",
+				data:{
+					order_no:order_no
+				},success:function(data){
+					if(data.message == "SUCCESS"){
+						//可以申请
+						window.location.href = "/sheet/buyersApp/disputeInfo?order_no="+order_no;
+					}else{
+						//不可申请
+						$("#content").html("该订单已全部申请过交易纠纷了");
+						$(".btn_tip_content3").show();
+						setTimeout(function(){
+							$(".btn_tip_content3").hide();
+						}, 1000);
+						return;
+					}
+				}
+				
+			});
+			
+		}
+		</script>
+	</body>
+
+</html>

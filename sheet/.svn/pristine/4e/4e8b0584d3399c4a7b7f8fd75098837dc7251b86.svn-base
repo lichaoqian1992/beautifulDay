@@ -1,0 +1,49 @@
+<div class="kf_block_box">
+    <div class="kf_form_title">
+        <span class="kf_form_content kf_icon kf_icon_title">工单信息</span>
+    </div>
+    <div class="kf_workOrder">
+        <div class="kf_workOrder_type">
+            <div class="kf_workOrder_type_content">
+                待受理
+            </div>
+        </div>
+        <div class="kf_workOrder_info">
+            <div class="kf_workOrder_info_list">
+                <div class="kf_workOrder_info_item">
+                    <span>工单编号：#(WorkNumber.sheet_no)</span>
+                    <span>发起时间：#(WorkNumber.start_time)</span>
+                    <span>工单类型：#(WorkNumber.aClassType)</span>
+                    <span>纠纷类型：#(WorkNumber.typeTitle)</span>
+                    <span>纠纷对象：#(WorkNumber.name)</span>
+                </div>
+                <div class="kf_workOrder_info_item">
+                    <span>信息来源：#(WorkNumber.fromTitle)</span>
+                    <span>发起人类型：#(WorkNumber.sponsor_type)</span>
+                    <span>发起人：#(WorkNumber.sponsor)</span>
+                    <span>发起人联系方式：#(WorkNumber.sponsor_contact)</span>
+                    <span>缓急程度：#(WorkNumber.priority_level)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    #for(x : WorkInfo)
+    <div class="kf_problem">
+        <div class="kf_problem_user">
+            <label>#(x.submitter)</label>
+            <span>#(x.add_time)</span>
+        </div>
+        <div class="kf_group">
+            <span class="kf_group_title alsotitle">问题描述：</span>
+            <div class="kf_group_content">
+                #(x.descr)
+            </div>
+        </div>
+        <div class="kf_group">
+            <span class="kf_group_title">图片：</span>
+            <input type="hidden" value="#(x.pics)" class="pics"/>
+            <div class="kf_group_content"></div>
+        </div>
+    </div>
+    #end
+</div>

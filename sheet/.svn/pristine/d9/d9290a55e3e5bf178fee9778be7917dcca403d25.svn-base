@@ -1,0 +1,106 @@
+<div class="kf_block_box">
+    <div class="kf_form_title">
+        <span class="kf_form_content kf_icon kf_icon_electricity">仲裁结果</span>
+    </div>
+    <div class="kf_form_result">
+        <div class="kf_group">
+            <label class="kf_group_title"><i class="kf_color_danger">*</i>仲裁描述：</label>
+            <div class="kf_group_content">
+                经过调查核实，针对该举报情况核查情况属实、并依照满集网商家规定对该商家进行扣取积分1分并罚款20元的处罚。
+            </div>
+        </div>
+        <div class="kf_group">
+            <span class="kf_group_title">&nbsp;</span>
+            <div class="kf_group_content kf_group_text_tips kf_float_left">
+                <ul class="kf_upload_img">
+                    <li class="kf_upload_item">
+										<span class="kf_upload_box">
+											<img src="images/shanchu.png">
+										</span>
+                    </li>
+                    <li class="kf_upload_item">
+										<span class="kf_upload_box">
+											<img src="images/shanchu.png">
+										</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="kf_block_box">
+    <div class="kf_form_title">
+        <span class="kf_form_content kf_icon kf_icon_electricity">执行处罚</span>
+    </div>
+    <div class="kf_form_penalize_box">
+        <div class="kf_form_penalize">
+            <div class="kf_form_penalize_content">
+                <label class="kf_form_penalize_content_title">
+                    仲裁结果执行：
+                </label>
+                <div class="kf_form_penalize_list">
+                    <div class="kf_form_penalize_item">
+                        <label class="kf_checkbox active">
+                            <input type="checkbox" />扣信誉值：230分
+                        </label>
+                    </div>
+                    <div class="kf_form_penalize_item ">
+                        <label class="kf_checkbox active">
+                            <input type="checkbox" />扣保证金：230元
+                        </label>
+                    </div>
+                    <div class="kf_form_penalize_item">
+                        <label class="kf_checkbox active">
+                            <input type="checkbox" />赔&emsp;&emsp;偿：230元
+                        </label>
+                    </div>
+                    <div class="kf_form_penalize_item">
+                        <label class="kf_checkbox active">
+                            <input type="checkbox" /><i class="kf_color_danger">强制关店</i>
+                        </label>
+                    </div>
+                    <div class="kf_form_penalize_item">
+                        <label class="kf_checkbox active">
+                            <input type="checkbox" /><i class="kf_color_danger">冻结店铺财务账号（不能提现）</i>
+                        </label>
+                    </div>
+                    <div class="kf_form_penalize_item">
+                        <label class="kf_checkbox active">
+                            <input type="checkbox" />强制下架
+                        </label>
+                    </div>
+                </div>
+
+                <div class="kf_form_penalize_goods_list">
+                    <label>已选择商品</label>
+                    <div class="kf_form_penalize_item">
+                        <label class="kf_checkbox active">
+                            <img src="images/shanchu.png" />
+                            安踏2016年新款透气跑鞋全场大甩卖
+                        </label>
+                    </div>
+                    <div class="kf_form_penalize_item">
+                        <label class="kf_checkbox active">
+                            <img src="images/shanchu.png" />
+                            安踏2016年新款透气跑鞋全场大甩卖
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kf_form_penalize_execute">
+            <div class="kf_form_penalize_execute_btn">
+                <a class="kf_form_penalize_execute_btn_a kf_form_penalize_execute_btn_a_no"></a>
+            </div>
+            <div class="kf_form_penalize_execute_tips">
+                <label>温馨提示：</label>
+                <p>1、请仔细核对执行仲裁是否于仲裁详细一至</p>
+                <p>2、必须先“执行仲裁“才能”推送结果“</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="kf_form_footer">
+    <button type="button" class="kf_btn kf_btn_grey_main kf_btn_disabled">已推送结果</button>
+    <button type="button" class="kf_btn">返 回</button>
+</div>

@@ -1,0 +1,22 @@
+<div class="kf_block_box">
+    <div class="kf_form_title">
+        <span class="kf_form_content kf_icon kf_icon_electricity">仲裁结果</span>
+    </div>
+    <div class="kf_form_result">
+        <div class="kf_group">
+            <label class="kf_group_title"><i class="kf_color_danger">*</i>受&emsp;&emsp;理：</label>
+            <div class="kf_group_content">
+              #(processLog.result)
+            </div>
+        </div>
+        <div class="kf_group">
+            <label class="kf_group_title"><i class="kf_color_danger">*</i>说&emsp;&emsp;明：</label>
+            <div class="kf_group_content">
+                #(processLog.descr)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="kf_form_footer">
+    <button type="button" class="kf_btn">返 回</button>
+</div>

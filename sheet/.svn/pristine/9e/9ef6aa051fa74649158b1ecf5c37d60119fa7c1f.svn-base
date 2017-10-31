@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>补充资料</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/feedback-page.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/report_center.css" />
+	</head>
+
+	<body class="report_center">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"> </a>
+			<h1 class="mui-title">补充资料</h1>
+		</header>
+		<div class="mui-content">
+			<div class="content">
+				<div class="report_problem">
+					<textarea placeholder="您可以继续对举报内容进行补充说明" maxlength="500"></textarea>
+					<div class="text_total"><span class="span1">0</span><span class="span2">/500</span></div>
+				</div>
+				<div class="report_img feedback" id="feedback">
+					<p class="report_img_title">上传图片 <span class="span1">(最多可上传5张)</span></p>
+					<div id='image-list' class="row image-list">
+					</div>
+				</div>
+				<div class="update_btn">提交</div>
+			
+			</div>
+			<div class="add_mask_all">
+				<div class="add_mask_layer"></div>
+				<div class="add_mask_content">
+					<div class="add_mask_content_text">已经补充完毕并确认提交嘛?</div>
+					<div class="add_mask_content_bottom">
+						<div class="add_mask_cancel">取消</div>
+						<div class="add_mask_confirm">确定</div>
+					</div>
+				</div>
+			</div>
+			<div class="add_mask_success">提交成功</div>
+
+		</div>
+
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/mui.min.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/feedback-page.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/report_center.js"></script>
+
+	</body>
+
+</html>

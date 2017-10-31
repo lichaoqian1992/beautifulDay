@@ -1,0 +1,277 @@
+package com.manji.sheet.controller;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.jfinal.core.Controller;
+import com.jfinal.json.JFinalJson;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
+import com.manji.sheet.model.common.SheetResult;
+import com.manji.sheet.model.enums.ResultEmuns;
+import com.manji.sheet.service.BuyerPcService;
+import com.manji.sheet.utils.DatesUtils;
+
+public class BuyerPcController extends Controller{
+	
+	private static final Logger log = Logger.getLogger(BuyerPcController.class);
+	
+	private BuyerPcService service = new BuyerPcService();
+	
+	/*
+	 * 客服系统 -建议
+	 * */
+	/**
+	 * 我的工单
+	 */
+	@SuppressWarnings("static-access")
+	public void mySheet(){
+		
+		SheetResult result = new SheetResult();
+		//获取参数
+		String userId = getPara("user_id");
+		String pageNum = getPara("page_num");
+		String pageSize = getPara("page_size");
+		String type = getPara("sheet_type");
+		String callBack = getPara("callback");
+		//判断参数
+		if(userId == null || userId.equals("")){
+			result.setCode("403");
+			result.setMessage("参数user_id不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		if(pageNum == null || pageNum.equals("")){
+			result.setCode("403");
+			result.setMessage("参数page_num不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		if(pageSize == null || pageSize.equals("")){
+			result.setCode("403");
+			result.setMessage("参数page_size不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		if(type == null || type.equals("")){
+			result.setCode("403");
+			result.setMessage("参数sheet_type不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		if(callBack == null || callBack.equals("")){
+			result.setCode("403");
+			result.setMessage("参数callback不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		log.info("=====调用mySuggest接口开始，调用开始时间："+new DatesUtils().time()+"参数值：userId="+userId+",pageNum="+pageNum+",pageSize="+pageSize+"=============");
+		
+		Page<Record> list = service.mySuggest(userId, pageNum, pageSize, type);
+		
+		if(list != null && list.getList().size() > 0){
+			result.setCode("200");
+			result.setMessage(ResultEmuns.getMessageByCode("200"));
+			result.setResult(list);
+		}else{
+			result.setCode("404");
+			result.setMessage(ResultEmuns.getMessageByCode("404"));
+		}
+		
+		log.info("=====调用mySuggest接口结束，调用结束时间："+new DatesUtils().time()+"日志信息："+JFinalJson.getJson().toJson(result).toString()+"=============");
+
+		renderText(callBack+"("+JFinalJson.getJson().toJson(result).toString()+")");
+	}
+	/**
+	 * 新增工单
+	 *
+	 */
+	@SuppressWarnings("static-access")
+	public void addSheet(){
+		
+		SheetResult result = new SheetResult();
+		
+		//获取参数
+		String userId = getPara("user_id");
+		String code = getPara("code");
+		String descr = getPara("descr");
+		String pics = getPara("pics");
+		String type = getPara("sheet_type");//工单类型
+		String callBack = getPara("callback");
+		//校验参数
+		if(userId == null || userId.equals("")){
+			result.setCode("403");
+			result.setMessage("参数user_id不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		if(code== null || code.equals("")){
+			result.setCode("403");
+			result.setMessage("参数code不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		if(descr  == null || descr.equals("")){
+			result.setCode("403");
+			result.setMessage("参数descr不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		/*if(pics   == null || pics.equals("")){
+			result.setCode("403");
+			result.setMessage("参数pics不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}*/
+		if(type   == null || type.equals("")){
+			result.setCode("403");
+			result.setMessage("参数sheet_type不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		if(callBack   == null || callBack.equals("")){
+			result.setCode("403");
+			result.setMessage("参数callBack不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+
+		log.info("==========调用addSuggest接口开始，开始时间："+new DatesUtils().time()+"日志信息："+JFinalJson.getJson().toJson(result).toString()+"===============");
+	
+		String sheet_id = service.saveSheet(userId, code, descr, pics, type);
+		//返回消息
+		if(!sheet_id.equals("")){
+			result.setCode("200");
+			result.setMessage(ResultEmuns.getMessageByCode("200"));
+			result.setResult("工单id:"+sheet_id);
+		}else{
+			result.setCode("500");
+			result.setMessage(ResultEmuns.getMessageByCode("500"));
+			result.setResult("系统错误！");
+		}
+		log.info("=====调用addSuggest接口结束，调用结束时间："+new DatesUtils().time()+"日志信息："+JFinalJson.getJson().toJson(result).toString()+"=============");
+		
+		renderText(callBack+"("+JFinalJson.getJson().toJson(result).toString()+")");
+		
+	}
+	
+	/**
+	 * 查询建议详情
+	 */
+	@SuppressWarnings("static-access")
+	public void sheetDetail(){
+		
+		SheetResult result = new SheetResult();
+		//获取参数
+		String sheet_id = getPara("sheet_id");
+		String callBack = getPara("callback");
+		if(sheet_id == null || sheet_id.equals("")){
+			result.setCode("403");
+			result.setMessage("参数sheet_id不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		if(callBack == null || callBack.equals("")){
+			result.setCode("403");
+			result.setMessage("参数callback不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		log.info("=======调用sheettDetail接口开始，调用时间："+new DatesUtils().time()+"参数值：sheet_id="+sheet_id+"============");
+		
+		Record sheet = service.findSheetDetail(sheet_id);
+		
+		if(sheet != null){
+			result.setCode("200");
+			result.setMessage(ResultEmuns.getMessageByCode("200"));
+			result.setResult(sheet);
+		}else{
+			result.setCode("404");
+			result.setMessage(ResultEmuns.getMessageByCode("404"));
+			result.setResult(sheet);
+		}
+		log.info("=======调用sheettDetail接口结束，结束时间："+new DatesUtils().time()+"日志信息："+JFinalJson.getJson().toJson(result).toString()+"============");
+		
+		renderText(callBack+"("+JFinalJson.getJson().toJson(result).toString()+")");
+		
+	}
+	
+	
+	/*
+	 * 客服系统 -交易纠纷
+	 * */
+	/**
+	 * 获取工单的类型
+	 */
+	@SuppressWarnings("static-access")
+	public void findSheetType(){
+		
+		SheetResult result = new SheetResult();
+		//获取参数
+		String type = getPara("sheet_type");
+		String callBack = getPara("callback");
+		//判断参数是否为空
+		if(type   == null || type.equals("")){
+			result.setCode("403");
+			result.setMessage("参数sheet_type不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		if(callBack   == null || callBack.equals("")){
+			result.setCode("403");
+			result.setMessage("参数callBack不能为空！");
+			renderText("返回消息："+JFinalJson.getJson().toJson(result).toString());
+			return;
+		}
+		
+		log.info("==========调用findSheetType接口开始，开始时间："+new DatesUtils().time()+"日志信息："+JFinalJson.getJson().toJson(result).toString()+"===============");
+		
+		//获取工单的类型
+		List<Record> list = service.findSheetType(type);
+		
+		if(list != null && list.size() > 0){
+			result.setCode("200");
+			result.setMessage(ResultEmuns.getMessageByCode("200"));
+			result.setResult(list);
+		}else{
+			result.setCode("404");
+			result.setMessage(ResultEmuns.getMessageByCode("404"));
+			result.setResult(list);
+		}
+		log.info("=======调用findSheetType接口结束，结束时间："+new DatesUtils().time()+"日志信息："+JFinalJson.getJson().toJson(result).toString()+"============");
+		
+		renderText(callBack+"("+JFinalJson.getJson().toJson(result).toString()+")");
+		
+	} 
+	/**
+	 * 给工单补充资料
+	 */
+	public void addData(){
+		
+		//获取参数
+		String userId = getPara("user_id");
+		String sheet_id = getPara("sheet_id");
+		String descr = getPara("descr");
+		String pics = getPara("pics");
+		String callBack = getPara("callback");
+		
+		//保存添加的资料
+		SheetResult result = service.addData(userId,sheet_id, descr, pics);
+		
+		renderText(callBack+"("+JFinalJson.getJson().toJson(result).toString()+")");
+	}
+	/**
+	 * 自行解决
+	 */
+	public void resovled(){
+		
+		
+		
+	}
+	
+	/*
+	 * 客服系统 -举报
+	 * */
+	
+}

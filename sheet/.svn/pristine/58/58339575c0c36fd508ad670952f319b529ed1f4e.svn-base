@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>意见建议</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/opinon_suggest.css" />
+	</head>
+
+	<body class="opinion_suggest">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"> </a>
+			<h1 class="mui-title">意见建议</h1>
+		</header>
+		<div class="mui-content">
+           <div class="content">
+           	 <div class="opinion_suggest_time">
+           	 	<span class="span1">建议时间:</span><span>#(sheet.start_time)</span>
+           	 </div>
+           	 <div class="opinion_suggest_type">
+           	 	<span class="span1">建议类型:</span><span>#(type.title)</span>
+           	 </div>
+           	 <div class="opinion_suggest_detail">
+           	 	  <span class="span1">详细描述:</span>
+           	 	  <div class="detail_text">
+           	 	  	<p class="p1">#(info.descr)</p>
+					  <!--判断有无图片-->
+					  #if(info.pics!="")
+					  <!--开始分割图片-->
+					  #for(img:info.pics.split(","))
+           	 	  	<img class="img1" src="#(img)"/>
+					  #end
+					  #end
+           	 	  </div>
+           	 	  
+           	 </div>
+			   #if(sheet.status=='5')
+           	 <div class="opinion_suggest_result">
+           	 	  <span class="span1">满集答复:</span>
+           	 	  <p class="p1">#(sheetDetail.content)</p>
+           	 </div>
+			   #end
+           	 <div class="footer_text">
+           	 	<p>感谢您提出的宝贵意见！ </p>
+           	 	<p> 联系电话：<a class="p_span1 a1"  onclick="dmobile()">400-6766-999</a></p>
+           	 </div>
+           </div>
+			<!--<div class="tel_mask">-->
+				<!--<div class="center_mask"></div>-->
+				<!--<div class="mask_content">-->
+					<!--<p class="p1">400-6766-999</p>-->
+					<!--<input type="hidden" id="dh" value="4006766999"/>-->
+					<!--<div class="mask_content_bottom">-->
+						<!--<a class="a a1" href="javascript:void(0)">取消</a>-->
+						<!--<a class="a a2" onclick="dmobile()">呼叫</a>-->
+					<!--</div>-->
+				<!--</div>-->
+			<!--</div>-->
+		</div>
+
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/mui.min.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/service.js"></script>
+		<!--拨打电话-->
+		<script>
+			var browser = {
+				versions: function() {
+					var u = navigator.userAgent;
+					return {
+						trident: u.indexOf('Trident') > -1, //IE内核
+						presto: u.indexOf('Presto') > -1, //opera内核
+						webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+						gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko
+						mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+						ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios
+						android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android
+						iPhone: u.indexOf('iPhone') > -1 , //iPhone
+						iPad: u.indexOf('iPad') > -1, //iPad
+						webApp: u.indexOf('Safari') > -1 //Safari
+					};
+				}()
+			}
+			/**
+			 * 关闭页面
+			 */
+			function dmobile() {
+				var dh=$('#dh').val();
+				var jsonstr = '{"action":"mobile","mobile":"'+dh+'"}';
+				console.log(jsonstr);
+				if (browser.versions.ios ||
+						browser.versions.iPhone ||
+						browser.versions.iPad) {
+					// alert("");
+					window.webkit.messageHandlers.Native.postMessage(jsonstr);
+				}
+				if (browser.versions.android) {
+					// alert("");
+					window.android.clickOnAndroid(jsonstr);
+				}
+			}
+		</script>
+	</body>
+
+</html>

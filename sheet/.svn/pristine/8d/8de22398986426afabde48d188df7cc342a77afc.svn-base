@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>举报/建议</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/informant_suggest.css" />
+	</head>
+
+	<body class="informant_suggest">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" id="ww"></a>
+			<h1 class="mui-title">举报/建议</h1>
+		</header>
+		<div class="mui-content">
+			<div class="content_img1">
+				<img src="#(ctx)/static/app/images/back_icon1.png"/>
+			</div>
+			<div class="content_aside">
+				<a class="content_a" href="/sheet/buyersApp/myInfo?codeReport=01-02-03"><img src="#(ctx)/static/app/images/informant_icon1.png"/><br/><span>我的举报</span></a>
+				<a class="content_a" href="/sheet/buyersApp/myInfo?codeReport=05"><img src="#(ctx)/static/app/images/suggest_icon1.png"/><br/><span>我的建议</span></a>
+			</div>
+			
+		
+		</div>
+		<script type="text/javascript" src="#(ctx)/static/app/js/jquery-1.9.0.js"></script>
+		<script type="text/javascript">
+		$(function(){
+			var browser = { 
+	           versions: function() { 
+	               var u = navigator.userAgent; 
+	               return { 
+	                   trident: u.indexOf('Trident') > -1, //IE内核 
+	                   presto: u.indexOf('Presto') > -1, //opera内核 
+	                   webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核 
+	                   gecko: u.indexOf('Firefox') > -1, //火狐内核Gecko 
+	                   mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端 
+	                   ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios 
+	                   android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 
+	                   iPhone: u.indexOf('iPhone') > -1 , //iPhone 
+	                   iPad: u.indexOf('iPad') > -1, //iPad 
+	                   webApp: u.indexOf('Safari') > -1 //Safari 
+	               }; 
+	           }() 
+	        } 
+			$(".mui-action-back").click(function(){
+                    closePage();
+			})
+			function closePage() {
+				var jsonstr = '{"action":"close"}';
+				console.log(jsonstr);
+				if (browser.versions.ios ||
+					browser.versions.iPhone ||
+					browser.versions.iPad) {
+					// alert("");
+					window.webkit.messageHandlers.Native.postMessage(jsonstr);
+				}
+				if (browser.versions.android) {
+					// alert("");
+					window.android.clickOnAndroid(jsonstr);
+				}
+			}
+		})
+		</script>
+	</body>
+
+</html>

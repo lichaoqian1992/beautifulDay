@@ -1,0 +1,45 @@
+ #@pclayout() #define main()
+
+	<div class="kf_nav">
+		<span class="kf_nav_home kf_nav_item">首页</span>
+	</div>
+	<ul class="kf_content">
+		<li class="li1" onclick="location.href='/sheet/manage/list?status=acceptance&nav=nav1'">
+			<div class="kf_item_title">待受理工单</div>
+			<div class="kf_item_txt1">
+				当前总计<span class="kf_item_total">#(sheetStatistics.acceptance)</span>
+			</div>
+			<div class="kf_item_txt2">
+				今日新增<span class="kf_item_total">#(sheetStatisticsNewTime.acceptance)</span>
+			</div>
+		</li>
+		<li class="li2" onclick="location.href='/sheet/manage/list?status=already&nav=nav2'">
+			<div class="kf_item_title">处理中工单</div>
+			<div class="kf_item_txt1">
+				当前总计<span class="kf_item_total">#(sheetStatistics.already)</span>
+			</div>
+			<div class="kf_item_txt2">
+				今日新增<span class="kf_item_total">#(sheetStatisticsNewTime.already)</span>
+			</div>
+		</li>
+		<li class="li3" onclick="location.href='/sheet/manage/list?status=push&nav=nav3'">
+			<div class="kf_item_title">已处理工单</div>
+			<div class="kf_item_txt1">
+				当前总计<span class="kf_item_total">#(sheetStatistics.push)</span>
+			</div>
+			<div class="kf_item_txt2">
+				今日新增<span class="kf_item_total">#(sheetStatisticsNewTime.push)</span>
+			</div>
+		</li>
+	</ul>
+	
+	
+
+	
+	
+
+
+<script type="text/javascript" src="#(ctx)/static/pc/js/jquery-1.11.0.js"></script>
+
+
+#end

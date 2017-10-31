@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>交易纠纷</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/feedback-page.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/trade_dispute_list.css" />
+	</head>
+
+	<body class="trade_dispute_list">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title"><i class="i1">关闭</i>交易纠纷</h1>
+		</header>
+		<div class="trade_dispute_state">
+			<div class="state_apply1 state_apply2">
+				<span class="span_active">可申请</span>
+			</div>
+			<div class="state_apply1 state_apply3">
+				<span>已申请</span>
+			</div>
+		</div>
+		<div class="mui-content">
+           <div class="state1_container">
+           	<ul class="state1_ul">
+           	#for(x : order)
+           		#if(x.biaoshi == "1")
+           		<li class="state1_li">
+           			<div class="item_top">
+           				<span class="span1">下单号: #(x.order_no)</span>
+           				<a class="a1" href="">#(x.type)</a>
+           			</div>
+           			<div class="item_content">
+           				#for(y : x.pics.split(","))
+           					#if(for.size <2)
+	           					<img src="#(y)"/>
+	           					<div class="text">
+		           					<p class="p1">#(x.name.split(",")[0])</p>
+		           					<p class="p2">数量x#(x.number.split(",")[0])</p>
+		           				</div>
+	           				#elseif(for.size>=2 && for.size<=4)
+	           					<img src="#(y)"/>
+	           				#elseif(for.size>4)
+	           				...
+	           				#end
+	           			#end
+           			</div>
+           			<div class="item_bottom">
+           				<span class="span1">下单时间: #(x.add_time)</span>
+           				<a class="a1" href="/sheet/buyersApp/disputeInfo?order_no=#(x.order_no)">申请</a>
+           			</div>
+           		</li>
+           		#end
+           	#end
+           	</ul>
+           </div>
+           <div class="state2_container">
+           	 <ul class="state2_ul">
+           	 	#for(x : list)
+           	 	<li class="state2_li" onclick="showDetails('#(x.sheet_no)','06')">
+           			<div class="item_top">
+           				<span class="span1">纠纷单号: #(x.sheet_no)</span>
+           				<a class="a1" href="">
+           					#if(x.status == "1")
+	        					待受理
+	        				#elseif(x.status == "2")
+	        					不受理
+	        				#elseif(x.status == "3" || x.status == "4")
+	        					处理中
+	        				#elseif(x.status == "5")
+	        					已完成
+	        				#elseif(x.status == "6")
+	        					已解决
+	        				#end
+           				</a>
+           			</div>
+           			<div class="item_content">
+           				#for(y : x.pics.split(","))
+           					#if(for.size <2)
+	           					<img src="#(y)"/>
+	           					<div class="text">
+		           					<p class="p1">#(x.name.split(",")[0])</p>
+		           					<p class="p2">数量x#(x.number.split(",")[0])</p>
+		           				</div>
+	           				#elseif(for.size>=2 && for.size<=4)
+	           					<img src="#(y)"/>
+	           				#elseif(for.size>4)
+	           				...
+	           				#end
+	           			#end	
+           			</div>
+           			<div class="item_bottom">
+           				<span class="span1">订单编号: #(x.order_no)</span>
+           			</div>
+           	 	</li>
+           	 	#end
+           	 </ul>
+           </div>
+		</div>
+		<script type="text/javascript" src="#(ctx)/static/app/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/trade_dispute_list.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/my_suggest.js"></script>
+	</body>
+
+</html>

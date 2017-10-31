@@ -1,0 +1,7 @@
+.border-table {
+    border-collapse: collapse;
+    border: none;
+}
+.border-table td {
+    border: solid grey 1px;
+}

@@ -1,0 +1,108 @@
+<div class="kf_block_box">
+    <div class="kf_form_title">
+        <span class="kf_form_content kf_icon kf_icon_electricity">仲裁结果</span>
+    </div>
+	    <div class="kf_form_result">
+	    	<form action="/sheet/manage/handle"  id="chufa" enctype="multipart/form-data" method="POST" >
+		        <div class="kf_group">
+		            <label class="kf_group_title"><i class="kf_color_danger">*</i>仲裁描述：</label>
+		            <div class="kf_group_content kf_group_text_tips">
+		                <textarea class="kf_form_text kf_form_text_textarea_length" maxlength="500" name="explain" placeholder="请输入说明，最少10个字"></textarea>
+		                <span class="kf_form_text_number"><i>0</i>/500</span>
+		            </div>
+		        </div>
+		        <div class="kf_group">
+		            <span class="kf_group_title">&nbsp;</span>
+		            <div class="kf_group_content kf_group_text_tips kf_float_left">
+		                <ul class="kf_upload_img">
+		                    <span id="dd"></span >
+		                    <li class="kf_upload_item">
+								<span class="kf_upload_box"></span>
+		                        <a class="kf_uploat_item_close kf_hide" href="javascript:void(0);"></a>
+								<input type="file" name="file" id="doc" multiple="multiple"  style="width:150px;" onchange="javascript:setImagePreviews();" accept="image/*" />
+		                    </li>
+		                </ul>
+		               
+		                <span class="kf_form_text_number" style="bottom: 0;right: -35px;left: auto;"><i class="kf_color_danger shuzi">1</i>/5</span>
+		            </div>
+		        </div>
+		        <input type="hidden" name="sheetId" value="#(WorkNumber.id)"/>
+		        <input type="hidden" name="Ishandle" value="true"/>
+		        #if(WorkNumber.aClasscode!="false")
+			        <input type="hidden" name="reputation"/>
+			        <input type="hidden" name="bond"/>
+			        <input type="hidden" name="compensate"/>
+			        <input type="hidden" name="closedShop" value="false"/>
+			        <input type="hidden" name="frozen"/>
+			        <input type="hidden" name="shopId"/>
+			        <input type="hidden" name="aClasscode" value="true"/>
+		        #else
+		        	#if(WorkNumber.OneCode=="07")
+		        		<input type="hidden" name="evaluate" value="false"/>
+		        		<input type="hidden" name="pingjia" value="false"/>
+		        	#end
+		        	<input type="hidden" name="aClasscode" value="false"/>
+		        #end
+	    </form>
+	    </div>
+</div>
+#if(WorkNumber.aClasscode!="false")
+	<div class="kf_block_box">
+	    <div class="kf_form_title">
+	        <span class="kf_form_content kf_icon kf_icon_electricity">执行处罚</span>
+	        <label class="kf_checkbox kf_checkbox_orange">
+	            <input type="checkbox" />无处罚
+	        </label>
+	    </div>
+	    <div class="kf_form_penalize">
+	        <div class="kf_form_penalize_btn">
+	            <label class="kf_form_penalize_tips">
+	                <i>温馨提示：</i>请谨慎填写，填写后将不能修改
+	            </label>
+	            <button class="kf_form_penalize_button" type="button">填写处罚</button>
+	        </div>
+	        <div class="kf_form_penalize_content kf_hide">
+	            <label class="kf_form_penalize_content_title">
+	                仲裁结果执行：
+	                <a class="kf_form_penalize_edit" href="javascript:void(0);"></a>
+	            </label>
+	            <div class="kf_form_penalize_list chufaalso">
+	                
+	            </div>
+	            <div class="kf_form_penalize_goods_list chufashopalso">
+	               
+	            </div>
+	        </div>
+	    </div>
+	</div>
+#else
+	#if(WorkNumber.OneCode=="07")
+	<div class="kf_block_box">
+		<div class="kf_form_title">
+			<span class="kf_form_content kf_icon kf_icon_electricity">执行处罚</span>
+		</div>
+		<div class="kf_form_result">
+			<div class="kf_group">
+				<label class="kf_group_title"><i class="kf_color_danger">*</i>受&emsp;&emsp;理：</label>
+				<div class="kf_group_content">
+					<label class="kf_radio active">
+							<input type="radio" value="0" name=""/>维持原评价
+						</label>
+					<label class="kf_radio">
+							<input type="radio" value="1" name=""/>屏蔽该评价
+						</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	#end	
+#end
+<input type="hidden" class="shopUserId" value="#(articleBusiness.shop_user_id)"/>
+<input type="hidden" class="shopIdalso" value="#(articleBusiness.shop_id)"/>
+<input type="hidden" class="aClasscode" value="#(WorkNumber.aClasscode)"/>
+<input type="hidden" class="pingbi" value="#(orderComment)"/>
+<input type="hidden" class="codeTypeOne" value="#(WorkNumber.OneCode)"/>
+<div class="kf_form_footer">
+    <button type="button" class="kf_btn kf_form_ok #(disabled)" #(disabled)>确 定</button>
+    <button type="button" class="kf_btn" onclick="backBtn()">返 回</button>
+</div>

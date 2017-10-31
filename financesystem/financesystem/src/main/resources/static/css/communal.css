@@ -1,0 +1,7 @@
+/*公用的css*/
+@import url(style.css);
+@import url(newSelect.css);
+@import url(magic-check.css);
+/*提示框的css*/
+@import url(../../static/js/dialog/css/qikoo.css);
+@import url(../../static/js/dialog/css/store.css);

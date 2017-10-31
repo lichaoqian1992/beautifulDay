@@ -1,0 +1,51 @@
+package com.manji.sheet.intercepter;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
+
+import com.jfinal.aop.Interceptor;
+import com.jfinal.aop.Invocation;
+import com.jfinal.plugin.activerecord.Record;
+import com.manji.sheet.base.UrlCode;
+import com.manji.sheet.utils.HttpClientUtils;
+
+import net.sf.json.JSONObject;
+
+public class LocalIntercepter implements Interceptor {
+
+	@Override
+	public void intercept(Invocation inv) {
+		// TODO Auto-generated method stub
+		HttpSession session = inv.getController().getSession();
+		String token = inv.getController().getCookie("ssoToken");
+		if(session == null){
+			inv.getController().redirect("/");//跳转到登录页面
+		}else{
+			Record user = (Record) session.getAttribute("user");
+			if(user == null){
+				inv.getController().redirect("/");//跳转到登录页面
+			}else{
+				//验证token
+				String url_auth = UrlCode.URL_AUTH+"system=sheet&ssoToken="+token;
+				String authData = HttpClientUtils.postMethod(url_auth);
+				if(JSONObject.fromObject(authData).get("code").equals("0000")){
+					inv.invoke();//为了将当前调用传递到后续的 Interceptor与 Action。
+				}else{
+					inv.getController().redirect("/");//跳转到登录页面
+				}
+				
+			}
+		}
+		
+	}
+
+	
+	
+	//HttpSession
+//	cookie token 
+	
+	
+	
+	
+	
+}

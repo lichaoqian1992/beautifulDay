@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>纠纷管理</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/dispute_manage.css" />
+	</head>
+
+	<body class="dispute_manage">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"> </a>
+			<h1 class="mui-title">纠纷管理</h1>
+			<a class="a1" href="javascript:void(0);"></a>
+		</header>
+		<div class="mui-content">
+			<div class="content">
+				<ul class="header_title">
+					<li><span class="span1 span_active">全部</span></li>
+					<li><span class="span2">处理中</span></li>
+					<li><span class="span3">已完成</span></li>
+				</ul>
+				<ul class="list1">
+					<li class="item">
+						<div class="item_left">
+							<p class="p1"><span class="span1">纠纷单号:</span><span class="span2">acd67583421</span></p>
+							<p class="p2"><span class="span1">订单编号:</span><span class="span2">50033221928304</span></p>
+							<div class="div1">
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<p class="div1_p1">MUJI无印良品棉拖鞋灰色款MUJI无印良品棉拖鞋灰色款</p>
+							</div>
+							<img class="item_left_img1" src="images/report_progress_icon4.png" />
+						</div>
+					</li>
+					<li class="item">
+						<div class="item_left">
+							<p class="p1"><span class="span1">纠纷单号:</span><span class="span2">acd67583421</span></p>
+							<p class="p2"><span class="span1">订单编号:</span><span class="span2 span2_active">50033221928304</span></p>
+							<div class="div1">
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<p class="div1_p1">MUJI无印良品棉拖鞋灰色款MUJI无印良品棉拖鞋灰色款</p>
+							</div>
+							<img class="item_left_img1" src="images/report_progress_icon5.png" />
+						</div>
+					</li>
+					<li class="item">
+						<div class="item_left">
+							<p class="p1"><span class="span1">纠纷单号:</span><span class="span2">acd67583421</span></p>
+							<p class="p2"><span class="span1">订单编号:</span><span class="span2 span2_active">50033221928304</span></p>
+							<div class="div1">
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<img class="img1" src="images/report_progress_icon3.png" />
+							</div>
+							<img class="item_left_img1" src="images/report_progress_icon5.png" />
+						</div>
+					</li>
+				</ul>
+				<ul class="list2">
+					<li class="item">
+						<div class="item_left">
+							<p class="p1"><span class="span1">纠纷单号:</span><span class="span2">acd67583421</span></p>
+							<p class="p2"><span class="span1">订单编号:</span><span class="span2">50033221928304</span></p>
+							<div class="div1">
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<p class="div1_p1">MUJI无印良品棉拖鞋灰色款MUJI无印良品棉拖鞋灰色款</p>
+							</div>
+							<img class="item_left_img1" src="images/report_progress_icon4.png" />
+						</div>
+					</li>
+				</ul>
+				<ul class="list3">
+					<li class="item">
+						<div class="item_left">
+							<p class="p1"><span class="span1">纠纷单号:</span><span class="span2">acd67583421</span></p>
+							<p class="p2"><span class="span1">订单编号:</span><span class="span2 span2_active">50033221928304</span></p>
+							<div class="div1">
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<p class="div1_p1">MUJI无印良品棉拖鞋灰色款MUJI无印良品棉拖鞋灰色款</p>
+							</div>
+							<img class="item_left_img1" src="images/report_progress_icon5.png" />
+						</div>
+					</li>
+					<li class="item">
+						<div class="item_left">
+							<p class="p1"><span class="span1">纠纷单号:</span><span class="span2">acd67583421</span></p>
+							<p class="p2"><span class="span1">订单编号:</span><span class="span2 span2_active">50033221928304</span></p>
+							<div class="div1">
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<img class="img1" src="images/report_progress_icon3.png" />
+								<img class="img1" src="images/report_progress_icon3.png" />
+							</div>
+							<img class="item_left_img1" src="images/report_progress_icon5.png" />
+						</div>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/mui.min.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/dispute_manage.js"></script>
+
+	</body>
+
+</html>

@@ -1,0 +1,68 @@
+package com.manji.sheet.service;
+
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
+import com.manji.sheet.utils.DatesUtils;
+
+import java.util.List;
+
+/**
+ * Created by pudding on 2017-6-19.(YYR 商家APP业务逻辑类)
+ */
+public class ShopAppService extends  BaseSheetService {
+
+    //添加工单业务(发起举报)
+    public int  saveSheets(String sheet_on,String status,String type_code,String sponsor_id,String sponsor,String sponsor_type,String sponsor_contoct,String start_time,String source_code,String priority_level,String is_push)
+    {
+        return Db.update("insert into dt_sheets values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",null,sheet_on,status,type_code,sponsor_id,priority_level,is_push
+                ,sponsor,sponsor_type,sponsor_contoct,start_time,source_code);
+    }
+
+    //添加新增信息
+    public int saveSheetInfo(String sheet_id,String descr,String pics,String submitter){
+        return Db.update("insert into dt_sheet_info values(?,?,?,?,?,?)",null,sheet_id,descr,pics, DatesUtils.time(),submitter);
+    }
+
+    /**
+     * 商家查询我被举报工单(我被举报)
+     */
+    public List<Record> findbusinessByShopId(String ShopUserId){
+        List<Record> sheets=Db.find("select * from dt_sheets where id in (select sheet_id from dt_sheet_business where shop_user_id=?);",ShopUserId);
+        return sheets;
+    }
+
+    /**
+     * 通过工单发起人编号查询工单(我的举报)
+     */
+    List<Record> findSheetBySponsorId(String sponsor_id){
+        List<Record> recordList=Db.find("select * from dt_sheets where sponsor_id=?",sponsor_id);
+        return  recordList;
+    }
+
+    /**
+     * 通过工单id查询工单
+     */
+    Record findSheetById(String sheetId){
+        Record record=Db.findFirst("select * from dt_sheets where id=?",sheetId);
+        return record;
+    }
+
+
+
+    /**
+     * 通过工单id查询新增详细信息
+     * @return
+     */
+    public List<Record> findSheetInfo(String SheetId){
+        List<Record> recordList= Db.find("select * from dt_sheet_info where sheet_id=?",SheetId);
+        return  recordList;
+    }
+
+
+
+
+
+
+
+
+}

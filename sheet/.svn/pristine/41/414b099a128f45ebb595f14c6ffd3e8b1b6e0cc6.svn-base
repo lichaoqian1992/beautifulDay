@@ -1,0 +1,204 @@
+<div class="kf_mode_box ">
+			<div class="kf_mode_shield"></div>
+			<div class="kf_mode_content kf_mode_affirm">
+				<div class="kf_mode_header">
+					<label class="kf_mode_title">请确认操作</label>
+				</div>
+				<div class="kf_mode_body kf_display_table">
+					<div class="kf_display_table_cell">
+						<label>温馨提示</label>
+						<p>请仔细审查工单，确定是否这样处理。</p>
+					</div>
+				</div>
+				<div class="kf_mode_footer">
+					<button class="kf_btn kf_mode_btn_ok" isclass=".kf_mode_affirm" type="button">确 定</button>
+					<button class="kf_btn kf_btn_grey kf_mode_btn_close" type="button">取 消</button>
+				</div>
+			</div>
+			<div class="kf_mode_content kf_mode_tips">
+				<div class="kf_mode_tips_box">
+					保存成功
+				</div>
+			</div>
+			#if(remarkRecordAll!=null)
+			    <div class="kf_mode_content kf_mode_logistics">
+			        <div class="kf_mode_header">
+			            <label class="kf_mode_title">物流信息</label>
+			            <a class="kf_mode_close guanbiwuliu"></a>
+			        </div>
+			        <div class="kf_mode_body">
+			            <ul class="kf_logistics_nav">
+			            #if(remarkRecordAll.status=="配送中")
+			            	<li class="kf_logistics_nav_itme1 active">
+			                    <span>待揽件</span>
+			                </li>
+			                <li class="kf_logistics_nav_itme2 active">
+			                    <span>运输</span>
+			                </li>
+			                <li class="kf_logistics_nav_itme3 active">
+			                    <span>派送</span>
+			                </li>
+			                <li class="kf_logistics_nav_itme4">
+			                    <span>签收</span>
+			                </li>
+			            #elseif(remarkRecordAll.status=="已收货" || remarkRecordAll.status=="签收")
+			            	<li class="kf_logistics_nav_itme1 active">
+			                    <span>待揽件</span>
+			                </li>
+			                <li class="kf_logistics_nav_itme2 active">
+			                    <span>运输</span>
+			                </li>
+			                <li class="kf_logistics_nav_itme3 active">
+			                    <span>派送</span>
+			                </li>
+			                <li class="kf_logistics_nav_itme4 active">
+			                    <span>签收</span>
+			                </li>
+
+			            #end
+			            </ul>
+			            <div class="kf_logistics_address">
+			                <label class="kf_logistics_address_title">
+			                	您的包裹
+			                	#if(remarkRecordAll.status=="签收")
+			                		已签收
+			                	#else
+			                		#(remarkRecordAll.status)
+			                	#end
+			                </label>
+			                <ul class="kf_logistics_address_list">
+			                 #for(x : remarkRecordAll.remarkList)
+			                    <li>
+			                        <span class="kf_logistics_address_time">#(x.keyTime)</span>
+			                        <span class="kf_logistics_address_content">#(x.value)</span>
+			                    </li>
+			                 #end
+			                </ul>
+			            </div>
+			            <div class="kf_group">
+			                <label class="kf_group_title">运单号码：</label>
+			                <div class="kf_group_content">#(logistics.express_no)</div>
+			            </div>
+			            <div class="kf_group">
+			                <label class="kf_group_title">卖家昵称：</label>
+			                <div class="kf_group_content">#(remarkRecordAll.nick_name)</div>
+			            </div>
+			            <div class="kf_group">
+			                <label class="kf_group_title">发货地址：</label>
+			                <div class="kf_group_content">#(ShipAddress.address)</div>
+			            </div>
+			            <div class="kf_group">
+			                <label class="kf_group_title">收货地址：</label>
+			                <div class="kf_group_content">#(BuyersInfo.address)</div>
+			            </div>
+			            <div class="kf_group">
+			                <label class="kf_group_title"></label>
+			                <div class="kf_group_content">
+			                	#for(x : BuyersList)
+			                		<div class="kf_logistics_goods">
+				                        <img src="#(x.img_url)">
+				                        <label><i class="kf_color_danger">#(x.real_price)</i>x#(x.quantity)</label>
+			                    	</div>
+								#end
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			#end
+		</div>
+<div class="kf_form_footer">
+    <button type="button" class="kf_btn kf_form_ok">确 定</button>
+    <button type="button" class="kf_btn">返 回</button>
+</div>
+<script type="text/javascript">
+    $(function() {
+    	/*
+    	 *  弹出框
+    	 */
+    	//关闭弹出框
+    	$(".kf_mode_close, .kf_mode_btn_close").click(function() {
+    		$(".kf_mode_content, .kf_mode_shield ").hide();
+    	});
+    	//弹出框单击事件
+    	$(".kf_mode_btn_ok").click(function() {
+    		$(this).parents(".kf_mode_content").hide();
+    		if($(".kf_mode_shield").attr("istype") == "zhix") {
+    			$(".kf_mode_tips").show().find(".kf_mode_tips_box").text("执行成功");
+    			$(".kf_form_btn_tuis").removeClass("kf_btn_disabled kf_btn_grey_main");
+    			$(".kf_form_penalize_execute_btn_a").addClass("kf_form_penalize_execute_btn_a_no")
+    		} else if($(".kf_mode_shield").attr("istype") == "tuisong") {
+    			$(".kf_mode_tips").show().find(".kf_mode_tips_box").text("推送成功");
+    			$(".kf_form_btn_tuis").addClass("kf_btn_disabled kf_btn_grey_main");
+    		} else {
+    			if(acceptSubmit()=="success"){
+    				$(".kf_mode_tips").find(".kf_mode_tips_box").removeClass("kf_mode_tips_error");
+    				$(".kf_mode_tips").show().find(".kf_mode_tips_box").text("保存成功");
+    				setTimeout(function () { 
+    					location.href="/sheet/manage/list?status=acceptance&nav=nav1";
+    				}, 1000);
+    			}else{
+    				$(".kf_mode_tips").find(".kf_mode_tips_box").addClass("kf_mode_tips_error");
+    				$(".kf_mode_tips").show().find(".kf_mode_tips_box").text("保存失败,系统繁忙！");
+    			}
+    		}
+
+    		interval = setInterval(function() {
+    			$(".kf_mode_content, .kf_mode_shield").hide();
+    			clearInterval(interval);
+    		}, 1000);
+    	});
+    	
+        //受理不受理单击事件
+        $(".kf_form_result input[type='radio']").click(function() {
+            $(this).parent().addClass("active").siblings().removeClass("active")
+            var id = $(this).attr("isid");
+            $(id).removeClass("kf_hide").siblings("").addClass("kf_hide");
+        });
+
+
+        //页面确定单击事件
+        $(".kf_form_ok").click(function(){
+        	if($(".kf_radio input[name='tance']:checked").val()==0){
+        		if($("#implement").val()!=""){
+        			$(".kf_mode_affirm, .kf_mode_shield").show();
+            	}else{
+            		$(".kf_mode_tips").find(".kf_mode_tips_box").addClass("kf_mode_tips_error");
+            		$(".kf_mode_tips").show().find(".kf_mode_tips_box").text("执行部门未选择！");
+            		interval = setInterval(function() {
+            			$(".kf_mode_content, .kf_mode_shield").hide();
+            			clearInterval(interval);
+            		}, 1000);
+            	}
+        	}else if($(".kf_radio input[name='tance']:checked").val()==1){
+				if($("#explain").val()!=""){
+					$(".kf_mode_affirm, .kf_mode_shield").show();
+            	}else{
+            		$(".kf_mode_tips").find(".kf_mode_tips_box").addClass("kf_mode_tips_error");
+            		$(".kf_mode_tips").show().find(".kf_mode_tips_box").text("说明未填写！");
+            		interval = setInterval(function() {
+            			$(".kf_mode_content, .kf_mode_shield").hide();
+            			clearInterval(interval);
+            		}, 1000);
+            	}
+        	}
+        });
+
+    });
+    
+    function acceptSubmit(){
+    	var stu="";
+    	$.ajax({
+            url: '/sheet/manage/acceptance',
+            type: 'GET',
+            dataType: "text",
+            data:$("#accept").serialize(),
+            async:false,
+            success: function (data) {
+            	stu="success";
+            },error:function(){
+            	stu="error";
+            }
+    	 })
+    	 return stu;
+    }
+</script>

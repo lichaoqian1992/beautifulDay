@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>举报</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/informant.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/informant_center.css" />
+		<!--App自定义的点击放大css-->
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/click_enlarge.css" />
+	</head>
+
+	<body class="informant">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title"><i class="i1" onclick="closePage()">关闭</i>交易纠纷</h1>
+		</header>
+		<div class="mui-content">
+			<div class="informant_state">
+				<h1 class="title"><i></i><span>
+					#if(sheet.nstatus == "1")
+       					待受理
+       				#elseif(sheet.nstatus == "2")
+       					不受理
+       				#elseif(sheet.nstatus == "3")
+       					处理中
+       				#elseif(sheet.nstatus == "4")
+       					已处理
+       				#elseif(sheet.nstatus == "5")
+       					已完成
+       				#elseif(sheet.nstatus == "6")
+       					已解决
+       				#end
+				</span></h1>
+				#if(sheet.nstatus == "2" || sheet.nstatus == "5" || sheet.nstatus == "6")
+				<div class="text">
+					#if(sheet.nstatus == "2")
+						<p class="text_p1">未受理原因:</p>
+					#elseif(sheet.nstatus == "5")
+						<p class="text_p1">仲裁结果:</p>
+					#elseif(sheet.nstatus == "6")
+						<p class="text_p1">自行解决:</p>
+					#end
+					#if(detail == null)
+						#for(x : flow)
+							#if(for.index == for.size-1)
+								<p class="text_p2">#(x.descr)</p>
+							#end
+						#end
+					#else
+						<p class="text_p2">#(detail.content)</p>
+					#end
+				</div>
+				#end
+				<div class="informant_progress">
+					<ul>
+						#if(flow != null)
+							#for(x : flow)
+								#if(for.index == 0 || for.index == 2 || for.index == 4)
+									<li class="item">
+										<span class="item_span1"></span>
+								#end
+								#if(for.index == 1 || for.index == 3)
+									<span class="item_span3"></span>
+								#end
+								<p class="item_p2">
+									<span class="item_p2_span1">
+										#if(x.opr_type == "1")
+											#(x.descr)
+										#else
+											#(x.result)
+										#end
+									</span><br/>
+									<span class="item_p2_span2">#(x.opr_time)</span>
+								</p>
+								#if(for.index == 1 || for.index == 3)
+									</li>
+								#end
+							#end
+					#end
+					</ul>
+				</div>
+			</div>
+			<div class="list_second">
+				<p class="p_title">店铺信息  <a class="a1" href="" onclick="chart(#(shopInfo.id))"><i></i>联系卖家</a></p>
+				<p>店铺名称
+				#if(shopInfo != null)
+					#if(shopInfo.name == null)
+						暂无
+					#else
+						#(shopInfo.name)
+					#end
+				#else
+					暂无
+				#end
+				</p>
+				<p>纠纷单号：#(sheet.sheet_no)</p>
+				<p>订单状态：
+					#if(order.status == "1")
+						生成订单
+					#elseif(order.status == "2")
+						确认订单
+					#elseif(order.status == "3")
+						完成订单
+					#elseif(order.status == "4")
+						取消订单
+					#elseif(order.status == "5")
+						锁定订单
+					#elseif(order.status == "6")
+						卖家取消订单
+					#end
+				</p>
+			</div>
+			<div class="list_third">
+				<div class="third_title">
+					<p><span class="span3">*</span><span class="span1">纠纷类型：</span><span class="span2">#(sheet.title)</span></p>
+				</div>
+				<div class="third_problem">
+					#for(x : info)
+						#if(for.index == 0)
+							<span class="span1">*</span><span class="span2">问题描述</span><span class="span3">#(x.add_time)</span>
+							<p>#(x.descr)</p>
+							#if(x.pics != null)
+							<div class="mui-content-padded">
+								#for(y:x.pics.split(","))
+								<img src="#(y)" data-preview-src="" data-preview-group="1"/>
+								#end
+							</div>
+							#end
+						#end
+					#end
+				</div>
+			</div>
+			<div class="list_fourth_title">补充资料</div>
+			#for(x : info)
+			#if(for.index != 0)
+			<div class="report_supplement2">
+				<ul class="supplement2_list">
+				#if(x.submitter_type == "Buyer")
+					<li class="supplement2_item">
+						<div class="supplement2_name">
+							<img class="supplement2_name_img1" src="#(ctx)/static/app/images/report_goods_icon3.png" /><br />
+							<span class="supplement2_name_span1">我</span>
+						</div>
+						<div class="supplement2_text">
+							<div class="triangle_left"></div>
+							<p class="p1">#(x.add_time)</p>
+							<p class="p2">#(x.descr)</p>
+							#if(x.pics != null)
+							<div class="mui-content-padded">
+								#for(y:x.pics.split(","))
+								<img src="#(y)" data-preview-src="" data-preview-group="1"/>
+								#end
+							</div>
+							#end
+						</div>
+					</li>
+				#else
+					<li class="supplement2_item">
+						<div class="supplement2_name supplement2_name_2">
+							<img class="supplement2_name_img1" src="#(ctx)/static/app/images/report_goods_icon2.png" /><br />
+							<span class="supplement2_name_span1">
+								#if(shopInfo.name == null)
+									暂无
+								#else
+									#(shopInfo.name)
+								#end
+							</span>
+						</div>
+						<div class="supplement2_text supplement2_text_2">
+							<div class="triangle_left_2"></div>
+							<p class="p1">#(x.add_time)</p>
+							<p class="p2">#(x.descr)</p>
+							#if(x.pics != null)
+							<div class="mui-content-padded">
+								#for(y:x.pics.split(","))
+								<img src="#(y)" data-preview-src="" data-preview-group="1"/>
+								#end
+							</div>
+							#end
+						</div>
+					</li>
+				#end
+				</ul>
+			</div>
+			#end
+		#end
+		</div>
+		#if(sheet.nstatus == "1" || sheet.nstatus == "3")
+			#for(x:info)
+			<div class="footer">
+				<a class="footer_a footer_a1" onclick="buchong('#(x.sheet_id)')">补充资料</a>
+				<a class="footer_a footer_a2" onclick="resolved('#(x.sheet_id)')">已解决</a>
+			</div>
+			#end
+		#end
+		<script type="text/javascript" src="#(ctx)/static/app/js/mui.min.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/mui.zoom.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/mui.previewimage.js"></script>
+		<script>
+			mui.previewImage();
+		</script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/informant.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/close_page.js"></script>
+		<script type="text/javascript">
+			function chart(shopId) {
+				var jsonstr = '{"action":"contact_shop","data":{"shopId":"'+shopId+'"}}';
+				console.log(jsonstr);
+				if (browser.versions.ios ||
+					browser.versions.iPhone ||
+					browser.versions.iPad) {
+					// alert("");
+					window.webkit.messageHandlers.Native.postMessage(jsonstr);
+				}
+				if (browser.versions.android) {
+					// alert("");
+					window.android.clickOnAndroid(jsonstr);
+				}
+			}
+		</script>
+	</body>
+
+</html>

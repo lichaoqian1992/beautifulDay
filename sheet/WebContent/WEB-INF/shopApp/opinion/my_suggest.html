@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我的建议</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/my_report.css" />
+	</head>
+
+	<body class="my_report">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left" onclick="closePage()"> </a>
+			<h1 class="mui-title">我的建议</h1>
+			<a class="a1" href="/sheet/shopApp/insertOpinion">我要建议</a>
+		</header>
+		<div class="mui-content">
+		#for(list:recordList)
+		#if(for.size > 0 && for.index == 0)
+			<div class="content">
+				<ul class="content_list">
+				#for(list:recordList)
+					<li class="list_item">
+						<a class="a1" onclick="findsugginfo(this)">
+							<p class="p1"><span>建议时间：</span><span class="span2">#(list.start_time)</span></p>
+							<p class="p2"><span>建议类型： </span><span class="span2">#(list.title)</span></p>
+							#if(list.status=="3")
+							<img class="img1" src="#(ctx)/static/shopApp/images/my_report_icon1.png" />
+							#end
+							#if(list.status=="4")
+							<img class="img1" src="#(ctx)/static/shopApp/images/my_report_icon1.png" />
+							#end
+							#if(list.status=="5")
+							<img class="img1" src="#(ctx)/static/shopApp/images/my_report_icon2.png" />
+							#end
+						</a>
+						<input type="hidden" value="#(list.id)"/>
+					</li>
+					#end
+				</ul>
+			</div>
+			#end
+			#else
+			<div class="no_content">
+				<p class="p1">当前无建议</p>
+			</div>
+		#end
+		</div>
+	</body>
+	<script type="text/javascript" src="#(ctx)/static/shopApp/js/jquery-1.11.0.js"></script>
+	<script type="text/javascript" src="#(ctx)/static/shopApp/js/mui.min.js"></script>
+	<script type="text/javascript" src="#(ctx)/static/shopApp/js/opinion/mysuggest.js"></script>
+	<script type="text/javascript" src="#(ctx)/static/app/js/close_page.js"></script>
+</html>

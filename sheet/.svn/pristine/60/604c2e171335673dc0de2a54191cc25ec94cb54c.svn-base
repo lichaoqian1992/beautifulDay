@@ -1,0 +1,95 @@
+package com.manji.sheet.utils;
+
+
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+/**
+ * Created by karben on 16/8/31.(用户提现请求接口工具)
+ */
+public class InterfaceUtil {
+    /**
+     * httpclient请求
+     */
+    public final static String SUCCESS = "success";//正确状态
+    public final static String ERROR = "error";//错误状态
+    public final static String ATURL = "http://service.manji.com/AppService.asmx/SendMessage";//测试接口地址
+    public final static String ArbiURL= "http://192.168.0.31:8002/api/ThirdParty/Arbitration";//仲裁
+    //public final static String ATURL = "http://pay.manjiwang.com/javaio.ashx?";//正式接口地址
+
+    static OkHttpClient httpClient=new OkHttpClient();
+
+
+
+    /*
+   发送同步请求
+    */
+    public static String PostAPI(String url, String sheetId,String sign) throws IOException {
+
+        RequestBody formBody =new FormBody.Builder().add("sheetId",sheetId).add("sign", sign).build();
+
+        Request request=new Request.Builder().url(url).post(formBody).build();
+
+        Response response = httpClient.newCall(request).execute();
+
+        if (response.isSuccessful()) {
+            System.out.println("post请求成功");
+            return response.body().string();
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+    }
+    
+
+    /*
+    发送get异步请求
+     */
+    public static  String GetAPI(String url, TreeMap<String,String> map) throws IOException {
+        String params="";
+        for(String key:map.keySet()){
+        	String cKey=key;
+        	String value=map.get(key);
+        	params+="&"+cKey+"="+value;
+        }
+        String newparams=params.substring(1,params.length());
+        String getUrl=url+"?"+newparams;
+        
+        final Object[] objs = new Object[1];
+        Request request = new Request.Builder().get().url(getUrl).build();
+        Response response = httpClient.newCall(request).execute();
+
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                objs[0]=null;
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.print("请求发送成功");
+                 objs[0]=response;
+            }
+        });
+        if(response==null){
+            return "null";
+        }
+        if (response.isSuccessful()) {
+            return response.body().string();
+        } else {
+            throw new IOException("Unexpected code " + response);
+        }
+    }
+    
+}

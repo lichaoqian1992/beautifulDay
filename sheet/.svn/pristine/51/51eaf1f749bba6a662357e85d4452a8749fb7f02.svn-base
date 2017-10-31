@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>意见建议</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/feedback-page.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/report_center.css" />
+	</head>
+
+	<body class="report_center">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"> </a>
+			<h1 class="mui-title">意见建议</h1>
+		</header>
+		<form class="mui-content" action="/sheet/shopApp/saveOpinion" method="post" enctype="multipart/form-data">
+			<div class="content">
+				<div class="report_type">
+
+					<span class="span1">*建议类型：</span>
+					<span class="span2">
+						#for(type:typeList)
+							#if(for.index==0)
+								#(type.title)
+							<input type="hidden" id="cshort_title" name="short_title" value="#(type.short_title)"/>
+							<input type="hidden" id="ccode_type" name="code_type" value="#(type.code)"/>
+							#end
+						#end
+					</span>
+					<input type="hidden" id="short_title" name="short_title"/>
+					<input type="hidden" id="code_type" name="code_type"/>
+					<i class="i1"></i>
+				</div>
+				<div class="report_problem">
+					<p class="p1">*详细描述</p>
+					<textarea placeholder="有什么不满的请尽管吐槽" maxlength="500" name="descr"></textarea>
+					<div class="text_total"><span class="span1">0</span><span class="span2">/500</span></div>
+				</div>
+				<div class="report_img feedback" id="feedback">
+					<p class="report_img_title">上传图片 <span class="span1">(最多可上传5张)</span></p>
+					<div id='image-list' class="row image-list">
+					</div>
+				</div>
+				<input type="submit" class="report_btn" value="提交" id="ddisable" style="width: 100%;line-height: 20px;"/>
+			</div>
+			<div class="mask_all">
+				<div class="report_mask"></div>
+				<div class="mask_content">
+					<ul class="mask_content_list">
+						#for(type:typeList)
+						<span style="display: none">#(type.code)</span>
+						<li>#(type.title)</li>
+						<span style="display: none">#(type.short_title)</span>
+						#end
+					</ul>
+					<div class="item_last">取消</div>
+				</div>
+			</div>
+			<div class="btn_tip_content">
+				<img class="img1" src="#(ctx)/static/shopApp/images/report_center_icon4.png"/>
+				<p class="p1">我们已经收到你的建议，将会在一周内处理并给予回复哟</p>
+			</div>
+
+		</form>
+
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/mui.min.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/feedback-page.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/report_center.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/ddisable.js"></script>
+	</body>
+
+</html>

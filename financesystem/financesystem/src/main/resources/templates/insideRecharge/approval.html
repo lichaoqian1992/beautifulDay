@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>充值审批（只给会计使用）</title>
+    <link href="../../static/css/communal.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../../static/js/communal.js"></script>
+    <script type="text/javascript" src="../../static/js/insideRecharge/approval.js"></script>
+</head>
+
+<body>
+
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="#">充值管理</a></li>
+        <li><a href="#">充值审批</a></li>
+    </ul>
+</div>
+<!-- 弹出层 -->
+<div class="box"></div>
+<div class="hint">
+    <div class="hint-in1">
+        <div style="line-height:70px;color:#f4e8df;font-size:26px;padding-left:80px;">温馨提醒</div>
+    </div>
+    <div class="hint-in2"><p id="hint-in2" class="tishi"></p></div>
+    <div class="hint-in3" onclick="closeMessage()">确定</div>
+</div>
+<div class="formbody">
+    <input type="hidden" id="checkPeople" th:attr="value=${session.user.getUserName()}"/>
+    <!--提示消息-->
+    <div class="tip1" style="display: none;">
+        <div class="tiptop"><span>提示信息</span><a></a></div>
+
+        <div class="tipinfo">
+            <span><img src="../../static/images/ticon.png" /></span>
+            <div class="tipright">
+                <p id="message"></p>
+
+            </div>
+        </div>
+        <div class="tipbtn">
+            <input  type="button"  class="sure" value="确定"/>&nbsp;
+            <input  type="button"  class="cancel" value="取消" />
+        </div>
+    </div>
+    <!--批量同意，拒绝-->
+    <div class="tip3" style="display: none;height: 380px;">
+        <div class="tiptop"><span>审批信息</span><a></a></div>
+
+        <div class="tipinfo">
+            <ul class="forminfo">
+                <li><label>充值单号</label><input id="czId" type="text" class="dfinput" readonly="readonly"/></li>
+                <li><label>审批意见</label><input placeholder="这里输入审批意见" id="reasons" type="text" class="dfinput" style="height: 120px;"/></li>
+            </ul>
+        </div>
+        <div class="tipbtn" style="margin-top:145px;">
+            <input id="delUserId" type="hidden"/>
+            <input  type="button"  value="审批" class="delSure" onclick="doSure()"/>&nbsp;
+            <input  type="button"  class="cancel" value="取消" />
+        </div>
+    </div>
+    <div id="usual1" class="usual">
+
+        <div class="itab">
+            <ul>
+                <li><a href="#tab1" class="selected">我的待审批</a></li>
+                <li><a href="#tab2" onclick="getDetailByPage()">我的已处理</a></li>
+            </ul>
+        </div>
+
+        <div id="tab1" class="tabson">
+            <ul class="seachform">
+                <li><label>充值单号</label><input name="" type="text" class="scinput" id="rechargeId"/></li>
+                <li><label>发布人</label><input name="" type="text" class="scinput" style="width: 100px;" id="personRelease"/></li>
+                <li>
+                    <label>发布时间</label><input style="width: 90px"  class="scinput"
+                                              readonly="readonly"
+                                              type="text" id="startTime"
+                                              onclick="WdatePicker()" onchange="checkDate()"/>&nbsp;-
+                    <input style="width: 90px"  class="scinput"
+                           readonly="readonly"
+                           type="text" id="endTime"
+                           onclick="WdatePicker()" onchange="checkDate()"/>
+                </li>
+                <li><label>&nbsp;</label><input name="" type="button" class="scbtn" value="查询" onclick="searchInfo()"/>
+                    &nbsp;<label>&nbsp;</label><input style="background:lightgray" onclick="reset()" name="" type="button" class="scbtn"
+                                                      value="重置"/></li>
+
+            </ul>
+            <ul class="seachform1">
+                <li style="cursor: pointer" onclick="agreeBctch()"><span><img src="../../static/images/agree.png" /></span>批量同意</li>
+                <li style="cursor: pointer" onclick="refuseBctch()"><span><img src="../../static/images/refuse.png" /></span>批量拒绝</li>
+            </ul>
+            <table class="tablelist">
+                <thead>
+                <tr>
+                    <th><input name="checkAll" type="checkbox" value="" onclick="selectAll()"/></th>
+                    <th>编号</th>
+                    <th>充值订单号<i class="sort"><img src="../../static/images/px.gif"/></i></th>
+                    <th style="display: none;">批次号</th>
+                    <th>业务单号</th>
+                    <th style="display: none;">Excel名称</th>
+                    <th style="display: none;">用户ID</th>
+                    <th>用户标识</th>
+                    <th>角色类型</th>
+                    <th style="display: none;">角色值</th>
+                    <th>充值金额</th>
+                    <th>发布人</th>
+                    <th>审批人</th>
+                    <th>充值类型</th>
+                    <th>充值状态</th>
+                    <th>审批状态</th>
+                    <th>发布时间</th>
+                    <th>报批时间</th>
+                    <th>审批时间</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="myTbody">
+                </tbody>
+            </table>
+            <!--分页 -->
+            <div id="fy">
+            </div>
+        </div>
+        <div id="tab2" class="tabson">
+            <ul class="seachform">
+                <li><label>充值订单号</label><input name="" type="text" class="scinput" id="rechargeId2"/></li>
+                <li><label>审核状态</label>
+                    <div class="styled-select">
+                        <select class="mySelect" id="checkStatus">
+                            <option value=""></option>
+                            <option value="2">已审核</option>
+                            <option value="3">已拒绝</option>
+                        </select>
+                    </div>
+                </li>
+                <li>
+                    <label>审核时间</label><input style="width: 90px"  class="scinput"
+                                              readonly="readonly"
+                                              type="text" id="startTime2"
+                                              onclick="WdatePicker()" onchange="checkDate()"/>&nbsp;-
+                    <input style="width: 90px"  class="scinput"
+                           readonly="readonly"
+                           type="text" id="endTime2"
+                           onclick="WdatePicker()" onchange="checkDate()"/>
+                </li>
+                <li><label>&nbsp;</label><input name="" type="button" class="scbtn" value="查询" onclick="getDetailByPage()"/>
+                    &nbsp;<label>&nbsp;</label><input style="background:lightgray" onclick="reset2()" name="" type="button" class="scbtn"
+                                                      value="重置"/></li>
+            </ul>
+            <table class="tablelist" name="tableist2">
+                <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>充值订单号<i class="sort"><img src="../../static/images/px.gif"/></i></th>
+                    <th style="display: none;">批次号</th>
+                    <th>业务单号</th>
+                    <th style="display: none;">Excel名称</th>
+                    <th style="display: none;">用户ID</th>
+                    <th>用户标识</th>
+                    <th>角色类型</th>
+                    <th style="display: none;">角色值</th>
+                    <th>充值金额</th>
+                    <th>发布人</th>
+                    <th>审批人</th>
+                    <th>充值类型</th>
+                    <th>充值状态</th>
+                    <th>审批状态</th>
+                    <th>发布时间</th>
+                    <th>报批时间</th>
+                    <th>审批时间</th>
+                    <th>备注</th>
+                </tr>
+                </thead>
+                <tbody id="myTable">
+
+                </tbody>
+            </table>
+            <!--分页 -->
+            <div id="fy1">
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $("#usual1 ul").idTabs();
+    </script>
+
+    <script type="text/javascript">
+        $('.tablelist tbody tr:odd').addClass('odd');
+    </script>
+
+
+
+
+
+</div>
+
+
+</body>
+
+</html>

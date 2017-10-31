@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/err/css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/err/css/error2.css"/>
+	</head>
+	<body>
+		<div class="error_container">
+			<img class="error_img1" src="#(ctx)/static/err/images/error_icon2.png"/>
+			<p class="error_p1">出错啦！</p>
+			<p class="error_p2"> 连接不到服务器，我们正在努力修复</p>
+			<a class="error_a1" href="javascript:void(0);">返回首页</a>
+		</div>
+	</body>
+</html>

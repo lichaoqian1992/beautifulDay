@@ -1,0 +1,208 @@
+#@pclayout()
+#define main()
+<!--描述：页面内容部分-->
+		<div class="kf_content_box">
+			<div class="kf_bg_box">
+				<div class="kf_nav">
+					<a class="kf_nav_home kf_nav_item">首页</a>
+					<a class="kf_nav_item">基础设置</a>
+					<span class="kf_nav_item kf_nav_item_last">部门管理</span>
+				</div>
+				<div class="kf_box">
+					<div class="kf_search_box">
+						<div class="kf_group">
+							<span class="kf_group_title">状态</span>
+							<div class="kf_group_content">
+								<select class="kf_form_text" id="status">
+									<option value="3">全部</option>
+									<option value="1">启用</option>
+									<option value="0">禁用</option>
+								</select>
+							</div>
+						</div>
+						<div class="kf_group">
+							<span class="kf_group_title">执行/监督</span>
+							<div class="kf_group_content">
+								<select class="kf_form_text" id="type">
+									<option value="3">全部</option>
+									<option value="2">执行部门</option>
+									<option value="1">监察部门</option>
+								</select>
+							</div>
+						</div>
+						<div class="kf_group">
+							<span class="kf_group_title">&nbsp;</span>
+							<div class="kf_group_content">
+								<input class="kf_form_text" type="text" placeholder="部门名称" id="deptName"/>
+							</div>
+						</div>
+						<div class="kf_group">
+							<div class="kf_group_content">
+								<button type="button" class="kf_btn" onclick="findDept()">搜 索</button>
+							</div>
+						</div>
+					</div>
+					<div class="kf_table_box">
+						<table class="kf_table">
+							<thead>
+								<tr>
+									<th>编号</th>
+									<th>角色名称</th>
+									<th>执行/监督</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody id="content">
+								#for(x : info)
+								<tr>
+									<td>#(for.index+1)</td>
+									<td style="display: none;" id="dept_id">#(x.id)</td>
+									#if(x.type == "1")
+										<td><i class="kf_color_danger">*</i>#(x.name)</td>
+										<td>监督</td>
+										<td>
+											<a class="kf_table_a_edit" href="#">编辑</a>
+										</td>
+									#else
+										<td><i class="kf_color_danger"></i>#(x.name)</td>
+										<td>执行</td>
+										<td>
+											<a class="kf_table_a_edit" href="#">编辑</a>
+											#if(x.status == "0")
+												<a class="kf_table_a_enabled" href="#">启用</a>
+											#else
+												<a class="kf_table_a_forbidden" href="#">禁用</a>
+											#end
+										</td>
+									#end
+								</tr>
+								#end
+							</tbody>
+						</table>
+						<div class="kf_table_page">
+							<div class="kf_page_content kf_float_right ">
+								<span class="kf_page_text">每页<i>15</i>个，共<i>1</i>页</span>
+								<ul class="kf_page_size">
+									<li>
+										<a class="kf_page_prev"></a>
+									</li>
+									<li class="active">
+										<a>1</a>
+									</li>
+									<li>
+										<a class="kf_page_next"></a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--描述：页面内容部分结束-->
+	
+		<!--弹出框-->
+		<div class="kf_mode_box ">
+			<div class="kf_mode_shield"></div>
+			<div class="kf_mode_content kf_mode_affirm">
+				<div class="kf_mode_header">
+					<label class="kf_mode_title">请确定操作</label>
+				</div>
+				<div class="kf_mode_body kf_display_table">
+					<div class="kf_display_table_cell">
+						<label>温馨提示</label>
+						<p>确认<i class="kf_color_danger">禁用</i>该类型嘛？</p>
+					</div>
+				</div>
+				<div class="kf_mode_footer">
+					<button class="kf_btn kf_btn_grey kf_mode_btn_close" type="button">取 消</button>
+					<button class="kf_btn kf_mode_btn_ok" type="button" onclick="isDone()">确 定</button>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="#(ctx)/static/pc/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript">
+		var id = "";
+		var status = "";
+			$(function(){
+				$(".kf_table").on("click",".kf_table_a_forbidden",function(){
+					id = $(this).parent().parent().find("#dept_id").text();
+					status = "0";
+					$(".kf_mode_affirm, .kf_mode_shield").show();
+					$(".kf_mode_affirm i").text("禁用");
+				});
+				$(".kf_table").on("click",".kf_table_a_enabled",function(){
+					id = $(this).parent().parent().find("#dept_id").text();
+					status = "1";
+					$(".kf_mode_affirm, .kf_mode_shield").show();
+					$(".kf_mode_affirm i").text("启用");
+				});
+				$(".kf_mode_btn_close").click(function(){
+					$(".kf_mode_content, .kf_mode_shield").hide();
+				});
+				
+			});
+			//查询部门列表
+			function findDept(){
+				$.ajax({
+					type:"get",
+					url:"/sheet/base/findDept",
+					dataType:"json",
+					data:{
+						status:$("#status").val(),
+						type:$("#type").val(),
+						name:$("#deptName").val()
+					},success:function(data){
+						var txt = "";
+						console.log(data);
+						for(var i=0;i<data.length;i++){
+							var status = "";
+							var type = "";
+							if(data[i].type == "1"){
+								type = "监察";
+							}else if(data[i].type == "2"){
+								type = "执行";
+								if(data[i].status == "0"){
+									data[i].status = "启用";
+									status = '<a class="kf_table_a_enabled" href="#">'+data[i].status+'</a>';
+								}else if(data[i].status == "1"){
+									data[i].status = "禁用";
+									status = '<a class="kf_table_a_forbidden" href="#">'+data[i].status+'</a>';
+								}
+							}
+							txt += "<tr><td>"+(i+1)+"</td>"
+								+"<td style='display: none;' id='dept_id'>"+data[i].id+"</td>"
+								+"<td>"+data[i].name+"</td>"
+								+"<td>"+type+"</td>"
+								+"<td><a class='kf_table_a_edit' href='#'>编辑</a>"+status+"</td>"
+								+"</tr>";
+						}
+						$("#content").html(txt);
+					}
+					
+				});
+			}
+			//禁用启用部门
+			function isDone(){
+				$.ajax({
+					type:"get",
+					url:"/sheet/base/isDone",
+					dataType:"json",
+					data:{
+						status:status,
+						id:id
+					},success:function(data){
+						if(data.message == "SUCCESS"){
+							window.location.href="/sheet/base/toDept";
+						}else{
+							$(".kf_mode_tips").show().find(".kf_mode_tips_box").text("修改失败");
+			    			$(".kf_form_btn_tuis").addClass("kf_btn_disabled kf_btn_grey_main");
+						}
+					}
+					
+				});
+			}
+		</script>
+
+#end

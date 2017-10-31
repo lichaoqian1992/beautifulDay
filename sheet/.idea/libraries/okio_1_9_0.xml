@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="okio-1.9.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/okio-1.9.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/fastjson-1.2.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WebContent/WEB-INF/lib/cos-2017.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

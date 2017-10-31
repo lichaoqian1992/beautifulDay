@@ -1,0 +1,689 @@
+package com.manji.sheet.controller;
+
+import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.upload.UploadFile;
+import com.manji.sheet.base.Message;
+import com.manji.sheet.model.reqParam.SheetInfoParam;
+import com.manji.sheet.service.BuyersAppService;
+import com.manji.sheet.service.PCService;
+import com.manji.sheet.utils.DatesUtils;
+import com.manji.sheet.utils.PicUtils;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.morph.context.contexts.HttpServletContext;
+import org.apache.commons.collections.map.HashedMap;
+
+
+import java.util.*;
+
+
+//商家PC接口调用
+public class PCController extends Controller{
+
+	private static final String SUCCESS="请求成功";
+	private static final String PARA_ERROR="参数错误";
+	private static final String NO_DATA="暂无数据";
+
+	PCService service = new PCService();
+	BuyersAppService appser=new BuyersAppService();
+
+	public void index(){
+
+		renderText("hhahaha");
+	}
+
+	/**
+	 * 商家PC详情页面ok
+	 * 根据传入不同的short_title来显示不同页面
+	 */
+	public void getInformation(){
+		Message msg = new Message();
+
+		Integer sponsor_id = getParaToInt("sponsor_id");
+		String short_title = getPara("short_title");
+		Integer shop_user_id = getParaToInt("shop_user_id");
+		String start_time = getPara("start_time");
+		String end_time = getPara("end_time");
+		Integer status = getParaToInt("status");
+		String sheet_no = getPara("sheet_no");
+
+		if (sponsor_id == null || short_title == null || shop_user_id == null) {
+			msg.setStatus("3");
+			msg.setMessage(PARA_ERROR);
+
+		}else{
+
+			List<Record> records = service.getInformation(sponsor_id,short_title,shop_user_id,start_time,end_time,status,sheet_no);
+			msg.setStatus("1");
+			msg.setMessage(SUCCESS);
+			msg.setResult(records);
+		}
+
+		setAttr("getInformation",msg);
+
+		renderJson();
+
+	}
+
+	/**
+	 * 订单详情
+	 */
+	public void getOrderInfo() {
+
+		Message msg = new Message();
+
+		String sheet_no = getPara("sheet_no");
+		System.out.println(sheet_no);
+		if (sheet_no == null) {
+			msg.setStatus("3");
+			msg.setMessage(PARA_ERROR);
+		}else{
+			//买家详情ok
+			Map<String,Object> map = new HashMap<String,Object>();
+			Record buyerInfo = service.buyerInfo(sheet_no);
+			map.put("buyerInfo",buyerInfo);
+
+			//商品和运费信息ok 数据全为null
+			Record orderAmount = service.orderAmount(sheet_no);
+			map.put("orderAmount",orderAmount);
+
+			//商品规格和数量等信息ok
+			List<Record> specInfo = service.specInfo(sheet_no);
+			map.put("specInfo",specInfo);
+
+			//发货信息ok
+			Record shipAddress = service.shipAddress(sheet_no);
+			map.put("shipAddress",shipAddress);
+
+			//物流信息ok
+			Record logisticsInfo = service.logisticsInfo(sheet_no);
+			map.put("logisticsInfo",logisticsInfo);
+
+			msg.setStatus("1");
+			msg.setMessage(SUCCESS);
+			msg.setResult(map);
+		}
+		setAttr("getOrderInfo",msg);
+		renderJson();
+	}
+
+	/**
+	 * 退单详情
+	 */
+	public void backInfo() {
+
+		Message msg = new Message();
+		Map<String,Object> map = new HashMap<String,Object>();
+		String sheet_no = getPara("sheet_no");
+		if (sheet_no == null) {
+			msg.setStatus("3");
+			msg.setMessage(PARA_ERROR);
+		} else {
+
+			//退单的规格信息
+			List<Record> backSpecInfo = service.backSpecInfo(sheet_no);
+			map.put("backSpecInfo",backSpecInfo);
+
+			//退单信息
+			List<Record> backInfo = service.backInfo(sheet_no);
+			map.put("backInfo",backInfo);
+
+			msg.setStatus("1");
+			msg.setMessage(SUCCESS);
+			msg.setResult(map);
+		}
+		setAttr("backInfo",msg);
+		renderJson();
+	}
+	/**
+	 * 处理流程和时间
+	 */
+
+	public void dealTime() {
+
+		Message msg = new Message();
+		String sheet_no = getPara("sheet_no");
+		if (sheet_no == null) {
+			msg.setStatus("3");
+			msg.setMessage(PARA_ERROR);
+		} else {
+
+			List<Record> dealTime = service.dealTime(sheet_no);
+			if (dealTime.size()>0) {
+				msg.setStatus("1");
+				msg.setMessage(SUCCESS);
+				msg.setResult(dealTime);
+			} else {
+				msg.setStatus("2");
+				msg.setMessage(NO_DATA);
+			}
+		}
+		setAttr("dealTime",msg);
+		renderJson();
+
+	}
+
+	/**
+	 * 我要建议详情页  ok
+	 */
+	public void suggestion() {
+
+		Message msg = new Message();
+		Map<String,Object> map = new HashMap<String,Object>();
+		String sheet_no = getPara("sheet_no");
+		//Integer status = getParaToInt("status");
+		if (sheet_no == null) {
+			msg.setStatus("3");
+			msg.setMessage(PARA_ERROR);
+		} else {
+			//建议信息
+			Record sugSheet = service.commonSheet(sheet_no);
+			map.put("sugSheet",sugSheet);
+			//详细描述
+			List<Record> sugInfo = service.disputeInfo(sheet_no);
+			map.put("sugInfo",sugInfo);
+			//仲裁结果
+			Record sugResult = service.arbResult(sheet_no);
+			map.put("sugResult",sugResult);
+			msg.setStatus("1");
+			msg.setMessage(SUCCESS);
+			msg.setResult(map);
+		}
+		setAttr("suggestion",msg);
+		renderJson();
+	}
+
+	/**
+	 * 我要举报详情页 ok
+	 */
+	public void report(){
+
+		Message msg = new Message();
+		Map<String,Object> map = new HashMap<String,Object>();
+
+		String sheet_no = getPara("sheet_no");
+		Integer status = getParaToInt("status");
+		System.out.println(sheet_no+"=="+status);
+		if (sheet_no == null || status == null) {
+			msg.setStatus("3");
+			msg.setResult(PARA_ERROR);
+		} else {
+
+			//举报的工单信息
+			Record reportSheet = service.commonSheet(sheet_no);
+			map.put("reportSheet",reportSheet);
+
+			//要举报的提交资料信息
+			List<Record> reportInfo = service.disputeInfo(sheet_no);
+			map.put("reportInfo",reportInfo);
+
+			//仲裁结果
+			if (status == 4) {
+
+				Record repResult = service.arbResult(sheet_no);
+				map.put("repResult",repResult);
+
+			}
+			msg.setStatus("1");
+			msg.setMessage(SUCCESS);
+			msg.setResult(map);
+		}
+		setAttr("report",msg);
+		renderJson();
+	}
+	
+	
+	/**
+	 * 添加补充资料 ok
+	 */
+	public void addInformation(){
+
+		Message msg = new Message();
+		Map<String,Object> map = new HashMap<String,Object>();
+		Record record = new Record();
+		String path="";
+		List<UploadFile> files=getFiles();
+		if(files.size()>0){
+
+			for(UploadFile x : files){
+
+				path += PicUtils.postPic(x.getFile())+",";
+			}
+		}
+		System.out.println(path);
+		if (path != "") {
+
+			path = path.substring(0,path.length()-1);
+		}
+		record.set("sheet_id",getParaToLong("sheet_id"));
+		record.set("descr",getPara("descr"));
+		record.set("pics",path);
+		record.set("add_time", DatesUtils.time());
+		record.set("submitter",getPara("submitter"));
+
+		if (service.addInformation(record)) {
+			msg.setStatus("1");
+			msg.setResult(SUCCESS);
+		} else {
+			msg.setStatus("3");
+			msg.setResult(PARA_ERROR);
+		}
+		setAttr("addInformation",msg);
+		renderJson();
+	}
+
+	/**
+	 * ????????????/
+	 * @param record
+	 */
+	public void addReport(Record record) {
+
+		String path = "";
+		List<UploadFile> files=getFiles();
+		if(files.size()>0){
+
+			for(UploadFile x : files){
+
+				path += PicUtils.postPic(x.getFile())+",";
+			}
+		}
+		if (path != "") {
+
+			path = path.substring(0,path.length()-1);
+		}
+		record.set("type_code",getPara("type_code"));
+		record.set("descr",getPara("descr"));
+		record.set("pics",path);
+		record.set("submitter",getPara("submitter"));
+
+
+
+	}
+
+	/**
+	 * 被举报详细信息 ok
+	 */
+	public void reportedInfo(){
+
+		Message msg = new Message();
+		Map<String,Object> map = new HashMap<String,Object>();
+
+		String sheet_no = getPara("sheet_no");
+		Integer status = getParaToInt("status");
+		String short_title = getPara("short_title");
+
+		if (sheet_no == null || status == null || short_title == null ) {
+			msg.setStatus("3");
+			msg.setMessage(PARA_ERROR);
+		} else {
+
+			//被举报的工单信息
+			Record reportedSheet = service.commonSheet(sheet_no);
+			map.put("reportedSheet",reportedSheet);
+
+			//判断被举报内容
+			if ( "RGD".equals(short_title)) {
+
+				//获取举报的商品
+				Record repObject = service.article(sheet_no);
+				map.put("repObject",repObject);
+
+			}
+
+			//举报者提交资料信息
+			List<Record> reportedInfo = service.disputeInfo(sheet_no);
+			map.put("reportInfo",reportedInfo);
+
+			//如果被举报的工单状态已完成
+			if (status == 4) {
+
+				//被举报的处罚结果
+				List<Record> punish = service.punish(sheet_no);
+				map.put("punish",punish);
+
+				//被举报的仲裁结果
+				Record arbResult = service.arbResult(sheet_no);
+				map.put("arbResult",arbResult);
+			}
+
+			msg.setStatus("1");
+			msg.setMessage(SUCCESS);
+			msg.setResult(map);
+		}
+		setAttr("reportedInfo",msg);
+		renderJson();
+	}
+
+	/**
+	 * 商品详情页
+	 */
+
+	public void shopDetail() {
+
+		Message msg = new Message();
+		Map<String,Object> map = new HashMap<String,Object>();
+		String sheet_no = getPara("sheet_no");
+		if (sheet_no == null) {
+			msg.setStatus("3");
+			msg.setMessage(PARA_ERROR);
+		} else {
+
+			//获取举报的商品
+			Record repObject = service.article(sheet_no);
+
+			//获取分类(返回的class_layer数字代表层级)
+			try {
+
+				Integer category_id = repObject.get("category_id");
+				String classList = service.getList(category_id);
+				classList = classList.substring(1,classList.length()-1);
+				classList = "("+classList+")";
+				List<Record> artCategory = service.articleCategory(classList);
+				map.put("artCategory",artCategory);
+				//获取商品规格属性
+				int article_id = repObject.get("id");
+				List<Record> goodsSpec = service.goodsSpec(article_id);
+				Double sell_price;
+				Integer stock_quantity;
+				String brand;
+				String spec_text;
+				Map<String,Object> specMap = new HashMap<>();
+				Map<String,Object>  map2 = new HashMap<>();
+				List list = new ArrayList<>();
+
+				for (int i=0;i<goodsSpec.size();i++) {
+
+					spec_text = goodsSpec.get(i).get("spec_text").toString();
+					String []specArr = spec_text.split("，");
+					for (int j=0;j<specArr.length;j++) {
+						String [] sb = specArr[j].split("：");
+						for (int k=0;k<sb.length;k++) {
+							map2.put(sb[0],sb[1]);
+							specMap.put("spec",map2);
+						}
+					}
+
+					sell_price = Double.parseDouble(goodsSpec.get(i).get("sell_price").toString());
+					stock_quantity = Integer.parseInt(goodsSpec.get(i).get("stock_quantity").toString());
+					specMap.put("sell_price",sell_price);
+					specMap.put("stock_quantity",stock_quantity);
+					JSONObject specObj = JSONObject.fromObject(specMap);
+					list.add(specObj);
+
+				}
+				//商品的所有规格信息
+				//自定义分类
+				map.put("shopSpec",list);
+				if(service.category(article_id) != null) {
+					String title = service.category(article_id);
+					map.put("category",title);
+				}else{
+					map.put("category","默认分类");
+				}
+				//商品标题
+				Record artTitle = service.article(sheet_no);
+				map.put("shopTitle",artTitle.get("title"));
+				//商品卖点，品牌，属性
+				Record shopGoods = service.shopGoods(article_id);
+				JSONObject shopObj = JSONObject.fromObject(shopGoods.get("goods_expenses"));
+				shopGoods.setColumns(shopObj);
+				shopGoods.remove("expenses_companyId");
+				shopGoods.remove("goods_expenses");
+				shopGoods.remove("expenses_tempId");
+				map.put("shopGoods",shopGoods);
+				//获取物流信息
+				Record tranInfo = service.tranInfo(article_id);
+				JSONObject jsonObject = JSONObject.fromObject(tranInfo.get("goods_expenses"));
+				int shop_id = service.userShopInfo(sheet_no).get("shop_user_id");
+				String tranType = jsonObject.get("type").toString();
+				String expensesType = "";
+
+				if ("0".equals(tranType)) {
+					expensesType = "商家物流";
+					Record logInfo = service.logisticsInfo(shop_id);
+					map.put("logInfo",logInfo);
+				} else if ("1".equals(tranType)) {
+					expensesType = "商家自送";
+					Record shopZiSong = service.shopZiSong(shop_id);
+					map.put("shopZiSong",shopZiSong);
+					JSONArray jsonArray = JSONArray.fromObject(shopZiSong.get("area"));
+					Integer cityCode = Integer.parseInt(shopZiSong.get("city").toString());
+					String city = service.getCity(cityCode);
+					Integer type = shopZiSong.get("type");
+					String transType = "";
+					switch(type){
+						case 0:
+							transType = "自定义运费";
+							break;
+						case 1:
+							transType = "包邮";
+							break;
+						default:
+							transType = "";
+					}
+					Double free_price = Double.parseDouble(shopZiSong.get("free_price").toString());
+					int area;
+					String county;
+					double price;
+					String condition = "订单满"+free_price+"包邮,";
+					for(int i=0;i<jsonArray.size();i++){
+						JSONObject jsonObj = JSONObject.fromObject(jsonArray.get(i));
+						area = Integer.parseInt(jsonObj.get("Area").toString());
+						county = service.getCounty(area);
+						price = Double.parseDouble(jsonObj.get("Price").toString());
+						condition += county+price+"元,";
+					}
+					condition = condition.substring(0,condition.length()-1);
+
+					Map<String,String> map3 = new HashMap<String,String>();
+					map3.put("type",transType);//运输方式
+					map3.put("city",city);//运输范围
+					map3.put("area",condition);//运输条件
+					map.put("shopTran",map3);//返回的商家自送信息
+				} else {
+					expensesType = "";
+				}
+				msg.setStatus("1");
+				msg.setMessage(SUCCESS);
+				msg.setResult(map);
+
+			} catch (NullPointerException e) {
+				msg.setStatus("3");
+				msg.setMessage(PARA_ERROR);
+				e.printStackTrace();
+			}
+		}
+		setAttr("shopDetail",msg);
+		renderJson();
+	}
+
+	/**
+	 * 评价纠纷详情ok
+	 */
+	public void commentList(){
+
+		Message msg = new Message();
+		Map<String,Object> map = new HashMap<String,Object>();
+
+		String sheet_no = getPara("sheet_no");
+		Integer status = getParaToInt("status");
+
+		if (sheet_no == null || status == null) {
+			msg.setStatus("3");
+			msg.setMessage(PARA_ERROR);
+		} else {
+
+			//纠纷的工单信息
+			Record commentSheet = service.commonSheet(sheet_no);
+			map.put("commentSheet",commentSheet);
+
+			//商家和用户信息和订单号
+			Record userInfo = service.userInfo(sheet_no);
+			map.put("userInfo",userInfo);
+			Record shopInfo = service.shopInfo(sheet_no);
+			map.put("shopInfo",shopInfo);
+			Record order_no = service.userShopInfo(sheet_no);
+			map.put("orderNo",order_no.get("order_no"));
+
+			//纠纷详情
+			List<Record> commentInfo = service.disputeInfo(sheet_no);
+			map.put("commentInfo",commentInfo);
+
+			//仲裁结果
+			if (status == 2 || status ==4){
+
+				Record arb = service.arbResult(sheet_no);
+				map.put("arb",arb);
+			}
+			msg.setStatus("1");
+			msg.setMessage(SUCCESS);
+			msg.setResult(map);
+		}
+		//评价详情
+		setAttr("commentList",msg);
+		renderJson();
+	}
+	
+	
+	/**
+	 * 交易纠纷详情 ok
+	 */
+	public void tradeList(){
+
+		Message msg = new Message();
+		Map<String,Object> map = new HashMap<String,Object>();
+
+		String sheet_no = getPara("sheet_no");
+		Integer status = getParaToInt("status");
+
+		if (sheet_no == null || status == null) {
+			msg.setStatus("3");
+			msg.setMessage(PARA_ERROR);
+		} else {
+
+			//交易纠纷工单信息
+			Record tradeSheet = service.commonSheet(sheet_no);
+			map.put("tradeSheet",tradeSheet);
+
+			//交易纠纷内容
+			List<Record> tradeInfo = service.disputeInfo(sheet_no);
+			map.put("tradeInfo",tradeInfo);
+
+			//仲裁结果
+			if (status == 4) {
+				//处罚结果执行
+				List<Record> punishTrade = service.punish(sheet_no);
+				map.put("punishTrade",punishTrade);
+				//处罚的商品
+				Record articleTrade = service.article(sheet_no);
+				map.put("articleTrade",articleTrade);
+				//仲裁结果
+				Record arbTrade = service.arbResult(sheet_no);
+				map.put("arbTrade",arbTrade);
+			}
+			msg.setStatus("1");
+			msg.setMessage(SUCCESS);
+			msg.setResult(map);
+		}
+
+		setAttr("tradeList",msg);
+		renderJson();
+	}
+
+	/**
+	 * 评论详情
+	 */
+	public void commentDetail() {
+
+		Message msg = new Message();
+		Map<String,Object> map = new HashMap<String,Object>();
+
+		Integer order_id = getParaToInt("order_id");
+		if (order_id == null || "".equals(order_id)) {
+			msg.setStatus("3");
+			msg.setMessage(PARA_ERROR);
+		} else {
+
+			//用户信息和订单号
+			Record orderInfo = service.ordersInfo(order_id);//订单号，评价时间，买家昵称
+			map.put("orderInfo",orderInfo);
+
+			//店铺评分
+			Record shopCommentScore = service.shopCommentScore(order_id);
+			map.put("shopCommentScore",shopCommentScore);
+
+			//商品评分
+			List<Record> goodsScore = service.findGoodsScore(order_id);
+			map.put("goodsScore",goodsScore);
+
+			//商品评价和时间
+			List<Record> goodsTitle = service.findGoodsTitle(order_id);
+			map.put("goodsTitle",goodsTitle);
+
+			msg.setStatus("1");
+			msg.setMessage(SUCCESS);
+			msg.setResult(map);
+
+		}
+
+		setAttr("commentDetail",msg);
+
+		renderJson();
+
+	}
+
+
+	/**
+	 * 发起举报
+	 */
+	public void submmitReport(){
+		Message msg = new Message();
+		Map<String,String> map = new HashMap<String,String>();
+		List<UploadFile> file = getFiles();
+		String pics="";
+		for(int i=0;i<file.size();i++){
+			if(i == file.size()-1){
+				pics+=PicUtils.postPic(file.get(i).getFile());
+			}else{
+				pics+=PicUtils.postPic(file.get(i).getFile())+",";
+			}
+		}
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+		sheetInfo.setPics(pics);
+		String stu=service.saveShopReport(sheetInfo);
+		map.put("stu",stu);
+		msg.setStatus("1");
+		msg.setResult(map);
+		msg.setMessage(SUCCESS);
+		renderJson();
+
+	}
+
+	/**
+	 * 发起建议
+	 */
+	public void submmitSuggestion(){
+		Message msg = new Message();
+		Map<String,String> map = new HashMap<String,String>();
+		List<UploadFile> file = getFiles();
+		String pics="";
+		for(int i=0;i<file.size();i++){
+			if(i == file.size()-1){
+				pics+=PicUtils.postPic(file.get(i).getFile());
+			}else{
+				pics+=PicUtils.postPic(file.get(i).getFile())+",";
+			}
+		}
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+		sheetInfo.setPics(pics);
+		String stu=service.saveShopSuggestion(sheetInfo);
+		map.put("stu",stu);
+		msg.setStatus("1");
+		msg.setResult(map);
+		msg.setMessage(SUCCESS);
+		renderJson();
+
+	}
+
+}

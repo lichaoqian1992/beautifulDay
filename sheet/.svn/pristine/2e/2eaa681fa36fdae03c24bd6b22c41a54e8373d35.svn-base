@@ -1,0 +1,146 @@
+ #@pclayout() #define main()
+<div class="kf_nav">
+	<a class="kf_nav_home kf_nav_item">首页</a> <span class="kf_nav_item">工单管理</span>
+	<span class="kf_nav_item kf_nav_item_last">
+		#if(status=="acceptance")工单受理#elseif(status=="already")工单处理#elseif(status=="push")结果推送#elseif(status=="history")工单历史#elseif(status=="supermarket")超时工单#end
+	</span>
+	<input type="hidden" class="status" value="#(status)"/>
+</div>
+<div class="kf_box">
+	<div class="kf_search_box">
+		<div class="kf_group">
+			<span class="kf_group_title">信息来源</span>
+			<div class="kf_group_content">
+				<select class="kf_form_text" id="sourceCode">
+					<option value="">全部</option>
+					#for(x : fromList)
+						<option value="#(x.code)">#(x.title)</option>
+					#end
+				</select>
+			</div>
+		</div>
+		<div class="kf_group">
+			<span class="kf_group_title">工单类型</span>
+			<div class="kf_group_content">
+				<select class="kf_form_text" id="typeCode">
+					<option value="">全部</option>
+					#for(x : typeList)
+						<option value="#(x.code)">#(x.title)</option>
+					#end
+				</select>
+			</div>
+		</div>
+		<div class="kf_group">
+			<span class="kf_group_title">时间</span>
+			<div class="kf_group_content">
+				<div class="kf_form_icon">
+					<input class="kf_form_text" type="text" id="startTime" placeholder="开始时间" /> <span
+						class="kf_form_text_icon kf_form_icon_time"></span>
+				</div>
+			</div>
+		</div>
+		<div class="kf_group">
+			<span class="kf_group_title">至</span>
+			<div class="kf_group_content">
+				<div class="kf_form_icon">
+					<input class="kf_form_text" type="text" id="endTime" placeholder="结束时间" /> <span
+						class="kf_form_text_icon kf_form_icon_time"></span>
+				</div>
+			</div>
+		</div>
+		<div class="kf_group">
+			<span class="kf_group_title">搜索</span>
+			<div class="kf_group_content">
+				<div class="kf_form_icon kf_search_text">
+					<input class="kf_form_text" type="text" id="search"
+						placeholder="请输入发起人姓名/工单编号查询" /> <span
+						class="kf_form_text_icon kf_form_icon_search"></span>
+				</div>
+
+			</div>
+		</div>
+		<div class="kf_group">
+			<div class="kf_group_content">
+				<button type="button" class="kf_btn" onclick="DateTraversal(1)">查 询</button>
+			</div>
+		</div>
+		<div class="kf_group kf_float_right">
+			<div class="kf_group_content">
+				<a href="javascript:void(0);" class="kf_btn kf_btn_word_add">新 增</a>
+				<button type="button" class="kf_btn">导出报表</button>
+			</div>
+		</div>
+	</div>
+	<div class="kf_table_box">
+		<table class="kf_table">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>单号</th>
+					<th>发起时间</th>
+					<th>工单类型</th>
+					<th>发起人</th>
+					<th>信息来源</th>
+					<th>处理状态</th>
+					<th>处理人</th>
+					<th>执行部门</th>
+					<!--<th>督查部门</th>-->
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody id="Date"></tbody>
+		</table>
+		<div class="kf_table_page">
+			<div class="kf_page_content kf_float_right ">
+				<span class="kf_page_text">每页<i>15</i>个，共<i>2</i>页
+				</span>
+				<input type="hidden" value="" id="pageNumber"/>
+				<input type="hidden" value="" id="lastPageNumber"/>
+				<ul class="kf_page_size">
+					<li onclick="prevDate()"><a class="kf_page_prev"></a></li>
+					<span></span>
+					<li onclick="nextDate()"><a class="kf_page_next"></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<!--描述：页面弹出框-->		
+		<div class="kf_mode_box">
+			<div class="kf_mode_shield"></div>
+			<div class="kf_mode_content kf_mode_work_add">
+				<div class="kf_mode_header">
+					<label class="kf_mode_title">请选择新增工单类型</label>
+					<a class="kf_mode_close"></a>
+				</div>
+				<div class="kf_mode_body kf_display_table">
+					<a class="kf_mode_work_item kf_mode_work_item1" href="listAdd?code=04">
+						咨询工单
+					</a>
+					<a class="kf_mode_work_item kf_mode_work_item2" href="listAdd?code=05">
+						建议工单
+					</a>
+					<a class="kf_mode_work_item kf_mode_work_item3" href="listAdd?code=03">
+						举报满集员工
+					</a>
+				</div>
+			</div>
+		</div>
+<!--描述：页面弹出框结束-->			
+#include("../common/_js.html")
+<script type="text/javascript" src="#(ctx)/static/pc/js/sheet/sheet.js"></script>
+<script type="text/javascript" src="#(ctx)/static/pc/js/pageDate.js"></script>
+<script>
+	$(function(){
+		
+		$(".kf_mode_close").click(function(){//隐藏弹出框
+			$(".kf_mode_shield, .kf_mode_content").hide();
+		});
+		
+		$(".kf_btn_word_add").click(function(){//显示弹出框
+			$(".kf_mode_shield, .kf_mode_work_add").show();
+		});
+	});
+</script>
+
+#end

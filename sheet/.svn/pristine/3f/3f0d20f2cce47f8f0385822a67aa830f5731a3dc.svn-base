@@ -1,0 +1,78 @@
+$(function(){
+	//用户提示
+	$(".kf_name .kf_input1").blur(function(){
+		var value = $(this).val();
+		if(value == ''){
+			$(".kf_tipname").css("display","block");
+			$(".kf_name").addClass("kf_bordercolor");
+		}else{
+			$(".kf_tipname").css("display","none");
+			$(".kf_name").removeClass("kf_bordercolor");
+		}
+	})
+	$(".kf_name .kf_input1").focus(function(){
+		var value = $(this).val();
+		if(value == ''){
+			$(".kf_tipname").css("display","block");
+			$(".kf_name").addClass("kf_bordercolor");
+		}else{
+			$(".kf_tipname").css("display","none");
+			$(".kf_name").removeClass("kf_bordercolor");
+		}
+	})
+	//密码提示
+	$(".kf_password .kf_input1").blur(function(){
+		var value = $(this).val();
+		if(value == ''){
+			$(".kf_tippassword").css("display","block");
+			$(".kf_password").addClass("kf_bordercolor");
+		}else{
+			$(".kf_tippassword").css("display","none");
+			$(".kf_password").removeClass("kf_bordercolor");
+		}
+	})
+	$(".kf_password .kf_input1").focus(function(){
+		var value = $(this).val();
+		if(value == ''){
+			$(".kf_tippassword").css("display","block");
+			$(".kf_password").addClass("kf_bordercolor");
+		}else{
+			$(".kf_tippassword").css("display","none");
+			$(".kf_password").removeClass("kf_bordercolor");
+		}
+	})
+	$(".kf_code .kf_input2").blur(function(){
+		var value = $(this).val();
+		if(value == ''){
+			$(".kf_tipcode").css("display","block");
+			$(".kf_code").addClass("kf_bordercolor");
+		}else{
+			$(".kf_tipcode").css("display","none");
+			$(".kf_code").removeClass("kf_bordercolor");
+		}
+	})
+	$(".kf_code .kf_input2").focus(function(){
+		var value = $(this).val();
+		if(value == ''){
+			$(".kf_tipcode").css("display","block");
+			$(".kf_code").addClass("kf_bordercolor");
+		}else{
+			$(".kf_tipcode").css("display","none");
+			$(".kf_code").removeClass("kf_bordercolor");
+		}
+	})	
+	
+	$(".kf_login img").click(function(){
+		var type = $(".kf_login img").attr("type");
+		if(type == "1" || type == "3" ){
+			$(this).attr("type",2);
+			$(this).attr("src","images/icon/login_state2.png");
+		}else{
+			$(this).attr("type",3);
+			$(this).attr("src","images/icon/login_state1.png");
+		}
+	})
+	if($("#message").val() == "ERROR"){
+   	 alert("账号不存在或密码错误");
+   }
+})

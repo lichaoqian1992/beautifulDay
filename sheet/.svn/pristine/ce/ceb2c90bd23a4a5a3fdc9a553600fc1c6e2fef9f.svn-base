@@ -1,0 +1,149 @@
+<div class="kf_block_box">
+	<div class="kf_form_title">
+		<span class="kf_form_content kf_icon kf_icon_electricity">仲裁结果</span>
+	</div>
+	<div class="kf_form_result">
+		<div class="kf_group">
+			<label class="kf_group_title"><i class="kf_color_danger">*</i>仲裁描述：</label>
+			<div class="kf_group_content">
+				#if(processLog!=null)
+					#(processLog.content)
+				#end
+			</div>
+		</div>
+		<div class="kf_group">
+			<span class="kf_group_title">&nbsp;</span>
+		    <div class="kf_group_content kf_group_text_tips kf_float_left">
+		    	<input type="hidden" class="picsalso" value="#(processLog.pics)"/>
+				<ul class="kf_upload_img"></ul>
+		    </div>
+		</div>
+	</div>
+</div> 
+<input type="hidden" class="sheetId" value="#(WorkNumber.id)"/>
+#if(WorkNumber.aClasscode!="false")
+<div class="kf_block_box">
+    <div class="kf_form_title">
+        <span class="kf_form_content kf_icon kf_icon_electricity">执行处罚</span>
+    </div>
+    <div class="kf_form_penalize_box">
+        <div class="kf_form_penalize">
+            <div class="kf_form_penalize_content">
+                <label class="kf_form_penalize_content_title">
+                    仲裁结果执行：
+                </label>
+                <div class="kf_form_penalize_list">
+                #if(seHandle.size()>0)
+	                #for(x : seHandle)
+	                	#if(x.type=="1")
+	                    <div class="kf_form_penalize_item">
+	                        <label class="kf_checkbox active">
+	                            <input type="checkbox" />扣信誉值：#(x.value)分
+	                        </label>
+	                    </div>
+	                    #elseif(x.type=="2")
+	                    <div class="kf_form_penalize_item ">
+	                        <label class="kf_checkbox active">
+	                            <input type="checkbox" />扣保证金：<label class="jianBond">#(x.value)</label>元
+	                        </label>
+	                    </div>
+	                    #elseif(x.type=="3")
+	                    <div class="kf_form_penalize_item">
+	                        <label class="kf_checkbox active">
+	                            <input type="checkbox" />赔&emsp;&emsp;偿：#(x.value)元
+	                        </label>
+	                    </div>
+	                    #elseif(x.type=="6")
+	                    <div class="kf_form_penalize_item">
+	                        <label class="kf_checkbox active">
+	                            <input type="checkbox" /><i class="kf_color_danger">强制关店</i>
+	                        </label>
+	                    </div>
+	                    #elseif(x.type=="4")
+	                    <div class="kf_form_penalize_item">
+	                        <label class="kf_checkbox active">
+	                            <input type="checkbox" /><i class="kf_color_danger">冻结店铺财务账号（不能提现）</i>
+	                        </label>
+	                    </div>
+	                    #elseif(x.type=="5")
+		                    <div class="kf_form_penalize_item">
+		                        <label class="kf_checkbox active">
+		                            <input type="checkbox" />强制下架
+		                        </label>
+		                    </div>
+		                #end
+	                #end  
+	            #else
+	            	<label style="font-size:16px;">无处罚</label>
+	            #end      
+                </div>
+				
+				#for(x : seHandle)
+	             	#if(x.type=="5")
+						#if(articleList.size()>0)
+				            <div class="kf_form_penalize_goods_list">
+				                <label>已选择商品</label>
+				                #for(xx : articleList)
+					                #if(x.value==xx.id)
+					                	<div class="kf_form_penalize_item">
+						                    <label class="kf_checkbox shop active">
+						                        <input type="checkbox">
+						                        <input type="hidden" value="#(xx.id)" class="shopId"/>
+						                        <img src="#(xx.img_url)">
+						                      #(xx.title)
+						                    </label>
+					                	</div>
+					                #end
+				                #end
+				            </div>
+             			#end
+	                #end
+                #end
+            </div>
+        </div>
+        #if(disabled!="disabled")
+        <div class="kf_form_penalize_execute">
+            <div class="kf_form_penalize_execute_btn">
+                <a class="kf_form_penalize_execute_btn_a"></a>
+            </div>
+            <div class="kf_form_penalize_execute_tips">
+                <label>温馨提示：</label>
+                <p>1、请仔细核对执行仲裁是否于仲裁详细一至</p>
+                <p>2、必须先“执行仲裁“才能”推送结果“</p>
+            </div>
+        </div>
+        #end
+    </div>
+</div>
+#else
+	#if(WorkNumber.OneCode=="07")
+	<div class="kf_block_box">
+		<div class="kf_form_title">
+			<span class="kf_form_content kf_icon kf_icon_electricity">执行仲裁</span>
+		</div>
+		<div class="kf_form_result">
+			<div class="kf_form_result_content">
+				#if(seHandle.size()!=0)
+					#for(x : seHandle)
+	                	#if(x.type=="7")
+	                		屏蔽该评价
+	                	#end
+                	#end	
+                #else
+                	维持原评价	
+				#end
+			</div>
+			#if(seHandle.size()!=0)
+				<div class="kf_form_result_btn">
+					<a class="kf_form_penalize_execute_btn_a"></a>
+				</div>
+			#end
+		</div>
+	</div>
+	#end
+#end
+<input type="hidden" class="codeTypeOne" value="#(WorkNumber.OneCode)"/>
+<div class="kf_form_footer">
+    <button type="button" class="kf_btn kf_btn_grey_main kf_form_btn_tuis kf_btn_disabled #(disabled)" #(disabled)>推送结果</button>
+    <button type="button" class="kf_btn" onclick="backBtn()">返 回</button>
+</div>

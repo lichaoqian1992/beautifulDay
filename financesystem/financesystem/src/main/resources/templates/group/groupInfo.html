@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>内部用户充值记录查询</title>
+    <link href="../../static/css/communal.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../../static/js/communal.js"></script>
+    <script type="text/javascript" src="../../static/js/group/groupInfo.js"></script>
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="#">集团管理</a></li>
+        <li><a href="#">集团账户信息</a></li>
+    </ul>
+</div>
+<input type="hidden" id="myCount"/>
+<!-- 弹出层 -->
+<div class="box"></div>
+<div class="hint">
+    <div class="hint-in1">
+        <div style="line-height:70px;color:#f4e8df;font-size:26px;padding-left:80px;">温馨提醒</div>
+    </div>
+    <div class="hint-in2"><p id="hint-in2" class="tishi"></p></div>
+    <div class="hint-in3" onclick="closeMessage()">确定</div>
+</div>
+<div id="tab2" >
+    <ul class="seachform" style="margin-left:0.5%;margin-top: 0.5%;">
+
+        <li><label>集团名称</label><input name="" type="text" class="scinput" id="groupName" style="background: transparent"/></li>
+        <li><label>管理类型</label>
+            <div class="styled-select" style="width: 110px;">
+                <select id="managerType" class="mySelect" style="width: 130px;">
+                    <option value=""></option>
+                    <option value="0">直营店</option>
+                    <option value="1">加盟店</option>
+                </select>
+            </div>
+        </li>
+        <li>
+            <label>申请时间</label><input style="width: 90px"  class="scinput"
+                                      readonly="readonly"
+                                      type="text" id="startTime"
+                                      onclick="WdatePicker()"/>&nbsp;-
+            <input style="width: 90px"  class="scinput"
+                   readonly="readonly"
+                   type="text" id="endTime"
+                   onclick="WdatePicker()"/>
+        </li>
+        <li><label>&nbsp;</label><input onclick="searchInfo()" name="" type="button" class="scbtn" value="查询"/>&nbsp;&nbsp;
+            <!--<label></label><input onclick="exportTable()" style="background:#acd31c"
+                                  type="button" class="scbtn"
+                                  value="导出Excel"/>-->
+            &nbsp;<label>&nbsp;</label><input style="background:lightgray" onclick="reset()" name="" type="button" class="scbtn"
+                                              value="重置"/></li>
+    </ul>
+
+    <table class="tablelist" id="userAccount">
+        <thead>
+        <tr>
+            <th><input name="checkAll" type="checkbox" value="" onclick="selectAll()"/></th>
+            <th>编号</th>
+            <th>用户ID<i class="sort"><img src="../../static/images/px.gif"/></i></th>
+            <th>用户角色类型</th>
+            <th>用户角色值</th>
+            <th>集团名称</th>
+            <th>商家总数</th>
+            <th>录入平台总数</th>
+            <th>预付款余额</th>
+            <th>集团管理类型</th>
+            <th>申请时间</th>
+            <th>更新时间</th>
+            <th>更新状态</th>
+            <th>当前状态</th>
+        </tr>
+        </thead>
+        <tbody id="userAccountData">
+        </tbody>
+    </table>
+    <!--分页 -->
+    <div id="fy">
+    </div>
+</div>
+<div class="pagin" id="myPageInfo"></div>
+</body>
+</html>

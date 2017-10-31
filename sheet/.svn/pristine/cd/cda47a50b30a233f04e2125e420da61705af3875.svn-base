@@ -1,0 +1,19 @@
+package com.manji.sheet.base;
+
+
+import com.jfinal.config.Routes;
+import com.manji.sheet.controller.IndexController;
+
+
+public class _RouteKit {
+
+	public static Routes routing(Routes route) {
+		
+		route.add("/",IndexController.class);
+		return route;
+		
+		
+	}
+
+
+}

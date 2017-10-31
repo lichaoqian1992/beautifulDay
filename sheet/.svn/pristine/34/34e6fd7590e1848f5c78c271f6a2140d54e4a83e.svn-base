@@ -1,0 +1,32 @@
+package com.manji.sheet.validator.pc.shop;
+
+/**
+ * Created by pudding on 2017-7-12.
+ */
+
+import com.jfinal.core.Controller;
+import com.jfinal.validate.Validator;
+import com.manji.sheet.model.bean.Account;
+
+public class sessionValidator extends Validator {
+
+
+    @Override
+    protected void validate(Controller c) {
+        Account account=c.getSessionAttr("Account");
+        if (account==null){
+            String a=getActionKey();
+            validateRequiredString("APPPathErr","0009",a);
+        }
+    }
+
+    @Override
+    protected void handleError(Controller c) {
+        String a=getActionKey();
+        if (a.equals("")){
+            c.render("app/error.html");
+        }else{
+            c.render("shopApp/error.html");
+        }
+    }
+}

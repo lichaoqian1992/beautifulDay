@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>商家订单信息</title>
+    <link href="../../static/css/communal.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../../static/js/communal.js"></script>
+    <script type="text/javascript" src="../../static/js/orders/dtOrders.js"></script>
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="#">订单管理</a></li>
+        <li><a href="#">订单信息</a></li>
+    </ul>
+</div>
+<input type="hidden" id="myCount"/>
+<!-- 弹出层 -->
+<div class="box"></div>
+<div class="hint">
+    <div class="hint-in1">
+        <div style="line-height:70px;color:#f4e8df;font-size:26px;padding-left:80px;">温馨提醒</div>
+    </div>
+    <div class="hint-in2"><p id="hint-in2" class="tishi"></p></div>
+    <div class="hint-in3" onclick="closeMessage()">确定</div>
+</div>
+<div id="tab2" >
+    <ul class="seachform" style="margin-left:0.5%;margin-top: 0.5%;">
+
+        <li><label>商家名称</label><input name="" type="text" class="scinput" id="shopName" style="background: transparent"/></li>
+        <li><label>订单状态</label>
+            <div class="styled-select">
+                <select id="orderStatus" class="mySelect">
+                    <option value=""></option>
+                    <option value="1">生成订单</option>
+                    <option value="2">确认订单</option>
+                    <option value="3">完成订单</option>
+                    <option value="4">取消订单</option>
+                    <option value="5">锁定订单</option>
+                    <option value="6">卖家取消订单</option>
+                </select>
+            </div>
+        </li>
+        <li><label>&nbsp;</label><input onclick="searchInfo()" name="" type="button" class="scbtn" value="查询"/>&nbsp;&nbsp;
+            &nbsp;<label>&nbsp;</label><input onclick="exportTable()" style="background:#acd31c"
+                                              type="button" class="scbtn"
+                                              value="导出Excel"/>&nbsp;&nbsp;
+            &nbsp;<label>&nbsp;</label><input style="background:lightgray" onclick="reset()" name="" type="button" class="scbtn"
+                                              value="重置"/></li>
+    </ul>
+    <table class="tablelist" id="userAccount" style="width: 100%;">
+        <thead>
+        <tr>
+            <th>编号<i class="sort"><img src="../../static/images/px.gif"/></i></th>
+            <th>商家ID</th>
+            <th>商家名称</th>
+            <th>所在区域</th>
+            <th>联系电话</th>
+            <th>提点比例</th>
+            <th>订单编号</th>
+            <th>订单类型</th>
+            <th>订单标题</th>
+            <th>订单金额</th>
+            <th>应付总金额</th>
+            <th>实付总金额</th>
+            <th>订单状态</th>
+            <th>支付状态</th>
+            <th>结算状态</th>
+            <th>结算时间</th>
+        </tr>
+        </thead>
+        <tbody id="userAccountData">
+        </tbody>
+    </table>
+    <!--分页 -->
+    <div id="fy" style="width: 100%;">
+    </div>
+</div>
+</body>
+</html>

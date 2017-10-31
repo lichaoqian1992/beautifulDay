@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>我被举报</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/my_report.css" />
+	</head>
+
+	<body class="my_report">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left" href="/sheet/shopApp/ReportManagement"> </a>
+			<h1 class="mui-title">我被举报</h1>
+			
+		</header>
+		<div class="mui-content">
+			#for(x:recordList)
+			#if(for.size > 0 && for.index == 0)
+			<div class="content">
+				<ul class="content_list">
+					#for(list:recordList)
+					<li class="list_item">
+						<a class="a1" href="javascript:void(0)" onclick="ireportInfo(this)">
+							<p class="p1"><span>举报时间：</span><span class="span2">#(list.start_time)</span></p>
+							<p class="p2"><span>举报类型： </span><span class="span2">#(list.title)</span></p>
+							#if(list.status=="3")
+							<img class="img1" src="#(ctx)/static/shopApp/images/my_report_icon1.png" />
+							#end
+							#if(list.status=="4")
+							<img class="img1" src="#(ctx)/static/shopApp/images/my_report_icon1.png" />
+							#end
+							#if(list.status=="5")
+							<img class="img1" src="#(ctx)/static/shopApp/images/my_report_icon2.png" />
+							#end
+							#if(list.status=="6")
+							<img class="img1" src="#(ctx)/static/shopApp/images/my_report_icon2.png" />
+							#end
+						</a>
+						<input type="hidden" value="#(list.id)"/>
+					</li>
+					#end
+				</ul>
+			</div>
+			#end
+			#else
+			<div class="no_content2">
+				<p class="p1">当前无举报</p>
+			</div>
+		#end
+		</div>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/mui.min.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/report/Ireport/i_reported.js"></script>
+
+	</body>
+
+</html>

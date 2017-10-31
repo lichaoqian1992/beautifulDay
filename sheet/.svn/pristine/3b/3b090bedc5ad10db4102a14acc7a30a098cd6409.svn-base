@@ -1,0 +1,57 @@
+<div class="kf_block_box">
+    <div class="kf_form_title">
+        <span class="kf_form_content kf_icon kf_icon_electricity">仲裁结果</span>
+    </div>
+    <form id="accept">
+	    <div class="kf_form_result">
+	        <div class="kf_group">
+	            <label class="kf_group_title"><i class="kf_color_danger">*</i>受&emsp;&emsp;理：</label>
+	            <div class="kf_group_content">
+	                <label class="kf_radio">
+	                    <input type="radio" value="0" name="tance" isid="#shouli"/>受理
+	                </label>
+	                <label class="kf_radio">
+	                    <input type="radio" value="1" name="tance" isid="#bushouli"/>不受理
+	                </label>
+	            </div>
+	        </div>
+	        <div class="kf_group_result">
+	            <div class="kf_group kf_hide" id="shouli">
+	                <label class="kf_group_title"><i class="kf_color_danger">*</i>分&nbsp;&nbsp;配&nbsp;至：</label>
+	                <div class="kf_group_content kf_form_text_textarea_length">
+	                    <div class="kf_result_department">
+	                        <label class="kf_result_department_name">执行部门</label>
+	                        <select class="kf_form_text" id="implement" name="implement">
+	                            <option value="">选择部门</option>
+	                            #for(x : dept)
+	                                <option value="#(x.id)">#(x.name)</option>
+	                            #end
+	                        </select>
+	                    </div>
+	                    <div class="kf_result_department">
+	                        <span class="kf_result_department_jt"></span>
+	                    </div>
+	                    <div class="kf_result_department">
+	                        <label class="kf_result_department_name">督查部门</label>
+	                        <select class="kf_form_text" id="supervision" name="supervision">
+	                            <option value="2">监察部</option>
+	                        </select>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="kf_group kf_hide" id="bushouli">
+	                <label class="kf_group_title"><i class="kf_color_danger">*</i>说&emsp;&emsp;明：</label>
+	                <div class="kf_group_content kf_group_text_tips">
+	                    <textarea class="kf_form_text kf_form_text_textarea_length" name="explain" id="explain" maxlength="500" placeholder="请输入说明，最少10个字"></textarea>
+	                    <span class="kf_form_text_number"><i>0</i>/500</span>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    <input type="hidden" name="sheetId" value="#(WorkNumber.id)"/>
+    </form>
+</div>
+<div class="kf_form_footer">
+    <button type="button" class="kf_btn kf_form_ok">确 定</button>
+    <button type="button" class="kf_btn">返 回</button>
+</div>

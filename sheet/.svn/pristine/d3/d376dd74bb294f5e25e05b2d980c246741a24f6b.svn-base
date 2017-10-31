@@ -1,0 +1,188 @@
+package com.manji.sheet.controller;
+
+
+import java.util.List;
+import java.util.Map;
+
+import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
+import com.manji.sheet.model.reqParam.EvaluateParam;
+import com.manji.sheet.model.reqParam.WorkOrderParam;
+import com.manji.sheet.service.ManageService;
+import com.manji.sheet.utils.WorkerNumberUtil;
+
+/**
+ * Created by Administrator on 2017/6/17.
+ */
+public class ManageController extends Controller {
+
+
+    private ManageService manageService = new ManageService();
+    private WorkerNumberUtil WorkerUtil;
+    private int pageSize=20;
+
+    /**
+     * 受理页面
+     */
+    public void list() {
+        if(!getPara("ajax","").equals("")){
+            WorkOrderParam workOrder=new WorkOrderParam();
+            workOrder=Verification(workOrder);
+            Page<Record> managePage=manageService.Acceptance(Integer.parseInt(getPara("page","1").toString()),pageSize,workOrder);
+            managePage=orderSum(managePage);
+            renderJson(managePage);
+        }else{
+            Map<String, Object> map=manageService.fromType();
+            if(!getPara("status","").equals("")){
+                setAttr("status",getPara("status"));
+            }
+            setAttr("fromList",(List<Record>) map.get("fromList"));
+            setAttr("typeList",(List<Record>) map.get("typeList"));
+            render("accept_list.html");
+        }
+    }
+    /**
+     *工单详情界面
+     */
+    public void acceptDetail() {
+        if(!getPara("ajax","").equals("")){
+            List<Record> RefundShopList= manageService.SelectRefundShop(Integer.parseInt(getPara("id")));
+            renderJson(RefundShopList);
+        }else{
+            int id=Integer.parseInt(getPara("id",""));
+            Map<String, Object> map=manageService.SelectWorkNumber(id);
+            Record WorkNumber=(Record) map.get("WorkNumber");
+            List<Record> WorkInfo=(List<Record>) map.get("WorkInfo");
+            //检查部门查询
+            List<Record> dept=manageService.dept();
+            List<Record> RefundList=null;
+            if(!WorkNumber.get("order_id").equals("") && WorkNumber.get("order_id")!=null && Integer.parseInt(WorkNumber.get("order_id").toString())!=0){
+                if(manageService.detilOrderCount(Integer.parseInt(WorkNumber.get("order_id").toString()))>0){
+                    //退单详情
+                    Map<String, Object> detilMapInfo=manageService.SelectRefund((Record) map.get("WorkNumber"));
+                    RefundList=(List<Record>)detilMapInfo.get("RefundList");
+                }
+                //交易纠纷订单信息
+                Map<String, Object> OrderMapInfo=manageService.SelectOrderInfo((Record) map.get("WorkNumber"));
+                setAttr("OrderHave","true");
+                setAttr("rc",(Record)OrderMapInfo.get("rc"));
+                setAttr("BuyersList",(List<Record>)OrderMapInfo.get("BuyersList"));
+                setAttr("logistics",(Record)OrderMapInfo.get("logistics"));
+                setAttr("ShipAddress",(Record)OrderMapInfo.get("ShipAddress"));
+                setAttr("BuyersInfo",(Record)OrderMapInfo.get("BuyersInfo"));
+
+            }
+
+            setAttr("dept",dept);
+            setAttr("WorkNumber",WorkNumber);
+            setAttr("WorkInfo",WorkInfo);
+            setAttr("RefundList",RefundList);
+            setAttr("status",getPara("status",""));
+            render("workorder_Pending.html");
+        }
+    }
+
+    /**
+     * 新增工单
+     */
+    public void InsertWorkNumber(){
+        if(!getPara("ajax").equals("")){
+
+            renderJson();
+        }else{
+            render("");
+        }
+    }
+
+    /**
+     * 工单（受理/不受理）
+     */
+    public void acceptance(){
+
+    }
+
+    public WorkOrderParam Verification(WorkOrderParam WorkOrder){
+        WorkOrderParam workOrder=new WorkOrderParam();
+        workOrder.setStatus(getPara("status",""));
+        workOrder.setSearch(getPara("search",""));
+        workOrder.setStartTime(getPara("startTime",""));
+        workOrder.setEndTime(getPara("endTime",""));
+        workOrder.setSourceCode(getPara("sourceCode",""));
+        workOrder.setTypeCode(getPara("typeCode",""));
+        return workOrder;
+    }
+
+    public Page<Record> orderSum(Page<Record> list){
+        int i=1;
+        for(Record  x : list.getList()){
+            x.set("sumId",i);
+            i++;
+        }
+        return list;
+    }
+
+    /************************************************************************************************************************************************************/
+    /**
+     * 工单流程查询
+     */
+    public void findSheetFlow(){
+    	
+    	String sheet_no = getPara("sheet_no");
+    	List<Record> list = manageService.findSheetFlow(sheet_no);
+    	renderJson(list);
+    }
+    
+    /**
+     * 根据工单编号查询工单信息
+     */
+    public void findSheets(){
+    	
+    	String sheet_no = getPara("sheet_no");
+    	
+    	Record sheet = manageService.findSheets(sheet_no);
+    	renderJson(sheet);
+    	
+    }
+    /**
+     * 根据工单编号查询工单资料     因为一个工单可能存在多条资料，所以是集合形式
+     */
+    public void findSheetInfo(){
+    	
+    	String sheet_no = getPara("sheet_no");
+    	List<Record> list = manageService.findSheetInfo(sheet_no);
+    	renderJson(list);
+    }
+    /**
+     * 查询订单评论信息
+     */
+    public void findOrderScore(){
+    	String sheet_no = getPara("sheet_no");
+    	
+    	List<Record> shopScore = manageService.findShopScore(sheet_no);
+    	List<Record> goodsScore = manageService.findGoodsScore(sheet_no);
+    	List<Record> goodsTitle = manageService.findGoodsTitle(sheet_no);
+    	setAttr("shopScore", shopScore);//商家评分
+    	setAttr("goodsScore", goodsScore);//商品评分
+    	setAttr("goodsTitle", goodsTitle);//商品评价
+    	renderJson();
+    }
+    
+    /**
+     * 处理工单。。。（各种状态的操作）
+     */
+    public void isAcceptance(){
+    	Record u = new Record().set("opr_dept_id", 1).set("opr_dept", "技术部").set("opr_user_id", 2).set("opr_user", "刘英杰");
+    	setSessionAttr("user", u);
+    	EvaluateParam evaluate = getBean(EvaluateParam.class);
+    	Record user = getSessionAttr("user");
+    	boolean flag = manageService.isAcceptance(evaluate,user);
+    	if(flag){
+    		setAttr("message", "SUCCESS");
+    	}else{
+    		setAttr("message", "ERROR");
+    	}
+    	renderJson();
+    }
+    
+}

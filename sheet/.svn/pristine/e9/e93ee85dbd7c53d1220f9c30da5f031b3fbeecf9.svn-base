@@ -1,0 +1,120 @@
+package com.manji.sheet.controller;
+
+import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Record;
+import com.manji.sheet.service.AppService;
+
+
+//APP接口调用
+public class AppController extends Controller{
+	AppService appser=new AppService();
+	
+	
+	
+	public void index(){
+
+
+
+
+		
+	}
+	
+	
+	
+	/**
+	 * 工单二级类型
+	 */
+	public void secondType(){
+		
+		
+		
+	}
+
+
+	/**
+	 * 商家信息查询
+	 */
+	public void shopInfo(){
+		Integer shopId=Integer.parseInt(getPara("shopId",""));
+		String reportType=getPara("reportType","");
+		Record shopInfo=appser.getShopByName(shopId);
+		setAttr("shopInfo",shopInfo);
+		setAttr("reportType",reportType);
+		render("");
+	}
+
+	/**
+	 * 商家举报
+	 */
+	public void shopReport(){
+
+	}
+	
+	/**
+	 * 商品举报
+	 */
+	public void goodsReport(){
+
+	}
+	
+	/**
+	 * 举报满集员工
+	 */
+	public void manjiReport(){
+		
+		
+		
+	}
+	
+	/**
+	 * 举报
+	 */
+	public void report(){
+		
+		
+		
+	}
+	
+	/**
+	 * 交易纠纷
+	 */
+	public void dispute(){
+		
+		
+		
+		
+	}
+	
+	/**
+	 * 建议
+	 */
+	public void suggest(){
+		
+		
+		
+		
+		
+		
+	}
+	
+	/**
+	 * 添加资料
+	 */
+	public void addInfo(){
+		
+		
+		
+	}
+	
+	/**
+	 * 用户取消
+	 */
+	public void cancle(){
+		
+		
+		
+		
+	}
+	
+	
+}

@@ -1,0 +1,59 @@
+#@pclayout()
+#define main()
+
+		<!--描述：页面内容部分-->
+		<div class="kf_content_box">
+			<div class="kf_bg_box">
+				<div class="kf_nav">
+					<a class="kf_nav_home kf_nav_item">首页</a>
+					<a class="kf_nav_item">基础设置</a>
+					<span class="kf_nav_item kf_nav_item_last">工单类型</span>
+				</div>
+				<div class="kf_type_block">
+					<div class="kf_form_title">
+						<span class="kf_form_content kf_icon kf_icon_role">请选择工单类型查看</span>
+					</div>
+					<div class="kf_type_list">
+						<a class="kf_type_itme" href="/sheet/base/findSheetTypeByCode?code=06">
+							<span class="kf_type_itme_img kf_type_itme_img_1">
+								<img src="#(ctx)/static/pc/images/type_1.png" />
+							</span>
+							<span>交易纠纷工单类型管理</span>
+						</a>
+						<a class="kf_type_itme" href="/sheet/base/findJB">
+							<span class="kf_type_itme_img kf_type_itme_img_2">
+								<img src="#(ctx)/static/pc/images/type_2.png" />
+							</span>
+							<span>举报工单类型管理</span>
+						</a>
+						<a class="kf_type_itme" href="/sheet/base/findSheetTypeByCode?code=05">
+							<span class="kf_type_itme_img kf_type_itme_img_3">
+								<img src="#(ctx)/static/pc/images/type_3.png" />
+							</span>
+							<span>建议工单类型管理</span>
+						</a>
+						<a class="kf_type_itme" href="/sheet/base/findSheetTypeByCode?code=04">
+							<span class="kf_type_itme_img kf_type_itme_img_4">
+								<img src="#(ctx)/static/pc/images/type_4.png" />
+							</span>
+							<span>咨询工单类型管理</span>
+						</a>
+						<a class="kf_type_itme kf_type_itme_no">
+							<span class="kf_type_itme_img kf_type_itme_img_5">
+								<img src="#(ctx)/static/pc/images/type_5.png" />
+							</span>
+							<span>纠正工单</span>
+						</a>
+						<a class="kf_type_itme" href="/sheet/base/findSheetTypeByCode?code=07">
+							<span class="kf_type_itme_img kf_type_itme_img_2">
+								<img src="#(ctx)/static/pc/images/type_6.png" />
+							</span>
+							<span>评价纠纷工单</span>
+						</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!--描述：页面内容部分结束-->
+#end

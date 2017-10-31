@@ -1,0 +1,117 @@
+package com.manji.sheet.controller;
+
+import com.jfinal.aop.Before;
+import com.jfinal.core.Controller;
+import com.jfinal.json.JFinalJson;
+import com.manji.sheet.model.common.SheetResult;
+import com.manji.sheet.service.BuyerPcService;
+import com.manji.sheet.validator.pc.buyer.ParaValidator;
+
+@Before(ParaValidator.class)
+public class BuyerPcController extends Controller{
+	
+	private BuyerPcService service = new BuyerPcService();
+	
+	/*
+	 * 客服系统 -建议
+	 * */
+	/**
+	 * 我的工单
+	 */
+	public void mySheet(){
+		
+		//获取参数
+		String userId = getPara("user_id");
+		String pageNum = getPara("page_num");
+		String type = getPara("sheet_type");
+		String callBack = getPara("callback");
+		//获取数据
+		SheetResult result = service.mySheet(userId, pageNum, type);
+		
+		renderText(callBack+"("+JFinalJson.getJson().toJson(result).toString()+")");
+	}
+	/**
+	 * 新增工单
+	 *
+	 */
+	public void addSheet(){
+		
+		//获取参数
+		String userId = getPara("user_id");
+		String code = getPara("code");
+		String descr = getPara("descr");
+		String pics = getPara("pics");
+		String type = getPara("sheet_type");//工单类型
+		String callBack = getPara("callback");
+
+		SheetResult result = service.saveSheet(userId, code, descr, pics, type);
+		
+		renderText(callBack+"("+JFinalJson.getJson().toJson(result).toString()+")");
+		
+	}
+	
+	/**
+	 * 查询建议详情
+	 */
+	public void sheetDetail(){
+		
+		//获取参数
+		String sheet_id = getPara("sheet_id");
+		String callBack = getPara("callback");
+		
+		SheetResult result = service.findSheetDetail(sheet_id);
+		
+		renderText(callBack+"("+JFinalJson.getJson().toJson(result).toString()+")");
+		
+	}
+	
+	
+	/*
+	 * 客服系统 -交易纠纷
+	 * */
+	/**
+	 * 获取工单的类型
+	 */
+	public void findSheetType(){
+		
+		//获取参数
+		String type = getPara("sheet_type");
+		String callBack = getPara("callback");
+		
+		//获取工单的类型
+		SheetResult result = service.findSheetType(type);
+		
+		renderText(callBack+"("+JFinalJson.getJson().toJson(result).toString()+")");
+		
+	} 
+	/**
+	 * 给工单补充资料
+	 */
+	public void addData(){
+		
+		//获取参数
+		String userId = getPara("user_id");
+		String sheet_id = getPara("sheet_id");
+		String descr = getPara("descr");
+		String pics = getPara("pics");
+		String callBack = getPara("callback");
+		
+		//保存添加的资料
+		SheetResult result = service.addData(userId,sheet_id, descr, pics);
+		
+		renderText(callBack+"("+JFinalJson.getJson().toJson(result).toString()+")");
+	}
+	/**
+	 * 自行解决
+	 */
+	public void resovled(){
+		
+		
+		
+	}
+	
+	/*
+	 * 客服系统 -举报
+	 * */
+	
+}

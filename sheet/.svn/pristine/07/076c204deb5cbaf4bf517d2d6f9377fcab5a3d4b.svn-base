@@ -1,0 +1,169 @@
+package com.manji.sheet.controller;
+
+import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Record;
+import com.manji.sheet.model.reqParam.SheetInfoParam;
+import com.manji.sheet.service.BuyersAppService;
+import com.manji.sheet.utils.WorkerNumberUtil;
+
+import java.util.List;
+
+
+//APP接口调用
+public class BuyersAppController extends Controller{
+	BuyersAppService appser=new BuyersAppService();
+	private WorkerNumberUtil WorkerUtil;
+
+
+	public void index(){
+
+	}
+	
+
+	/**
+	 * 商家信息查询
+	 */
+	public void shopInfo(){
+
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+		Record shopInfo=appser.getShopByName(sheetInfo.getShopId());
+		List<Record> codeReportList= WorkerUtil.getcodeReport(sheetInfo.getCodeReport());
+
+		setAttr("sheetInfo",sheetInfo);
+		setAttr("shopInfo",shopInfo);//店铺信息
+		setAttr("codeReportList",codeReportList);//二级类型信息
+
+		render("");
+	}
+
+	/**
+	 * 商家举报
+	 */
+	public void shopReport(){
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+		String stu=appser.saveShopReport(sheetInfo);
+		renderJson(stu);
+	}
+
+
+	/**
+	 * 商品举报查询
+	 */
+	public void goodsReportInfo() {
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+
+		Record commodityInfo=appser.getCommodityInfo(sheetInfo.getArticleId());
+		List<Record> codeReportList= WorkerUtil.getcodeReport(sheetInfo.getCodeReport());
+
+		setAttr("sheetInfo",sheetInfo);
+		setAttr("commodityInfo",commodityInfo);//店铺商品信息
+		setAttr("codeReportList",codeReportList);//二级类型信息
+
+		render("");
+	}
+
+	/**
+	 * 商品举报
+	 */
+	public void goodsReport(){
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+	}
+
+	/**
+	 * 举报满集员工信息
+	 */
+	public void manjiReportInfo(){
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+
+		List<Record> codeReportList= WorkerUtil.getcodeReport(sheetInfo.getCodeReport());
+
+		setAttr("sheetInfo",sheetInfo);
+		setAttr("codeReportList",codeReportList);//二级类型信息
+
+		render("");
+	}
+	
+	/**
+	 * 举报满集员工
+	 */
+	public void manjiReport(){
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+	}
+
+	/**
+	 * 举报详情
+	 */
+	public void reportInfo(){
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+		List<Record> list=appser.reportInfo(sheetInfo);
+		setAttr("reportInfo",list);
+		render("");
+	}
+
+	/**
+	 * 纠纷查询
+	 */
+	public void disputeInfo(){
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+
+		Record orderInfo=appser.getOrderInfo(sheetInfo.getOrderId());
+		List<Record> codeReportList= WorkerUtil.getcodeReport(sheetInfo.getCodeReport());
+
+		setAttr("sheetInfo",sheetInfo);
+		setAttr("orderInfo",orderInfo);//店铺订单信息
+		setAttr("codeReportList",codeReportList);//二级类型信息
+
+		render("");
+	}
+	/**
+	 * 交易纠纷
+	 */
+	public void dispute(){
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+	}
+
+	/**
+	 * 建议详情查询
+	 */
+	public void suggestInfo(){
+		render("");
+	}
+
+	/**
+	 * 建议
+	 */
+	public void suggest(){
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+	}
+	
+	/**
+	 * 添加资料详情
+	 */
+	public void addInfo(){
+		render("");
+	}
+
+	/**
+	 * 添加资料
+	 */
+	public void add(){
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+	}
+
+
+	/**
+	 * 用户取消详情查询
+	 */
+	public void cancleInfo(){
+		render("");
+	}
+	
+	/**
+	 * 用户取消
+	 */
+	public void cancle(){
+		SheetInfoParam sheetInfo=getBean(SheetInfoParam.class, "");
+	}
+	
+	
+}

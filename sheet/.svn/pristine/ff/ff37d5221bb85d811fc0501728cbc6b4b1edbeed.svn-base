@@ -1,0 +1,55 @@
+package com.manji.sheet.controller;
+
+import javax.servlet.http.HttpSession;
+
+import com.jfinal.core.Controller;
+import com.manji.sheet.model.reqParam.SheetInfoParam;
+
+
+/**
+ * 本地登陆相关
+ * @author Administrator
+ *
+ */
+public class IndexController extends Controller{
+	
+	
+	
+	public void index(){
+		
+		
+		HttpSession session =getSession();
+		
+		
+		if(session ==null){
+			renderText("sb");
+			
+			
+		}else{
+			
+			
+			
+			
+		}
+		
+	}
+	
+	
+	
+	public void login(){
+		
+		
+		
+		
+		
+	}
+	
+	
+	public void home(){
+		
+		
+		render("home.html");
+	}
+	
+
+}

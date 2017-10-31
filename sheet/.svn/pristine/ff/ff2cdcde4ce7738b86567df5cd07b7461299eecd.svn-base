@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>意见建议</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/opinon_suggest.css" />
+	</head>
+
+	<body class="opinion_suggest">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"> </a>
+			<h1 class="mui-title">意见建议</h1>
+		</header>
+		<div class="mui-content">
+           <div class="content">
+           	 <div class="opinion_suggest_time">
+           	 	<span class="span1">建议时间:</span><span>#(sheet.start_time)</span>
+           	 </div>
+           	 <div class="opinion_suggest_type">
+           	 	<span class="span1">建议类型:</span><span>#(type.title)</span>
+           	 </div>
+           	 <div class="opinion_suggest_detail">
+           	 	  <span class="span1">详细描述:</span>
+           	 	  <div class="detail_text">
+           	 	  	<p class="p1">#(info.descr)</p>
+					  <!--判断有无图片-->
+					  #if(info.pics!="")
+					  <!--开始分割图片-->
+					  #for(img:info.pics.split(","))
+           	 	  	<img class="img1" src="#(img)"/>
+					  #end
+					  #end
+           	 	  </div>
+           	 	  
+           	 </div>
+			   #if(sheet.status=='5')
+           	 <div class="opinion_suggest_result">
+           	 	  <span class="span1">满集答复:</span>
+           	 	  <p class="p1">感谢您的宝贵意见，我们已经将您反应的问题记录在案相信在下次更新软件的时候您就能会发现已经改变了 </p>
+           	 </div>
+			   #end
+           	 <div class="footer_text">
+           	 	<p>感谢您提出的宝贵意见！ </p>
+           	 	<p> 联系电话：<span class="p_span1">400-0000-0000</span></p>
+           	 </div>
+           </div>
+
+		</div>
+
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/mui.min.js"></script>
+		<script type="text/javascript" src=""></script>
+
+	</body>
+
+</html>

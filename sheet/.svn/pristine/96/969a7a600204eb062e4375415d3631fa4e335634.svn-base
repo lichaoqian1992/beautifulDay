@@ -1,0 +1,445 @@
+<div class="kf_mode_box ">
+    <div class="kf_mode_shield"></div>
+    <div class="kf_mode_content kf_mode_affirm">
+        <div class="kf_mode_header">
+            <label class="kf_mode_title">请确认操作</label>
+        </div>
+        <div class="kf_mode_body kf_display_table">
+            <div class="kf_display_table_cell">
+                <label>温馨提示</label>
+                <p>请仔细审查工单，确定仲裁合理。</p>
+            </div>
+        </div>
+        <div class="kf_mode_footer">
+            <button class="kf_btn kf_btn_grey kf_mode_btn_close" type="button">取 消</button>
+            <button class="kf_btn kf_mode_btn_ok" isclass=".kf_mode_affirm" type="button">确 定</button>
+        </div>
+    </div>
+    <div class="kf_mode_content kf_mode_arbitration">
+        <div class="kf_mode_header">
+            <label class="kf_mode_title">仲裁结果录入</label>
+            <a class="kf_mode_close"></a>
+        </div>
+        <div class="kf_mode_body">
+            <div class="kf_form_penalize_list chufa">
+                <div class="kf_form_penalize_item">
+                    <label class="kf_checkbox">
+                        <input type="checkbox">扣信誉值：<input class="kf_form_text sum"  type="text" placeholder="请录入数字"/>分
+                    </label>
+                </div>
+                <div class="kf_form_penalize_item">
+                    <label class="kf_checkbox">
+                        <input type="checkbox">扣保证金：<input class="kf_form_text sum"  type="text" placeholder="请录入数字"/>元
+                    </label>
+                </div>
+                <div class="kf_form_penalize_item">
+                    <label class="kf_checkbox">
+                        <input type="checkbox">
+                        赔  偿：<input class="kf_form_text sum" type="text" placeholder="请录入数字"/>元<span>（从待结算的钱里扣除）</span>
+                    </label>
+                </div>
+                <div class="kf_form_penalize_item">
+                    <label class="kf_checkbox">
+                        <input type="checkbox"><i class="kf_color_danger">强制关店</i>
+                    </label>
+                </div>
+                <div class="kf_form_penalize_item">
+                    <label class="kf_checkbox">
+                        <input type="checkbox"><i class="kf_color_danger">冻结店铺财务账号（不能提现）</i>
+                    </label>
+                </div>
+                 #if(articleList.size()>0)
+                <div class="kf_form_penalize_item">
+                    <label class="kf_checkbox">
+                        <input type="checkbox" class="goods_list_show">强制下架
+                    </label>
+                </div>
+                #end
+            </div>
+            
+			#if(articleList.size()>0)
+            <div class="kf_form_penalize_goods_list kf_hide chufashop" id="goods_list">
+                <label>已选择商品</label>
+                #for(x : articleList)
+                <div class="kf_form_penalize_item">
+                    <label class="kf_checkbox shop">
+                        <input type="checkbox">
+                        <input type="hidden" value="#(x.id)" class="shopId"/>
+                        <img src="#(x.img_url)">
+                      #(x.title)
+                    </label>
+                </div>
+                #end
+            </div>
+             #end
+            <div class="kf_form_penalize_mode_tips kf_hide" >你有勾选的处罚项未填写</div>
+        </div>
+        <div class="kf_mode_footer">
+            <button class="kf_btn kf_btn_grey kf_mode_btn_close" type="button">取 消</button>
+            <button class="kf_btn kf_mode_arbitration_btn_ok" isclass=".kf_mode_arbitration"type="button">确 定</button>
+        </div>
+    </div>
+    <div class="kf_mode_content kf_mode_tips">
+        <div class="kf_mode_tips_box">
+            保存成功
+        </div>
+    </div>
+    <div class="kf_mode_content kf_mode_logistics">
+        <div class="kf_mode_header">
+            <label class="kf_mode_title">物流信息</label>
+            <a class="kf_mode_close"></a>
+        </div>
+        <div class="kf_mode_body">
+            <ul class="kf_logistics_nav">
+                <li class="kf_logistics_nav_itme1 active">
+                    <span>待揽件</span>
+                </li>
+                <li class="kf_logistics_nav_itme2 active">
+                    <span>运输</span>
+                </li>
+                <li class="kf_logistics_nav_itme3">
+                    <span>派送</span>
+                </li>
+                <li class="kf_logistics_nav_itme4">
+                    <span>签收</span>
+                </li>
+            </ul>
+            <div class="kf_logistics_address">
+                <label class="kf_logistics_address_title">您的包裹正在运输中</label>
+                <ul class="kf_logistics_address_list">
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content"> 感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！您好，因为订单量较多，超过预计送货时间，正在积极送货过程中，麻烦耐心等待</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！您好，因为订单量较多，超过预计送货时间，正在积极送货过程中，麻烦耐心等待</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">感谢您在满集网购物，欢迎您再次光临！</span>
+                    </li>
+                    <li>
+                        <span class="kf_logistics_address_time">2016-08-01 11:28:33</span>
+                        <span class="kf_logistics_address_content">2016-07-30 13:59:18    您的订单已经拣货完成</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="kf_group">
+                <label class="kf_group_title">运单号码：</label>
+                <div class="kf_group_content">8828254982541125630</div>
+            </div>
+            <div class="kf_group">
+                <label class="kf_group_title">卖家昵称：</label>
+                <div class="kf_group_content">shenlina李知欣专卖店</div>
+            </div>
+            <div class="kf_group">
+                <label class="kf_group_title">发货地址：</label>
+                <div class="kf_group_content">北京市 昌平区 北七家镇 平西府工业园洪明轩311 102209 010-57151929</div>
+            </div>
+            <div class="kf_group">
+                <label class="kf_group_title">收货地址：</label>
+                <div class="kf_group_content">重庆市 沙坪坝区 富洲路108号</div>
+            </div>
+            <div class="kf_group">
+                <label class="kf_group_title"></label>
+                <div class="kf_group_content">
+                    <div class="kf_logistics_goods">
+                        <img src="images/shanchu.png">
+                        <label><i class="kf_color_danger">132.00</i>x1</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+//下面用于多图片上传预览功能
+
+function setImagePreviews(avalue) {
+
+    var docObj = document.getElementById("doc");
+
+    var dd = document.getElementById("dd");
+
+    dd.innerHTML = "";
+
+    var fileList = docObj.files;
+
+    for (var i = 0; i < fileList.length; i++) {            
+
+
+
+        dd.innerHTML += "<li class='kf_upload_item'><span class='kf_upload_box'><img id='img" + i + "'  /></span><a class='kf_uploat_item_close' href='javascript:void(0);'></a></li>";
+
+        var imgObjPreview = document.getElementById("img"+i); 
+
+        if (docObj.files && docObj.files[i]) {
+
+            //火狐下，直接设img属性
+
+            imgObjPreview.style.display = 'block';
+
+            imgObjPreview.style.width = '120px';
+
+            imgObjPreview.style.height = '120px';
+
+            //imgObjPreview.src = docObj.files[0].getAsDataURL();
+
+            //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[i]);
+
+        }
+
+        else {
+
+            //IE下，使用滤镜
+
+            docObj.select();
+
+            var imgSrc = document.selection.createRange().text;
+
+            alert(imgSrc)
+
+            var localImagId = document.getElementById("img" + i);
+
+            //必须设置初始大小
+
+            localImagId.style.width = "150px";
+
+            localImagId.style.height = "180px";
+
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
+
+            try {
+
+                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+
+            }
+
+            catch (e) {
+
+                alert("您上传的图片格式不正确，请重新选择!");
+
+                return false;
+
+            }
+
+            imgObjPreview.style.display = 'none';
+
+            document.selection.empty();
+
+        }
+
+    }  
+
+    return true;
+}
+
+    $(function(){
+    	/*
+    	 *  弹出框
+    	 */
+    	//关闭弹出框
+    	$(".kf_mode_close, .kf_mode_btn_close").click(function() {
+    		$(".kf_mode_content, .kf_mode_shield").hide();
+    	});
+    	//弹出框单击事件
+    	$(".kf_mode_btn_ok").click(function() {
+    		$(this).parents(".kf_mode_content").hide();
+    		if($(".kf_mode_shield").attr("istype") == "zhix") {
+    			$(".kf_mode_tips").show().find(".kf_mode_tips_box").text("执行成功");
+    			$(".kf_form_btn_tuis").removeClass("kf_btn_disabled kf_btn_grey_main");
+    			$(".kf_form_penalize_execute_btn_a").addClass("kf_form_penalize_execute_btn_a_no")
+    		} else if($(".kf_mode_shield").attr("istype") == "tuisong") {
+    			$(".kf_mode_tips").show().find(".kf_mode_tips_box").text("推送成功");
+    			$(".kf_form_btn_tuis").addClass("kf_btn_disabled kf_btn_grey_main");
+    		} else {
+    			submitChuFa();
+    			$("#chufa").submit();
+    			$(".kf_mode_tips").show().find(".kf_mode_tips_box").text("保存成功");
+    		}
+
+    		interval = setInterval(function() {
+    			$(".kf_mode_content, .kf_mode_shield").hide();
+    			clearInterval(interval);
+    		}, 1000);
+    	});
+    	
+        //执行处罚修改单击事件
+        $(".kf_form_penalize_edit").click(function(){
+            $(".kf_mode_arbitration, .kf_mode_shield").show();
+        });
+
+
+        //有无处罚单击事件
+        $(".kf_form_title input[type='checkbox']").click(function(){
+            if($(this).prop("checked")){
+                $(this).parent().addClass("active");
+                $(".kf_form_penalize>*").addClass("kf_hide");
+            }else{
+                $(this).parent().removeClass("active");
+                $(".kf_form_penalize>*").removeClass("kf_hide");
+            }
+        });
+        
+      	//受理不受理单击事件
+		$(".kf_form_result input[type='radio']").click(function() {
+			$(this).parent().addClass("active").siblings().removeClass("active");
+		});
+
+        //页面确定单击事件
+        $(".kf_form_ok").click(function(){
+            $(".kf_mode_affirm, .kf_mode_shield").show();
+        });
+
+
+        //弹出框单击事件
+        $(".kf_mode_arbitration_btn_ok").click(function(){
+        	//获得有输入框的选中个数
+            var che=$(".kf_mode_arbitration .kf_checkbox input[type='checkbox']:checked").siblings(".kf_form_text");
+            var index=0;
+            che.each(function(){
+                var $val=$.trim(che.val());
+                if($val!=""){
+                    index++;
+                }
+            });
+
+            if(che.length==index){
+                $(this).parents(".kf_mode_content").hide();
+                $(".kf_mode_tips").show();
+                $(".kf_mode_content, .kf_mode_shield").hide();
+                $(".kf_form_penalize_content").removeClass("kf_hide").siblings().addClass("kf_hide");
+                $(".kf_form_penalize_mode_tips").addClass("kf_hide");
+                $(".chufaalso").html($(".chufa").html());
+            	$(".chufashopalso").html($(".chufashop").html());
+            	$(".chufaalso .sum:eq(0)").val($(".chufa .sum:eq(0)").val());
+            	$(".chufaalso .sum:eq(1)").val($(".chufa .sum:eq(1)").val());
+            	$(".chufaalso .sum:eq(2)").val($(".chufa .sum:eq(2)").val());
+            	$(".chufaalso .sum").attr("readonly","readonly");
+            }else{
+                $(".kf_form_penalize_mode_tips").removeClass("kf_hide");
+            }
+
+        });
+
+        //仲裁弹出框显示
+        $(".kf_form_penalize_button").click(function(){
+
+            $(".kf_mode_arbitration, .kf_mode_shield").show();
+            var h=$(".kf_mode_arbitration").height();
+            $(".kf_mode_arbitration").css("margin-top",-h/2+"px");
+        });
+        //仲裁弹出框选择
+        $(".kf_form_penalize_item input[type='checkbox']").click(function(){
+
+            //判断强制下架
+            if($(this).hasClass("goods_list_show") && $(this).prop("checked")){
+                $(this).parents(".kf_form_penalize_list").siblings(".kf_form_penalize_goods_list").removeClass("kf_hide");
+                var h=$(".kf_mode_arbitration").height();
+                $(".kf_mode_arbitration").css("margin-top",-h/2+"px");
+            }else if($(this).hasClass("goods_list_show") && !$(this).prop("checked")){
+                $(this).parents(".kf_form_penalize_list").siblings(".kf_form_penalize_goods_list").addClass("kf_hide");
+                var h=$(".kf_mode_arbitration").height();
+                $(".kf_mode_arbitration").css("margin-top",-h/2+"px");
+                $(".shop").removeClass("active");
+            }
+
+            //判断是否选中
+            if($(this).prop("checked")){
+            	$(this).parent().find(".punish").val(1);
+                $(this).parent().addClass("active");
+
+            }else{
+            	$(this).parent().find(".punish").val("");
+                $(this).parent().removeClass("active");
+            }
+        });
+    });
+    
+    
+    function submitChuFa(){
+    	if($(".chufaalso .kf_form_penalize_item:eq(0) label").hasClass("active")){
+    		$('input[name="reputation"]').val($(".chufaalso .sum:eq(0)").val());
+    	}else{
+    		$('input[name="reputation"]').val("false");
+    	}
+    	
+		if($(".chufaalso .kf_form_penalize_item:eq(1) label").hasClass("active")){
+			$('input[name="bond"]').val($(".chufaalso .sum:eq(1)").val());
+		}else{
+			$('input[name="bond"]').val("false");
+		}
+		
+		if($(".chufaalso .kf_form_penalize_item:eq(2) label").hasClass("active")){
+			$('input[name="compensate"]').val($(".chufaalso .sum:eq(2)").val());
+		}else{
+			$('input[name="compensate"]').val("false");
+		}
+		
+		if($(".chufaalso .kf_form_penalize_item:eq(3) label").hasClass("active")){
+			$('input[name="closedShop"]').val($(".shopIdalso").val());
+		}else{
+			$('input[name="closedShop"]').val("false");
+		}
+		
+		if($(".chufaalso .kf_form_penalize_item:eq(4) label").hasClass("active")){
+			$('input[name="frozen"]').val($(".shopUserId").val());
+		}else{
+			$('input[name="frozen"]').val("false");
+		}
+		var stu="";
+		if($(".chufaalso .kf_form_penalize_item:eq(5) label").hasClass("active")){
+			$(".chufashopalso .kf_form_penalize_item").each(function(){
+				if($(this).find(".shop").hasClass("active")){
+					stu+=$(this).find(".shopId").val()+",";
+				}
+			})
+			if(stu==""){
+				$('input[name="shopId"]').val("false");
+			}else{
+				$('input[name="shopId"]').val(stu);
+			}
+		}else{
+			$('input[name="shopId"]').val("false");
+		}
+		
+		$(".kf_radio").each(function(){
+			if($(this).hasClass("active")){
+				if($(this).find("input").val()==1){
+					$('input[name="evaluate"]').val("true");
+					$('input[name="pingjia"]').val("true");
+				}
+			}
+		})
+		
+    }
+</script>

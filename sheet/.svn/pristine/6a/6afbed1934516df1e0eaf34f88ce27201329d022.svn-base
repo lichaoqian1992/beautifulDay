@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>交易纠纷申请</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/trade_dispute.css" />
+		<!--App自定义的点击放大css-->
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/click_enlarge.css" />
+	</head>
+
+	<body class="report">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">交易纠纷详情</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="header_title">
+				<li><span class="span1 span_active">纠纷信息</span></li>
+				<li><span class="span2">订单信息</span></li>
+			</ul>
+			<!--工单内容-->
+			<div class="content">
+				#if(sheet.status=='5')
+				<div class="report_result">
+					<div class="report_result_title">仲裁结果：</div>
+					<div class="report_result_text">
+						<p class="p1">#(sheetDetail.content) </p>
+						#if(sheetDetail.pics!='')
+						<img class="img1" src="#(sheetDetail.pics)" alt="" />
+						#end
+					</div>
+				</div>
+				#end
+				<!--处理日志流程图-->
+				<div class="report_progress">
+					<p>纠纷处理进度：</p>
+					<ul class="progress_list">
+						#for(log:logList)
+						#if(log.opr_type != "5")
+						<li class="list_item">
+							#if(for.index==0)
+							<span class="span1"></span>
+							#else
+							<span class="span2"></span>
+							#end
+							#if(for.index != for.size-1)
+							<span class="span_line"></span>
+							#end
+							<div class="text1">
+								<p class="p1">
+								#if(log.opr_type == "1")
+									客户提交纠纷单
+								#elseif(log.opr_type == "3")
+									平台受理
+								#elseif(log.opr_type == "4")
+									平台仲裁
+								#elseif(log.opr_type == "6" || log.opr_type == "7")
+									已完成
+								#end
+								</p>
+								<p class="p1">#(log.opr_time)</p>
+							</div>
+						</li>
+						#end
+						#end
+					</ul>
+				</div>
+				#if(sheet.status!='5')
+				<div class="report_object">
+					<span class="span1">#(info.submitter)</span>
+					<a class="object_a1" onclick="chart(#(info.submitter_id),'#(info.avatar)','#(info.nick_name)')"><i class="i1" ></i>联系买家</a>
+				</div>
+				#end
+				<div class="report_content">
+					<div class="report_content_number"><span class="span1">纠纷单号：</span><span class="span2">#(sheet.sheet_no)</span></div>
+					<div class="report_content_type"><span class="span1">纠纷类型： </span><sapn class="span2">#(type.title)</sapn></div>
+					<div class="report_content_problem">
+						<p class="p1">问题描述：</p>
+						<div class="text1">
+							<p class="text1_p1">#(info.descr)</p>
+							<!--判断有无图片-->
+							#if(info.pics!="")
+							<!--开始分割图片-->
+							#for(img:info.pics.split(","))
+							<img class="text1_img1" src="#(img)" />
+							#end
+							#end
+							<p class="text1_p2">#(info.add_time)</p>
+						</div>
+					</div>
+					#if(sheet.status=="3")
+					<img class="report_content_img1" src="#(ctx)/static/shopApp/images/report_progress_icon4.png" />
+					#end
+					#if(sheet.status=="4")
+					<img class="report_content_img1" src="#(ctx)/static/shopApp/images/report_progress_icon4.png" />
+					#end
+					#if(sheet.status=="5")
+					<img class="report_content_img1" src="#(ctx)/static/shopApp/images/report_progress_icon5.png" />
+					#end
+				</div>
+				#for(sinfo:sheetInfo)
+				#if(for.size > 1 && for.index == 1)
+				<div class="report_supplement2_title">补充资料：</div>
+				<div class="report_supplement2">
+                     <ul class="supplement2_list">
+						 #for(sinfo:sheetInfo)
+						 #if(for.index!=0)
+						 #if(sinfo.submitter_type=='Buyer')
+						 <li class="supplement2_item">
+							 <div class="supplement2_name">
+								 <img class="supplement2_name_img1" src="#(ctx)/static/shopApp/images/report_goods_icon2.png"/><br />
+								 <span>#(sinfo.submitter)</span>
+							 </div>
+							 <div class="supplement2_text">
+								 <div class="triangle_left"></div>
+								 <p class="p1">#(sinfo.add_time) </p>
+								 <p class="p2">#(sinfo.descr)</p>
+								 #if(sinfo.pics != '')
+								 <div class="mui-content-padded">
+									 #for(y:sinfo.pics.split(","))
+									 <img src="#(y)" data-preview-src="" data-preview-group="1"/>
+									 #end
+								 </div>
+								 #end
+							 </div>
+						 </li>
+						 #else
+						 <li class="supplement2_item">
+							 <div class="supplement2_name supplement2_name_2">
+								 <img class="supplement2_name_img1" src="#(ctx)/static/shopApp/images/report_goods_icon3.png"/><br />
+								 <span>我</span>
+							 </div>
+							 <div class="supplement2_text supplement2_text_2">
+								 <div class="triangle_left_2"></div>
+								 <p class="p1">#(sinfo.add_time) </p>
+								 <p class="p2">#(sinfo.descr)</p>
+								 #if(sinfo.pics != '')
+								 <div class="mui-content-padded">
+									 #for(y:sinfo.pics.split(","))
+									 <img src="#(y)" data-preview-src="" data-preview-group="1"/>
+									 #end
+								 </div>
+								 #end
+							 </div>
+						 </li>
+						 #end
+						 #end
+						 #end
+                     </ul>
+				</div>
+				#end
+				#end
+			</div>
+
+			<!--订单内容-->
+            <div class="content2">
+				<div class="list1">
+					<p class="p1"><i class="i1"></i>待反馈 </p>
+					<p class="p2">您的店铺已被  举报,请尽快反馈信息，以便我们及时处理！ </p>
+				</div>
+				<div class="list2">
+					<span class="list2_left"></span>
+					<div class="list2_right">
+						<div class="list2_right_top">
+							<span class="span1">#(users.accept_name)</span><span class="span2">#(users.mobile)</span>
+						</div>
+						<div class="list2_right_bottom">
+							<span class="span1">收货地址</span>
+							<p class="p1">#(users.area)#(users.address)</p>
+						</div>
+
+					</div>
+				</div>
+				<p class="list3_title">订单信息</p>
+				<div class="list3">
+					<p class="p1"><span class="span1">订 单  号:</span><span class="span2">#(users.order_no)</span></p>
+					<p class="p1"><span class="span1">下单时间:</span><span class="span2">#(users.add_time)</span></p>
+					<p class="p1"><span class="span1">下 单  人:</span>
+						<sapn class="span2">#(users.user_name)</sapn>
+					</p>
+					<p class="p1"><span class="span1">联系电话:</span><span class="span2">
+					#if(users.mobile != null && users.mobile != '')
+						#(users.mobile)
+					#else
+						无
+					#end
+					</span></p>
+					<p class="p1"><span class="span1">发票抬头:</span><span class="span2">
+					#if(users.invoice_title != null && users.invoice_title != '')
+						#(users.invoice_title)
+					#else
+						无
+					#end
+					</span></p>
+					<p class="p1"><span class="span1">买家留言:</span><span class="span2">
+					#if(users.message != null && users.message != '')
+						#(users.message)
+					#else
+						无
+					#end</span></p>
+				</div>
+				#if(backinfo!=null)
+				<p class="list4_title">退单信息</p>
+				<div class="list4">
+					<div class="mui-content-padded">
+					<img class="list4_left" src="#(users.img_url)" data-preview-src="" data-preview-group="1" alt="" />
+					</div>
+					<div class="list4_right">
+						<p class="p1">#(users.goods_title)</p>
+						<p class="p2"><span class="span1">规格: #(users.spec_text)</span>
+							#if(back_quantity!=null)
+							<span class="span2">×#(back_quantity)</span>
+							#end
+							#if(back_quantity==null)
+							<span class="span2">×1</span>
+							#end
+						</p>
+					</div>
+				</div>
+				<div class="list5">
+					<p class="p1"><span class="span1">退单编号:</span><span class="span2">#(backinfo.order_no)</span></p>
+					<p class="p1"><span class="span1">退单时间:</span><span class="span2">#(backinfo.add_time)</span></p>
+					<p class="p1"><span class="span1">退款金额:</span><span class="span2 span3">¥#(backinfo.back_goods_amount)</span></p>
+					<p class="p1"><span class="span1">退款类型:</span>
+						#if(backinfo.back_goods=='1')<span class="span2">退货退款</span>
+						#else<span class="span2">仅退款</span>
+						#end
+					</p>
+					<p class="p1"><span class="span1">退款原因:</span><span class="span2">#(backinfo.back_category)</span></p>
+					<div class="p1">
+						<span class="span1">退款凭证:</span>
+						<p class="p1_p2">
+							<!--判断有无图片-->
+							#if(backinfo.back_resource!="")
+							<!--开始分割图片-->
+							#for(img:backinfo.back_resource.split(","))
+							<img class="img1" src="#(img)"/>
+							#end
+							#end
+						</p>
+					</div>
+				</div>
+				<p class="list6_title">退款处理</p>
+				<div class="list6">
+					#if(backinfo.status=='5')
+					<p class="p1">不同意退款</p>
+					#end
+					#if(backinfo.status=='4')
+					<p class="p1">取消退款</p>
+					#end
+					#if(backinfo.status=='3')
+					<p class="p1">退款完成</p>
+					#end
+					#if(backinfo.status=='2')
+					<p class="p1">退款中</p>
+					#end
+					#if(backinfo.status=='1')
+					<p class="p1">等待确认</p>
+					#end
+
+					#if(backinfo.status=='5')
+					<p class="p2">#(backinfo.reject_remark)</p>
+					#end
+				</div>
+				#end
+			</div>
+			#if(sheet.status!='5')
+			<div class="footer">
+				<input type="hidden" value="D"/><a class="footer_a1 footer_a1_2" onclick="sheetUpdate(this)">补充资料</a><input type="hidden" value="#(sheet.id)"/>
+			</div>
+			#end
+		</div>
+
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/mui.min.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/trade_dispute.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/report/update.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/mui.zoom.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/mui.previewimage.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/close_page.js"></script>
+		<script>
+			mui.previewImage();
+		</script>
+		<script type="text/javascript">
+			function chart(userId,avatar,nick_name) {
+				var jsonstr = '{"action":"contact_shop","data":{"userId":"'+userId+'Buyer","avatar":"'+avatar+'","nick_name":"'+nick_name+'"}}';
+				console.log(jsonstr);
+				if (browser.versions.ios ||
+						browser.versions.iPhone ||
+						browser.versions.iPad) {
+					// alert("");
+					window.webkit.messageHandlers.Native.postMessage(jsonstr);
+				}
+				if (browser.versions.android) {
+					// alert("");
+					window.android.clickOnAndroid(jsonstr);
+				}
+			}
+		</script>
+	</body>
+
+</html>

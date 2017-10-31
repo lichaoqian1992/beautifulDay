@@ -1,0 +1,44 @@
+package com.manji.sheet.intercepter;
+
+import com.jfinal.aop.Interceptor;
+import com.jfinal.aop.Invocation;
+import com.jfinal.core.Controller;
+import com.jfinal.upload.UploadFile;
+import com.manji.sheet.model.bean.Account;
+import com.manji.sheet.utils.GetAccountUtils;
+
+import java.util.List;
+
+/**
+ * Created by Administrator on 2017/7/6.
+ */
+
+public class ShopIntercepter implements Interceptor {
+
+    @Override
+    public void intercept(Invocation inv) {
+
+        // 获取当前控制器
+        Controller controller = inv.getController();
+
+
+            List<UploadFile> file = controller.getFiles();
+            String sessionid=controller.getPara("sessionId");
+            //获取用户信息
+            Account userinfo= GetAccountUtils.getAccount(sessionid);
+
+            if (userinfo.getUser_id()==null||userinfo.getUser_id().equals("")){
+                //没查到用户信息
+                controller.setSessionAttr("Account",null);
+                inv.invoke();
+            }else{
+                //将用户信息存入session
+                controller.setSessionAttr("Account",userinfo);
+                inv.invoke();
+            }
+        inv.invoke();
+        }
+
+
+
+}

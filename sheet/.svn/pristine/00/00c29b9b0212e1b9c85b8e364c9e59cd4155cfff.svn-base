@@ -1,0 +1,117 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+.informant_list .mui-bar{
+	box-shadow: none;
+	border-bottom: 1px solid #EAEAEA;
+}
+.informant_list .mui-bar .mui-icon {
+	color: #333;
+	font-size: 35px;
+	padding: 5px 0;
+	
+}
+.informant_list .mui-bar .right_text{
+	padding: 12px 0;
+	float: right;
+	font-size: 16px;
+}
+ul,li{
+	list-style: none;
+}
+.informant_item{
+   margin: 10px 0;
+}
+
+.informant_item .informant_item_head{
+	background-color: #FFFFFF;
+	padding: 10px;
+	font-size: 14px;
+}
+.informant_item .informant_item_head .span1{
+	color: #8f8f94;
+}
+.informant_item .informant_item_head .a1{
+	float: right;
+	color: #FF6600;
+}
+.informant_item .informant_item_head .a1_active{
+	color: #8F8F94;
+}
+.informant_item .informant_item_center{
+	background-color: #fafafa;
+	padding:15px 10px;
+}
+.informant_item .informant_item_center:after{
+	display: block;
+	content: "";
+	clear: both;
+	visibility: hidden;
+}
+.informant_item_center img{
+	width: 80px;
+	height: 80px;
+	float: left;
+	margin-right: 10px;
+}
+.informant_item_center .item_center_text{
+	width: calc(100% - 90px);
+	float: left;
+}
+.informant_item_center .item_center_text p{
+	margin-top: 10px;
+}
+.informant_item_center .item_center_text p span{
+	color: #000000;
+}
+.informant_item .informant_item_bottom{
+	background-color: #FFFFFF;
+	padding: 10px;
+	font-size: 14px;
+	text-align: right;
+}
+.informant_item .informant_item_bottom .a1{
+	display: inline-block;
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	color: #000000;
+	
+}
+.informant_item .informant_item_bottom .a2{
+	display: inline-block;
+	padding: 5px;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	color: #000000;
+	background-color: #e0e0e0;
+	
+}
+/*弹窗css*/
+.list_popup{
+	background: url(../images/back_icon2.png) no-repeat;
+	position: fixed;
+	top: 35px;
+	right: 10px;
+	width: 100px;
+	height: 156px;
+	z-index: 20;
+	/*opacity: 0.9;*/
+	text-align: center;
+	display: none;
+}
+.list_popup .a1{
+
+	display: inline-block;
+	width: 80px;
+	margin: 10px 10px 5px 10px;
+	padding: 6px ;
+	border-bottom: 1px solid #7a7a7a;
+	color: #FFFFFF;
+	text-align: center;
+	box-sizing: border-box;
+}
+.list_popup .a1:last-child{
+	border-bottom: none;
+}

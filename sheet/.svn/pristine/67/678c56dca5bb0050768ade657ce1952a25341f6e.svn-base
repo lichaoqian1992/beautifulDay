@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>举报</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/report.css" />
+	</head>
+
+	<body class="report">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left" href="/sheet/shopApp/Myreport"></a>
+			<h1 class="mui-title">举报处理</h1>
+		</header>
+		<div class="mui-content">
+			<div class="content">
+				#if(sheet.status=='5')
+				<div class="report_result">
+					<div class="report_result_title">仲裁结果：</div>
+					<div class="report_result_text">
+						<p class="p1">#(sheetDetail.content) </p>
+						<!--判断有无图片-->
+						#if(sheetDetail.pics != null && sheetDetail.pics != "")
+						<!--开始分割图片-->
+						#for(img:sheetDetail.pics.split(","))
+						<img class="img1" src="#(img)" />
+						#end
+						#end
+					</div>
+				</div>
+				#end
+
+				<!--处理日志流程图-->
+				<div class="report_progress">
+					<p>处理进度：</p>
+					<ul class="progress_list">
+					#for(log:logList)
+						#if(log.opr_type != "5")
+						<li class="list_item">
+							#if(for.index==0)
+							<span class="span1"></span>
+							#else
+							<span class="span2"></span>
+							#end
+							<span class="span_line"></span>
+							<div class="text1">
+								<p class="p1">
+								#if(log.opr_type == "3")
+									平台受理
+								#elseif(log.opr_type == "4")
+									平台仲裁
+								#elseif(log.opr_type == "6" || log.opr_type == "7")
+									已完成
+								#end
+								</p>
+								<p class="p1">#(log.opr_time)</p>
+							</div>
+						</li>
+						#end
+						#if(for.index == for.size-1)
+						<li class="list_item">
+							<span class="span2"></span>
+							<div class="text1">
+								<p class="p1">客户提交举报单</p>
+								<p class="p1">#(log.opr_time)</p>
+							</div>
+						</li>
+						#end
+					#end
+					</ul>
+				</div>
+
+
+				<div class="report_object"><span class="span1">举报对象：</span><span>满集#(object.title.split("举报")[1])</span></div>
+				<div class="report_content">
+					<div class="report_content_number"><span class="span1">举报单号：</span><span class="span2">#(sheet.sheet_no)</span></div>
+					<div class="report_content_type"><span class="span1">举报类型： </span><sapn class="span2">#(type.title)</sapn></div>
+					<div class="report_content_problem">
+						<p class="p1">问题描述：</p>
+						<div class="text1">
+							<p class="text1_p1">#(info.descr)</p>
+							<!--判断有无图片-->
+							#if(info.pics!="" && info.pics != null)
+							<!--开始分割图片-->
+							#for(img:info.pics.split(","))
+							<img class="text1_img1" src="#(img)" />
+							#end
+							#end
+							<p class="text1_p2">#(info.add_time)</p>
+						</div>
+					</div>
+					#if(sheet.status=="3")
+					<img class="report_content_img1" src="#(ctx)/static/shopApp/images/report_progress_icon4.png" />
+					#end
+					#if(sheet.status=="4")
+					<img class="report_content_img1" src="#(ctx)/static/shopApp/images/report_progress_icon4.png" />
+					#end
+					#if(sheet.status=="5")
+					<img class="report_content_img1" src="#(ctx)/static/shopApp/images/report_progress_icon5.png" />
+					#end
+				</div>
+				<div class="report_supplement">
+					#for(sinfo:sheetInfo)
+					#if(for.index==1)
+					<div class="report_supplement_title">补充资料：</div>
+					#end
+					#end
+					<div class="report_supplement_text">
+						<ul class="text_list">
+							#for(sinfo:sheetInfo)
+							#if(for.index!=for.size-1)
+							<li class="list_item">
+								<p class="p1">#(sinfo.descr)</p>
+								<!--判断有无图片-->
+								#if(sinfo.pics!="" && info.pics != null)
+								<!--开始分割图片-->
+								#for(img:sinfo.pics.split(","))
+								<img class="img1" src="#(img)" />
+								#end
+								#end
+								<p>#(sinfo.add_time) </p>
+							</li>
+							#end
+							#end
+						</ul>
+					</div>
+				</div>
+			</div>
+			#for(log:logList)
+			#if(for.index == 0 && (log.opr_type == "3"|| log.opr_type == "1"))
+			<div class="footer">
+				<input type="hidden" value="MY"/><a class="footer_a1 footer_a1_2" onclick="sheetUpdate(this)">补充资料</a><input type="hidden" value="#(sheet.id)"/>
+			</div>
+			#end
+			#end
+		</div>
+
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/mui.min.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/report/update.js"></script>
+
+	</body>
+
+</html>

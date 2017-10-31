@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>补充资料</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/feedback-page.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/app/css/informant_center.css" />
+	</head>
+
+	<body class="informant_center">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"> </a>
+			<h1 class="mui-title"><i class="i1" onclick="closePage()">关闭</i>补充资料</h1>
+		</header>
+		<div class="mui-content">
+			<div class="problem_type">
+				<textarea placeholder="您可以继续对举报内容进行补充说明" maxlength="500" id="desc"></textarea>
+				<div class="word_total">
+					<span class="word_total_span1">0</span><span>/500</span>
+				</div>
+			</div>
+			<form action="/sheet/buyersApp/add" method="post" enctype="multipart/form-data" id="myForm">
+				<div class="upload feedback" id="feedback">
+					<h6><span>上传证明</span><span>(最多可上传5张)</span></h6>
+					<div id='image-list' class="row image-list">
+					</div>
+				</div>
+				<div class="mui-content-padded">
+						<input id="id" name="id" type="hidden" value="#(info)">
+						<input id="descr" name="descr" type="hidden">
+						<button type="button" class="mui-btn mui-btn-block" onclick="mySubmit()">提交举报</button>
+				</div>
+			</form>
+		</div>
+		<div class="tip_mask">
+			<div class="center_mask"></div>
+			 <div class="mask_content">
+			 	<div class="mask_content_text">已经补充完毕并确定提交吗？</div>
+			 	 <div class="mask_content_btn">
+			 	 	<span class="span1">取消</span><span class="span2">确认</span>
+			 	 </div>
+			 </div>
+		</div>
+		<div id="message" style="display: none;">
+			<div class="center_mask"></div>
+			 <div class="mask_content">
+			 	<div class="mask_content_text" id="content"></div>
+			 	 <div class="mask_content_btn">
+			 	 	<span class="span1" onclick="cancle()">取消</span>
+			 	 </div>
+			 </div>
+		</div>
+		<div class="success_mask">
+			<div class="center_mask"></div>
+			<div class="mask_content">
+				<img src="images/tip_success.png" />
+				<p class="p1">提交成功</p>
+				</div>
+		</div>
+
+		<script type="text/javascript" src="#(ctx)/static/app/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/informant_center.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/mui.min.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/feedback-page.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/app/js/close_page.js"></script>
+		<script type="text/javascript">
+			function mySubmit(){
+				
+				if($("#desc").val() == ""){
+					showMessage("描述不能为空!");
+					return;
+				}
+				$("#descr").val($("#desc").val());
+				$("#myForm").submit();
+			}
+		</script>
+	</body>
+
+</html>

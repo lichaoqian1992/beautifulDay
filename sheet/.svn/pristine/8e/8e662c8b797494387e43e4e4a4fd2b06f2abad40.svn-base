@@ -1,0 +1,242 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+.report_center .mui-bar{
+	box-shadow: none;
+	border-bottom: 1px solid #EAEAEA;
+}
+.report_center .mui-bar .mui-icon {
+	color: #333;
+	font-size: 35px;
+	padding: 5px 0;
+	
+}
+.content .report_type{
+	background-color: #FFFFFF;
+	padding: 10px;
+	margin-top: 10px;
+	font-size: 14px;
+}
+.content .report_type .span2{
+	color: #8F8F94;
+}
+.content .report_type .i1{
+	background: url(../images/report_center_icon1.png) no-repeat;
+	width: 10px;
+	height: 18px;
+	display: inline-block;
+	float: right;
+}
+
+.content .report_problem{
+	background-color: #FFFFFF;
+	padding: 10px;
+	margin-top: 10px;
+	border-bottom: 1px solid #EAEAEA;
+}
+.content .report_problem .p1{
+	color: #000000;
+	margin: 0;
+}
+.content .report_problem textarea{
+	border: none;
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+	
+}
+
+.content .report_problem .text_total{
+	text-align: right;
+	
+}
+.content .report_problem .text_total .span1{
+	font-size: 17px;
+}
+.content .report_problem .text_total .span2{
+	font-size: 15px;
+	color: #8F8F94;
+}
+.content .report_img{
+	background-color: #FFFFFF;
+}
+.content .report_img .report_img_title{
+	margin: 0;
+	color: #000000;
+	padding:10px 10px 0 10px;
+}
+.content .report_img .report_img_title .span1{
+	color: #8F8F94;
+}
+
+/*上传图片*/
+#image-list .image-item:nth-child(6){
+	display: none;
+	
+}
+.content .report_btn{
+	width: 95%;
+	height: 40px;
+	line-height: 40px;
+	margin: 0 auto;
+	background-color: #00a2ff;
+	text-align: center;
+	color: #FFFFFF;	
+	border-radius: 5px;
+	margin-top: 60px;
+}
+.content .update_btn{
+	width: 95%;
+	height: 40px;
+	line-height: 40px;
+	margin: 0 auto;
+	background-color: #00a2ff;
+	text-align: center;
+	color: #FFFFFF;	
+	border-radius: 5px;
+	margin-top: 60px;
+}
+.content .tip_text{
+	width: 95%;
+	margin: 0 auto;
+	font-size: 12px;
+	text-align: center;
+	margin-top: 10px;
+}
+.content .tip_text .span1{
+	color: #00A2FF;
+}
+
+/*遮罩层*/
+.mask_all{
+	display: none;
+}
+.report_mask{
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #666;
+	opacity: 0.7;
+	z-index: 999;
+}
+.mask_content{
+	position: fixed;
+	bottom: 0;
+	left: 2.5%;
+    z-index: 9999;
+    width: 95%;
+    text-align: center;
+    margin: 0 auto;
+
+}
+ul,li{
+	list-style: none;
+}
+.mask_content .mask_content_list li{
+	font-size: 14px;
+	padding: 10px 0;
+	border-bottom: 1px solid #EAEAEA;
+	background-color: #FFFFFF;
+}
+.mask_content .mask_content_list li:nth-child(1){
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    
+}
+.mask_content .mask_content_list li:last-child{
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+.mask_content .item_last{
+	font-size: 14px;
+	padding: 10px 0;
+	border-bottom: 1px solid #EAEAEA;
+	background-color: #FFFFFF;
+	margin-top: 10px;
+	border-radius: 5px;
+}
+/*提交的弹框*/
+.btn_tip_content{
+	display: none;
+	width: 80%;
+	position: fixed;
+	top: 40%;
+	left: 10%;
+	padding: 10px 20px;
+	border-radius: 5px;
+	background: url(../images/report_center_icon5.png) no-repeat;
+}
+.btn_tip_content .img1{
+	width: 50px;
+	height: 42px;
+	float: left;
+	padding-right: 10px;
+}
+.btn_tip_content .p1{
+	float: left;
+	width: calc(100% - 50px);
+	margin: 0;
+	color: #FFFFFF;
+}
+/*补充资料的弹窗*/
+.add_mask_all{
+	display: none;
+}
+.add_mask_layer{
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #666;
+	opacity: 0.7;
+	z-index: 999;
+}
+.add_mask_content{
+	position: fixed;
+	top: 40%;
+	left: 15%;
+	background-color: #FFFFFF;
+	z-index: 9999;
+	width: 70%;
+	border-radius: 5px;
+	font-size: 14px;
+}
+.add_mask_content .add_mask_content_text{
+	padding: 20px 0;
+	text-align: center;
+	border-bottom: 1px solid #EAEAEA;
+}
+.add_mask_content .add_mask_content_bottom .add_mask_cancel{
+	width: 50%;
+	float: left;
+	padding: 10px 0;
+	border-right: 1px solid #EAEAEA;
+	text-align: center;
+	color: #00a2ff;
+}
+.add_mask_content .add_mask_content_bottom .add_mask_confirm{
+	width: 50%;
+	float: left;
+	padding: 10px 0;
+	text-align: center;
+	color: #00a2ff;
+}
+
+.add_mask_success{
+	display: none;
+	position: fixed;
+	top: 40%;
+	left: 35%;
+	width: 40%;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	color: #FFFFFF;
+	border-radius: 5px;
+	background: url(../images/report_center_icon5.png) no-repeat;
+}
+

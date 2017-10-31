@@ -1,0 +1,52 @@
+package com.manji.sheet.utils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
+/**
+ * Created by Administrator on 2017/6/12.
+ */
+public class WorkerNumberUtil {
+    /**
+     * 生成订单号
+     * @param jobType
+     * @return
+     */
+    public static String GeneratWorkerNumber(String jobType){
+        //创建单号(StringBuffer)
+        StringBuffer workerNum=new StringBuffer();
+        switch (jobType) {
+            case "交易纠纷":
+                workerNum.append("TRD");
+                break;
+            case "评价纠纷":
+                workerNum.append("EVD");
+                break;
+            case "反馈":
+                workerNum.append("FEB");
+                break;
+            case "举报":
+                workerNum.append("REP");
+                break;
+            case "纠错":
+                workerNum.append("ERC");
+                break;
+            default:
+                workerNum.append("UN");
+                break;
+        }
+
+        //生成时间(拼接)
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+        workerNum.append(sdf.format(new Date()));
+
+        //随机生成四位数(拼接)
+        int randomNumber;//定义两变量
+        Random ne=new Random();//实例化一个random的对象ne
+        randomNumber=ne.nextInt(9999-1000+1)+1000;//为变量赋随机值1000-9999
+
+        workerNum.append(randomNumber);
+        return workerNum.toString();
+    }
+}

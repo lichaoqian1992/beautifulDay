@@ -1,0 +1,193 @@
+package com.manji.sheet.controller;
+
+import com.jfinal.aop.Before;
+import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.upload.UploadFile;
+import com.manji.sheet.intercepter.AppIntercepter;
+import com.manji.sheet.model.bean.Account;
+import com.manji.sheet.service.ShopAppService;
+import com.manji.sheet.utils.GetAccountUtils;
+import com.manji.sheet.utils.PicUtils;
+import com.manji.sheet.utils.WorkerNumberUtil;
+import net.sf.json.JSONObject;
+
+import java.util.List;
+
+/**
+ * Created by pudding on 2017-6-19.(YYR 商家APP控制器)
+ */
+@Before(AppIntercepter.class)
+public class ShopController extends Controller {
+
+    ShopAppService shopAppService=new ShopAppService();
+
+    //进入举报管理页面
+    public void ReportManagement(){
+
+        render("report/report_manage.html");
+    }
+
+    //进入交易纠纷页面
+    public void TransactionDisputes(){
+
+        render("dispute/dispute_manage.html");
+    }
+
+    //进入我要建议页面
+    public void Proposal(){
+
+        render("opinion/my_suggest.html");
+    }
+
+    /**
+     * 进入发起举报页面
+     */
+    public void LaunchAreport(){
+        //查询举报员工的全部类型
+        List<Record> typeList=shopAppService.findSheetTypeByRMJ();
+        setAttr("typeList",typeList);
+        render("report/Ureport/report_center.html");
+    }
+
+
+    //发起工单
+    public void saveSheet(){
+        //获取账户
+        Account account=getSessionAttr("Account");
+        String path="";
+        List<UploadFile> files=getFiles();
+        if(files.size()>0){
+            for(UploadFile x : files){
+                path+= PicUtils.postPic(x.getFile())+",";
+            }
+        }
+        String short_title=getPara("short_title");
+        String code_type=getPara("code_type");
+        String descr=getPara("descr");
+        String status="3";//默认状态为处理中
+        String sheet_no=WorkerNumberUtil.GeneratWorkerNumber(short_title); //生成工单号
+        shopAppService.saveSheets(sheet_no,status,code_type,account.getUser_id(),account.getNick_name(),"1",account.getMobile(),"04_01","1","0");//生成工单
+        Record record=shopAppService.findSheetBySheetNo(sheet_no);//获取工单
+        shopAppService.insertSheetInfo(record.get("id").toString(),descr,path,account);
+
+        redirect("/shopApp/Myreport");
+    }
+
+
+    /**
+     * 我被举报
+     */
+    public void IwasReported(){
+
+        Account account=getSessionAttr("Account");//获取session里存入的用户
+
+        if (account!=null){
+            List<Record> recordList=shopAppService.IwasReported(account.getUser_id());
+            //把状态转换成String类型到前端判断
+            for (int i=0;i<recordList.size();i++){
+                String status=recordList.get(i).get("status").toString();
+                recordList.get(i).set("status",status);
+            }
+            setAttr("recordList",recordList);
+        }
+
+        render("report/Ireport/i_reported.html");
+    }
+
+
+    /**
+     * 我的举报
+     */
+    public void Myreport(){
+        Account account=getSessionAttr("Account");//获取session里存入的用户
+
+        if (account!=null){
+            List<Record> recordList=shopAppService.MyReported(account.getUser_id());
+            //把状态转换成String类型到前端判断
+            for (int i=0;i<recordList.size();i++){
+                String status=recordList.get(i).get("status").toString();
+                recordList.get(i).set("status",status);
+            }
+            setAttr("recordList",recordList);
+        }
+        render("report/Ureport/my_report.html");
+    }
+
+    /**
+     * 点击单个工单时(查询对应工单详细信息)
+     */
+    public void findSheetInfo(){
+        String id=getPara("id");
+        //查询出工单写详细信息
+        Record sheet=shopAppService.findSheetById(id);
+        //查询正式质料
+        Record info=shopAppService.findSInfo(id);
+        //查询有无补充质料
+        List<Record> sheetInfo=shopAppService.findSheetInfo(id);
+        if (sheet.get("status").toString().equals("5")){//如果此订单已完成查询出处理说明
+            Record sheetDetail=shopAppService.findSheetDetail(id);//查询工单详细信息
+            setAttr("sheetDetail",sheetDetail);
+        }
+        //把状态转换成String类型到前端判断
+        String status=sheet.get("status").toString();
+        sheet.set("status",status);
+
+        //查询流程日志
+        List<Record> log=shopAppService.findsheetLog(id);
+
+        //查询出举报类型
+        Record type=shopAppService.findTypeBytypeCode(sheet.getStr("type_code"));
+
+        //查询出举报对象
+        Record object=shopAppService.findObjectBytypeshortTitle(type.getStr("short_title"));
+
+        setAttr("object",object);
+        setAttr("type",type);
+        setAttr("logList",log);
+        setAttr("info",info);
+        setAttr("sheetInfo",sheetInfo);
+        setAttr("sheet",sheet);
+
+        render("report/Ireport/report_business_Completed.html");
+    }
+
+    /**
+     * 进入补充质料界面
+     */
+    public void updateinfo(){
+        String id=getPara("id");
+        setAttr("id",id);
+        render("report/update.html");
+    }
+
+    /**
+     * 补充质料
+     */
+    public void insertinfo(){
+        //获取账户
+        Account account=getSessionAttr("Account");
+        String path="";
+        List<UploadFile> files=getFiles();
+        if(files.size()>0){
+            for(UploadFile x : files){
+                path+= PicUtils.postPic(x.getFile())+",";
+            }
+        }
+        String sheet_id=getPara("sheet_id");
+        String descr=getPara("descr");
+
+        try{
+            shopAppService.insertSheetInfo(sheet_id,descr,path,account);
+        }catch (Exception e){
+
+        }
+        redirect("/shopApp/findSheetInfo?id="+sheet_id+"");
+    }
+
+
+
+
+
+
+}

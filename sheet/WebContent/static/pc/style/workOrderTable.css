@@ -1,0 +1,185 @@
+
+/*
+ * table分页
+ */
+.kf_table_page{
+	margin-top: 15px;
+}
+.kf_table_page,
+.kf_page_content,
+.kf_page_content .kf_page_size{
+	color:#76838f;
+	overflow: hidden;
+	zoom:1;
+}
+.kf_page_content .kf_page_text,
+.kf_page_content .kf_page_size{
+	line-height: 34px;
+	float: left;
+}
+.kf_page_size li {
+	float: left;
+}
+.kf_page_size li a{
+	display: block;
+	width: 32px;
+	height: 32px;
+	line-height: 32px;
+	border-style: solid;
+	border-color: #e4eaec;
+	border-width:1px 0 1px 1px;
+	text-align: center;
+	background-color: #fff;
+	color:#76838f;
+	cursor: pointer;
+}
+.kf_page_size li a:hover{
+	background-color: #f3f7f9;
+	color:#087dd1;
+}
+.kf_page_size li.active a{
+	width: 34px;
+	height: 34px;
+	line-height: 34px;
+	border:0;
+	background-color: #087dd1;
+	color:#fff;
+}
+.kf_page_next{
+	background: url(../images/icon/next_page.png) no-repeat center;
+}
+.kf_page_prev{
+	background: url(../images/icon/prev_page.png) no-repeat center;
+}
+
+.kf_page_text{
+	margin-right: 10px;
+}
+.kf_page_text i{
+	color:#087dd1;
+}
+
+
+/*
+ * 表格搜索栏
+ */
+.kf_search_box{
+	margin: 15px 0;
+	overflow: hidden;
+	zoom:1;
+}
+.kf_search_box .kf_group{
+	margin: 5px 0;
+	float: left;
+}
+.kf_search_box .kf_float_right{
+	float: right;
+}
+.kf_search_box .kf_group_content{
+	margin: 0;
+	float: left;
+}
+.kf_search_box .kf_group_title{
+	width: auto;
+	padding: 0 10px;
+	color:#37474f;
+}
+.kf_search_box .kf_btn{
+	margin-left: 10px;
+}
+.kf_form_text{
+	width: 154px;
+}
+select.kf_form_text{
+	width: 160px;
+}
+
+.kf_form_icon{
+	position: relative;
+	width: 160px;
+}
+.kf_form_icon.kf_search_text{
+	width: 260px;
+}
+.kf_form_icon .kf_form_text{
+	width: 119px;
+}
+.kf_form_icon.kf_search_text .kf_form_text{
+	width: 220px;
+}
+.kf_form_text_icon{
+	position: absolute;
+	top:0;
+	right: 0;
+	display: block;
+	width: 34px;
+	height: 28px;
+	height: 27px\9;
+	border:1px solid #d0d0d0;
+}
+.kf_form_icon_time{
+	background:#fff url(../images/icon/time.png) no-repeat center;
+}
+.kf_form_icon_search{
+	background: #fff url(../images/icon/magnifier.png) no-repeat center;
+}
+
+
+/*弹出窗*/
+.kf_mode_affirm {
+    width: 478px;
+    margin: -120px 0 0 -239px;
+}
+.kf_display_table_cell {
+    display: table-cell;
+    vertical-align: middle;
+    height: 120px;
+}
+.kf_display_table {
+    display: table;
+    margin: 0 auto;
+}
+.kf_display_table label {
+    display: block;
+    color: #087dd1;
+    text-align: center;
+    margin: 10px 0;
+    font-size: 18px;
+    line-height: 30px;
+}
+.kf_display_table p {
+    font-size: 18px;
+    text-align: center;
+    line-height: 30px;
+}
+.kf_display_table .kf_color_danger{
+	color: #cd2520;
+	font-size:18px;
+}
+
+
+/*工单受理添加弹出框*/
+.kf_mode_work_add{
+	width: 730px;
+	margin:-116px 0 0 -365px;
+}
+.kf_mode_work_item{
+	display: block;
+	width: 178px;
+	padding: 55px 0 10px;
+	margin: 50px 20px;
+	color:#fff;
+	text-align: center;
+	font-size: 14px;
+	float: left;
+	cursor: pointer;
+}
+.kf_mode_work_item1{
+	background:  #27a9e3 url(../images/icon/work1.png) no-repeat center 13px;
+}
+.kf_mode_work_item2{
+	background:  #28b779 url(../images/icon/work2.png) no-repeat center 13px;
+}
+.kf_mode_work_item3{
+	background:  #ffb748 url(../images/icon/work3.png) no-repeat center 13px;
+}

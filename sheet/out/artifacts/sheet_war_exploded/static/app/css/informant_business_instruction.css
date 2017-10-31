@@ -1,0 +1,101 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+.informant_business_instruction .mui-bar{
+	box-shadow: none;
+	border-bottom: 1px solid #EAEAEA;
+}
+.informant_business_instruction .mui-bar .mui-icon {
+	color: #333;
+	font-size: 35px;
+	padding: 5px 0;
+	
+}
+.content_title{
+	margin: 10px 0;
+	background-color: #FFFFFF;
+	padding: 10px 10px;
+}
+.content_title:after{
+	display: block;
+	visibility: hidden;
+	clear: both;
+	content: "";
+}
+.content_title .content_title_img{
+	background: url(../images/tip_icon1.png) no-repeat;
+	width: 15px;
+	height: 15px;
+	display: inline-block;
+	float: left;
+	margin: 4px 10px 0 0;
+	vertical-align: top;
+}
+.content_title p{
+	float: left;
+	width: calc(100% - 25px);
+	margin: 0;
+	color: #000;
+}
+.content_title p .p_tel{
+	color: #6bbdff;
+	text-decoration: underline;
+}
+.content{
+	background: #FFFFFF;
+	padding: 0 10px;
+}
+.content .content_text{
+	padding: 20px 0 10px 0;
+}
+.content .content_text .span1{
+	display: inline-block;
+	border: 1px solid #6bbdff;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	font-size: 20px;
+    line-height:25px;
+    text-align: center;
+    color: #6bbdff;
+    float: left;
+    margin: 0 5px 0 0;
+}
+.content .content_text p{
+	font-size: 17px;
+	color: #000;
+}
+.content .content_text .p2{
+	margin: 0 0 0 30px;
+	color: #8b8b8b;
+	font-size: 16px;
+}
+.content .content_text p .p_span1{
+	color: #6bbdff;
+	font-weight: bold;
+}
+@media (max-width: 321px) {
+  .content .content_text img{
+		width: 260px;
+		height: auto;
+	}
+}
+.content_text img{
+	height: auto;
+	width: 300px;
+	margin: 0 0 0 30px;
+}
+/*.content_text .img2{
+	background: url(../images/business_steps2.png) no-repeat;
+	
+	height: 281px;
+	margin: 0 0 0 30px;
+}
+.content_text .img3{
+	background: url(../images/business_steps3.png) no-repeat;
+	
+	height: 487px;
+	margin: 0 0 0 30px;
+}*/
+

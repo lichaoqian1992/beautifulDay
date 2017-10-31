@@ -1,0 +1,44 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+.informant_suggest .mui-bar{
+	box-shadow: none;
+	border-bottom: 1px solid #EAEAEA;
+}
+.informant_suggest .mui-bar .mui-icon {
+	color: #333;
+	font-size: 35px;
+	padding: 5px 0;
+	
+}
+.content_img1{
+	width: 80%;
+	margin: 30px auto;
+	text-align: center;
+}
+.content_img1 img{
+	width: 200px;
+}
+.content_aside{
+	width: 90%;
+	margin: 0 auto;
+}
+.content_a{
+	width: 100%;
+	margin: 10px auto;
+    display: inline-block;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    text-align: center;
+    padding: 10px 0;
+    /*cursor: pointer;*/
+}
+.content_a img{
+	width: 30px;
+	margin: 10px 0;
+}
+.content_a span{
+	color: #333333;
+	font-size: 14px;
+}

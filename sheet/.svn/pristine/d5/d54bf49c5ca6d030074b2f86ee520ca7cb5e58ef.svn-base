@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>交易纠纷申请</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="#(ctx)/static/shopApp/css/trade_dispute.css" />
+	</head>
+
+	<body class="report">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">交易纠纷申请</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="header_title">
+				<li><span class="span1 span_active">举报信息</span></li>
+				<li><span class="span2">订单信息</span></li>
+			</ul>
+			<div class="content">
+				<div class="report_progress">
+					<p>处理进度：</p>
+					<ul class="progress_list">
+						<li class="list_item">
+							<span class="span1"></span>
+							<span class="span_line"></span>
+							<div class="text1">
+								<p class="p1 p2">平台审核</p>
+								<p class="p1 p2">2017-05-03 14:52:32 </p>
+							</div>
+						</li>
+						<li class="list_item">
+							<span class="span2"></span>
+							<span class="span_line"></span>
+							<div class="text1">
+								<p class="p1">平台受理 </p>
+								<p class="p1">2017-05-03 14:52:32 </p>
+							</div>
+						</li>
+						<li class="list_item">
+							<span class="span2"></span>
+							<div class="text1">
+								<p class="p1">客户提交举报单</p>
+								<p class="p1">2017-05-03 14:52:32 </p>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="report_object">
+					<span class="span1">ZS1234665</span>
+					<a class="object_a1" href=""><i class="i1"></i>联系买家</a>
+				</div>
+				<div class="report_content">
+					<div class="report_content_number"><span class="span1">举报单号：</span><span class="span2">5436294</span></div>
+					<div class="report_content_type"><span class="span1">举报类型： </span>
+						<sapn class="span2">服务态度恶劣</sapn>
+					</div>
+					<div class="report_content_problem">
+						<p class="p1">问题描述：</p>
+						<div class="text1">
+							<p class="text1_p1">这个工号为123456的员工，服务态度及其 不好，没有职业道德</p>
+							<img class="text1_img1" src="images/report_progress_icon3.png" />
+							<img class="text1_img1" src="images/report_progress_icon3.png" />
+							<img class="text1_img1" src="images/report_progress_icon3.png" />
+							<p class="text1_p2">2017-05-03 14:52:32 </p>
+						</div>
+					</div>
+					<img class="report_content_img1" src="images/report_progress_icon4.png" />
+				</div>
+				<div class="report_supplement2_title">补充资料：</div>
+				<div class="report_supplement2">
+					<ul class="supplement2_list">
+						<li class="supplement2_item">
+							<div class="supplement2_name">
+								<img class="supplement2_name_img1" src="images/report_goods_icon2.png" /><br />
+								<span>1**6</span>
+							</div>
+							<div class="supplement2_text">
+								<div class="triangle_left"></div>
+								<p class="p1">2017-05-03 14:52:32 </p>
+								<p class="p2">这个工号为123456的员工，服务态度撇</p>
+							</div>
+						</li>
+						<li class="supplement2_item">
+							<div class="supplement2_name supplement2_name_2">
+								<img class="supplement2_name_img1" src="images/report_goods_icon3.png" /><br />
+								<span>我</span>
+							</div>
+							<div class="supplement2_text supplement2_text_2">
+								<div class="triangle_left_2"></div>
+								<p class="p1">2017-05-03 14:52:32 </p>
+								<p class="p2">这个工号为123456的员工，服务态度及其不好没 有职业道德</p>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="content2">
+				<div class="list1">
+					<p class="p1"><i class="i1"></i>待反馈 </p>
+					<p class="p2">请尽快反馈信息，以便我们及时处理！ </p>
+				</div>
+				<div class="list2">
+					<span class="list2_left"></span>
+					<div class="list2_right">
+						<div class="list2_right_top">
+							<span class="span1">张三丰</span><span class="span2">18906325693</span>
+						</div>
+						<div class="list2_right_bottom">
+							<span class="span1">收货地址</span>
+							<p class="p1">重庆市沙坪坝区大学城融汇温泉城艾徳公馆11栋22-5室11栋22-5室</p>
+						</div>
+
+					</div>
+				</div>
+				<p class="list3_title">订单信息</p>
+				<div class="list3">
+					<p class="p1"><span class="span1">订 单  号:</span><span class="span2">BOK161107100434R6V42</span></p>
+					<p class="p1"><span class="span1">下单时间:</span><span class="span2">2016-11-07 12:32</span></p>
+					<p class="p1"><span class="span1">下 单  人:</span>
+						<sapn class="span2">安然</sapn>
+					</p>
+					<p class="p1"><span class="span1">联系电话:</span><span class="span2">18690989098</span></p>
+					<p class="p1"><span class="span1">发票抬头:</span><span class="span2">_</span></p>
+					<p class="p1"><span class="span1">买家留言:</span><span class="span2">易碎物品注意轻放</span></p>
+				</div>
+
+				<p class="list4_title">退单信息</p>
+				<div class="list4">
+					<img class="list4_left" src="images/trade_dispute_icon4.png" alt="" />
+					<div class="list4_right">
+						<p class="p1">甘甘高端婚礼妈妈装甘甘高端婚礼妈妈装 甘甘高端婚礼妈妈装婚礼妈妈装婚礼妈妈装</p>
+						<p class="p2"><span class="span1">规格:  棕色  均码</span><span class="span2">×1</span></p>
+					</div>
+				</div>
+				<div class="list5">
+					<p class="p1"><span class="span1">退单编号:</span><span class="span2">GDS161209163921RNZPX</span></p>
+					<p class="p1"><span class="span1">退单时间:</span><span class="span2">2016-11-07 12:32</span></p>
+					<p class="p1"><span class="span1">退款金额:</span><span class="span2 span3">¥195.00</span></p>
+					<p class="p1"><span class="span1">退款类型:</span><span class="span2">退货退款</span></p>
+					<p class="p1"><span class="span1">退款原因:</span><span class="span2">商品有破损  还有很多线头 劣质</span></p>
+					<div class="p1">
+						<span class="span1">退款凭证:</span>
+						<p class="p1_p2">
+							<img class="img1" src="images/trade_dispute_icon5.png"/>
+						   <img class="img1" src="images/trade_dispute_icon5.png"/>
+						   <img class="img1" src="images/trade_dispute_icon5.png"/>
+						   <img class="img1" src="images/trade_dispute_icon5.png"/>
+						   <img class="img1" src="images/trade_dispute_icon5.png"/>
+						   <img class="img1" src="images/trade_dispute_icon5.png"/>
+						</p>
+					</div>
+				</div>
+				<p class="list6_title">退款处理</p>
+				<div class="list6">
+					<p class="p1">不同意退款</p>
+					<p class="p2">买家故意损坏衣服，无理取闹，不同意退款,买家故意损坏衣服，无理取闹，不同意退款</p>
+				</div>
+
+			</div>
+
+			<div class="footer">
+				<a class="footer_a1 footer_a1_2" href="javascript:void(0)">补充资料</a>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/mui.min.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/shopApp/js/trade_dispute.js"></script>
+
+	</body>
+
+</html>

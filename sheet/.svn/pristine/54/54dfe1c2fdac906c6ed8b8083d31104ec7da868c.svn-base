@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<link rel="stylesheet" href="#(ctx)/static/pc/style/login.css">
+		<title>登录页</title>
+	</head>
+
+	<body>
+		<img class="kf_bag" src="#(ctx)/static/pc/images/login_bag.png">
+			<div class="kf_center">
+				<div class="kf_center_text">
+				<form action="login" method="post">
+					<h4 class="kf_h4">管理员登录</h4>
+					<div class="kf_name_aside">
+						<div class="kf_name"><span class="kf_name_img"></span><span class="kf_name_line"></span><input class="kf_input1" name="username" type="text" placeholder="请输入用户名"></div>
+						<p class="kf_tiptxt kf_tipname">请输入用户名</p>
+					</div>
+					<div class="kf_name_aside">
+					    <div class="kf_password"><span class="kf_password_img"></span><span class="kf_name_line"></span><input class="kf_input1" name="password" type="password" placeholder="请输入密码"></div>
+					    <p class="kf_tiptxt kf_tippassword">请输入密码</p>
+					    
+					</div>
+                    <div class="kf_name_aside">
+					    <div class="kf_code"><span class="kf_code_img"></span><span class="kf_name_line"></span><input class="kf_input2" type="text" placeholder="验证码">
+					    	<img src="#(ctx)/static/pc/images/login_codeimg.png" alt="">
+					    	
+					    </div>
+                    	<p class="kf_tiptxt kf_tipcode">请输入验证码</p>
+                    </div>
+					<input type="hidden"  id="message" value="#(message)" >
+					<div class="kf_login"> <img type="1" src="#(ctx)/static/pc/images/icon/login_state1.png"/><span class="kf_login_txt">记住登录状态</span><button class="kf_login_btn" type="submit">登录</button>></div>
+				</form>
+				</div>
+			</div>
+		<!--</div>-->
+		<script type="text/javascript" src="#(ctx)/static/pc/js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="#(ctx)/static/pc/js/login.js"></script>
+	</body>
+
+</html>

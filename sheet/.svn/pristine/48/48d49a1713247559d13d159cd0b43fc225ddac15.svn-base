@@ -1,0 +1,338 @@
+package com.manji.sheet.service;
+
+import com.jfinal.aop.Before;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.activerecord.tx.Tx;
+import com.manji.sheet.model.reqParam.EvaluateParam;
+import com.manji.sheet.model.reqParam.SheetInfoParam;
+import com.manji.sheet.model.reqParam.WorkOrderParam;
+import com.manji.sheet.utils.WorkerNumberUtil;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by Administrator on 2017/6/17.
+ */
+public class ManageService extends BaseSheetService {
+
+    /**
+     * 查询来源/
+     * @return
+     */
+    public Map<String, Object> fromType(){
+        List<Record> fromList=Db.find("select * from dt_sheet_source where layer=1 and status=1");
+        List<Record> typeList=Db.find("select * from dt_sheet_type where layer=1 and status=1");
+        Map<String, Object> map=new HashMap<String, Object>();
+        map.put("fromList",fromList);
+        map.put("typeList",typeList);
+        return map;
+    }
+
+    /**
+     * 查询部门
+     * @return
+     */
+    public List<Record> dept(){
+        return Db.find("select * from dt_base_dept where status=1");
+    }
+
+    /**
+     * 工单查询
+     * @param pageNumber
+     * @param pageSize
+     * @param workOrder
+     * @return
+     */
+    public Page<Record> Acceptance(int pageNumber, int pageSize, WorkOrderParam workOrder){
+        StringBuffer sql=new StringBuffer();
+        sql.append("from dt_sheets ds left join dt_sheet_type dst on ds.type_code=dst.code and dst.status=1 left join dt_sheet_detail dsd on dsd.sheet_id=ds.id left join  dt_sheet_source dss on dss.code=ds.source_code and dss.status=1 where 1=1");
+        sql=AcceptanceSQL(sql,workOrder);
+        return Db.paginate(pageNumber, pageSize, "select ds.id,ds.sheet_no,ds.start_time,dst.merge_title typeCode,isnull(ds.sponsor,'') sponsor,dss.merge_title sourceCode,ds.status,isnull(dsd.receiver,'') receiver,isnull(dsd.exe_dept,'') exe_dept,isnull(dsd.sup_dept,'') sup_dept",sql.toString());
+    }
+
+    /**
+     * 新增工单
+     * @return
+     */
+    public String InsertWorkNumber(){
+        String stu="";
+
+        return stu;
+    }
+
+    /**
+     * 工单交易纠纷
+     * @param id
+     * @return
+     */
+    public Map<String, Object> SelectWorkNumber(int id){
+        //工单信息
+        Record WorkNumber=Db.findFirst("select ds.type_code,ds.sheet_no,do.order_amount,do.express_fee,dsb.order_id,ds.status,dsd.exe_dept,dsd.sup_dept,do.order_no,ds.start_time,dst.merge_title typeTitle,durs.name,dss.merge_title fromTitle,ds.sponsor_type,ds.sponsor,ds.sponsor_contact,ds.priority_level from dt_sheets ds left join dt_sheet_type dst on ds.type_code=dst.code and dst.status=1 left join dt_sheet_detail dsd on dsd.sheet_id=ds.id left join  dt_sheet_source dss on dss.code=ds.source_code and dss.status=1 left join dt_sheet_business dsb on dsb.sheet_id=ds.id left join dt_orders do on do.id=dsb.order_id and do.is_del=0 left join dt_user_role_shopinfo durs on dsb.shop_user_id=durs.user_id and  durs.user_id<>0 and durs.is_del=0 and durs.dpkg=1 where 1=1 and ds.id=?",id);
+        WorkNumber.set("aClassType", WorkerNumberUtil.getcode(WorkNumber.get("type_code").toString()));
+        switch(WorkNumber.get("priority_level").toString()){
+            case "1":
+                WorkNumber.set("priority_level","一般");
+                break;
+            case "2":
+                WorkNumber.set("priority_level","急");
+                break;
+
+            case "3":
+                WorkNumber.set("priority_level","加急");
+                break;
+
+            default :
+                break;
+        }
+        List<Record> WorkInfo=Db.find("select * from dt_sheet_info where sheet_id=? order by add_time asc",id);
+
+        Map<String, Object> map=new HashMap<String, Object>();
+        map.put("WorkNumber",WorkNumber);
+        map.put("WorkInfo",WorkInfo);
+        return map;
+    }
+
+    /**
+     * 订单详情
+     * @param WorkNumber
+     * @return
+     */
+    public Map<String, Object> SelectOrderInfo(Record WorkNumber){
+        //买家详细信息
+        Record BuyersInfo=Db.findFirst("select do.status,do.order_no,do.add_time,dup.person_name,du.mobile dumobile,dogone.accept_name,dogone.mobile dogonemobile,dogone.post_code,dogone.address,do.invoice_title,isnull(do.message,'') message from dt_orders do left join dt_order_goodinfo dog on do.id=dog.order_id left join dt_users du on du.id=do.user_id left join dt_user_personinfo dup on dup.user_id=du.id left join dt_order_goodinfo dogone on dogone.order_id=do.id  where do.is_del=0 and do.id=?",WorkNumber.get("order_id"));
+        List<Record> BuyersList=Db.find("select dog.img_url,dog.goods_title,dog.spec_text,dog.real_price,dog.quantity,(dog.real_price*dog.quantity) allmoney from dt_order_goods dog where dog.order_id=?",WorkNumber.get("order_id"));
+
+        //优惠
+        Double money=0.0;
+        for(Record x : BuyersList){
+            Double moneyChild=Integer.valueOf(x.get("quantity").toString())*Double.valueOf(x.get("real_price").toString());
+            money+=moneyChild;
+        }
+        Record rc=new Record();
+        rc.set("money",money);
+        rc.set("order_amount",WorkNumber.get("order_amount"));
+        rc.set("express_fee",WorkNumber.get("express_fee"));
+        rc.set("discount",0.0);
+
+        //发货地址
+        Record ShipAddress=Db.findFirst("select dse.* from dt_orders do left join dt_shop_expensesInfo dse on dse.shop_id=do.shop_user_id and dse.type=0 where do.id=?",WorkNumber.get("order_id"));
+        //物流信息
+        Record logistics=Db.findFirst("select isnull(dog.express_no,'') express_no,isnull(de.title,'') title,isnull(dog.express_time,'') express_time from dt_order_goodinfo dog left join  dt_express de on de.id=dog.express_id where dog.order_id=?",WorkNumber.get("order_id"));
+
+
+        Map<String, Object> map=new HashMap<String, Object>();
+        map.put("rc",rc);
+        map.put("BuyersList",BuyersList);
+        map.put("logistics",logistics);
+        map.put("ShipAddress",ShipAddress);
+        map.put("BuyersInfo",BuyersInfo);
+        return map;
+    }
+
+    /**
+     *退款详情
+     * @param WorkNumber
+     * @return
+     */
+    public Map<String, Object> SelectRefund(Record WorkNumber){
+        List<Record> RefundList=Db.find("select dob.id,dob.back_return_no,dob.real_back_amount,dob.back_goods,dob.back_category,dob.back_resource from dt_order_backinfo dob where dob.order_id=?",WorkNumber.get("order_id"));
+        for(Record x:RefundList){
+            Record logistics=Db.findFirst("select isnull(de.title,'') title from dt_express_info dei left join dt_express de on dei.express_id=de.id where express_no=?",x.get("back_return_no"));
+            if(logistics!=null){
+                x.set("back_title",logistics.get("title"));
+            }else{
+                x.set("back_title","");
+            }
+            switch(x.get("back_goods").toString()){
+                case "0":
+                    x.set("back_goods","仅退款");
+                    break;
+                case "1":
+                    x.set("back_goods","退货退款");
+                    break;
+                default :
+                    break;
+            }
+        }
+        Map<String, Object> map=new HashMap<String, Object>();
+        map.put("RefundList",RefundList);
+        return map;
+    }
+
+    /**
+     *退款商品详情
+     * @param id
+     * @return
+     */
+    public List<Record> SelectRefundShop(int id){
+        List<Record> RefundShopList=Db.find("select dog.img_url,dog.goods_title,dog.spec_text,dog.real_price,dog.quantity,(dog.real_price*dog.quantity) allmoney from dt_order_goods dog where back_order_id=?",id);
+        return  RefundShopList;
+    }
+
+    /**
+     * 工单查询sql拼装
+     * @param sql
+     * @param workOrder
+     * @return
+     */
+    public StringBuffer AcceptanceSQL(StringBuffer sql,WorkOrderParam workOrder){
+        if(!workOrder.getStatus().equals("") && workOrder.getStatus()!=null){
+            if(workOrder.getStatus().equals("supermarket")){
+
+            }else if(workOrder.getStatus().equals("history")){
+                sql.append(" and ds.status in (2,3,4)");
+            }else if(workOrder.getStatus().equals("push")){
+                sql.append(" and ds.is_push =1 and status=5");
+            }else if(workOrder.getStatus().equals("already")){
+                sql.append(" and ds.status in (3,4)");
+            }else if(workOrder.getStatus().equals("acceptance")){
+                sql.append(" and ds.status = 1");
+            }
+        }
+        if(!workOrder.getSourceCode().equals("") && workOrder.getSourceCode()!=null){
+            sql.append(" and ds.source_code like '"+workOrder.getSourceCode()+"_%'");
+        }
+        if(!workOrder.getTypeCode().equals("") && workOrder.getTypeCode()!=null){
+            sql.append(" and ds.type_code like '"+workOrder.getTypeCode()+"_%'");
+        }
+        if(!workOrder.getSearch().equals("") && workOrder.getSearch()!=null){
+            sql.append(" and (ds.sheet_no = '"+workOrder.getSearch()+"' or ds.sponsor='"+workOrder.getSearch()+"')");
+        }
+        if(!workOrder.getStartTime().equals("") && !workOrder.getEndTime().equals("")){
+            sql.append(" and ds.start_time BETWEEN '"+workOrder.getStartTime()+"' and '"+workOrder.getEndTime()+"'");
+        }else if(!workOrder.getStartTime().equals("") && workOrder.getEndTime().equals("")){
+            sql.append(" and ds.start_time > '"+workOrder.getStartTime()+"'");
+        }else if(workOrder.getStartTime().equals("") && !workOrder.getEndTime().equals("")){
+            sql.append(" and ds.start_time < '"+workOrder.getEndTime()+"'");
+        }
+        return sql;
+    }
+
+    public Integer detilOrderCount(int id){
+        Integer detilOrderCount=Db.find("select * from dt_order_backinfo where order_id=?",id).size();
+        return detilOrderCount;
+    }
+
+    /************************************************************************************************************************************************************/
+    /**
+     * 查询工单流程
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> findSheetFlow(String sheet_no){
+    	
+    	return Db.find("select * from dt_sheet_flowlog where sheet_id=(select id from dt_sheets where sheet_no=?)",sheet_no);
+    	
+    }
+    
+    /**
+     * 查询工单信息
+     * @param sheet_no
+     * @return
+     */
+    public Record findSheets(String sheet_no){
+    	
+    	return Db.findFirst("select a.*,b.order_no,c.nick_name,c.mobile,d.name,d.mobile as smobile from dt_sheets a,dt_orders b,dt_users c,dt_user_role_shopinfo d,dt_sheet_business e where a.id=e.sheet_id and e.order_id=b.id and e.shop_user_id=d.user_id and c.id=("+
+    						"select user_id from dt_orders a where id=(select order_id from dt_sheet_business where sheet_id=(select id from dt_sheets where sheet_no=?)))",sheet_no);
+    	
+    }
+    /**
+     * 查询工单资料
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> findSheetInfo(String sheet_no){
+    	
+    	return Db.find("select * from dt_sheet_info where sheet_id=(select id from dt_sheets where sheet_no=?)",sheet_no);
+    	
+    }
+   /**
+    * 是否受理
+    * @param
+    * @param
+    * @param
+    * @return
+    */
+    @Before(Tx.class)
+    public boolean isAcceptance(EvaluateParam evaluate,Record user){
+    		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    		boolean b = false;
+    		String result = "不予理睬";
+    		String descr = "不予理睬";
+    		String sheet_no = evaluate.getSheet_no();
+        	int status = evaluate.getStatus();
+        	String content = evaluate.getContent();
+    		//1.修改工单主表的状态
+        	int num = Db.update("update dt_sheets set status=? where sheet_no=?",status,sheet_no);
+        	//2.新增工单详情表数据
+        	Boolean flag = Db.save("dt_sheet_detail", new Record().set("content", content).set("sheet_id",findSheets(sheet_no).get("id")));
+        	//3.记录工单流程日志表        从session中取登录人的相关信息，部门什么之类的
+        	Db.save("dt_sheet_flowlog", new Record().set("sheet_id",findSheets(sheet_no).get("id")).set("opr_dept_id", user.get("opr_dept_id")
+        			.toString()).set("opr_dept", user.get("opr_dept").toString()).set("opr_user_id", user.get("opr_user_id").toString()).
+        			set("opr_user",user.get("opr_user").toString()).set("opr_time",date).set("opr_type", 1).set("result", result)
+        			.set("descr", descr));
+        	//4.如果是刚受理工单，则需要推送到执行部门和督察部门
+        	if(evaluate.getType().equals("受理")){
+        		//5.记录对应的执行部门和督察部门      受理人应该根据部门老查询出来的
+        		b = addDetail(evaluate);
+            			
+        	}
+        	if(num >0 && flag && b){
+        		return true;
+        	}else{
+        		return false;
+        	}
+    }
+    /**
+     * 添加工单详情
+     * @param evaluate
+     * @return
+     */
+    public boolean addDetail(EvaluateParam evaluate){
+    	boolean flag = false;
+    	if(evaluate != null){
+    		flag = Db.save("dt_sheet_detail", new Record().set("sheet_id",findSheets(evaluate.getSheet_no()).get("id")).set("receiver", "刘英杰")
+    				.set("exe_dept", evaluate.getExe_dept()).set("exe_dept_id", evaluate.getExe_dept_id()).
+        			set("sup_dept",evaluate.getSup_dept()).set("sup_dept_id",evaluate.getSup_dept_id()).set("content", evaluate.getContent()).set("pics", evaluate.getPics()));
+    	}
+    	return flag;
+    }
+    /**
+     * 根据工单号查询店铺评分信息
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> findShopScore(String sheet_no){
+    	
+    	return Db.find("select order_id 订单号,review_score 整体评分,service_review_score 服务评分,pack_review_score 包装评分,distribution_review_score 物流评分 from dt_order_comment where order_id=(select order_id from dt_sheet_business where sheet_id=(select id from dt_sheets where sheet_no=?))",sheet_no);
+    	
+    }
+    
+    /**
+     * 根据工单号查询商品评分信息
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> findGoodsScore(String sheet_no){
+    	
+    	return Db.find("select a.article_id,a.goods_score,b.title,c.goods_describe from dt_order_goods a ,dt_article b,dt_article_info c where a.article_id=b.id and b.id=c.article_id and a.order_id=(select order_id from dt_sheet_business where sheet_id=(select id from dt_sheets where sheet_no=?))",sheet_no);
+    	
+    }
+    
+    /**
+     * 根据工单号查询商品文字评论信息
+     * @param sheet_no
+     * @return
+     */
+    public List<Record> findGoodsTitle(String sheet_no){
+    	
+    	return Db.find("select a.article_id,a.content,b.title from dt_article_comment a,dt_article b where a.article_id=b.id and a.order_id=(select order_id from dt_sheet_business where sheet_id=(select id from dt_sheets where sheet_no=?))",sheet_no);
+    	
+    }
+}

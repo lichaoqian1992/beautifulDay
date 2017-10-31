@@ -1,0 +1,46 @@
+package com.manji.sheet.controller;
+
+import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
+import com.manji.sheet.model.reqParam.WorkOrderParam;
+import com.manji.sheet.service.ManageService;
+import com.manji.sheet.utils.WorkerNumberUtil;
+
+/**
+ * Created by Administrator on 2017/6/17.
+ */
+public class ManageController extends Controller {
+
+    private ManageService manageService;
+    private WorkerNumberUtil WorkerUtil;
+    private int pageSize=20;
+
+    /**
+     * 工单受理
+     */
+    public void Acceptance(){
+        if(!getPara("ajax").equals("")){
+            WorkOrderParam workOrder=getBean(WorkOrderParam.class, "");
+            Page<Record> managePage=manageService.Acceptance(Integer.parseInt(getPara("pageNumber","1").toString()),pageSize,workOrder);
+            renderJson(managePage);
+        }else{
+            render("");
+        }
+    }
+
+    /**
+     * 新增工单
+     */
+    public void InsertWorkNumber(){
+        if(!getPara("ajax").equals("")){
+
+            renderJson();
+        }else{
+            render("");
+        }
+    }
+
+
+    /************************************************************************************************************************************************************/
+}

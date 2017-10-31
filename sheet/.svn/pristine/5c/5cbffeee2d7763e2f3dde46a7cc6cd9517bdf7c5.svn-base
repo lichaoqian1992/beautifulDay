@@ -1,0 +1,152 @@
+package com.manji.sheet.service;
+
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
+import com.manji.sheet.model.reqParam.SheetInfoParam;
+import com.manji.sheet.utils.WorkerNumberUtil;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+public class BuyersAppService extends BaseSheetService{
+	/**********************************************************************买家APP******************************************************************************/
+	/**
+	 * 根据商家ID获取店铺信息
+	 * @param shopId
+	 * @return
+	 */
+	public Record getShopByName(int shopId){
+		StringBuffer sql=new StringBuffer("select s.id,s.name,isnull(a.title,'') title,isnull(mobile,'') mobile from dt_user_role_shopinfo s left join dt_article_category a on a.id=s.main_business and s.user_id<>0 and s.is_del=0 and s.dpkg=1 where user_id=?");
+		Record shopInfo = Db.findFirst(sql.toString(),shopId);
+		return shopInfo;
+	}
+
+	/**
+	 * 根据订单ID查询订单商家信息
+	 * @param orderId
+	 * @return
+	 */
+	public Record getOrderInfo(int orderId){
+		StringBuffer sql=new StringBuffer("select u.name,o.order_no,o.status from dt_orders o left join dt_user_role_shopinfo u on o.shop_user_id=u.user_id and u.user_id<>0 and u.is_del=0 and u.dpkg=1 where o.id=?");
+		Record orderInfo = Db.findFirst(sql.toString(),orderId);
+		return orderInfo;
+	}
+
+	/**
+	 * 根据商品id查询商家信息
+	 * @param commodityId
+	 * @return
+	 */
+	public Record getCommodityInfo(int commodityId){
+		StringBuffer sql=new StringBuffer("select dag.id,da.title,dac.title,dsb.name,durs.name from dt_article_goods dag left join dt_article da on dag.article_id=da.id and da.is_del=0 left join dt_article_category dac on dac.id=da.category_id and dac.is_del=0 left join dt_shop_brand dsb on dsb.shop_id=da.user_id and dsb.is_del=0 and dsb.state=1 left join dt_user_role_shopinfo durs on da.user_id=durs.user_id and  durs.user_id<>0 and durs.is_del=0 and durs.dpkg=1");
+		Record commodityInfo = Db.findFirst(sql.toString(),commodityId);
+		return commodityInfo;
+	}
+
+	/**
+	 * 查看举报
+	 * @return
+	 */
+	public List<Record> reportInfo(SheetInfoParam sheetInfo){
+		StringBuffer sql=new StringBuffer("select ds.start_time,ds.status,ds.type_code,dst.title from dt_sheets ds left join dt_sheet_type dst on ds.type_code=dst.code and dst.status=1 where ds.sponsor_id=? and dst.code in ('01','02','03')");
+		return Db.find(sql.toString());
+	}
+
+	/**
+	 * 补充资料
+	 * @param sheetInfo
+	 * @return
+	 */
+	public String add(SheetInfoParam sheetInfo){
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String stu="";
+		try {
+		/*保存工单资料表*/
+			Record sheetData = new Record();
+			sheetData.set("sheet_id", sheetInfo.getId());
+			sheetData.set("descr", sheetInfo.getDescr());
+			sheetData.set("pics", sheetInfo.getPics());
+			sheetData.set("add_time", sdf.format(new Date()));
+			sheetData.set("submitter", sheetInfo.getReportUser());
+			Db.save("dt_sheet_info", sheetData);
+			stu="SUCCESS";
+		}catch(Exception e){
+			stu="ERROR";
+			e.printStackTrace();
+		}
+		return stu;
+	}
+
+	/**
+     * 已解决
+	 * @param sheetInfo
+     * @return
+     */
+	public String cancle(SheetInfoParam sheetInfo){
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String stu="";
+		try {
+			/*修改工单主表*/
+			Db.update("update dt_sheets set status=4 where id=?",sheetInfo.getId());
+			/*新增日志*/
+			stu="SUCCESS";
+		}catch (Exception e){
+			stu="ERROR";
+			e.printStackTrace();
+		}
+		return stu;
+	}
+
+	/**
+	 * 添加投诉信息
+	 * @param sheetInfo
+	 * @return
+	 */
+	public String saveShopReport(SheetInfoParam sheetInfo){
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String stu="";
+		try{
+		/*工单主表*/
+			Record sheet = new Record();
+			sheet.set("sheet_no", WorkerNumberUtil.GeneratWorkerNumber(sheetInfo.getReportTitle()));
+			sheet.set("status",sheetInfo.getStatus());
+			sheet.set("type_code",sheetInfo.getReportType());
+			sheet.set("sponsor_id",sheetInfo.getSponsor_id());
+			sheet.set("sponsor",sheetInfo.getSponsor());
+			sheet.set("sponsor_type",sheetInfo.getSponsor_type());
+			sheet.set("sponsor_contact",sheetInfo.getSponsor_contact());
+			sheet.set("start_time",sdf.format(new Date()));
+			sheet.set("source_code",sheetInfo.getSheetFrom());
+			sheet.set("priority_level",sheetInfo.getPriority_level());
+			sheet.set("is_push",sheetInfo.getIs_push());
+			Db.save("dt_sheets",sheet);
+
+		/*保存工单资料表*/
+			Record sheetData = new Record();
+			sheetData.set("sheet_id",sheet.get("id"));
+			sheetData.set("descr",sheetInfo.getDescr());
+			sheetData.set("pics",sheetInfo.getPics());
+			sheetData.set("add_time",sdf1.format(new Date()));
+			sheetData.set("submitter",sheetInfo.getReportUser());
+			Db.save("dt_sheet_info",sheetData);
+
+		/*工单业务关系表*/
+			Record sheetRelation = new Record();
+			sheetRelation.set("sheet_id",sheet.get("id"));
+			sheetRelation.set("order_id",sheetInfo.getOrderId());
+			sheetRelation.set("back_order_id",sheetInfo.getBackOrderId());
+			sheetRelation.set("shop_user_id",sheetInfo.getShopId());
+			sheetRelation.set("shop_id",sheetInfo.getShopInfo());
+			sheetRelation.set("article_id",sheetInfo.getArticleId());
+			Db.save("dt_sheet_business",sheetRelation);
+
+			stu = "SUCCESS";
+		}catch(Exception e){
+			stu = "ERROR";
+			e.printStackTrace();
+		}
+		return stu;
+	}
+}

@@ -1,0 +1,172 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+input:focus{
+	outline: none;
+}
+body{
+	width: 100%;
+	height: 1080px;
+}
+.kf_bag{
+    /*background: url(../images/login_bag.png) no-repeat 100% 100%;*/
+    width: 100%;
+    height: 1080px;
+ 
+}
+.kf_center{
+    background: url(../images/login_logo.png) no-repeat 100% 100%;
+    background-position: left top;
+    background-color: #fff;
+    width: 895px;
+    height: 480px;
+    margin: 0 auto;
+    position: relative;
+    top: -800px;
+}
+.kf_center_text{
+    width: 370px;
+    position: absolute;
+    right: 0;
+    padding: 0 35px 0 0;
+    box-sizing: border-box;
+}
+.kf_center_text .kf_h4{
+    margin: 50px 0;
+    font-size: 27px;
+    /*font-family: "微软雅黑";*/
+    font-weight: normal;
+}
+.kf_tiptxt{
+	font-size: 12px;
+	color: red;
+	margin: 5px 0 0 5px;
+	
+}
+.kf_bordercolor{
+	border: 1px solid #1f89d5 !important;
+}
+.kf_tipname{
+	display: none;
+}
+.kf_tippassword{
+	display: none;
+}
+.kf_tipcode{
+	display: none;
+}
+.kf_center_text .kf_name_aside{
+    width: 320px;
+    height: 70px;
+}
+.kf_center_text .kf_name{
+    border: 1px solid #d7d7d7;
+    width: 320px;
+    height: 40px;
+    /*margin-bottom: 30px;*/
+    border-radius: 2px;
+}
+.kf_center_text .kf_name .kf_name_img{
+    background: url(../images/login_use.png) no-repeat 100% 100%;
+    width: 14px;
+    height: 16px;
+    margin: 10px 15px;
+    display: inline-block;
+}
+ .kf_name_line{
+   position: relative;
+   top: -10px;
+   border-right: 1px solid #d7d7d7;
+}
+ .kf_input1{
+    margin: 10px 0;
+    position: relative;
+    top: -10px;
+    width: 260px;
+    border:none;
+    padding:0 5px;
+}
+ .kf_input2{
+    margin: 10px 0;
+    position: relative;
+    top: -10px;
+    width: 165px;
+    border:none;
+    padding:0 5px;
+}
+.kf_center_text .kf_password{
+    border: 1px solid #d7d7d7;
+    width: 320px;
+    height: 40px;
+    /*margin-bottom: 30px;*/
+    border-radius: 2px;
+}
+.kf_center_text .kf_password .kf_password_img{
+    background: url(../images/login_password.png) no-repeat 100% 100%;
+    width: 14px;
+    height: 16px;
+    margin: 10px 15px;
+    display: inline-block;
+}
+.kf_center_text .kf_code{
+    border: 1px solid #d7d7d7;
+    width: 320px;
+    height: 40px;
+   /* margin-bottom: 33px;*/
+    position: relative;
+    border-radius: 2px;
+}
+.kf_center_text .kf_code .kf_code_img{
+    background: url(../images/login_code.png) no-repeat 100% 100%;
+    width: 14px;
+    height: 16px;
+    margin: 10px 15px;
+    display: inline-block;
+}
+.kf_center_text .kf_code img{
+   width: 97px;
+   height: 40px;
+   position: absolute;
+   right: 0;
+   top: 0;
+   cursor: pointer;
+}
+.kf_center_text .kf_login{
+    width: 320px;
+    height: 40px;
+    margin-bottom: 30px;
+    position: relative;
+   
+}
+.kf_center_text .kf_login img{
+    /*background: url(../images/login_state.png) no-repeat 100% 100%;*/
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    /*background-color: #63baf8;*/
+   /*color: #63BAF8;
+   border: 1px solid #63BAF8;*/
+   cursor: pointer;
+}
+.kf_center_text .kf_login_txt{
+    margin: 0 27px 0 10px;
+    position: relative;
+    top: -6px;
+    color: #8d949a;
+    font-size: 12px;
+}
+.kf_center_text .kf_login_btn{
+    width: 165px;
+    height: 30px;
+    margin: -5px 0 0 0;
+    background-color: #63baf8;
+    color: #fff;
+    line-height: 30px;
+    text-align: center;
+    display: inline-block;
+    float: right;
+    font-size: 12px;
+    border-radius: 2px;
+    cursor: pointer;
+}
